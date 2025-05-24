@@ -1,5 +1,8 @@
 {
     "copyrightInserter.license": "mit",
     "copyrightInserter.holder": "ETIB",
-    "editor.defaultFormatter": "ms-vscode.cpptools"
+    "editor.defaultFormatter": "ms-vscode.cpptools",
+    "files.associations": {
+        "string": "cpp"
+    }
 }
