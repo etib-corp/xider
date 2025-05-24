@@ -20,9 +20,16 @@
  SOFTWARE.
  */
 
-#include "pet.hpp"
+#pragma once
 
-int main(int argc, char *argv[], char *envp[]) {
-  Pet pet("Guillaume");
-  return 0;
-}
+#include <string>
+
+class Pet {
+
+public:
+  Pet(std::string name);
+  ~Pet(void);
+
+private:
+  std::string name;
+};

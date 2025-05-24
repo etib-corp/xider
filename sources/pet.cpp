@@ -20,9 +20,12 @@
  SOFTWARE.
  */
 
+#include <iostream>
+
 #include "pet.hpp"
 
-int main(int argc, char *argv[], char *envp[]) {
-  Pet pet("Guillaume");
-  return 0;
+Pet::Pet(std::string name) : name(name) {
+  std::cout << "Pet created with name: " << name << std::endl;
 }
+
+Pet::~Pet(void) {}
