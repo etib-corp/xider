@@ -1,0 +1,62 @@
+name: Doxygen CD
+
+on:
+  push:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+  id-token: write
+  pages: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    name: Generate Doxygen Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
+      - name: Setup Doxygen
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y doxygen --no-install-recommends
+
+      - name: Build Doxygen Documentation
+        run: doxygen
+
+      - name: Save build output
+        uses: actions/upload-artifact@v4.6.2
+        with:
+          name: doxygen-docs
+          path: docs/html
+
+  publish:
+    name: Deploy to GitHub Pages
+    needs: generate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
+      - name: Restore build output
+        uses: actions/download-artifact@v4.3.0
+        with:
+          name: doxygen-docs
+          path: docs/html
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5.0.0
+
+      - name: Upload artifact to Pages
+        uses: actions/upload-pages-artifact@v3.0.1
+        with:
+          path: docs/html
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4.0.5
