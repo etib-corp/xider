@@ -42,3 +42,17 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${HEADERS_DIR}
 )
+
+# For each library in the libraries directory, add it as a subdirectory
+file(GLOB LIBRARIES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libraries/*")
+foreach(LIBRARY_DIR ${LIBRARIES_DIR})
+    if (IS_DIRECTORY ${LIBRARY_DIR})
+        add_subdirectory(${LIBRARY_DIR})
+    else()
+        message(STATUS "Skipping non-directory: ${LIBRARY_DIR}")
+    endif()
+endforeach()
+
+# Add the tests
+enable_testing()
+add_subdirectory(${TESTS_DIR})

@@ -22,7 +22,11 @@
 
 #include "pet.hpp"
 
+#ifndef TESTING
+
 int main(int argc, char *argv[], char *envp[]) {
   Pet pet("Guillaume");
   return 0;
 }
+
+#endif
