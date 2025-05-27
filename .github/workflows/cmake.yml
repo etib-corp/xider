@@ -12,36 +12,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        build_type: [Release]
         include:
+          - os: ubuntu-latest
+            c_compiler: gcc
+            cpp_compiler: g++
+            build_type: Release
           - os: windows-latest
             c_compiler: cl
             cpp_compiler: cl
-          - os: ubuntu-latest
-            c_compiler: gcc
-            cpp_compiler: g++
-          - os: ubuntu-latest
-            c_compiler: clang
-            cpp_compiler: clang++
-          - os: windows-latest
-            c_compiler: gcc
-            cpp_compiler: g++
-          - os: windows-latest
-            c_compiler: clang
-            cpp_compiler: clang++
+            build_type: Release
           - os: macos-latest
             c_compiler: clang
             cpp_compiler: clang++
-          - os: macos-latest
-            c_compiler: gcc
-            cpp_compiler: g++
-        exclude:
-          - os: ubuntu-latest
-            c_compiler: cl
-          - os: macos-latest
-            c_compiler: cl
-
+            build_type: Release
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.2

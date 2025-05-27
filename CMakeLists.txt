@@ -5,6 +5,16 @@ project(cpp_template
     LANGUAGES CXX
 )
 
+# Platform-specific configuration
+if(WIN32)
+    include(cmake/ConfigWindows.cmake)
+elseif(APPLE)
+    include(cmake/ConfigMacOS.cmake)
+elseif(UNIX)
+    include(cmake/ConfigLinux.cmake)
+endif()
+
+
 # Set the C++ standard
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
