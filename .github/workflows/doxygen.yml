@@ -48,7 +48,7 @@ jobs:
           submodules: recursive
 
       - name: Restore build output
-        uses: actions/download-artifact@v4.3.0
+        uses: actions/download-artifact@v5.0.0
         with:
           name: doxygen-docs
           path: docs/html
@@ -57,7 +57,7 @@ jobs:
         uses: actions/configure-pages@v5.0.0
 
       - name: Upload artifact to Pages
-        uses: actions/upload-pages-artifact@v3.0.1
+        uses: actions/upload-pages-artifact@v4.0.0
         with:
           path: docs/html
 
