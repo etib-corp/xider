@@ -2,9 +2,9 @@ name: CMake CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
@@ -27,16 +27,16 @@ jobs:
             build_type: Release
     steps:
       - name: Checkout
-        uses: actions/checkout@v4.2.2
+        uses: actions/checkout@v5.0.0
         with:
           submodules: recursive
-      
+
       - name: Set reusable strings
         id: strings
         shell: bash
         run: |
           echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
-  
+
       - name: Configure CMake
         run: >
           cmake
@@ -45,13 +45,13 @@ jobs:
           -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
           -S ${{ github.workspace }}
-  
+
       - name: Build
         run: >
           cmake
           --build ${{ steps.strings.outputs.build-output-dir }}
           --config ${{ matrix.build_type }}
-  
+
       - name: Test
         working-directory: ${{ steps.strings.outputs.build-output-dir }}
         run: >
