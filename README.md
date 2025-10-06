@@ -1,3 +1,3 @@
-# C++ Template
+# XIDER
 
-A ready-to-use C++20 project template packed with essential tools, libraries, and configurations.
+XIDER is an advanced IDE (Integrated Development Environment) designed to develop XR (eXtended Reality) applications. It provides a comprehensive set of tools and features to streamline the development process for VR (Virtual Reality), AR (Augmented Reality), and MR (Mixed Reality) projects.
