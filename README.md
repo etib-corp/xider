@@ -16,7 +16,7 @@ int main() {
 
 ## Documentation
 
-- **[How XIDER Works](docs/HOW_EVAN_WORKS.md)** - Comprehensive guide to concepts, lifecycle, and usage patterns
+- **[How XIDER Works](docs/HOW_XIDER_WORKS.md)** - Comprehensive guide to concepts, lifecycle, and usage patterns
 - **[Architecture Documentation](docs/ARCHITECTURE.md)** - Detailed overview of the system's design and components
 - **[Technical Choices Documentation](docs/TECHNICAL_CHOICES.md)** - Insights into design decisions and technologies
 

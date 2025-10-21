@@ -22,7 +22,8 @@
 
 #include "xider.hpp"
 
-Xider::Xider(const int argc, const char *const argv[],
-             const char *const envp[]) {}
+Xider::Xider(const int argc, const char *const argv[], const char *const envp[])
+    : argumentsParser(std::make_unique<ArgumentsParser>(argc, argv)),
+      environmentsParser(std::make_unique<EnvironmentsParser>(envp)) {}
 
 Xider::~Xider(void) {}

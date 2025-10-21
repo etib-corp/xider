@@ -22,18 +22,16 @@
 
 #pragma once
 
-#include <memory>
-
-#include "arguments_parser.hpp"
-#include "environments_parser.hpp"
-
-class Xider {
+class EnvironmentsParser {
 private:
-  std::unique_ptr<ArgumentsParser> argumentsParser;
-  std::unique_ptr<EnvironmentsParser> environmentsParser;
+  const char *const *envp;
 
 protected:
 public:
-  Xider(const int argc, const char *const argv[], const char *const envp[]);
-  ~Xider(void);
+  EnvironmentsParser(const char *const envp[]);
+  ~EnvironmentsParser(void);
+
+  const char *const *getEnvp(void) const;
+  const char *getEnv(const int index) const;
+  const char *findEnv(const char *key) const;
 };

@@ -20,20 +20,20 @@
  SOFTWARE.
  */
 
-#pragma once
-
-#include <memory>
-
 #include "arguments_parser.hpp"
-#include "environments_parser.hpp"
 
-class Xider {
-private:
-  std::unique_ptr<ArgumentsParser> argumentsParser;
-  std::unique_ptr<EnvironmentsParser> environmentsParser;
+ArgumentsParser::ArgumentsParser(const int argc, const char *const argv[])
+    : argc(argc), argv(argv) {}
 
-protected:
-public:
-  Xider(const int argc, const char *const argv[], const char *const envp[]);
-  ~Xider(void);
-};
+ArgumentsParser::~ArgumentsParser(void) {}
+
+int ArgumentsParser::getArgc(void) const { return this->argc; }
+
+const char *const *ArgumentsParser::getArgv(void) const { return this->argv; }
+
+const char *ArgumentsParser::getArg(const int index) const {
+  if (index < 0 || index >= this->argc) {
+    return nullptr;
+  }
+  return this->argv[index];
+}

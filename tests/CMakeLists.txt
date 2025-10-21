@@ -30,6 +30,12 @@ target_include_directories(test_${PROJECT_NAME} PRIVATE
     ${TEST_HEADERS_DIR}
 )
 
+# Link GoogleTest and the main library
+target_link_libraries(test_${PROJECT_NAME}
+    PRIVATE GTest::gtest_main
+    ${PROJECT_NAME}
+)
+
 # Discover and register tests
 include(GoogleTest)
 gtest_discover_tests(test_${PROJECT_NAME})

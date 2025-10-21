@@ -20,20 +20,47 @@
  SOFTWARE.
  */
 
-#pragma once
+#include <cstring>
 
-#include <memory>
-
-#include "arguments_parser.hpp"
 #include "environments_parser.hpp"
 
-class Xider {
-private:
-  std::unique_ptr<ArgumentsParser> argumentsParser;
-  std::unique_ptr<EnvironmentsParser> environmentsParser;
+EnvironmentsParser::EnvironmentsParser(const char *const envp[]) : envp(envp) {}
 
-protected:
-public:
-  Xider(const int argc, const char *const argv[], const char *const envp[]);
-  ~Xider(void);
-};
+EnvironmentsParser::~EnvironmentsParser(void) {}
+
+const char *const *EnvironmentsParser::getEnvp(void) const {
+  return this->envp;
+}
+
+const char *EnvironmentsParser::getEnv(const int index) const {
+  if (index < 0 || this->envp == nullptr) {
+    return nullptr;
+  }
+
+  int count = 0;
+  while (this->envp[count] != nullptr) {
+    if (count == index) {
+      return this->envp[count];
+    }
+    count++;
+  }
+
+  return nullptr;
+}
+
+const char *EnvironmentsParser::findEnv(const char *key) const {
+  if (key == nullptr || this->envp == nullptr) {
+    return nullptr;
+  }
+
+  const size_t keyLen = std::strlen(key);
+
+  for (int i = 0; this->envp[i] != nullptr; i++) {
+    const char *env = this->envp[i];
+    if (std::strncmp(env, key, keyLen) == 0 && env[keyLen] == '=') {
+      return env + keyLen + 1;
+    }
+  }
+
+  return nullptr;
+}
