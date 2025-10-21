@@ -22,10 +22,6 @@
 
 #include "test_environments_parser.hpp"
 
-// ============================================================================
-// EnvironmentsParser Tests
-// ============================================================================
-
 class EnvironmentsParserTest : public ::testing::Test {
 protected:
   void SetUp() override {}

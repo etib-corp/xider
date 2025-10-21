@@ -22,10 +22,6 @@
 
 #include "test_arguments_parser.hpp"
 
-// ============================================================================
-// ArgumentsParser Tests
-// ============================================================================
-
 class ArgumentsParserTest : public ::testing::Test {
 protected:
   void SetUp() override {}
