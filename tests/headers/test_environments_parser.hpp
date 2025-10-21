@@ -20,9 +20,8 @@
  SOFTWARE.
  */
 
-#include "test_xider.hpp"
+#pragma once
 
-// This file aggregates all test modules
-// Individual test implementations are in their respective files:
-// - test_arguments_parser.cpp
-// - test_environments_parser.cpp
+#include <gtest/gtest.h>
+
+#include "environments_parser.hpp"
