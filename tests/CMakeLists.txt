@@ -20,7 +20,7 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 # Create test executable
-add_executable(test_${PROJECT_NAME} ${TEST_SOURCES} ${SOURCES})
+add_executable(test_${PROJECT_NAME} ${TEST_SOURCES})
 
 # Set common target properties
 set_xider_target_properties(test_${PROJECT_NAME})
@@ -30,10 +30,9 @@ target_include_directories(test_${PROJECT_NAME} PRIVATE
     ${TEST_HEADERS_DIR}
 )
 
-# Link GoogleTest and the main library
-target_link_libraries(test_${PROJECT_NAME}
-    PRIVATE GTest::gtest_main
-    ${PROJECT_NAME}
+# Link libraries
+target_link_libraries(test_${PROJECT_NAME} PRIVATE
+    gtest_main
 )
 
 # Discover and register tests
