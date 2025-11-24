@@ -8,6 +8,7 @@ project(xider
 )
 
 # Include common functions
+include(FetchContent)
 include(cmake/CommonFunctions.cmake)
 
 # Platform-specific configuration
@@ -30,6 +31,36 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build" FORCE)
     set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
 endif()
+
+# Backend selection
+if(ANDROID)
+    set(BUILD_FOR_OPENXR ON CACHE BOOL "Enable OpenXR backend" FORCE)
+else()
+    set(BUILD_FOR_GLFW ON CACHE BOOL "Enable GLFW backend" FORCE)
+endif()
+
+# Also add compile definitions for our targets
+if(BUILD_FOR_OPENXR)
+    add_compile_definitions(BUILD_FOR_OPENXR)
+endif()
+if(BUILD_FOR_GLFW)
+    add_compile_definitions(BUILD_FOR_GLFW)
+endif()
+
+
+FetchContent_Declare(
+    evan
+    GIT_REPOSITORY https://github.com/etib-corp/evan.git
+    GIT_TAG main
+)
+FetchContent_MakeAvailable(evan)
+
+FetchContent_Declare(
+    guillaume
+    GIT_REPOSITORY https://github.com/etib-corp/guillaume.git
+    GIT_TAG main
+)
+FetchContent_MakeAvailable(guillaume)
 
 # Set the files directories
 set(HEADERS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/headers")
