@@ -31,19 +31,19 @@ protected:
 TEST_F(ArgumentsParserTest, ConstructorAndGetArgc) {
   const char *argv[] = {"program", "arg1", "arg2"};
   int argc = 3;
-  
+
   ArgumentsParser parser(argc, argv);
-  
+
   EXPECT_EQ(parser.getArgc(), 3);
 }
 
 TEST_F(ArgumentsParserTest, GetArgv) {
   const char *argv[] = {"program", "arg1", "arg2"};
   int argc = 3;
-  
+
   ArgumentsParser parser(argc, argv);
   const char *const *result = parser.getArgv();
-  
+
   EXPECT_EQ(result, argv);
   EXPECT_STREQ(result[0], "program");
   EXPECT_STREQ(result[1], "arg1");
@@ -53,9 +53,9 @@ TEST_F(ArgumentsParserTest, GetArgv) {
 TEST_F(ArgumentsParserTest, GetArgValidIndex) {
   const char *argv[] = {"program", "arg1", "arg2", "arg3"};
   int argc = 4;
-  
+
   ArgumentsParser parser(argc, argv);
-  
+
   EXPECT_STREQ(parser.getArg(0), "program");
   EXPECT_STREQ(parser.getArg(1), "arg1");
   EXPECT_STREQ(parser.getArg(2), "arg2");
@@ -65,9 +65,9 @@ TEST_F(ArgumentsParserTest, GetArgValidIndex) {
 TEST_F(ArgumentsParserTest, GetArgInvalidNegativeIndex) {
   const char *argv[] = {"program", "arg1"};
   int argc = 2;
-  
+
   ArgumentsParser parser(argc, argv);
-  
+
   EXPECT_EQ(parser.getArg(-1), nullptr);
   EXPECT_EQ(parser.getArg(-5), nullptr);
 }
@@ -75,9 +75,9 @@ TEST_F(ArgumentsParserTest, GetArgInvalidNegativeIndex) {
 TEST_F(ArgumentsParserTest, GetArgInvalidIndexOutOfBounds) {
   const char *argv[] = {"program", "arg1"};
   int argc = 2;
-  
+
   ArgumentsParser parser(argc, argv);
-  
+
   EXPECT_EQ(parser.getArg(2), nullptr);
   EXPECT_EQ(parser.getArg(10), nullptr);
 }
@@ -85,9 +85,9 @@ TEST_F(ArgumentsParserTest, GetArgInvalidIndexOutOfBounds) {
 TEST_F(ArgumentsParserTest, GetArgBoundaryConditions) {
   const char *argv[] = {"program"};
   int argc = 1;
-  
+
   ArgumentsParser parser(argc, argv);
-  
+
   EXPECT_STREQ(parser.getArg(0), "program");
   EXPECT_EQ(parser.getArg(1), nullptr);
 }
@@ -95,19 +95,20 @@ TEST_F(ArgumentsParserTest, GetArgBoundaryConditions) {
 TEST_F(ArgumentsParserTest, EmptyArguments) {
   int argc = 0;
   const char **argv = nullptr;
-  
+
   ArgumentsParser parser(argc, argv);
-  
+
   EXPECT_EQ(parser.getArgc(), 0);
   EXPECT_EQ(parser.getArg(0), nullptr);
 }
 
 TEST_F(ArgumentsParserTest, ArgumentsWithSpecialCharacters) {
-  const char *argv[] = {"./program", "--flag", "-v", "--output=file.txt", "arg with spaces"};
+  const char *argv[] = {"./program", "--flag", "-v", "--output=file.txt",
+                        "arg with spaces"};
   int argc = 5;
-  
+
   ArgumentsParser parser(argc, argv);
-  
+
   EXPECT_EQ(parser.getArgc(), 5);
   EXPECT_STREQ(parser.getArg(0), "./program");
   EXPECT_STREQ(parser.getArg(1), "--flag");
@@ -119,9 +120,9 @@ TEST_F(ArgumentsParserTest, ArgumentsWithSpecialCharacters) {
 TEST_F(ArgumentsParserTest, ArgumentsWithEmptyStrings) {
   const char *argv[] = {"program", "", "arg2"};
   int argc = 3;
-  
+
   ArgumentsParser parser(argc, argv);
-  
+
   EXPECT_EQ(parser.getArgc(), 3);
   EXPECT_STREQ(parser.getArg(0), "program");
   EXPECT_STREQ(parser.getArg(1), "");
