@@ -42,7 +42,6 @@ FetchContent_Declare(
     GIT_TAG main
 )
 
-
 FetchContent_MakeAvailable(utility evan guillaume)
 
 # Set global C++ standard and properties
