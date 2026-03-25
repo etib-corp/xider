@@ -36,7 +36,7 @@ jobs:
           -DCMAKE_CXX_COMPILER=g++
           -DCMAKE_BUILD_TYPE=Release
           -DBUILD_XIDER_TESTING=OFF
-          -DBUILD_XIDER_EXAMPLES=OFF
+          -DBUILD_XIDER_PLATFORMS=OFF
           -DBUILD_XIDER_DOCS=ON
           -S ${{ github.workspace }}
 
