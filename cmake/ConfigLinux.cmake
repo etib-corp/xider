@@ -11,6 +11,3 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -DNDEBUG")
 
 # Enable position independent code for shared libraries
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-
-# Build evan for GLFW
-set(BUILD_FOR_GLFW ON)
