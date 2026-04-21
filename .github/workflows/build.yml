@@ -19,19 +19,24 @@ jobs:
         include:
           - name: GLFW Linux
             engine-backend: glfw
+            operating-system: linux
             runner: ubuntu-latest
           - name: GLFW macOS
             engine-backend: glfw
+            operating-system: macos
             runner: macos-latest
           - name: GLFW Windows
             engine-backend: glfw
+            operating-system: windows
             runner: windows-latest
           - name: OpenXR Linux
             engine-backend: openxr
+            operating-system: linux
             runner: ubuntu-latest
-          - name: OpenXR Windows
+          - name: OpenXR Android
             engine-backend: openxr
-            runner: windows-latest
+            operating-system: android
+            runner: ubuntu-latest
     steps:
       - name: Setup Vulkan SDK
         uses: humbletim/setup-vulkan-sdk@v1.2.1
@@ -39,6 +44,13 @@ jobs:
           vulkan-query-version: latest
           vulkan-components: Vulkan-Headers, Vulkan-Loader
           vulkan-use-cache: true
+
+      - name: Setup JDK
+        if: matrix.operating-system == 'android'
+        uses: actions/setup-java@v5.2.0
+        with:
+          distribution: "temurin"
+          java-version: "21"
 
       - name: Checkout the repository
         uses: actions/checkout@v6.0.2
@@ -52,6 +64,10 @@ jobs:
           cmake -B ${{ github.workspace }}/build -S ${{ github.workspace }}
           -DBUILD_FOR_GLFW=${{ matrix.engine-backend == 'glfw' }}
           -DBUILD_FOR_OPENXR=${{ matrix.engine-backend == 'openxr' }}
+          -DBUILD_FOR_LINUX=${{ matrix.operating-system == 'linux' }}
+          -DBUILD_FOR_MACOS=${{ matrix.operating-system == 'macos' }}
+          -DBUILD_FOR_WINDOWS=${{ matrix.operating-system == 'windows' }}
+          -DBUILD_FOR_ANDROID=${{ matrix.operating-system == 'android' }}
 
       - name: Build
         run: >
