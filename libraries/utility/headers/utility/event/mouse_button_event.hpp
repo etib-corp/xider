@@ -30,107 +30,111 @@
 
 #include "utility/event/event.hpp"
 
-namespace utility::event {
+namespace utility::event
+{
 
-/**
- * @brief Mouse button event.
- *
- * Represents mouse button presses/releases with position and button states.
- */
-class MouseButtonEvent : public Event {
-public:
-  using MousePosition = math::Vector2F; /**< 2D mouse position type */
+	/**
+	 * @brief Mouse button event.
+	 *
+	 * Represents mouse button presses/releases with position and button states.
+	 */
+	class MouseButtonEvent: public Event
+	{
+		public:
+		using MousePosition = math::Vector2F; /**< 2D mouse position type */
 
-  /**
-   * @brief Mouse buttons enumeration.
-   */
-  enum class Button : std::uint8_t {
-    Unknown = 0,
-    Left = 1,
-    Middle = 2,
-    Right = 3,
-    X1 = 4,
-    X2 = 5,
-    Last = 6 // Sentinel value to indicate the number of buttons, not an actual
-             // button
-  };
+		/**
+		 * @brief Mouse buttons enumeration.
+		 */
+		enum class Button : std::uint8_t {
+			Unknown = 0,
+			Left	= 1,
+			Middle	= 2,
+			Right	= 3,
+			X1		= 4,
+			X2		= 5,
+			Last = 6	// Sentinel value to indicate the number of buttons, not
+						// an actual button
+		};
 
-  using MouseButtonsState =
-      std::bitset<sizeof(std::uint8_t) *
-                  static_cast<std::size_t>(Button::Last)>; /**< Bitset for
-                                                              button states */
+		using MouseButtonsState =
+			std::bitset<sizeof(std::uint8_t)
+						* static_cast<std::size_t>(Button::Last)>; /**< Bitset
+																	  for button
+																	  states */
 
-  /**
-   * @brief Factory for creating MouseButtonEvent instances.
-   */
-  class Factory : public Event::AbstractFactory {
-  public:
-    ~Factory(void) override;
+		/**
+		 * @brief Factory for creating MouseButtonEvent instances.
+		 */
+		class Factory: public Event::AbstractFactory
+		{
+			public:
+			~Factory(void) override;
 
-    /**
-     * @brief Create a MouseButtonEvent as a base Event pointer.
-     * @return Newly created MouseButtonEvent as std::unique_ptr<Event>.
-     */
-    std::unique_ptr<Event> create(void) const override;
+			/**
+			 * @brief Create a MouseButtonEvent as a base Event pointer.
+			 * @return Newly created MouseButtonEvent as std::unique_ptr<Event>.
+			 */
+			std::unique_ptr<Event> create(void) const override;
 
-    /**
-     * @brief Create a strongly-typed MouseButtonEvent.
-     * @return Newly created MouseButtonEvent as
-     * std::unique_ptr<MouseButtonEvent>.
-     */
-    std::unique_ptr<MouseButtonEvent> createTyped(void) const;
-  };
+			/**
+			 * @brief Create a strongly-typed MouseButtonEvent.
+			 * @return Newly created MouseButtonEvent as
+			 * std::unique_ptr<MouseButtonEvent>.
+			 */
+			std::unique_ptr<MouseButtonEvent> createTyped(void) const;
+		};
 
-private:
-  MousePosition _position{0, 0}; /**< Current mouse position (x, y) */
-  MouseButtonsState
-      _buttonStates; /**< Bitset to track the state of mouse buttons */
+		private:
+		MousePosition _position { 0, 0 }; /**< Current mouse position (x, y) */
+		MouseButtonsState
+			_buttonStates; /**< Bitset to track the state of mouse buttons */
 
-public:
-  /**
-   * @brief Default constructor.
-   */
-  explicit MouseButtonEvent(void);
+		public:
+		/**
+		 * @brief Default constructor.
+		 */
+		explicit MouseButtonEvent(void);
 
-  /**
-   * @brief Default destructor.
-   */
-  ~MouseButtonEvent(void) override;
+		/**
+		 * @brief Default destructor.
+		 */
+		~MouseButtonEvent(void) override;
 
-  /**
-   * @brief Set the current mouse position.
-   * @param position The mouse position as a 2D vector (x, y).
-   * @return Reference to this MouseButtonEvent for method chaining.
-   */
-  MouseButtonEvent &setPosition(const MousePosition &position) noexcept;
+		/**
+		 * @brief Set the current mouse position.
+		 * @param position The mouse position as a 2D vector (x, y).
+		 * @return Reference to this MouseButtonEvent for method chaining.
+		 */
+		MouseButtonEvent &setPosition(const MousePosition &position) noexcept;
 
-  /**
-   * @brief Get the current mouse position.
-   * @return The mouse position as a 2D vector (x, y).
-   */
-  MousePosition getPosition(void) const noexcept;
+		/**
+		 * @brief Get the current mouse position.
+		 * @return The mouse position as a 2D vector (x, y).
+		 */
+		MousePosition getPosition(void) const noexcept;
 
-  /**
-   * @brief Set the state of a mouse button.
-   * @param button The mouse button to set.
-   * @param pressed True if the button is pressed, false if released.
-   * @return Reference to this MouseButtonEvent for method chaining.
-   */
-  MouseButtonEvent &setButtonState(const Button button,
-                                   const bool pressed) noexcept;
+		/**
+		 * @brief Set the state of a mouse button.
+		 * @param button The mouse button to set.
+		 * @param pressed True if the button is pressed, false if released.
+		 * @return Reference to this MouseButtonEvent for method chaining.
+		 */
+		MouseButtonEvent &setButtonState(const Button button,
+										 const bool pressed) noexcept;
 
-  /**
-   * @brief Check if a mouse button is currently pressed.
-   * @param button The mouse button to check.
-   * @return True if the button is pressed, false otherwise.
-   */
-  bool isButtonPressed(const Button button) const noexcept;
+		/**
+		 * @brief Check if a mouse button is currently pressed.
+		 * @param button The mouse button to check.
+		 * @return True if the button is pressed, false otherwise.
+		 */
+		bool isButtonPressed(const Button button) const noexcept;
 
-  /**
-   * @brief Get the current state of all mouse buttons.
-   * @return A bitset representing the state of all mouse buttons.
-   */
-  const MouseButtonsState &getButtonsState(void) const noexcept;
-};
+		/**
+		 * @brief Get the current state of all mouse buttons.
+		 * @return A bitset representing the state of all mouse buttons.
+		 */
+		const MouseButtonsState &getButtonsState(void) const noexcept;
+	};
 
-} // namespace utility::event
+}	 // namespace utility::event

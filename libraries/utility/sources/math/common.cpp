@@ -22,4 +22,6 @@
 
 #include "utility/math/common.hpp"
 
-namespace utility::math {} // namespace utility::math
+namespace utility::math
+{
+}	 // namespace utility::math

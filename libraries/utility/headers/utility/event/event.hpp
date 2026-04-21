@@ -25,45 +25,48 @@
 #include <memory>
 #include <type_traits>
 
-namespace utility::event {
+namespace utility::event
+{
 
-/**
- * @brief Base class for events in the event system.
- *
- * Serves as a polymorphic base for all event types.
- */
-class Event {
-public:
-  /**
-   * @brief Abstract factory interface for creating events.
-   */
-  class AbstractFactory {
-  public:
-    virtual ~AbstractFactory(void) = default;
+	/**
+	 * @brief Base class for events in the event system.
+	 *
+	 * Serves as a polymorphic base for all event types.
+	 */
+	class Event
+	{
+		public:
+		/**
+		 * @brief Abstract factory interface for creating events.
+		 */
+		class AbstractFactory
+		{
+			public:
+			virtual ~AbstractFactory(void) = default;
 
-    /**
-     * @brief Create an event instance.
-     * @return Polymorphic pointer to a newly created event.
-     */
-    virtual std::unique_ptr<Event> create(void) const = 0;
-  };
+			/**
+			 * @brief Create an event instance.
+			 * @return Polymorphic pointer to a newly created event.
+			 */
+			virtual std::unique_ptr<Event> create(void) const = 0;
+		};
 
-  /**
-   * @brief Default constructor.
-   */
-  Event(void) = default;
+		/**
+		 * @brief Default constructor.
+		 */
+		Event(void) = default;
 
-  /**
-   * @brief Virtual destructor.
-   */
-  virtual ~Event(void) = default;
-};
+		/**
+		 * @brief Virtual destructor.
+		 */
+		virtual ~Event(void) = default;
+	};
 
-/**
- * @brief Concept to ensure a type inherits from Event.
- * @tparam Type The type to check.
- */
-template <typename Type>
-concept InheritFromEvent = std::is_base_of_v<Event, Type>;
+	/**
+	 * @brief Concept to ensure a type inherits from Event.
+	 * @tparam Type The type to check.
+	 */
+	template<typename Type>
+	concept InheritFromEvent = std::is_base_of_v<Event, Type>;
 
-} // namespace utility::event
+}	 // namespace utility::event

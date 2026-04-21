@@ -26,45 +26,52 @@
 
 #include "utility/logging/logger.hpp"
 
-namespace utility::logging {
+namespace utility::logging
+{
 
-std::string Logger::levelToString(LogLevel level) {
-  switch (level) {
-  case LogLevel::DEBUG_LEVEL:
-    return "Debug";
-  case LogLevel::INFO_LEVEL:
-    return "Info";
-  case LogLevel::WARNING_LEVEL:
-    return "Warning";
-  case LogLevel::ERROR_LEVEL:
-    return "Error";
-  default:
-    return "Unknown";
-  }
-}
+	std::string Logger::levelToString(LogLevel level)
+	{
+		switch (level) {
+			case LogLevel::DEBUG_LEVEL:
+				return "Debug";
+			case LogLevel::INFO_LEVEL:
+				return "Info";
+			case LogLevel::WARNING_LEVEL:
+				return "Warning";
+			case LogLevel::ERROR_LEVEL:
+				return "Error";
+			default:
+				return "Unknown";
+		}
+	}
 
-std::string Logger::getTimestamp() {
-  auto now = std::chrono::system_clock::now();
-  auto time = std::chrono::system_clock::to_time_t(now);
-  auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
-                now.time_since_epoch()) %
-            1000;
+	std::string Logger::getTimestamp()
+	{
+		auto now  = std::chrono::system_clock::now();
+		auto time = std::chrono::system_clock::to_time_t(now);
+		auto ms	  = std::chrono::duration_cast<std::chrono::milliseconds>(
+						now.time_since_epoch())
+			% 1000;
 
-  std::stringstream ss;
-  ss << std::put_time(std::localtime(&time), "%Y-%m-%d %H:%M:%S");
-  ss << '.' << std::setfill('0') << std::setw(3) << ms.count();
-  return ss.str();
-}
+		std::stringstream ss;
+		ss << std::put_time(std::localtime(&time), "%Y-%m-%d %H:%M:%S");
+		ss << '.' << std::setfill('0') << std::setw(3) << ms.count();
+		return ss.str();
+	}
 
-std::string Logger::formatMessage(LogLevel level,
-                                  const std::string &message) const {
-  std::stringstream ss;
-  ss << "[" << getTimestamp() << "] ";
-  ss << "[" << _name << "] ";
-  ss << "[" << levelToString(level) << "] " << message;
-  return ss.str();
-}
+	std::string Logger::formatMessage(LogLevel level,
+									  const std::string &message) const
+	{
+		std::stringstream ss;
+		ss << "[" << getTimestamp() << "] ";
+		ss << "[" << _name << "] ";
+		ss << "[" << levelToString(level) << "] " << message;
+		return ss.str();
+	}
 
-Logger::Logger(const std::string &name) : _name(name) {}
+	Logger::Logger(const std::string &name)
+		: _name(name)
+	{
+	}
 
-} // namespace utility::logging
+}	 // namespace utility::logging

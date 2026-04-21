@@ -25,64 +25,83 @@
 
 #include "utility/logging/file_logger.hpp"
 
-namespace utility::logging {
+namespace utility::logging
+{
 
-FileLogger::FileLogger(const std::string &name)
-    : Logger(name), _filePath("logs/" + name + ".log") {
-  _fileStream.open(_filePath, std::ios::out | std::ios::app);
+	FileLogger::FileLogger(const std::string &name)
+		: Logger(name)
+		, _filePath("logs/" + name + ".log")
+	{
+		_fileStream.open(_filePath, std::ios::out | std::ios::app);
 
-  if (!_fileStream.is_open()) {
-    throw std::runtime_error("Failed to open log file: " + _filePath);
-  }
-}
+		if (!_fileStream.is_open()) {
+			throw std::runtime_error("Failed to open log file: " + _filePath);
+		}
+	}
 
-FileLogger::~FileLogger() {
-  if (_fileStream.is_open()) {
-    _fileStream.flush();
-    _fileStream.close();
-  }
-}
+	FileLogger::~FileLogger()
+	{
+		if (_fileStream.is_open()) {
+			_fileStream.flush();
+			_fileStream.close();
+		}
+	}
 
-FileLogger::FileLogger(FileLogger &&other) noexcept
-    : Logger(std::move(other)), _fileStream(std::move(other._fileStream)),
-      _filePath(std::move(other._filePath)) {}
+	FileLogger::FileLogger(FileLogger &&other) noexcept
+		: Logger(std::move(other))
+		, _fileStream(std::move(other._fileStream))
+		, _filePath(std::move(other._filePath))
+	{
+	}
 
-FileLogger &FileLogger::operator=(FileLogger &&other) noexcept {
-  if (this != &other) {
-    if (_fileStream.is_open()) {
-      _fileStream.close();
-    }
-    _fileStream = std::move(other._fileStream);
-    _filePath = std::move(other._filePath);
-  }
-  return *this;
-}
+	FileLogger &FileLogger::operator=(FileLogger &&other) noexcept
+	{
+		if (this != &other) {
+			if (_fileStream.is_open()) {
+				_fileStream.close();
+			}
+			_fileStream = std::move(other._fileStream);
+			_filePath	= std::move(other._filePath);
+		}
+		return *this;
+	}
 
-void FileLogger::debug(const std::string &message) {
-  log(LogLevel::DEBUG_LEVEL, message);
-}
+	void FileLogger::debug(const std::string &message)
+	{
+		log(LogLevel::DEBUG_LEVEL, message);
+	}
 
-void FileLogger::info(const std::string &message) {
-  log(LogLevel::INFO_LEVEL, message);
-}
+	void FileLogger::info(const std::string &message)
+	{
+		log(LogLevel::INFO_LEVEL, message);
+	}
 
-void FileLogger::warning(const std::string &message) {
-  log(LogLevel::WARNING_LEVEL, message);
-}
+	void FileLogger::warning(const std::string &message)
+	{
+		log(LogLevel::WARNING_LEVEL, message);
+	}
 
-void FileLogger::error(const std::string &message) {
-  log(LogLevel::ERROR_LEVEL, message);
-}
+	void FileLogger::error(const std::string &message)
+	{
+		log(LogLevel::ERROR_LEVEL, message);
+	}
 
-void FileLogger::log(LogLevel level, const std::string &message) {
-  if (_fileStream.is_open()) {
-    _fileStream << formatMessage(level, message) << std::endl;
-    _fileStream.flush();
-  }
-}
+	void FileLogger::log(LogLevel level, const std::string &message)
+	{
+		if (_fileStream.is_open()) {
+			_fileStream << formatMessage(level, message) << std::endl;
+			_fileStream.flush();
+		}
+	}
 
-const std::string &FileLogger::getFilePath() const { return _filePath; }
+	const std::string &FileLogger::getFilePath() const
+	{
+		return _filePath;
+	}
 
-bool FileLogger::isOpen() const { return _fileStream.is_open(); }
+	bool FileLogger::isOpen() const
+	{
+		return _fileStream.is_open();
+	}
 
-} // namespace utility::logging
+}	 // namespace utility::logging

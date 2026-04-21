@@ -30,74 +30,80 @@
 
 #include "utility/graphic/pose.hpp"
 
-namespace utility::event {
+namespace utility::event
+{
 
-/**
- * @brief Abstract base class for hand events.
- *
- * Represents events related to hand tracking, such as gesture recognition or
- * hand pose updates. Specific hand event types should derive from this class.
- */
-class HandEvent : public Event {
-public:
-  /**
-   * @brief Hand types for hand events.
-   * Defines the type of hand involved in the event (e.g., left or right).
-   */
-  enum class HandType {
-    Unknown = 0, /**< Unknown hand */
-    Left = 0,    /**< Left hand */
-    Right = 1,   /**< Right hand */
-  };
+	/**
+	 * @brief Abstract base class for hand events.
+	 *
+	 * Represents events related to hand tracking, such as gesture recognition
+	 * or hand pose updates. Specific hand event types should derive from this
+	 * class.
+	 */
+	class HandEvent: public Event
+	{
+		public:
+		/**
+		 * @brief Hand types for hand events.
+		 * Defines the type of hand involved in the event (e.g., left or right).
+		 */
+		enum class HandType {
+			Unknown = 0, /**< Unknown hand */
+			Left	= 0, /**< Left hand */
+			Right	= 1, /**< Right hand */
+		};
 
-private:
-  HandType _handType{HandType::Unknown}; /**< Type of hand involved in the event */
-  graphic::PoseF
-      _pose{}; /**< Pose of the hand, including position and orientation */
+		private:
+		HandType _handType {
+			HandType::Unknown
+		};						 /**< Type of hand involved in the event */
+		graphic::PoseF _pose {}; /**< Pose of the hand, including position and
+									orientation */
 
-public:
-  /**
-   * @brief Default constructor.
-   */
-  explicit HandEvent(void);
+		public:
+		/**
+		 * @brief Default constructor.
+		 */
+		explicit HandEvent(void);
 
-  /**
-   * @brief Default destructor.
-   */
-  virtual ~HandEvent(void) override;
+		/**
+		 * @brief Default destructor.
+		 */
+		virtual ~HandEvent(void) override;
 
-  /**
-   * @brief Set the type of hand involved in the event.
-   * @param handType The type of hand (left or right).
-   * @return Reference to this HandEvent for method chaining.
-   */
-  HandEvent &setHandType(const HandType handType) noexcept;
+		/**
+		 * @brief Set the type of hand involved in the event.
+		 * @param handType The type of hand (left or right).
+		 * @return Reference to this HandEvent for method chaining.
+		 */
+		HandEvent &setHandType(const HandType handType) noexcept;
 
-  /**
-   * @brief Get the type of hand involved in the event.
-   * @return The type of hand (left or right).
-   */
-  HandType getHandType(void) const noexcept;
+		/**
+		 * @brief Get the type of hand involved in the event.
+		 * @return The type of hand (left or right).
+		 */
+		HandType getHandType(void) const noexcept;
 
-  /**
-   * @brief Set the pose of the hand involved in the event.
-   * @param pose The new pose of the hand, including position and orientation.
-   * @return Reference to this HandEvent for method chaining.
-   */
-  HandEvent &setPose(const graphic::PoseF &pose) noexcept;
+		/**
+		 * @brief Set the pose of the hand involved in the event.
+		 * @param pose The new pose of the hand, including position and
+		 * orientation.
+		 * @return Reference to this HandEvent for method chaining.
+		 */
+		HandEvent &setPose(const graphic::PoseF &pose) noexcept;
 
-  /**
-   * @brief Get the pose of the hand involved in the event.
-   * @return The pose of the hand, including position and orientation.
-   */
-  graphic::PoseF getPose(void) const noexcept;
-};
+		/**
+		 * @brief Get the pose of the hand involved in the event.
+		 * @return The pose of the hand, including position and orientation.
+		 */
+		graphic::PoseF getPose(void) const noexcept;
+	};
 
-/**
- * @brief Concept to ensure a type inherits from HandEvent.
- * @tparam Type The type to check.
- */
-template <typename Type>
-concept InheritFromHandEvent = std::is_base_of_v<HandEvent, Type>;
+	/**
+	 * @brief Concept to ensure a type inherits from HandEvent.
+	 * @tparam Type The type to check.
+	 */
+	template<typename Type>
+	concept InheritFromHandEvent = std::is_base_of_v<HandEvent, Type>;
 
-} // namespace utility::event
+}	 // namespace utility::event

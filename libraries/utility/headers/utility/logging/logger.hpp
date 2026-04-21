@@ -34,105 +34,112 @@
 #include <string>
 #include <type_traits>
 
-namespace utility::logging {
+namespace utility::logging
+{
 
-/**
- * @brief Log severity levels.
- */
-enum class LogLevel {
-  DEBUG_LEVEL,   ///< Detailed debugging information
-  INFO_LEVEL,    ///< General informational messages
-  WARNING_LEVEL, ///< Warning messages for potentially harmful situations
-  ERROR_LEVEL    ///< Error messages for serious problems
-};
+	/**
+	 * @brief Log severity levels.
+	 */
+	enum class LogLevel {
+		DEBUG_LEVEL,	  ///< Detailed debugging information
+		INFO_LEVEL,		  ///< General informational messages
+		WARNING_LEVEL,	  ///< Warning messages for potentially harmful
+						  ///< situations
+		ERROR_LEVEL		  ///< Error messages for serious problems
+	};
 
-/**
- * @brief Abstract logger interface defining common logging operations.
- *
- * This interface provides a contract for all logger implementations,
- * supporting multiple log levels and formatted output.
- */
-class Logger {
-private:
-  std::string _name; ///< Logger name
+	/**
+	 * @brief Abstract logger interface defining common logging operations.
+	 *
+	 * This interface provides a contract for all logger implementations,
+	 * supporting multiple log levels and formatted output.
+	 */
+	class Logger
+	{
+		private:
+		std::string _name;	  ///< Logger name
 
-protected:
-  /**
-   * @brief Get string representation of log level.
-   * @param level The log level to convert.
-   * @return String representation of the level.
-   */
-  static std::string levelToString(LogLevel level);
+		protected:
+		/**
+		 * @brief Get string representation of log level.
+		 * @param level The log level to convert.
+		 * @return String representation of the level.
+		 */
+		static std::string levelToString(LogLevel level);
 
-  /**
-   * @brief Get current timestamp as formatted string.
-   * @return Formatted timestamp string.
-   */
-  static std::string getTimestamp(void);
+		/**
+		 * @brief Get current timestamp as formatted string.
+		 * @return Formatted timestamp string.
+		 */
+		static std::string getTimestamp(void);
 
-  /**
-   * @brief Format a log message with timestamp, logger name, and level.
-   * @param level The log level.
-   * @param message The message to format.
-   * @return Formatted log message.
-   */
-  std::string formatMessage(LogLevel level, const std::string &message) const;
+		/**
+		 * @brief Format a log message with timestamp, logger name, and level.
+		 * @param level The log level.
+		 * @param message The message to format.
+		 * @return Formatted log message.
+		 */
+		std::string formatMessage(LogLevel level,
+								  const std::string &message) const;
 
-  /**
-   * @brief Get the logger name.
-   * @return The name of this logger.
-   */
-  const std::string &getName(void) const { return _name; }
+		/**
+		 * @brief Get the logger name.
+		 * @return The name of this logger.
+		 */
+		const std::string &getName(void) const
+		{
+			return _name;
+		}
 
-public:
-  /**
-   * @brief Default constructor.
-   * @param name The name of the logger.
-   */
-  Logger(const std::string &name);
+		public:
+		/**
+		 * @brief Default constructor.
+		 * @param name The name of the logger.
+		 */
+		Logger(const std::string &name);
 
-  /**
-   * @brief Virtual destructor for proper cleanup.
-   */
-  virtual ~Logger(void) = default;
+		/**
+		 * @brief Virtual destructor for proper cleanup.
+		 */
+		virtual ~Logger(void) = default;
 
-  /**
-   * @brief Log a debug message.
-   * @param message The message to log.
-   */
-  virtual void debug(const std::string &message) = 0;
+		/**
+		 * @brief Log a debug message.
+		 * @param message The message to log.
+		 */
+		virtual void debug(const std::string &message) = 0;
 
-  /**
-   * @brief Log an informational message.
-   * @param message The message to log.
-   */
-  virtual void info(const std::string &message) = 0;
+		/**
+		 * @brief Log an informational message.
+		 * @param message The message to log.
+		 */
+		virtual void info(const std::string &message) = 0;
 
-  /**
-   * @brief Log a warning message.
-   * @param message The message to log.
-   */
-  virtual void warning(const std::string &message) = 0;
+		/**
+		 * @brief Log a warning message.
+		 * @param message The message to log.
+		 */
+		virtual void warning(const std::string &message) = 0;
 
-  /**
-   * @brief Log an error message.
-   * @param message The message to log.
-   */
-  virtual void error(const std::string &message) = 0;
+		/**
+		 * @brief Log an error message.
+		 * @param message The message to log.
+		 */
+		virtual void error(const std::string &message) = 0;
 
-  /**
-   * @brief Log a message with specified log level.
-   * @param level The severity level.
-   * @param message The message to log.
-   */
-  virtual void log(LogLevel level, const std::string &message) = 0;
-};
+		/**
+		 * @brief Log a message with specified log level.
+		 * @param level The severity level.
+		 * @param message The message to log.
+		 */
+		virtual void log(LogLevel level, const std::string &message) = 0;
+	};
 
-/**
- * @brief Concept to ensure a type inherits from Logger.
- * @tparam Type The type to check.
- */
-template <typename Type>
-concept InheritFromLogger = std::is_base_of_v<Logger, Type>;
+	/**
+	 * @brief Concept to ensure a type inherits from Logger.
+	 * @tparam Type The type to check.
+	 */
+	template<typename Type>
+	concept InheritFromLogger = std::is_base_of_v<Logger, Type>;
 
-} // namespace utility::logging
+}	 // namespace utility::logging

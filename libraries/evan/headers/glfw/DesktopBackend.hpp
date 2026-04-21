@@ -27,8 +27,7 @@
  * on macOS where Vulkan support is provided through MoltenVK.
  */
 const std::vector<const char *> deviceExtensions = {
-	VK_KHR_SWAPCHAIN_EXTENSION_NAME,
-	"VK_KHR_portability_subset",
+	VK_KHR_SWAPCHAIN_EXTENSION_NAME, "VK_KHR_portability_subset",
 	VK_EXT_EXTENDED_DYNAMIC_STATE_EXTENSION_NAME
 };
 
@@ -225,8 +224,7 @@ namespace evan
 		 * @return A SwapChainSupportDetails structure containing the swap chain
 		 * support details for the specified device and surface.
 		 */
-		evan::SwapChainSupportDetails
-			querySwapChainSupport();
+		evan::SwapChainSupportDetails querySwapChainSupport();
 
 		/**
 		 * @brief Creates the presentation queue for the device context.
@@ -340,7 +338,7 @@ namespace evan
 		 * @return true if the device is suitable for use, false otherwise.
 		 */
 		bool isDeviceSuitable(VkPhysicalDevice physicalDevice,
-			std::vector<const char *> deviceExtensions);
+							  std::vector<const char *> deviceExtensions);
 
 		/**
 		 * @brief Checks if the specified Vulkan physical device supports the

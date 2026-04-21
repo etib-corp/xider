@@ -34,7 +34,7 @@ namespace xider::tests
 	class TestEngine: public ::testing::Test
 	{
 		protected:
-		TestEngine(void)			= default;
+		TestEngine(void)		   = default;
 		~TestEngine(void) override = default;
 
 		void SetUp(void) override;

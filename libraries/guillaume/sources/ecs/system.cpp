@@ -65,7 +65,7 @@ namespace guillaume::ecs
 		_activeComponentRegistry = &componentRegistry;
 		getLogger().debug("System routine started");
 
-		bool hasPendingChanges = false;
+		bool hasPendingChanges		= false;
 		std::size_t visitedEntities = 0;
 		for (auto *entity: entityRegistry.getEntitiesBreadthFirst()) {
 			++visitedEntities;

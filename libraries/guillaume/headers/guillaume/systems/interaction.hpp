@@ -64,18 +64,18 @@ namespace guillaume::systems
 									  ///< hover processing
 
 		event::EventSubscriber<utility::event::HandButtonEvent>
-			_handButtonSubscriber;	///< Subscriber for XR hand
-											///< button events
+			_handButtonSubscriber;	  ///< Subscriber for XR hand
+									  ///< button events
 		std::unique_ptr<utility::event::HandButtonEvent>
-			_lastHandButtonEvent;	   ///< Last received hand button
-										   ///< event for click processing
+			_lastHandButtonEvent;	 ///< Last received hand button
+									 ///< event for click processing
 
 		event::EventSubscriber<utility::event::HandMotionEvent>
-			_handMotionSubscriber;	///< Subscriber for XR hand
-											///< motion events
+			_handMotionSubscriber;	  ///< Subscriber for XR hand
+									  ///< motion events
 		std::unique_ptr<utility::event::HandMotionEvent>
-			_lastHandMotionEvent;	   ///< Last received hand motion
-										   ///< event for hover processing
+			_lastHandMotionEvent;	 ///< Last received hand motion
+									 ///< event for hover processing
 
 		event::EventSubscriber<utility::event::HandPinchEvent>
 			_handPinchSubscriber;	 ///< Subscriber for XR hand pinch events
@@ -125,8 +125,8 @@ namespace guillaume::systems
 		 * @param isInside Whether the pointer is currently inside the entity
 		 * bounds.
 		 */
-		void processHandHover(
-			const ecs::Entity::Identifier &entityIdentifier, bool isInside);
+		void processHandHover(const ecs::Entity::Identifier &entityIdentifier,
+							  bool isInside);
 
 		/**
 		 * @brief Update the hand clicked state for the specified entity

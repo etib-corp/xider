@@ -24,8 +24,8 @@
 
 namespace guillaume::ecs
 {
-	ComponentTypeLimitExceededException::
-		ComponentTypeLimitExceededException(void)
+	ComponentTypeLimitExceededException::ComponentTypeLimitExceededException(
+		void)
 		: _message("Exceeded maximum number of component types")
 	{
 	}

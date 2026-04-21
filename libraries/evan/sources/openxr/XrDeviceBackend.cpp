@@ -22,8 +22,10 @@ evan::XrDeviceBackend::XrDeviceBackend(const IPlatform &platform)
 	this->createSession();
 	this->createVisualizedSpace();
 
-	_handActionSubactionPath[LEFT_HAND_INDEX] = InteractionProfile::stringToPath(_XrInstance, "/user/hand/left");
-	_handActionSubactionPath[RIGHT_HAND_INDEX] = InteractionProfile::stringToPath(_XrInstance, "/user/hand/right");
+	_handActionSubactionPath[LEFT_HAND_INDEX] =
+		InteractionProfile::stringToPath(_XrInstance, "/user/hand/left");
+	_handActionSubactionPath[RIGHT_HAND_INDEX] =
+		InteractionProfile::stringToPath(_XrInstance, "/user/hand/right");
 	_actionManager = std::make_unique<evan::XrManageActions>(*this);
 }
 

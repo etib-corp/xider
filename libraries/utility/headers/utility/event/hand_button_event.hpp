@@ -26,120 +26,123 @@
 
 #include "utility/event/hand_event.hpp"
 
-namespace utility::event {
+namespace utility::event
+{
 
-/**
- * @brief Hand button event.
- */
-class HandButtonEvent : public HandEvent {
-public:
-  /**
-   * @brief Hand button identifier.
-   */
-  enum class Button {
-    Unknown = 0, /**< Unknown button */
-    X = 0,      /**< X button */
-    Y = 1,      /**< Y button */
-    A = 2,      /**< A button */
-    B = 3,      /**< B button */
-    Menu = 4,   /**< Menu button */
-    System = 5, /**< System button */
-  };
+	/**
+	 * @brief Hand button event.
+	 */
+	class HandButtonEvent: public HandEvent
+	{
+		public:
+		/**
+		 * @brief Hand button identifier.
+		 */
+		enum class Button {
+			Unknown = 0, /**< Unknown button */
+			X		= 0, /**< X button */
+			Y		= 1, /**< Y button */
+			A		= 2, /**< A button */
+			B		= 3, /**< B button */
+			Menu	= 4, /**< Menu button */
+			System	= 5, /**< System button */
+		};
 
-  /**
-   * @brief Check whether a button is valid for a given hand path.
-   * @param handType Hand side.
-   * @param button Button identifier.
-   * @return True when the button is valid for that hand.
-   */
-  static bool isButtonValidForHand(const HandType handType,
-                                   const Button button) noexcept;
+		/**
+		 * @brief Check whether a button is valid for a given hand path.
+		 * @param handType Hand side.
+		 * @param button Button identifier.
+		 * @return True when the button is valid for that hand.
+		 */
+		static bool isButtonValidForHand(const HandType handType,
+										 const Button button) noexcept;
 
-  /**
-   * @brief Factory for creating HandButtonEvent instances.
-   */
-  class Factory : public Event::AbstractFactory {
-  public:
-    ~Factory(void) override;
+		/**
+		 * @brief Factory for creating HandButtonEvent instances.
+		 */
+		class Factory: public Event::AbstractFactory
+		{
+			public:
+			~Factory(void) override;
 
-    /**
-     * @brief Create a HandButtonEvent as base Event pointer.
-     * @return Newly created HandButtonEvent.
-     */
-    std::unique_ptr<Event> create(void) const override;
+			/**
+			 * @brief Create a HandButtonEvent as base Event pointer.
+			 * @return Newly created HandButtonEvent.
+			 */
+			std::unique_ptr<Event> create(void) const override;
 
-    /**
-     * @brief Create a strongly-typed HandButtonEvent.
-     * @return Newly created HandButtonEvent.
-     */
-    std::unique_ptr<HandButtonEvent> createTyped(void) const;
-  };
+			/**
+			 * @brief Create a strongly-typed HandButtonEvent.
+			 * @return Newly created HandButtonEvent.
+			 */
+			std::unique_ptr<HandButtonEvent> createTyped(void) const;
+		};
 
-private:
-  /** @brief Selected hand button. */
-  Button _button{Button::Unknown};
+		private:
+		/** @brief Selected hand button. */
+		Button _button { Button::Unknown };
 
-  /** @brief True when the button is touched. */
-  bool _isTouched{false};
+		/** @brief True when the button is touched. */
+		bool _isTouched { false };
 
-  /** @brief True when the button is clicked. */
-  bool _isClicked{false};
+		/** @brief True when the button is clicked. */
+		bool _isClicked { false };
 
-public:
-  /**
-   * @brief Default constructor.
-   */
-  explicit HandButtonEvent(void);
+		public:
+		/**
+		 * @brief Default constructor.
+		 */
+		explicit HandButtonEvent(void);
 
-  /**
-   * @brief Default destructor.
-   */
-  ~HandButtonEvent(void) override;
+		/**
+		 * @brief Default destructor.
+		 */
+		~HandButtonEvent(void) override;
 
-  /**
-   * @brief Set button value.
-   * @param button Hand button.
-   * @return Reference to this HandButtonEvent.
-   */
-  HandButtonEvent &setButton(const Button button) noexcept;
+		/**
+		 * @brief Set button value.
+		 * @param button Hand button.
+		 * @return Reference to this HandButtonEvent.
+		 */
+		HandButtonEvent &setButton(const Button button) noexcept;
 
-  /**
-   * @brief Get button value.
-   * @return Current button.
-   */
-  Button getButton(void) const noexcept;
+		/**
+		 * @brief Get button value.
+		 * @return Current button.
+		 */
+		Button getButton(void) const noexcept;
 
-  /**
-   * @brief Check whether current hand/button combination is valid.
-   * @return True when current button is valid for current hand type.
-   */
-  bool isValidForCurrentHand(void) const noexcept;
+		/**
+		 * @brief Check whether current hand/button combination is valid.
+		 * @return True when current button is valid for current hand type.
+		 */
+		bool isValidForCurrentHand(void) const noexcept;
 
-  /**
-   * @brief Set touched state.
-   * @param touched True if touched.
-   * @return Reference to this HandButtonEvent.
-   */
-  HandButtonEvent &setTouched(const bool touched) noexcept;
+		/**
+		 * @brief Set touched state.
+		 * @param touched True if touched.
+		 * @return Reference to this HandButtonEvent.
+		 */
+		HandButtonEvent &setTouched(const bool touched) noexcept;
 
-  /**
-   * @brief Get touched state.
-   * @return True if touched.
-   */
-  bool isTouched(void) const noexcept;
+		/**
+		 * @brief Get touched state.
+		 * @return True if touched.
+		 */
+		bool isTouched(void) const noexcept;
 
-  /**
-   * @brief Set clicked state.
-   * @param clicked True if clicked.
-   * @return Reference to this HandButtonEvent.
-   */
-  HandButtonEvent &setClicked(const bool clicked) noexcept;
+		/**
+		 * @brief Set clicked state.
+		 * @param clicked True if clicked.
+		 * @return Reference to this HandButtonEvent.
+		 */
+		HandButtonEvent &setClicked(const bool clicked) noexcept;
 
-  /**
-   * @brief Get clicked state.
-   * @return True if clicked.
-   */
-  bool isClicked(void) const noexcept;
-};
+		/**
+		 * @brief Get clicked state.
+		 * @return True if clicked.
+		 */
+		bool isClicked(void) const noexcept;
+	};
 
-} // namespace utility::event
+}	 // namespace utility::event

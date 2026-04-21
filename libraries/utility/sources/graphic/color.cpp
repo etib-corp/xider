@@ -22,4 +22,6 @@
 
 #include "utility/graphic/color.hpp"
 
-namespace utility::graphic {} // namespace utility::graphic
+namespace utility::graphic
+{
+}	 // namespace utility::graphic

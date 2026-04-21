@@ -34,7 +34,7 @@ namespace xider::tests
 	class TestXIDER: public ::testing::Test
 	{
 		protected:
-		TestXIDER(void)			= default;
+		TestXIDER(void)			  = default;
 		~TestXIDER(void) override = default;
 
 		void SetUp(void) override;

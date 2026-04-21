@@ -13,12 +13,14 @@ std::unique_ptr<utility::AndroidAssetManager> g_assetManager;
 std::unique_ptr<utility::AssetManager> g_assetManager;
 #endif
 
-void evan::Engine::initializeAssetManager(void* platformAssetManager) {
-    #ifdef __ANDROID__
-        g_assetManager = std::make_unique<utility::AndroidAssetManager>(static_cast<AAssetManager*>(platformAssetManager));
-    #else
-        g_assetManager = std::make_unique<utility::DefaultAssetManager>();
-    #endif
+void evan::Engine::initializeAssetManager(void *platformAssetManager)
+{
+#ifdef __ANDROID__
+	g_assetManager = std::make_unique<utility::AndroidAssetManager>(
+		static_cast<AAssetManager *>(platformAssetManager));
+#else
+	g_assetManager = std::make_unique<utility::DefaultAssetManager>();
+#endif
 }
 
 evan::Engine::Engine(const std::shared_ptr<IPlatform> &platform)
@@ -26,7 +28,8 @@ evan::Engine::Engine(const std::shared_ptr<IPlatform> &platform)
 {
 	if (!g_assetManager) {
 #ifdef __ANDROID__
-		throw std::runtime_error("Asset manager must be initialized before creating Engine on Android");
+		throw std::runtime_error("Asset manager must be initialized before "
+								 "creating Engine on Android");
 #else
 		initializeAssetManager(nullptr);
 #endif
@@ -34,7 +37,7 @@ evan::Engine::Engine(const std::shared_ptr<IPlatform> &platform)
 
 	g_assetManager->loadDirectory(std::string("shaders"));
 
-	_deviceContext	   = std::make_shared<DeviceContext>(*platform);
+	_deviceContext	  = std::make_shared<DeviceContext>(*platform);
 	_swapchainContext = platform->createSwapchainContext(*_deviceContext);
 
 	auto deviceBackend = _deviceContext->getDeviceBackend();
@@ -68,7 +71,8 @@ evan::Engine::~Engine()
 // Public Methods //
 ////////////////////
 
-void evan::Engine::addScene(size_t sceneIndex, std::vector<std::string> texturePaths,
+void evan::Engine::addScene(size_t sceneIndex,
+							std::vector<std::string> texturePaths,
 							std::map<std::string, std::vector<Mesh>> meshData)
 {
 	Scene newScene(*_deviceContext, *_renderer, texturePaths, meshData);
@@ -110,17 +114,21 @@ void evan::Engine::switchScene(size_t sceneIndex)
 	if (_scenes.find(sceneIndex) != _scenes.end()) {
 		_currentScene = sceneIndex;
 	} else {
-		std::cerr << "Scene index " << sceneIndex << " does not exist." << std::endl;
+		std::cerr << "Scene index " << sceneIndex << " does not exist."
+				  << std::endl;
 	}
 }
 
-void evan::Engine::updateScene(size_t sceneIndex, std::vector<std::string> texturePaths,
-								std::map<std::string, std::vector<Mesh>> meshData)
+void evan::Engine::updateScene(
+	size_t sceneIndex, std::vector<std::string> texturePaths,
+	std::map<std::string, std::vector<Mesh>> meshData)
 {
 	auto sceneIt = _scenes.find(sceneIndex);
 	if (sceneIt != _scenes.end()) {
-		sceneIt->second.updateScene(*_deviceContext, *_renderer, texturePaths, meshData);
+		sceneIt->second.updateScene(*_deviceContext, *_renderer, texturePaths,
+									meshData);
 	} else {
-		std::cerr << "Scene index " << sceneIndex << " does not exist." << std::endl;
+		std::cerr << "Scene index " << sceneIndex << " does not exist."
+				  << std::endl;
 	}
 }

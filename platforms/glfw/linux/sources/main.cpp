@@ -31,7 +31,8 @@
 int main(void)
 {
 	// Create Linux Desktop platform for graphics
-	auto linuxDesktopPlatform = std::make_shared<evan::LinuxDesktopPlatform>("XIDER", 1280, 720);
+	auto linuxDesktopPlatform =
+		std::make_shared<evan::LinuxDesktopPlatform>("XIDER", 1280, 720);
 
 	// Create Evan graphics engine with Linux Desktop platform
 	auto evanEngine = std::make_shared<evan::Engine>(linuxDesktopPlatform);

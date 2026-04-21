@@ -24,39 +24,50 @@
 
 #include "utility/logging/standard_logger.hpp"
 
-namespace utility::logging {
+namespace utility::logging
+{
 
-StandardLogger::StandardLogger(const std::string &name) : Logger(name) {}
+	StandardLogger::StandardLogger(const std::string &name)
+		: Logger(name)
+	{
+	}
 
-StandardLogger::~StandardLogger() {
-  std::cout.flush();
-  std::cerr.flush();
-}
+	StandardLogger::~StandardLogger()
+	{
+		std::cout.flush();
+		std::cerr.flush();
+	}
 
-void StandardLogger::debug(const std::string &message) {
-  log(LogLevel::DEBUG_LEVEL, message);
-}
+	void StandardLogger::debug(const std::string &message)
+	{
+		log(LogLevel::DEBUG_LEVEL, message);
+	}
 
-void StandardLogger::info(const std::string &message) {
-  log(LogLevel::INFO_LEVEL, message);
-}
+	void StandardLogger::info(const std::string &message)
+	{
+		log(LogLevel::INFO_LEVEL, message);
+	}
 
-void StandardLogger::warning(const std::string &message) {
-  log(LogLevel::WARNING_LEVEL, message);
-}
+	void StandardLogger::warning(const std::string &message)
+	{
+		log(LogLevel::WARNING_LEVEL, message);
+	}
 
-void StandardLogger::error(const std::string &message) {
-  log(LogLevel::ERROR_LEVEL, message);
-}
+	void StandardLogger::error(const std::string &message)
+	{
+		log(LogLevel::ERROR_LEVEL, message);
+	}
 
-void StandardLogger::log(LogLevel level, const std::string &message) {
-  std::string formatted = formatMessage(level, message);
+	void StandardLogger::log(LogLevel level, const std::string &message)
+	{
+		std::string formatted = formatMessage(level, message);
 
-  if (level == LogLevel::WARNING_LEVEL || level == LogLevel::ERROR_LEVEL) {
-    std::cerr << formatted << std::endl;
-  } else {
-    std::cout << formatted << std::endl;
-  }
-}
+		if (level == LogLevel::WARNING_LEVEL
+			|| level == LogLevel::ERROR_LEVEL) {
+			std::cerr << formatted << std::endl;
+		} else {
+			std::cout << formatted << std::endl;
+		}
+	}
 
-} // namespace utility::logging
+}	 // namespace utility::logging

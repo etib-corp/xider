@@ -27,167 +27,187 @@
 #include "utility/graphic/orientation.hpp"
 #include "utility/graphic/position.hpp"
 
-namespace utility::graphic {
+namespace utility::graphic
+{
 
-/**
- * @brief Concept to constrain pose component type.
- * @tparam Type Candidate component type.
- */
-template <typename Type>
-concept CanBePoseComponent =
-    CanBePositionComponent<Type> && CanBeOrientationComponent<Type>;
+	/**
+	 * @brief Concept to constrain pose component type.
+	 * @tparam Type Candidate component type.
+	 */
+	template<typename Type>
+	concept CanBePoseComponent =
+		CanBePositionComponent<Type> && CanBeOrientationComponent<Type>;
 
-/**
- * @brief Template class representing a pose (Position + Orientation).
- *
- * A pose encodes both the spatial Position and the Orientation of an object in
- * 3D space.
- *
- * @tparam PoseComponentType Floating-point type for Position and Orientation
- * components.
- */
-template <CanBePoseComponent PoseComponentType> class Pose {
-private:
-  /**
-   * @brief Position component of the pose.
-   */
-  Position<PoseComponentType> _position;
+	/**
+	 * @brief Template class representing a pose (Position + Orientation).
+	 *
+	 * A pose encodes both the spatial Position and the Orientation of an object
+	 * in 3D space.
+	 *
+	 * @tparam PoseComponentType Floating-point type for Position and
+	 * Orientation components.
+	 */
+	template<CanBePoseComponent PoseComponentType> class Pose
+	{
+		private:
+		/**
+		 * @brief Position component of the pose.
+		 */
+		Position<PoseComponentType> _position;
 
-  /**
-   * @brief Orientation component of the pose.
-   */
-  Orientation<PoseComponentType> _orientation;
+		/**
+		 * @brief Orientation component of the pose.
+		 */
+		Orientation<PoseComponentType> _orientation;
 
-public:
-  /**
-   * @brief Default constructor (zero position, identity orientation).
-   */
-  Pose(void) : _position(), _orientation() {}
-  /**
-   * @brief Construct a pose from position and orientation.
-   * @param position The position component.
-   * @param orientation The orientation component.
-   */
-  Pose(const Position<PoseComponentType> &position,
-       const Orientation<PoseComponentType> &orientation)
-      : _position(position), _orientation(orientation) {}
+		public:
+		/**
+		 * @brief Default constructor (zero position, identity orientation).
+		 */
+		Pose(void)
+			: _position()
+			, _orientation()
+		{
+		}
+		/**
+		 * @brief Construct a pose from position and orientation.
+		 * @param position The position component.
+		 * @param orientation The orientation component.
+		 */
+		Pose(const Position<PoseComponentType> &position,
+			 const Orientation<PoseComponentType> &orientation)
+			: _position(position)
+			, _orientation(orientation)
+		{
+		}
 
-  /**
-   * @brief Copy constructor.
-   * @param other The Pose object to copy from.
-   */
-  Pose(const Pose &other) = default;
+		/**
+		 * @brief Copy constructor.
+		 * @param other The Pose object to copy from.
+		 */
+		Pose(const Pose &other) = default;
 
-  /**
-   * @brief Move constructor.
-   * @param other The Pose object to move from.
-   */
-  Pose(Pose &&other) noexcept = default;
+		/**
+		 * @brief Move constructor.
+		 * @param other The Pose object to move from.
+		 */
+		Pose(Pose &&other) noexcept = default;
 
-  /**
-   * @brief Copy assignment operator.
-   * @param other The Pose object to copy from.
-   * @return A reference to this Pose object.
-   */
-  Pose &operator=(const Pose &other) = default;
+		/**
+		 * @brief Copy assignment operator.
+		 * @param other The Pose object to copy from.
+		 * @return A reference to this Pose object.
+		 */
+		Pose &operator=(const Pose &other) = default;
 
-  /**
-   * @brief Move assignment operator.
-   * @param other The Pose object to move from.
-   * @return A reference to this Pose object.
-   */
-  Pose &operator=(Pose &&other) noexcept = default;
+		/**
+		 * @brief Move assignment operator.
+		 * @param other The Pose object to move from.
+		 * @return A reference to this Pose object.
+		 */
+		Pose &operator=(Pose &&other) noexcept = default;
 
-  /**
-   * @brief Default destructor for Pose.
-   */
-  ~Pose(void) = default;
+		/**
+		 * @brief Default destructor for Pose.
+		 */
+		~Pose(void) = default;
 
-  /**
-   * @brief Set the position component.
-   * @param position New position value.
-   * @return Reference to this object for chaining.
-   */
-  Pose &setPosition(const Position<PoseComponentType> &position) noexcept {
-    _position = position;
-    return *this;
-  }
+		/**
+		 * @brief Set the position component.
+		 * @param position New position value.
+		 * @return Reference to this object for chaining.
+		 */
+		Pose &setPosition(const Position<PoseComponentType> &position) noexcept
+		{
+			_position = position;
+			return *this;
+		}
 
-  /**
-   * @brief Get the position component.
-   * @return Const reference to the position.
-   */
-  const Position<PoseComponentType> &getPosition(void) const noexcept {
-    return _position;
-  }
+		/**
+		 * @brief Get the position component.
+		 * @return Const reference to the position.
+		 */
+		const Position<PoseComponentType> &getPosition(void) const noexcept
+		{
+			return _position;
+		}
 
-  /**
-   * @brief Set the orientation component.
-   * @param orientation New orientation value.
-   * @return Reference to this object for chaining.
-   */
-  Pose &
-  setOrientation(const Orientation<PoseComponentType> &orientation) noexcept {
-    _orientation = orientation;
-    return *this;
-  }
+		/**
+		 * @brief Set the orientation component.
+		 * @param orientation New orientation value.
+		 * @return Reference to this object for chaining.
+		 */
+		Pose &setOrientation(
+			const Orientation<PoseComponentType> &orientation) noexcept
+		{
+			_orientation = orientation;
+			return *this;
+		}
 
-  /**
-   * @brief Get the orientation component.
-   * @return Const reference to the orientation.
-   */
-  const Orientation<PoseComponentType> &getOrientation(void) const noexcept {
-    return _orientation;
-  }
+		/**
+		 * @brief Get the orientation component.
+		 * @return Const reference to the orientation.
+		 */
+		const Orientation<PoseComponentType> &
+			getOrientation(void) const noexcept
+		{
+			return _orientation;
+		}
 
-  /**
-   * @brief Translate pose position by an offset.
-   * @param offset Position offset to apply.
-   * @return Reference to this pose for chaining.
-   */
-  Pose &translate(const Position<PoseComponentType> &offset) noexcept {
-    _position.translate(offset);
-    return *this;
-  }
+		/**
+		 * @brief Translate pose position by an offset.
+		 * @param offset Position offset to apply.
+		 * @return Reference to this pose for chaining.
+		 */
+		Pose &translate(const Position<PoseComponentType> &offset) noexcept
+		{
+			_position.translate(offset);
+			return *this;
+		}
 
-  /**
-   * @brief Return translated copy of this pose.
-   * @param offset Position offset to apply.
-   * @return A translated pose copy.
-   */
-  Pose translated(const Position<PoseComponentType> &offset) const noexcept {
-    Pose result(*this);
-    result.translate(offset);
-    return result;
-  }
+		/**
+		 * @brief Return translated copy of this pose.
+		 * @param offset Position offset to apply.
+		 * @return A translated pose copy.
+		 */
+		Pose
+			translated(const Position<PoseComponentType> &offset) const noexcept
+		{
+			Pose result(*this);
+			result.translate(offset);
+			return result;
+		}
 
-  /**
-   * @brief Equality comparison.
-   * @param other Pose to compare with.
-   * @return True when position and orientation are equal.
-   */
-  bool operator==(const Pose &other) const noexcept {
-    return _position == other._position && _orientation == other._orientation;
-  }
+		/**
+		 * @brief Equality comparison.
+		 * @param other Pose to compare with.
+		 * @return True when position and orientation are equal.
+		 */
+		bool operator==(const Pose &other) const noexcept
+		{
+			return _position == other._position
+				&& _orientation == other._orientation;
+		}
 
-  /**
-   * @brief Inequality comparison.
-   * @param other Pose to compare with.
-   * @return True when either position or orientation differs.
-   */
-  bool operator!=(const Pose &other) const noexcept {
-    return !(*this == other);
-  }
-};
+		/**
+		 * @brief Inequality comparison.
+		 * @param other Pose to compare with.
+		 * @return True when either position or orientation differs.
+		 */
+		bool operator!=(const Pose &other) const noexcept
+		{
+			return !(*this == other);
+		}
+	};
 
-/**
- * @brief Type alias for single-precision pose component.
- */
-using PoseF = Pose<float>;
+	/**
+	 * @brief Type alias for single-precision pose component.
+	 */
+	using PoseF = Pose<float>;
 
-/**
- * @brief Type alias for double-precision pose component.
- */
-using PoseD = Pose<double>;
+	/**
+	 * @brief Type alias for double-precision pose component.
+	 */
+	using PoseD = Pose<double>;
 
-} // namespace utility::graphic
+}	 // namespace utility::graphic

@@ -226,7 +226,7 @@ namespace guillaume
 		 */
 		explicit Scheme(
 			const std::array<ExtendedColor,
-						 static_cast<std::size_t>(SchemeColorRole::Count)>
+							 static_cast<std::size_t>(SchemeColorRole::Count)>
 				&colors);
 
 		/**

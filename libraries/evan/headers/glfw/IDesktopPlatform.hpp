@@ -25,7 +25,6 @@ namespace evan
 	class IDesktopPlatform: public IPlatform
 	{
 		public:
-
 		/**
 		 * @brief Destructor for DesktopPlatform.
 		 *
@@ -43,7 +42,8 @@ namespace evan
 		 * required for the Desktop platform, which may include extensions for
 		 * window surface creation and other platform-specific features.
 		 */
-		virtual std::vector<std::string> getRequiredInstanceExtensions() const = 0;
+		virtual std::vector<std::string>
+			getRequiredInstanceExtensions() const = 0;
 
 		/**
 		 * @brief Check if the Desktop platform should close.
@@ -87,10 +87,10 @@ namespace evan
 		 * @return A shared pointer to the created device context for the
 		 * Desktop platform.
 		 *
-		 * This method creates a device context specific to the Desktop platform,
-		 * which is responsible for managing Vulkan device resources and
-		 * operations. The implementation may involve initializing Vulkan and
-		 * setting up the necessary resources for rendering on the Desktop
+		 * This method creates a device context specific to the Desktop
+		 * platform, which is responsible for managing Vulkan device resources
+		 * and operations. The implementation may involve initializing Vulkan
+		 * and setting up the necessary resources for rendering on the Desktop
 		 * environment.
 		 */
 		std::shared_ptr<ADeviceBackend> createDeviceBackend() const override;

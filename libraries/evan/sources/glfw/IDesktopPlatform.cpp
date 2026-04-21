@@ -13,13 +13,15 @@ evan::IDesktopPlatform::~IDesktopPlatform()
 	glfwTerminate();
 }
 
-std::shared_ptr<evan::ADeviceBackend> evan::IDesktopPlatform::createDeviceBackend() const
+std::shared_ptr<evan::ADeviceBackend>
+	evan::IDesktopPlatform::createDeviceBackend() const
 {
 	return std::make_shared<DesktopBackend>(*this);
 }
 
-std::shared_ptr<evan::ASwapchainContext> evan::IDesktopPlatform::createSwapchainContext(
-	const DeviceContext &deviceContext) const
+std::shared_ptr<evan::ASwapchainContext>
+	evan::IDesktopPlatform::createSwapchainContext(
+		const DeviceContext &deviceContext) const
 {
 	return std::make_shared<DesktopSwapchainContext>(deviceContext, _window);
 }

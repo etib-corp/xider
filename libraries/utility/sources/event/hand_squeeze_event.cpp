@@ -24,48 +24,68 @@
 
 #include "utility/math/common.hpp"
 
-namespace utility::event {
+namespace utility::event
+{
 
-HandSqueezeEvent::Factory::~Factory(void) = default;
+	HandSqueezeEvent::Factory::~Factory(void) = default;
 
-std::unique_ptr<Event> HandSqueezeEvent::Factory::create(void) const {
-  return std::make_unique<HandSqueezeEvent>();
-}
+	std::unique_ptr<Event> HandSqueezeEvent::Factory::create(void) const
+	{
+		return std::make_unique<HandSqueezeEvent>();
+	}
 
-std::unique_ptr<HandSqueezeEvent> HandSqueezeEvent::Factory::createTyped(void) const {
-  return std::make_unique<HandSqueezeEvent>();
-}
+	std::unique_ptr<HandSqueezeEvent>
+		HandSqueezeEvent::Factory::createTyped(void) const
+	{
+		return std::make_unique<HandSqueezeEvent>();
+	}
 
-HandSqueezeEvent::HandSqueezeEvent(void) = default;
+	HandSqueezeEvent::HandSqueezeEvent(void) = default;
 
-HandSqueezeEvent::~HandSqueezeEvent(void) = default;
+	HandSqueezeEvent::~HandSqueezeEvent(void) = default;
 
-HandSqueezeEvent &HandSqueezeEvent::setValue(const float value) noexcept {
-  _value = utility::math::clamp(value, 0.0F, 1.0F);
-  return *this;
-}
+	HandSqueezeEvent &HandSqueezeEvent::setValue(const float value) noexcept
+	{
+		_value = utility::math::clamp(value, 0.0F, 1.0F);
+		return *this;
+	}
 
-float HandSqueezeEvent::getValue(void) const noexcept { return _value; }
+	float HandSqueezeEvent::getValue(void) const noexcept
+	{
+		return _value;
+	}
 
-HandSqueezeEvent &HandSqueezeEvent::setForce(const float force) noexcept {
-  _force = utility::math::clamp(force, 0.0F, 1.0F);
-  return *this;
-}
+	HandSqueezeEvent &HandSqueezeEvent::setForce(const float force) noexcept
+	{
+		_force = utility::math::clamp(force, 0.0F, 1.0F);
+		return *this;
+	}
 
-float HandSqueezeEvent::getForce(void) const noexcept { return _force; }
+	float HandSqueezeEvent::getForce(void) const noexcept
+	{
+		return _force;
+	}
 
-HandSqueezeEvent &HandSqueezeEvent::setTouched(const bool touched) noexcept {
-  _isTouched = touched;
-  return *this;
-}
+	HandSqueezeEvent &HandSqueezeEvent::setTouched(const bool touched) noexcept
+	{
+		_isTouched = touched;
+		return *this;
+	}
 
-bool HandSqueezeEvent::isTouched(void) const noexcept { return _isTouched; }
+	bool HandSqueezeEvent::isTouched(void) const noexcept
+	{
+		return _isTouched;
+	}
 
-HandSqueezeEvent &HandSqueezeEvent::setClicked(const bool clicked) noexcept {
-  _isClicked = clicked;
-  return *this;
-}
+	HandSqueezeEvent &HandSqueezeEvent::setClicked(const bool clicked) noexcept
+	{
+		_isClicked = clicked;
+		return *this;
+	}
 
-bool HandSqueezeEvent::isClicked(void) const noexcept { return _isClicked; }
+	bool HandSqueezeEvent::isClicked(void) const noexcept
+	{
+		return _isClicked;
+	}
 
-} // namespace utility::event
+}	 // namespace utility::event

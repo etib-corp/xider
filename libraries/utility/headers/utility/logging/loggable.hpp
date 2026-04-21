@@ -39,40 +39,48 @@
 
 #include "utility/logging/logger.hpp"
 
-namespace utility::logging {
+namespace utility::logging
+{
 
-/**
- * @brief Mixin base class providing logging capabilities to derived classes.
- * @tparam ClassType The derived class type.
- * @tparam LoggerType The logger type, must inherit from `Logger`.
- *
- * Any class that inherits from `Loggable` can use logging methods to output
- * debug, info, warning, and error messages.
- */
-template <typename ClassType, InheritFromLogger LoggerType> class Loggable {
-private:
-  std::string _name;                   ///< Logger name
-  std::unique_ptr<LoggerType> _logger; ///< Internal logger instance
+	/**
+	 * @brief Mixin base class providing logging capabilities to derived
+	 * classes.
+	 * @tparam ClassType The derived class type.
+	 * @tparam LoggerType The logger type, must inherit from `Logger`.
+	 *
+	 * Any class that inherits from `Loggable` can use logging methods to output
+	 * debug, info, warning, and error messages.
+	 */
+	template<typename ClassType, InheritFromLogger LoggerType> class Loggable
+	{
+		private:
+		std::string _name;						///< Logger name
+		std::unique_ptr<LoggerType> _logger;	///< Internal logger instance
 
-protected:
-  /**
-   * @brief Construct a Loggable with a default StandardLogger.
-   */
-  explicit Loggable(void)
-      : _name(utility::demangle<ClassType>()),
-        _logger(std::make_unique<LoggerType>(_name)) {}
+		protected:
+		/**
+		 * @brief Construct a Loggable with a default StandardLogger.
+		 */
+		explicit Loggable(void)
+			: _name(utility::demangle<ClassType>())
+			, _logger(std::make_unique<LoggerType>(_name))
+		{
+		}
 
-  /**
-   * @brief Get the internal logger.
-   * @return Reference to the internal Logger instance.
-   */
-  LoggerType &getLogger(void) { return *_logger; }
+		/**
+		 * @brief Get the internal logger.
+		 * @return Reference to the internal Logger instance.
+		 */
+		LoggerType &getLogger(void)
+		{
+			return *_logger;
+		}
 
-public:
-  /**
-   * @brief Virtual destructor for proper cleanup.
-   */
-  virtual ~Loggable(void) = default;
-};
+		public:
+		/**
+		 * @brief Virtual destructor for proper cleanup.
+		 */
+		virtual ~Loggable(void) = default;
+	};
 
-} // namespace utility::logging
+}	 // namespace utility::logging

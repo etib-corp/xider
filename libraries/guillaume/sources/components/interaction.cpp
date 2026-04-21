@@ -48,8 +48,8 @@ namespace guillaume::components
 			   utility::event::HandButtonEvent::Button::B,
 			   utility::event::HandButtonEvent::Button::Menu,
 			   utility::event::HandButtonEvent::Button::System }) {
-			_isHandButtonClicked[button]				= false;
-			_onHandButtonClickHandlers[button]		= nullptr;
+			_isHandButtonClicked[button]			  = false;
+			_onHandButtonClickHandlers[button]		  = nullptr;
 			_onHandButtonClickReleaseHandlers[button] = nullptr;
 		}
 
@@ -141,8 +141,7 @@ namespace guillaume::components
 	}
 
 	Interaction &Interaction::setMouseButtonClicked(
-		const utility::event::MouseButtonEvent::Button &button,
-		bool clicked)
+		const utility::event::MouseButtonEvent::Button &button, bool clicked)
 	{
 		if (_isMouseButtonClicked[button] == clicked) {
 			return *this;
@@ -191,8 +190,7 @@ namespace guillaume::components
 	}
 
 	Interaction &Interaction::setHandButtonClicked(
-		const utility::event::HandButtonEvent::Button &button,
-		bool clicked)
+		const utility::event::HandButtonEvent::Button &button, bool clicked)
 	{
 		if (_isHandButtonClicked[button] == clicked) {
 			return *this;
@@ -202,24 +200,23 @@ namespace guillaume::components
 		return *this;
 	}
 
-	Interaction &Interaction::setHandOnHoverHandler(
-		const HandHoverHandler &handler)
+	Interaction &
+		Interaction::setHandOnHoverHandler(const HandHoverHandler &handler)
 	{
 		_onHandHover = handler;
 		setHasChanged(true);
 		return *this;
 	}
 
-	Interaction &Interaction::setHandOnUnhoverHandler(
-		const HandUnhoverHandler &handler)
+	Interaction &
+		Interaction::setHandOnUnhoverHandler(const HandUnhoverHandler &handler)
 	{
 		_onHandUnhover = handler;
 		setHasChanged(true);
 		return *this;
 	}
 
-	Interaction::HandHoverHandler
-		Interaction::getHandOnHoverHandler(void) const
+	Interaction::HandHoverHandler Interaction::getHandOnHoverHandler(void) const
 	{
 		return _onHandHover;
 	}

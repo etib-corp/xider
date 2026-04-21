@@ -26,35 +26,38 @@
 
 #include "utility/event/hand_haptic_event.hpp"
 
-namespace utility::event {
+namespace utility::event
+{
 
-/**
- * @brief Hand haptic event for /output/haptic_thumb (XR_VERSION_1_1).
- */
-class HandHapticThumbEvent : public HandHapticEvent {
-public:
-  /**
-   * @brief Factory for creating HandHapticThumbEvent instances.
-   */
-  class Factory : public Event::AbstractFactory {
-  public:
-    ~Factory(void) override;
+	/**
+	 * @brief Hand haptic event for /output/haptic_thumb (XR_VERSION_1_1).
+	 */
+	class HandHapticThumbEvent: public HandHapticEvent
+	{
+		public:
+		/**
+		 * @brief Factory for creating HandHapticThumbEvent instances.
+		 */
+		class Factory: public Event::AbstractFactory
+		{
+			public:
+			~Factory(void) override;
 
-    /**
-     * @brief Create a HandHapticThumbEvent as base Event pointer.
-     * @return Newly created HandHapticThumbEvent.
-     */
-    std::unique_ptr<Event> create(void) const override;
+			/**
+			 * @brief Create a HandHapticThumbEvent as base Event pointer.
+			 * @return Newly created HandHapticThumbEvent.
+			 */
+			std::unique_ptr<Event> create(void) const override;
 
-    /**
-     * @brief Create a strongly-typed HandHapticThumbEvent.
-     * @return Newly created HandHapticThumbEvent.
-     */
-    std::unique_ptr<HandHapticThumbEvent> createTyped(void) const;
-  };
+			/**
+			 * @brief Create a strongly-typed HandHapticThumbEvent.
+			 * @return Newly created HandHapticThumbEvent.
+			 */
+			std::unique_ptr<HandHapticThumbEvent> createTyped(void) const;
+		};
 
-  explicit HandHapticThumbEvent(void);
-  ~HandHapticThumbEvent(void) override;
-};
+		explicit HandHapticThumbEvent(void);
+		~HandHapticThumbEvent(void) override;
+	};
 
-} // namespace utility::event
+}	 // namespace utility::event

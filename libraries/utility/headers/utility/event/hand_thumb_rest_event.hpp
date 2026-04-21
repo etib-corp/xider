@@ -26,72 +26,75 @@
 
 #include "utility/event/hand_event.hpp"
 
-namespace utility::event {
+namespace utility::event
+{
 
-/**
- * @brief Hand thumb rest event.
- */
-class HandThumbRestEvent : public HandEvent {
-public:
 	/**
-	 * @brief Factory for creating HandThumbRestEvent instances.
+	 * @brief Hand thumb rest event.
 	 */
-	class Factory : public Event::AbstractFactory {
-	public:
-		~Factory(void) override;
+	class HandThumbRestEvent: public HandEvent
+	{
+		public:
+		/**
+		 * @brief Factory for creating HandThumbRestEvent instances.
+		 */
+		class Factory: public Event::AbstractFactory
+		{
+			public:
+			~Factory(void) override;
+
+			/**
+			 * @brief Create a HandThumbRestEvent as base Event pointer.
+			 * @return Newly created HandThumbRestEvent.
+			 */
+			std::unique_ptr<Event> create(void) const override;
+
+			/**
+			 * @brief Create a strongly-typed HandThumbRestEvent.
+			 * @return Newly created HandThumbRestEvent.
+			 */
+			std::unique_ptr<HandThumbRestEvent> createTyped(void) const;
+		};
+
+		private:
+		/** @brief True when thumb rest is touched. */
+		bool _isTouched { false };
+
+		/** @brief True when thumb is in thumb-rest proximity region. */
+		bool _isProximity { false };
+
+		public:
+		/**
+		 * @brief Default constructor.
+		 */
+		explicit HandThumbRestEvent(void);
+		~HandThumbRestEvent(void) override;
 
 		/**
-		 * @brief Create a HandThumbRestEvent as base Event pointer.
-		 * @return Newly created HandThumbRestEvent.
+		 * @brief Set touched state.
+		 * @param touched True if touched.
+		 * @return Reference to this HandThumbRestEvent.
 		 */
-		std::unique_ptr<Event> create(void) const override;
+		HandThumbRestEvent &setTouched(const bool touched) noexcept;
 
 		/**
-		 * @brief Create a strongly-typed HandThumbRestEvent.
-		 * @return Newly created HandThumbRestEvent.
+		 * @brief Get touched state.
+		 * @return True if touched.
 		 */
-		std::unique_ptr<HandThumbRestEvent> createTyped(void) const;
+		bool isTouched(void) const noexcept;
+
+		/**
+		 * @brief Set proximity state.
+		 * @param proximity True if in proximity.
+		 * @return Reference to this HandThumbRestEvent.
+		 */
+		HandThumbRestEvent &setProximity(const bool proximity) noexcept;
+
+		/**
+		 * @brief Get proximity state.
+		 * @return True if in proximity.
+		 */
+		bool isProximity(void) const noexcept;
 	};
 
-private:
-	/** @brief True when thumb rest is touched. */
-	bool _isTouched{false};
-
-	/** @brief True when thumb is in thumb-rest proximity region. */
-	bool _isProximity{false};
-
-public:
-	/**
-	 * @brief Default constructor.
-	 */
-	explicit HandThumbRestEvent(void);
-	~HandThumbRestEvent(void) override;
-
-	/**
-	 * @brief Set touched state.
-	 * @param touched True if touched.
-	 * @return Reference to this HandThumbRestEvent.
-	 */
-	HandThumbRestEvent &setTouched(const bool touched) noexcept;
-
-	/**
-	 * @brief Get touched state.
-	 * @return True if touched.
-	 */
-	bool isTouched(void) const noexcept;
-
-	/**
-	 * @brief Set proximity state.
-	 * @param proximity True if in proximity.
-	 * @return Reference to this HandThumbRestEvent.
-	 */
-	HandThumbRestEvent &setProximity(const bool proximity) noexcept;
-
-	/**
-	 * @brief Get proximity state.
-	 * @return True if in proximity.
-	 */
-	bool isProximity(void) const noexcept;
-};
-
-} // namespace utility::event
+}	 // namespace utility::event

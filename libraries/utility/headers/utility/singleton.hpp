@@ -24,58 +24,61 @@
 
 #include <concepts>
 
-namespace utility {
+namespace utility
+{
 
-/**
- * @brief Concept to ensure the class can be a singleton.
- * @tparam Type The type to check.
- */
-template <typename Type>
-concept CanBeSingleton =
-    std::default_initializable<Type> && std::destructible<Type>;
+	/**
+	 * @brief Concept to ensure the class can be a singleton.
+	 * @tparam Type The type to check.
+	 */
+	template<typename Type>
+	concept CanBeSingleton =
+		std::default_initializable<Type> && std::destructible<Type>;
 
-/**
- * @brief Singleton class template.
- *
- * This class provides a thread-safe implementation of the singleton design
- * pattern. It ensures that only one instance of the class is created and
- * provides global access to it.
- *
- * @tparam Type The type of the singleton class.
- */
-template <CanBeSingleton Type> class Singleton {
-public:
-  // Delete copy constructor and assignment operator to prevent copying
-  Singleton(const Singleton &) = delete;
-  Singleton &operator=(const Singleton &) = delete;
+	/**
+	 * @brief Singleton class template.
+	 *
+	 * This class provides a thread-safe implementation of the singleton design
+	 * pattern. It ensures that only one instance of the class is created and
+	 * provides global access to it.
+	 *
+	 * @tparam Type The type of the singleton class.
+	 */
+	template<CanBeSingleton Type> class Singleton
+	{
+		public:
+		// Delete copy constructor and assignment operator to prevent copying
+		Singleton(const Singleton &)			= delete;
+		Singleton &operator=(const Singleton &) = delete;
 
-  /**
-   * @brief Get the singleton instance.
-   *
-   * This method returns a shared pointer to the singleton instance.
-   * If the instance does not exist, it is created.
-   *
-   * @return A reference to the singleton instance.
-   */
-  static Type &getInstance(void) {
-    static Singleton<Type> singleton;
-    return singleton._instance;
-  }
+		/**
+		 * @brief Get the singleton instance.
+		 *
+		 * This method returns a shared pointer to the singleton instance.
+		 * If the instance does not exist, it is created.
+		 *
+		 * @return A reference to the singleton instance.
+		 */
+		static Type &getInstance(void)
+		{
+			static Singleton<Type> singleton;
+			return singleton._instance;
+		}
 
-private:
-  // Private constructor to prevent direct instantiation
-  Singleton(void) = default;
+		private:
+		// Private constructor to prevent direct instantiation
+		Singleton(void) = default;
 
-  Type _instance; ///< The singleton instance.
-};
+		Type _instance;	   ///< The singleton instance.
+	};
 
-/**
- * @brief Concept to ensure a Singleton type is provided.
- * @tparam Type The type to check.
- */
-template <typename Type>
-concept IsSingletonOf = requires {
-  { Type::getInstance() } -> std::same_as<Type &>;
-};
+	/**
+	 * @brief Concept to ensure a Singleton type is provided.
+	 * @tparam Type The type to check.
+	 */
+	template<typename Type>
+	concept IsSingletonOf = requires {
+		{ Type::getInstance() } -> std::same_as<Type &>;
+	};
 
-} // namespace utility
+}	 // namespace utility

@@ -139,8 +139,7 @@ evan::QueueFamilyIndices evan::DesktopBackend::findQueueFamilies()
 	return indices;
 }
 
-evan::SwapChainSupportDetails
-	evan::DesktopBackend::querySwapChainSupport()
+evan::SwapChainSupportDetails evan::DesktopBackend::querySwapChainSupport()
 {
 	SwapChainSupportDetails details;
 	uint32_t formatCount;
@@ -148,14 +147,14 @@ evan::SwapChainSupportDetails
 
 	vkGetPhysicalDeviceSurfaceCapabilitiesKHR(_physicalDevice, _surface,
 											  &details.capabilities);
-	if (vkGetPhysicalDeviceSurfaceFormatsKHR(_physicalDevice, _surface, &formatCount,
-											 nullptr)
+	if (vkGetPhysicalDeviceSurfaceFormatsKHR(_physicalDevice, _surface,
+											 &formatCount, nullptr)
 		!= VK_SUCCESS)
 		return details;
 	if (formatCount != 0) {
 		details.formats.resize(formatCount);
-		vkGetPhysicalDeviceSurfaceFormatsKHR(_physicalDevice, _surface, &formatCount,
-											 details.formats.data());
+		vkGetPhysicalDeviceSurfaceFormatsKHR(
+			_physicalDevice, _surface, &formatCount, details.formats.data());
 	}
 
 	if (vkGetPhysicalDeviceSurfacePresentModesKHR(_physicalDevice, _surface,
@@ -164,8 +163,9 @@ evan::SwapChainSupportDetails
 		return details;
 	if (presentModeCount != 0) {
 		details.presentModes.resize(presentModeCount);
-		vkGetPhysicalDeviceSurfacePresentModesKHR(
-			_physicalDevice, _surface, &presentModeCount, details.presentModes.data());
+		vkGetPhysicalDeviceSurfacePresentModesKHR(_physicalDevice, _surface,
+												  &presentModeCount,
+												  details.presentModes.data());
 	}
 	return details;
 }
@@ -293,11 +293,10 @@ void evan::DesktopBackend::createLogicalDevice()
 	deviceFeatures.samplerAnisotropy = supportedFeatures.samplerAnisotropy;
 	deviceFeatures.sampleRateShading = supportedFeatures.sampleRateShading;
 
-
-	VkPhysicalDeviceExtendedDynamicStateFeaturesEXT extendedDynamicState{};
-    extendedDynamicState.sType =
-        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_FEATURES_EXT;
-    extendedDynamicState.extendedDynamicState = VK_TRUE;
+	VkPhysicalDeviceExtendedDynamicStateFeaturesEXT extendedDynamicState {};
+	extendedDynamicState.sType =
+		VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_FEATURES_EXT;
+	extendedDynamicState.extendedDynamicState = VK_TRUE;
 
 	VkDeviceCreateInfo createInfo {};
 	createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -356,9 +355,10 @@ void evan::DesktopBackend::pickPhysicalDevice()
 // Private Methods //
 /////////////////////
 
-bool evan::DesktopBackend::isDeviceSuitable(VkPhysicalDevice device, std::vector<const char *> deviceExtensions)
+bool evan::DesktopBackend::isDeviceSuitable(
+	VkPhysicalDevice device, std::vector<const char *> deviceExtensions)
 {
-	_physicalDevice = device;
+	_physicalDevice			   = device;
 	QueueFamilyIndices indices = this->findQueueFamilies();
 
 	bool extensionsSupported =

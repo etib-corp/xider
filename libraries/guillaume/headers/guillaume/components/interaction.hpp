@@ -53,16 +53,15 @@ namespace guillaume::components
 		using MouseButtonClickReleaseHandler =
 			std::function<void(void)>;	  ///< Button release event handler type
 
-		using HandHoverHandler   = std::function<void(
-			void)>;	   ///< Hand hover event handler type
-		using HandUnhoverHandler = std::function<void(
-			void)>;	   ///< Hand unhover event handler type
+		using HandHoverHandler =
+			std::function<void(void)>;	  ///< Hand hover event handler type
+		using HandUnhoverHandler =
+			std::function<void(void)>;	  ///< Hand unhover event handler type
 
-		using HandButtonClickHandler =
-			std::function<void(void)>;	  ///< Hand
-										  ///< button
-										  ///< click
-										  ///< event
+		using HandButtonClickHandler = std::function<void(void)>;	 ///< Hand
+																	 ///< button
+																	 ///< click
+																	 ///< event
 		using HandButtonClickReleaseHandler =
 			std::function<void(void)>;	  ///< Hand
 										  ///< button
@@ -93,29 +92,25 @@ namespace guillaume::components
 			_isMouseButtonClicked {};	 ///< Flag indicating if the entity is
 										 ///< currently clicked
 
-		HandHoverHandler
-			_onHandHover;	   ///< Hand hover event handler
-		HandUnhoverHandler
-			_onHandUnhover;	 ///< Hand unhover event
-									 ///< handler
-		bool _isHandHovered {
-			false
-		};	  ///< Flag indicating if the entity is currently hovered by a
-			  ///< hand
+		HandHoverHandler _onHandHover;		  ///< Hand hover event handler
+		HandUnhoverHandler _onHandUnhover;	  ///< Hand unhover event
+											  ///< handler
+		bool _isHandHovered { false };	  ///< Flag indicating if the entity is
+										  ///< currently hovered by a hand
 
 		std::map<utility::event::HandButtonEvent::Button,
 				 HandButtonClickHandler>
-			_onHandButtonClickHandlers {};	///< Hand button click
-													///< event handlers
+			_onHandButtonClickHandlers {};	  ///< Hand button click
+											  ///< event handlers
 		std::map<utility::event::HandButtonEvent::Button,
 				 HandButtonClickReleaseHandler>
-			_onHandButtonClickReleaseHandlers {};	   ///< Hand
-														   ///< button release
-														   ///< event handlers
+			_onHandButtonClickReleaseHandlers {};	 ///< Hand
+													 ///< button release
+													 ///< event handlers
 		std::map<utility::event::HandButtonEvent::Button, bool>
-			_isHandButtonClicked {};	  ///< Flag indicating if the entity
-											  ///< is currently clicked for a
-											  ///< hand button
+			_isHandButtonClicked {};	///< Flag indicating if the entity
+										///< is currently clicked for a
+										///< hand button
 
 		HandPinchHandler _onHandPinchHandler;	 ///< Hand pinch event handler
 		bool _isHandPinched {
@@ -308,8 +303,7 @@ namespace guillaume::components
 		 * @param handler The function to call on hover leave.
 		 * @return Reference to this Interaction component for chaining.
 		 */
-		Interaction &
-			setHandOnUnhoverHandler(const HandUnhoverHandler &handler);
+		Interaction &setHandOnUnhoverHandler(const HandUnhoverHandler &handler);
 
 		/**
 		 * @brief Get the hand onHover event handler.

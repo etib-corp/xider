@@ -28,64 +28,67 @@
 
 #include "utility/event/event.hpp"
 
-namespace utility::event {
+namespace utility::event
+{
 
-/**
- * @brief Mouse motion event.
- *
- * Represents mouse movement with position.
- */
-class MouseMotionEvent : public Event {
-public:
-  using MousePosition = math::Vector2F; /**< 2D mouse position type */
+	/**
+	 * @brief Mouse motion event.
+	 *
+	 * Represents mouse movement with position.
+	 */
+	class MouseMotionEvent: public Event
+	{
+		public:
+		using MousePosition = math::Vector2F; /**< 2D mouse position type */
 
-  /**
-   * @brief Factory for creating MouseMotionEvent instances.
-   */
-  class Factory : public Event::AbstractFactory {
-  public:
-    ~Factory(void) override;
+		/**
+		 * @brief Factory for creating MouseMotionEvent instances.
+		 */
+		class Factory: public Event::AbstractFactory
+		{
+			public:
+			~Factory(void) override;
 
-    /**
-     * @brief Create a MouseMotionEvent as a base Event pointer.
-     * @return Newly created MouseMotionEvent as std::unique_ptr<Event>.
-     */
-    std::unique_ptr<Event> create(void) const override;
+			/**
+			 * @brief Create a MouseMotionEvent as a base Event pointer.
+			 * @return Newly created MouseMotionEvent as std::unique_ptr<Event>.
+			 */
+			std::unique_ptr<Event> create(void) const override;
 
-    /**
-     * @brief Create a strongly-typed MouseMotionEvent.
-     * @return Newly created MouseMotionEvent as
-     * std::unique_ptr<MouseMotionEvent>.
-     */
-    std::unique_ptr<MouseMotionEvent> createTyped(void) const;
-  };
+			/**
+			 * @brief Create a strongly-typed MouseMotionEvent.
+			 * @return Newly created MouseMotionEvent as
+			 * std::unique_ptr<MouseMotionEvent>.
+			 */
+			std::unique_ptr<MouseMotionEvent> createTyped(void) const;
+		};
 
-private:
-  MousePosition _position{0, 0};
+		private:
+		MousePosition _position { 0, 0 };
 
-public:
-  /**
-   * @brief Default constructor.
-   */
-  explicit MouseMotionEvent(void);
+		public:
+		/**
+		 * @brief Default constructor.
+		 */
+		explicit MouseMotionEvent(void);
 
-  /**
-   * @brief Default destructor.
-   */
-  ~MouseMotionEvent(void) override;
+		/**
+		 * @brief Default destructor.
+		 */
+		~MouseMotionEvent(void) override;
 
-  /**
-   * @brief Set the current mouse position.
-   * @param position The mouse position as a 2D vector (x, y).
-   * @return Reference to this MouseMotionEvent for method chaining.
-   */
-  MouseMotionEvent &setPosition(const MousePosition &position) noexcept;
+		/**
+		 * @brief Set the current mouse position.
+		 * @param position The mouse position as a 2D vector (x, y).
+		 * @return Reference to this MouseMotionEvent for method chaining.
+		 */
+		MouseMotionEvent &setPosition(const MousePosition &position) noexcept;
 
-  /**
-   * @brief Get the current mouse position.
-   * @return The mouse position as a 2D vector (x, y).
-   */
-  MousePosition getPosition(void) const noexcept;
-};
+		/**
+		 * @brief Get the current mouse position.
+		 * @return The mouse position as a 2D vector (x, y).
+		 */
+		MousePosition getPosition(void) const noexcept;
+	};
 
-} // namespace utility::event
+}	 // namespace utility::event

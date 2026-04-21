@@ -53,4 +53,4 @@ namespace guillaume::components
 		setHasChanged(true);
 		return *this;
 	}
-} // namespace guillaume::components
+}	 // namespace guillaume::components

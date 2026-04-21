@@ -26,44 +26,47 @@
 
 #include "utility/event/event.hpp"
 
-namespace utility::event {
+namespace utility::event
+{
 
-/**
- * @brief Quit event.
- *
- * Represents a request to quit the application.
- */
-class QuitEvent : public Event {
-public:
-  /**
-   * @brief Factory for creating QuitEvent instances.
-   */
-  class Factory : public Event::AbstractFactory {
-  public:
-    ~Factory(void) override;
+	/**
+	 * @brief Quit event.
+	 *
+	 * Represents a request to quit the application.
+	 */
+	class QuitEvent: public Event
+	{
+		public:
+		/**
+		 * @brief Factory for creating QuitEvent instances.
+		 */
+		class Factory: public Event::AbstractFactory
+		{
+			public:
+			~Factory(void) override;
 
-    /**
-     * @brief Create a QuitEvent as a base Event pointer.
-     * @return Newly created QuitEvent as std::unique_ptr<Event>.
-     */
-    std::unique_ptr<Event> create(void) const override;
+			/**
+			 * @brief Create a QuitEvent as a base Event pointer.
+			 * @return Newly created QuitEvent as std::unique_ptr<Event>.
+			 */
+			std::unique_ptr<Event> create(void) const override;
 
-    /**
-     * @brief Create a strongly-typed QuitEvent.
-     * @return Newly created QuitEvent as std::unique_ptr<QuitEvent>.
-     */
-    std::unique_ptr<QuitEvent> createTyped(void) const;
-  };
+			/**
+			 * @brief Create a strongly-typed QuitEvent.
+			 * @return Newly created QuitEvent as std::unique_ptr<QuitEvent>.
+			 */
+			std::unique_ptr<QuitEvent> createTyped(void) const;
+		};
 
-  /**
-   * @brief Default constructor.
-   */
-  explicit QuitEvent(void);
+		/**
+		 * @brief Default constructor.
+		 */
+		explicit QuitEvent(void);
 
-  /**
-   * @brief Default destructor.
-   */
-  ~QuitEvent(void) override;
-};
+		/**
+		 * @brief Default destructor.
+		 */
+		~QuitEvent(void) override;
+	};
 
-} // namespace utility::event
+}	 // namespace utility::event

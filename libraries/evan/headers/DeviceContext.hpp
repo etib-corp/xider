@@ -211,8 +211,8 @@ namespace evan
 		 * @brief Checks if the Vulkan debug utils extension is supported by the
 		 * Vulkan instance.
 		 *
-		 * This function enumerates the available instance extensions and checks if
-		 * the `VK_EXT_debug_utils` extension is available.
+		 * This function enumerates the available instance extensions and checks
+		 * if the `VK_EXT_debug_utils` extension is available.
 		 * @param instance The Vulkan instance to check for extension support.
 		 * @return `true` if the extension is supported, `false` otherwise.
 		 */

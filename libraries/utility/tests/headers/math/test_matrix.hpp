@@ -24,10 +24,16 @@
 
 #include <gtest/gtest.h>
 
-namespace tests::utility::math {
-class TestMatrix : public ::testing::Test {
-protected:
-  void SetUp(void) override {}
-  void TearDown(void) override {}
-};
-} // namespace tests::utility::math
+namespace tests::utility::math
+{
+	class TestMatrix: public ::testing::Test
+	{
+		protected:
+		void SetUp(void) override
+		{
+		}
+		void TearDown(void) override
+		{
+		}
+	};
+}	 // namespace tests::utility::math

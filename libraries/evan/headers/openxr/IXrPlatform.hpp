@@ -25,7 +25,6 @@ namespace evan
 	class IXrPlatform: public IPlatform
 	{
 		public:
-
 		/**
 		 * @brief Virtual destructor.
 		 *
@@ -44,7 +43,8 @@ namespace evan
 		 * @return A vector of strings containing the required instance
 		 * extensions for the OpenXR platform.
 		 */
-		virtual std::vector<std::string> getRequiredInstanceExtensions() const = 0;
+		virtual std::vector<std::string>
+			getRequiredInstanceExtensions() const = 0;
 
 		/**
 		 * @brief Check if the OpenXR platform should close.
@@ -82,9 +82,10 @@ namespace evan
 		 * @brief Create a device context for the OpenXR platform.
 		 *
 		 * This function creates and returns a shared pointer to a DeviceContext
-		 * that is compatible with the OpenXR platform. The created device context
-		 * should be initialized with the necessary resources and configurations
-		 * required for rendering and interacting with the OpenXR runtime.
+		 * that is compatible with the OpenXR platform. The created device
+		 * context should be initialized with the necessary resources and
+		 * configurations required for rendering and interacting with the OpenXR
+		 * runtime.
 		 *
 		 * @return A shared pointer to the created DeviceContext for the OpenXR
 		 * platform.
@@ -94,14 +95,15 @@ namespace evan
 		/**
 		 * @brief Create a swapchain context for the OpenXR platform.
 		 *
-		 * This function creates and returns a shared pointer to an ASwapchainContext
-		 * that is compatible with the OpenXR platform. The created swapchain context
-		 * should be initialized with the necessary resources and configurations
-		 * required for rendering to the OpenXR runtime's swapchain.
+		 * This function creates and returns a shared pointer to an
+		 * ASwapchainContext that is compatible with the OpenXR platform. The
+		 * created swapchain context should be initialized with the necessary
+		 * resources and configurations required for rendering to the OpenXR
+		 * runtime's swapchain.
 		 *
-		 * @param deviceContext A reference to the DeviceContext that may be used
-		 * for initializing the swapchain context with the appropriate device
-		 * resources.
+		 * @param deviceContext A reference to the DeviceContext that may be
+		 * used for initializing the swapchain context with the appropriate
+		 * device resources.
 		 *
 		 * @return A shared pointer to the created ASwapchainContext for the
 		 * OpenXR platform.
@@ -134,7 +136,8 @@ namespace evan
 		 *
 		 * @param eventData The event data containing information about the
 		 * session state change.
-		 * @param xrDeviceBackend The OpenXR device backend associated with the event.
+		 * @param xrDeviceBackend The OpenXR device backend associated with the
+		 * event.
 		 *
 		 * @note This function is typically called from within the pollEvents
 		 * method when a session state change event is received. It is
@@ -142,7 +145,8 @@ namespace evan
 		 * to changes in the OpenXR session state.
 		 */
 		void processSessionStateChangedEvent(
-			const XrEventDataSessionStateChanged &eventData, XrDeviceBackend &xrDeviceBackend);
+			const XrEventDataSessionStateChanged &eventData,
+			XrDeviceBackend &xrDeviceBackend);
 
 		/**
 		 * Flag to indicate if the platform should close.

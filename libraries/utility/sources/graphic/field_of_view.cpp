@@ -22,4 +22,6 @@
 
 #include "utility/graphic/field_of_view.hpp"
 
-namespace utility::graphic {} // namespace utility::graphic
+namespace utility::graphic
+{
+}	 // namespace utility::graphic

@@ -74,7 +74,6 @@ namespace evan
 		 */
 		Engine(const std::shared_ptr<IPlatform> &platform);
 
-
 		~Engine();
 
 		/**
@@ -115,13 +114,14 @@ namespace evan
 		void render();	  // For rendering the current scene.
 
 		/**
-		 * @brief Polls for events from the platform. This method is responsible for
-		 * handling input events, window events, and other platform-specific events.
-		 * It is typically called once per frame, allowing the engine to
-		 * respond to user input, window resizing, and other events that may occur during the
-		 * application's runtime. The pollEvents method interacts with the platform abstraction
-		 * layer to retrieve and process events, ensuring that the engine can
-		 * respond to user interactions and system events in a timely manner.
+		 * @brief Polls for events from the platform. This method is responsible
+		 * for handling input events, window events, and other platform-specific
+		 * events. It is typically called once per frame, allowing the engine to
+		 * respond to user input, window resizing, and other events that may
+		 * occur during the application's runtime. The pollEvents method
+		 * interacts with the platform abstraction layer to retrieve and process
+		 * events, ensuring that the engine can respond to user interactions and
+		 * system events in a timely manner.
 		 *
 		 * @note The Engine class is designed to be flexible and extensible,
 		 * allowing for future enhancements and additions to the engine's
@@ -129,7 +129,7 @@ namespace evan
 		 * core structure and functionality of the engine, with plans for
 		 * further improvements and optimizations in the future.
 		 */
-		void pollEvents();  // For handling input and other events.
+		void pollEvents();	  // For handling input and other events.
 
 		/**
 		 * @brief Adds a new scene to the engine. This method allows users to
@@ -153,25 +153,34 @@ namespace evan
 					  std::map<std::string, std::vector<Mesh>> meshData);
 
 		/**
-		 * @brief Switches the current scene to the scene with the specified index.
-		 * This method allows users to navigate between different scenes managed by the engine.
+		 * @brief Switches the current scene to the scene with the specified
+		 * index. This method allows users to navigate between different scenes
+		 * managed by the engine.
 		 *
 		 * @param sceneIndex The index of the scene to switch to.
 		 */
 		void switchScene(size_t sceneIndex);
 
 		/**
-		 * @brief Updates the scene with the specified index using new texture paths and mesh data.
-		 * This method allows users to update an existing scene in the engine by providing new data, such as texture paths and mesh data.
+		 * @brief Updates the scene with the specified index using new texture
+		 * paths and mesh data. This method allows users to update an existing
+		 * scene in the engine by providing new data, such as texture paths and
+		 * mesh data.
 		 *
 		 * @param sceneIndex The index of the scene to update.
-		 * @param texturePaths A vector of strings representing the file paths to the textures used in the scene. These textures may be associated with the materials used by the meshes.
-		 * @param meshData A map where the key is a string representing the mesh name, and the value is a vector of Mesh objects representing the mesh data for that mesh name. Each Mesh object contains information about the vertices, indices, and material ID associated with that mesh.
+		 * @param texturePaths A vector of strings representing the file paths
+		 * to the textures used in the scene. These textures may be associated
+		 * with the materials used by the meshes.
+		 * @param meshData A map where the key is a string representing the mesh
+		 * name, and the value is a vector of Mesh objects representing the mesh
+		 * data for that mesh name. Each Mesh object contains information about
+		 * the vertices, indices, and material ID associated with that mesh.
 		 */
-		void updateScene(size_t sceneIndex, std::vector<std::string> texturePaths,
+		void updateScene(size_t sceneIndex,
+						 std::vector<std::string> texturePaths,
 						 std::map<std::string, std::vector<Mesh>> meshData);
 
-		static void initializeAssetManager(void* platformAssetManager);
+		static void initializeAssetManager(void *platformAssetManager);
 
 		protected:
 		/**
@@ -222,9 +231,9 @@ namespace evan
 		 * containing the data and resources for that scene. This allows the
 		 * engine to manage multiple scenes simultaneously, enabling users to
 		 * switch between different scenes as needed. Each Scene object contains
-		 * the necessary data for rendering, such as meshes, materials, and textures,
-		 * allowing the engine to efficiently manage and render multiple
-		 * scenes within the application.
+		 * the necessary data for rendering, such as meshes, materials, and
+		 * textures, allowing the engine to efficiently manage and render
+		 * multiple scenes within the application.
 		 */
 		std::map<size_t, Scene> _scenes;
 

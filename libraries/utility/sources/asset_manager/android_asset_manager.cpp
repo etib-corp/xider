@@ -24,109 +24,120 @@
 
 #ifdef __ANDROID__
 
-#include <filesystem>
-#include <fstream>
+	#include <filesystem>
+	#include <fstream>
 
-namespace {
-std::string NormalizePath(const std::string &path) {
-  return std::filesystem::path(path).lexically_normal().string();
-}
-} // namespace
+namespace
+{
+	std::string NormalizePath(const std::string &path)
+	{
+		return std::filesystem::path(path).lexically_normal().string();
+	}
+}	 // namespace
 
 utility::AndroidAssetManager::AndroidAssetManager(AAssetManager *assetManager)
-    : _assetManager(assetManager) {}
+	: _assetManager(assetManager)
+{
+}
 
-bool utility::AndroidAssetManager::loadDirectory(const std::string &directory) {
-  AAssetDir *assetDir = AAssetManager_openDir(_assetManager, directory.c_str());
-  if (assetDir == nullptr) {
-    std::cerr << "Failed to open asset directory: " << directory << std::endl;
-    return false;
-  }
+bool utility::AndroidAssetManager::loadDirectory(const std::string &directory)
+{
+	AAssetDir *assetDir =
+		AAssetManager_openDir(_assetManager, directory.c_str());
+	if (assetDir == nullptr) {
+		std::cerr << "Failed to open asset directory: " << directory
+				  << std::endl;
+		return false;
+	}
 
-  const char *fileName = nullptr;
-  while ((fileName = AAssetDir_getNextFileName(assetDir)) != nullptr) {
-    std::string assetPath = directory + "/" + fileName;
-    if (!this->add(assetPath)) {
-      std::cerr << "Failed to load asset: " << assetPath << std::endl;
-    }
-  }
-  AAssetDir_close(assetDir);
-  return true;
+	const char *fileName = nullptr;
+	while ((fileName = AAssetDir_getNextFileName(assetDir)) != nullptr) {
+		std::string assetPath = directory + "/" + fileName;
+		if (!this->add(assetPath)) {
+			std::cerr << "Failed to load asset: " << assetPath << std::endl;
+		}
+	}
+	AAssetDir_close(assetDir);
+	return true;
 }
 
 std::shared_ptr<utility::FileAsset>
-utility::AndroidAssetManager::add(const std::string &path) {
-  const std::string key = NormalizePath(path);
-  if (this->exists(key)) {
-    return this->open(key);
-  }
+	utility::AndroidAssetManager::add(const std::string &path)
+{
+	const std::string key = NormalizePath(path);
+	if (this->exists(key)) {
+		return this->open(key);
+	}
 
-  AAsset *file =
-      AAssetManager_open(_assetManager, key.c_str(), AASSET_MODE_UNKNOWN);
-  if (file == nullptr) {
-    return nullptr;
-  }
+	AAsset *file =
+		AAssetManager_open(_assetManager, key.c_str(), AASSET_MODE_UNKNOWN);
+	if (file == nullptr) {
+		return nullptr;
+	}
 
-  off_t fileLength = AAsset_getLength(file);
-  if (fileLength < 0) {
-    AAsset_close(file);
-    return nullptr;
-  }
+	off_t fileLength = AAsset_getLength(file);
+	if (fileLength < 0) {
+		AAsset_close(file);
+		return nullptr;
+	}
 
-  std::string content(static_cast<size_t>(fileLength), '\0');
-  if (!content.empty()) {
-    const int bytesRead =
-        AAsset_read(file, content.data(), static_cast<size_t>(fileLength));
-    if (bytesRead < 0 || static_cast<off_t>(bytesRead) != fileLength) {
-      AAsset_close(file);
-      return nullptr;
-    }
-  }
-  AAsset_close(file);
+	std::string content(static_cast<size_t>(fileLength), '\0');
+	if (!content.empty()) {
+		const int bytesRead =
+			AAsset_read(file, content.data(), static_cast<size_t>(fileLength));
+		if (bytesRead < 0 || static_cast<off_t>(bytesRead) != fileLength) {
+			AAsset_close(file);
+			return nullptr;
+		}
+	}
+	AAsset_close(file);
 
-  auto asset = std::make_shared<utility::FileAsset>(path, content);
-  _assets[key] = asset;
-  return asset;
+	auto asset	 = std::make_shared<utility::FileAsset>(path, content);
+	_assets[key] = asset;
+	return asset;
 }
 
-void utility::AndroidAssetManager::remove(const std::string &path, bool save) {
-  const std::string key = NormalizePath(path);
-  auto it = _assets.find(key);
-  if (it != _assets.end()) {
-    if (save) {
-      this->save(key);
-    }
-    _assets.erase(it);
-  } else {
-    std::cerr << "Asset not found: " << key << std::endl;
-  }
+void utility::AndroidAssetManager::remove(const std::string &path, bool save)
+{
+	const std::string key = NormalizePath(path);
+	auto it				  = _assets.find(key);
+	if (it != _assets.end()) {
+		if (save) {
+			this->save(key);
+		}
+		_assets.erase(it);
+	} else {
+		std::cerr << "Asset not found: " << key << std::endl;
+	}
 }
 
 bool utility::AndroidAssetManager::save(const std::string &path,
-                                        const std::string &newPath) {
-  const std::string key = NormalizePath(path);
-  auto it = _assets.find(key);
-  if (it == _assets.end()) {
-    std::cerr << "Asset not found: " << key << std::endl;
-    return false;
-  }
-  // Android assets are read-only from the APK. Saving to a new path must be
-  // provided.
-  if (newPath.empty()) {
-    std::cerr
-        << "Cannot save Android asset to original path. Provide a newPath."
-        << std::endl;
-    return false;
-  }
-  const std::string &content = it->second->content();
-  std::ofstream file(newPath, std::ios::binary);
-  if (!file.is_open()) {
-    std::cerr << "Failed to open file for writing: " << newPath << std::endl;
-    return false;
-  }
-  file.write(content.data(), content.size());
-  file.close();
-  return true;
+										const std::string &newPath)
+{
+	const std::string key = NormalizePath(path);
+	auto it				  = _assets.find(key);
+	if (it == _assets.end()) {
+		std::cerr << "Asset not found: " << key << std::endl;
+		return false;
+	}
+	// Android assets are read-only from the APK. Saving to a new path must be
+	// provided.
+	if (newPath.empty()) {
+		std::cerr
+			<< "Cannot save Android asset to original path. Provide a newPath."
+			<< std::endl;
+		return false;
+	}
+	const std::string &content = it->second->content();
+	std::ofstream file(newPath, std::ios::binary);
+	if (!file.is_open()) {
+		std::cerr << "Failed to open file for writing: " << newPath
+				  << std::endl;
+		return false;
+	}
+	file.write(content.data(), content.size());
+	file.close();
+	return true;
 }
 
-#endif // __ANDROID__
+#endif	  // __ANDROID__

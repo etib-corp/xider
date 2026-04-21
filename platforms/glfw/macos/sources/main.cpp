@@ -31,7 +31,8 @@
 int main(void)
 {
 	// Create Mac OS Desktop platform for graphics
-	auto macOsDesktopPlatform = std::make_shared<evan::MacOsDesktopPlatform>("XIDER", 1280, 720);
+	auto macOsDesktopPlatform =
+		std::make_shared<evan::MacOsDesktopPlatform>("XIDER", 1280, 720);
 
 	// Create Evan graphics engine with Mac OS Desktop platform
 	auto evanEngine = std::make_shared<evan::Engine>(macOsDesktopPlatform);

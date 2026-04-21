@@ -28,83 +28,87 @@
 
 #include "utility/graphic/pose.hpp"
 
-namespace utility::event {
+namespace utility::event
+{
 
-/**
- * @brief Hand motion event containing aim/grip/grip_surface poses.
- */
-class HandMotionEvent : public HandEvent {
-public:
-  /**
-   * @brief Factory for creating HandMotionEvent instances.
-   */
-  class Factory : public Event::AbstractFactory {
-  public:
-    ~Factory(void) override;
+	/**
+	 * @brief Hand motion event containing aim/grip/grip_surface poses.
+	 */
+	class HandMotionEvent: public HandEvent
+	{
+		public:
+		/**
+		 * @brief Factory for creating HandMotionEvent instances.
+		 */
+		class Factory: public Event::AbstractFactory
+		{
+			public:
+			~Factory(void) override;
 
-    /**
-     * @brief Create a HandMotionEvent as base Event pointer.
-     * @return Newly created HandMotionEvent.
-     */
-    std::unique_ptr<Event> create(void) const override;
+			/**
+			 * @brief Create a HandMotionEvent as base Event pointer.
+			 * @return Newly created HandMotionEvent.
+			 */
+			std::unique_ptr<Event> create(void) const override;
 
-    /**
-     * @brief Create a strongly-typed HandMotionEvent.
-     * @return Newly created HandMotionEvent.
-     */
-    std::unique_ptr<HandMotionEvent> createTyped(void) const;
-  };
+			/**
+			 * @brief Create a strongly-typed HandMotionEvent.
+			 * @return Newly created HandMotionEvent.
+			 */
+			std::unique_ptr<HandMotionEvent> createTyped(void) const;
+		};
 
-private:
-  graphic::PoseF _aim{};         /**< Aim pose of the hand */
-  graphic::PoseF _grip{};        /**< Grip pose of the hand */
-  graphic::PoseF _gripSurface{}; /**< Grip-surface pose */
+		private:
+		graphic::PoseF _aim {};			/**< Aim pose of the hand */
+		graphic::PoseF _grip {};		/**< Grip pose of the hand */
+		graphic::PoseF _gripSurface {}; /**< Grip-surface pose */
 
-public:
-  /**
-   * @brief Default constructor.
-   */
-  explicit HandMotionEvent(void);
-  ~HandMotionEvent(void) override;
+		public:
+		/**
+		 * @brief Default constructor.
+		 */
+		explicit HandMotionEvent(void);
+		~HandMotionEvent(void) override;
 
-  /**
-   * @brief Set aim pose.
-   * @param aim Aim pose.
-   * @return Reference to this HandMotionEvent.
-   */
-  HandMotionEvent &setAim(const graphic::PoseF &aim) noexcept;
+		/**
+		 * @brief Set aim pose.
+		 * @param aim Aim pose.
+		 * @return Reference to this HandMotionEvent.
+		 */
+		HandMotionEvent &setAim(const graphic::PoseF &aim) noexcept;
 
-  /**
-   * @brief Get aim pose.
-   * @return Aim pose.
-   */
-  graphic::PoseF getAim(void) const noexcept;
+		/**
+		 * @brief Get aim pose.
+		 * @return Aim pose.
+		 */
+		graphic::PoseF getAim(void) const noexcept;
 
-  /**
-   * @brief Set grip pose.
-   * @param grip Grip pose.
-   * @return Reference to this HandMotionEvent.
-   */
-  HandMotionEvent &setGrip(const graphic::PoseF &grip) noexcept;
+		/**
+		 * @brief Set grip pose.
+		 * @param grip Grip pose.
+		 * @return Reference to this HandMotionEvent.
+		 */
+		HandMotionEvent &setGrip(const graphic::PoseF &grip) noexcept;
 
-  /**
-   * @brief Get grip pose.
-   * @return Grip pose.
-   */
-  graphic::PoseF getGrip(void) const noexcept;
+		/**
+		 * @brief Get grip pose.
+		 * @return Grip pose.
+		 */
+		graphic::PoseF getGrip(void) const noexcept;
 
-  /**
-   * @brief Set grip_surface pose.
-   * @param gripSurface Grip-surface pose.
-   * @return Reference to this HandMotionEvent.
-   */
-  HandMotionEvent &setGripSurface(const graphic::PoseF &gripSurface) noexcept;
+		/**
+		 * @brief Set grip_surface pose.
+		 * @param gripSurface Grip-surface pose.
+		 * @return Reference to this HandMotionEvent.
+		 */
+		HandMotionEvent &
+			setGripSurface(const graphic::PoseF &gripSurface) noexcept;
 
-  /**
-   * @brief Get grip_surface pose.
-   * @return Grip-surface pose.
-   */
-  graphic::PoseF getGripSurface(void) const noexcept;
-};
+		/**
+		 * @brief Get grip_surface pose.
+		 * @return Grip-surface pose.
+		 */
+		graphic::PoseF getGripSurface(void) const noexcept;
+	};
 
-} // namespace utility::event
+}	 // namespace utility::event

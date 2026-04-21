@@ -49,10 +49,9 @@ namespace guillaume
 
 	Scene::~Scene(void)
 	{
-		getLogger().info(
-			"Scene destroyed with "
-			+ std::to_string(getEntitiesBreadthFirst().size())
-			+ " entity/entities in hierarchy");
+		getLogger().info("Scene destroyed with "
+						 + std::to_string(getEntitiesBreadthFirst().size())
+						 + " entity/entities in hierarchy");
 	}
 
 	ecs::EntityBuilderManager &Scene::getBuilderManager(void)

@@ -26,10 +26,8 @@ namespace guillaume
 {
 	Metadata::Metadata(const std::string &name, const std::string &version,
 					   const std::string &identifier,
-					   const std::string &creator,
-					   const std::string &copyright,
-					   const std::string &url,
-					   const std::string &type)
+					   const std::string &creator, const std::string &copyright,
+					   const std::string &url, const std::string &type)
 		: _name(name)
 		, _version(version)
 		, _identifier(identifier)

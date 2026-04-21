@@ -22,4 +22,6 @@
 
 #include "utility/logging/loggable.hpp"
 
-namespace utility::logging {}
+namespace utility::logging
+{
+}

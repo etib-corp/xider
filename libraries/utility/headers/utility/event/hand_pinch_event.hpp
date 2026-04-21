@@ -26,43 +26,46 @@
 
 #include "utility/event/hand_event.hpp"
 
-namespace utility::event {
+namespace utility::event
+{
 
-/**
- * @brief Hand pinch event.
- */
-class HandPinchEvent : public HandEvent {
-public:
-  /**
-   * @brief Factory for creating HandPinchEvent instances.
-   */
-  class Factory : public Event::AbstractFactory {
-  public:
-    ~Factory(void) override;
+	/**
+	 * @brief Hand pinch event.
+	 */
+	class HandPinchEvent: public HandEvent
+	{
+		public:
+		/**
+		 * @brief Factory for creating HandPinchEvent instances.
+		 */
+		class Factory: public Event::AbstractFactory
+		{
+			public:
+			~Factory(void) override;
 
-    /**
-     * @brief Create a HandPinchEvent as base Event pointer.
-     * @return Newly created HandPinchEvent.
-     */
-    std::unique_ptr<Event> create(void) const override;
+			/**
+			 * @brief Create a HandPinchEvent as base Event pointer.
+			 * @return Newly created HandPinchEvent.
+			 */
+			std::unique_ptr<Event> create(void) const override;
 
-    /**
-     * @brief Create a strongly-typed HandPinchEvent.
-     * @return Newly created HandPinchEvent.
-     */
-    std::unique_ptr<HandPinchEvent> createTyped(void) const;
-  };
+			/**
+			 * @brief Create a strongly-typed HandPinchEvent.
+			 * @return Newly created HandPinchEvent.
+			 */
+			std::unique_ptr<HandPinchEvent> createTyped(void) const;
+		};
 
-public:
-  /**
-   * @brief Default constructor.
-   */
-  explicit HandPinchEvent(void);
+		public:
+		/**
+		 * @brief Default constructor.
+		 */
+		explicit HandPinchEvent(void);
 
-  /**
-   * @brief Default destructor.
-   */
-  ~HandPinchEvent(void) override;
-};
+		/**
+		 * @brief Default destructor.
+		 */
+		~HandPinchEvent(void) override;
+	};
 
-} // namespace utility::event
+}	 // namespace utility::event

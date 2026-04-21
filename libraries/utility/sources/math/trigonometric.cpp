@@ -22,4 +22,6 @@
 
 #include "utility/math/trigonometric.hpp"
 
-namespace utility::math {} // namespace utility::math
+namespace utility::math
+{
+}	 // namespace utility::math

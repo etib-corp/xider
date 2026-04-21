@@ -26,88 +26,91 @@
 
 #include "utility/event/hand_event.hpp"
 
-namespace utility::event {
+namespace utility::event
+{
 
-/**
- * @brief Hand trigger event.
- */
-class HandTriggerEvent : public HandEvent {
-public:
 	/**
-	 * @brief Factory for creating HandTriggerEvent instances.
+	 * @brief Hand trigger event.
 	 */
-	class Factory : public Event::AbstractFactory {
-	public:
-		~Factory(void) override;
+	class HandTriggerEvent: public HandEvent
+	{
+		public:
+		/**
+		 * @brief Factory for creating HandTriggerEvent instances.
+		 */
+		class Factory: public Event::AbstractFactory
+		{
+			public:
+			~Factory(void) override;
+
+			/**
+			 * @brief Create a HandTriggerEvent as base Event pointer.
+			 * @return Newly created HandTriggerEvent.
+			 */
+			std::unique_ptr<Event> create(void) const override;
+
+			/**
+			 * @brief Create a strongly-typed HandTriggerEvent.
+			 * @return Newly created HandTriggerEvent.
+			 */
+			std::unique_ptr<HandTriggerEvent> createTyped(void) const;
+		};
+
+		private:
+		/** @brief Trigger value in range [0, 1]. */
+		float _value { 0.0F };
+
+		/** @brief True when trigger is touched. */
+		bool _isTouched { false };
+
+		/** @brief True when finger is in trigger proximity region. */
+		bool _isProximity { false };
+
+		public:
+		/**
+		 * @brief Default constructor.
+		 */
+		explicit HandTriggerEvent(void);
+		~HandTriggerEvent(void) override;
 
 		/**
-		 * @brief Create a HandTriggerEvent as base Event pointer.
-		 * @return Newly created HandTriggerEvent.
+		 * @brief Set trigger value.
+		 * @param value Trigger value.
+		 * @return Reference to this HandTriggerEvent.
 		 */
-		std::unique_ptr<Event> create(void) const override;
+		HandTriggerEvent &setValue(const float value) noexcept;
 
 		/**
-		 * @brief Create a strongly-typed HandTriggerEvent.
-		 * @return Newly created HandTriggerEvent.
+		 * @brief Get trigger value.
+		 * @return Value in [0, 1].
 		 */
-		std::unique_ptr<HandTriggerEvent> createTyped(void) const;
+		float getValue(void) const noexcept;
+
+		/**
+		 * @brief Set touched state.
+		 * @param touched True if touched.
+		 * @return Reference to this HandTriggerEvent.
+		 */
+		HandTriggerEvent &setTouched(const bool touched) noexcept;
+
+		/**
+		 * @brief Get touched state.
+		 * @return True if touched.
+		 */
+		bool isTouched(void) const noexcept;
+
+		/**
+		 * @brief Set proximity state.
+		 * @param proximity True if in proximity.
+		 * @return Reference to this HandTriggerEvent.
+		 */
+		HandTriggerEvent &setProximity(const bool proximity) noexcept;
+
+		/**
+		 * @brief Get proximity state.
+		 * @return True if in proximity.
+		 */
+		bool isProximity(void) const noexcept;
 	};
 
-private:
-	/** @brief Trigger value in range [0, 1]. */
-	float _value{0.0F};
-
-	/** @brief True when trigger is touched. */
-	bool _isTouched{false};
-
-	/** @brief True when finger is in trigger proximity region. */
-	bool _isProximity{false};
-
-public:
-	/**
-	 * @brief Default constructor.
-	 */
-	explicit HandTriggerEvent(void);
-	~HandTriggerEvent(void) override;
-
-	/**
-	 * @brief Set trigger value.
-	 * @param value Trigger value.
-	 * @return Reference to this HandTriggerEvent.
-	 */
-	HandTriggerEvent &setValue(const float value) noexcept;
-
-	/**
-	 * @brief Get trigger value.
-	 * @return Value in [0, 1].
-	 */
-	float getValue(void) const noexcept;
-
-	/**
-	 * @brief Set touched state.
-	 * @param touched True if touched.
-	 * @return Reference to this HandTriggerEvent.
-	 */
-	HandTriggerEvent &setTouched(const bool touched) noexcept;
-
-	/**
-	 * @brief Get touched state.
-	 * @return True if touched.
-	 */
-	bool isTouched(void) const noexcept;
-
-	/**
-	 * @brief Set proximity state.
-	 * @param proximity True if in proximity.
-	 * @return Reference to this HandTriggerEvent.
-	 */
-	HandTriggerEvent &setProximity(const bool proximity) noexcept;
-
-	/**
-	 * @brief Get proximity state.
-	 * @return True if in proximity.
-	 */
-	bool isProximity(void) const noexcept;
-};
-
-} // namespace utility::event
+}	 // namespace utility::event

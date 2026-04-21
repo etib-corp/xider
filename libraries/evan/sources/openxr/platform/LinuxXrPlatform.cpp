@@ -15,14 +15,13 @@ evan::LinuxXrPlatform::LinuxXrPlatform()
 // Public Methods //
 ////////////////////
 
-std::vector<std::string> evan::LinuxXrPlatform::getRequiredInstanceExtensions() const
+std::vector<std::string>
+	evan::LinuxXrPlatform::getRequiredInstanceExtensions() const
 {
-    return {
-        XR_KHR_VULKAN_ENABLE2_EXTENSION_NAME
-    };
+	return { XR_KHR_VULKAN_ENABLE2_EXTENSION_NAME };
 }
 
 const XrBaseInStructure *evan::LinuxXrPlatform::getInstanceCreateInfo() const
 {
-    return nullptr;
+	return nullptr;
 }

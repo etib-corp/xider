@@ -27,13 +27,12 @@ std::string evan::InteractionProfile::getRuntimeName(XrInstance instance)
 }
 
 std::string evan::InteractionProfile::getSystemName(XrInstance instance,
-    XrSystemId systemId)
+													XrSystemId systemId)
 {
 	XrSystemProperties systemProperties { XR_TYPE_SYSTEM_PROPERTIES };
 
-	XrResult result = xrGetSystemProperties(instance,
-										systemId,
-										&systemProperties);
+	XrResult result =
+		xrGetSystemProperties(instance, systemId, &systemProperties);
 	if (result != XR_SUCCESS) {
 		std::cerr << "Failed to get OpenXR system properties: " << result
 				  << std::endl;
@@ -43,12 +42,11 @@ std::string evan::InteractionProfile::getSystemName(XrInstance instance,
 }
 
 XrPath evan::InteractionProfile::stringToPath(XrInstance instance,
-    const std::string &pathString)
+											  const std::string &pathString)
 {
 	XrPath path = XR_NULL_PATH;
 
-	XrResult result = xrStringToPath(instance,
-								 pathString.c_str(), &path);
+	XrResult result = xrStringToPath(instance, pathString.c_str(), &path);
 	if (result != XR_SUCCESS) {
 		std::cerr << "Failed to convert string to OpenXR path ('" << pathString
 				  << "'): " << result << std::endl;
@@ -58,15 +56,15 @@ XrPath evan::InteractionProfile::stringToPath(XrInstance instance,
 }
 
 std::string evan::InteractionProfile::pathToString(XrInstance instance,
-    XrPath path)
+												   XrPath path)
 {
 	if (path == XR_NULL_PATH) {
 		return {};
 	}
 
 	uint32_t pathStringSize = 0;
-	XrResult result = xrPathToString(instance, path, 0,
-									 &pathStringSize, nullptr);
+	XrResult result =
+		xrPathToString(instance, path, 0, &pathStringSize, nullptr);
 	if (result != XR_SUCCESS || pathStringSize == 0) {
 		std::cerr << "Failed to get OpenXR path string size: " << result
 				  << std::endl;
@@ -74,8 +72,8 @@ std::string evan::InteractionProfile::pathToString(XrInstance instance,
 	}
 
 	std::string pathString(pathStringSize, '\0');
-	result = xrPathToString(instance, path, pathStringSize,
-						&pathStringSize, pathString.data());
+	result = xrPathToString(instance, path, pathStringSize, &pathStringSize,
+							pathString.data());
 	if (result != XR_SUCCESS) {
 		std::cerr << "Failed to convert OpenXR path to string: " << result
 				  << std::endl;
@@ -89,9 +87,7 @@ std::string evan::InteractionProfile::pathToString(XrInstance instance,
 }
 
 std::string evan::InteractionProfile::getCurrentInteractionProfilePath(
-	XrInstance instance,
-    XrSession session,
-    const std::string &userPathString)
+	XrInstance instance, XrSession session, const std::string &userPathString)
 {
 	if (session == XR_NULL_HANDLE) {
 		std::cerr << "OpenXR session is not initialized." << std::endl;
@@ -104,8 +100,7 @@ std::string evan::InteractionProfile::getCurrentInteractionProfilePath(
 	}
 
 	XrInteractionProfileState state { XR_TYPE_INTERACTION_PROFILE_STATE };
-	XrResult result =
-		xrGetCurrentInteractionProfile(session, userPath, &state);
+	XrResult result = xrGetCurrentInteractionProfile(session, userPath, &state);
 	if (result != XR_SUCCESS) {
 		std::cerr << "Failed to get current interaction profile for '"
 				  << userPathString << "': " << result << std::endl;
@@ -118,10 +113,8 @@ std::string evan::InteractionProfile::getCurrentInteractionProfilePath(
 	return pathToString(instance, state.interactionProfile);
 }
 
-std::vector<XrPath>
-	evan::InteractionProfile::enumerateBoundSourcesForAction(XrInstance instance,
-        XrSession session,
-        XrAction action)
+std::vector<XrPath> evan::InteractionProfile::enumerateBoundSourcesForAction(
+	XrInstance instance, XrSession session, XrAction action)
 {
 	std::vector<XrPath> paths;
 
@@ -135,18 +128,15 @@ std::vector<XrPath>
 	enumerateInfo.action = action;
 
 	uint32_t sourceCount = 0;
-	XrResult result = xrEnumerateBoundSourcesForAction(
-		session, &enumerateInfo, 0, &sourceCount, nullptr);
+	XrResult result		 = xrEnumerateBoundSourcesForAction(
+		 session, &enumerateInfo, 0, &sourceCount, nullptr);
 	if (result != XR_SUCCESS || sourceCount == 0) {
 		return paths;
 	}
 
 	paths.resize(sourceCount, XR_NULL_PATH);
-	result = xrEnumerateBoundSourcesForAction(session,
-								  &enumerateInfo,
-								  sourceCount,
-								  &sourceCount,
-								  paths.data());
+	result = xrEnumerateBoundSourcesForAction(
+		session, &enumerateInfo, sourceCount, &sourceCount, paths.data());
 	if (result != XR_SUCCESS) {
 		std::cerr << "Failed to enumerate bound action source paths: " << result
 				  << std::endl;
@@ -156,15 +146,13 @@ std::vector<XrPath>
 	return paths;
 }
 
-std::vector<std::string> evan::InteractionProfile::
-	enumerateBoundSourcePathStringsForAction(
-        XrInstance instance,
-        XrSession session,
-        XrAction action)
+std::vector<std::string>
+	evan::InteractionProfile::enumerateBoundSourcePathStringsForAction(
+		XrInstance instance, XrSession session, XrAction action)
 {
 	std::vector<std::string> sourcePathStrings;
-	std::vector<XrPath> sourcePaths = enumerateBoundSourcesForAction(instance,
-        session, action);
+	std::vector<XrPath> sourcePaths =
+		enumerateBoundSourcesForAction(instance, session, action);
 
 	sourcePathStrings.reserve(sourcePaths.size());
 	for (XrPath sourcePath: sourcePaths) {

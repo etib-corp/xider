@@ -25,7 +25,8 @@ void evan::IXrPlatform::pollEvents(ADeviceBackend &deviceBackend)
 
 	xrDeviceBackend.pollActions();
 
-	while (xrPollEvent(xrDeviceBackend._XrInstance, &eventDataBuffer) == XR_SUCCESS) {
+	while (xrPollEvent(xrDeviceBackend._XrInstance, &eventDataBuffer)
+		   == XR_SUCCESS) {
 		switch (eventDataBuffer.type) {
 			case XR_TYPE_EVENT_DATA_SESSION_STATE_CHANGED: {
 				auto sessionStateChangedEvent =
@@ -46,13 +47,15 @@ void evan::IXrPlatform::pollEvents(ADeviceBackend &deviceBackend)
 	}
 }
 
-std::shared_ptr<evan::ADeviceBackend> evan::IXrPlatform::createDeviceBackend() const
+std::shared_ptr<evan::ADeviceBackend>
+	evan::IXrPlatform::createDeviceBackend() const
 {
 	return std::make_shared<XrDeviceBackend>(*this);
 }
 
-std::shared_ptr<evan::ASwapchainContext>evan::IXrPlatform::createSwapchainContext(
-	const DeviceContext &deviceContext) const
+std::shared_ptr<evan::ASwapchainContext>
+	evan::IXrPlatform::createSwapchainContext(
+		const DeviceContext &deviceContext) const
 {
 	return std::make_shared<XrSwapchainContext>(deviceContext);
 }
@@ -62,7 +65,8 @@ std::shared_ptr<evan::ASwapchainContext>evan::IXrPlatform::createSwapchainContex
 ///////////////////////
 
 void evan::IXrPlatform::processSessionStateChangedEvent(
-	const XrEventDataSessionStateChanged &eventData, evan::XrDeviceBackend &xrDeviceBackend)
+	const XrEventDataSessionStateChanged &eventData,
+	evan::XrDeviceBackend &xrDeviceBackend)
 {
 	switch (eventData.state) {
 		case XR_SESSION_STATE_READY: {

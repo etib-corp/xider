@@ -36,98 +36,100 @@
 
 #include "utility/logging/logger.hpp"
 
-namespace utility::logging {
+namespace utility::logging
+{
 
-/**
- * @brief File-based logger implementation.
- *
- * Logs all messages to a specified file with automatic flushing.
- */
-class FileLogger : public Logger {
-private:
-  std::ofstream _fileStream; ///< Output file stream
-  std::string _filePath;     ///< Path to the log file
+	/**
+	 * @brief File-based logger implementation.
+	 *
+	 * Logs all messages to a specified file with automatic flushing.
+	 */
+	class FileLogger: public Logger
+	{
+		private:
+		std::ofstream _fileStream;	  ///< Output file stream
+		std::string _filePath;		  ///< Path to the log file
 
-public:
-  /**
-   * @brief Construct a file logger with a name.
-   * @param name The name of the logger.
-   * @throws std::runtime_error if file cannot be opened.
-   */
-  FileLogger(const std::string &name);
+		public:
+		/**
+		 * @brief Construct a file logger with a name.
+		 * @param name The name of the logger.
+		 * @throws std::runtime_error if file cannot be opened.
+		 */
+		FileLogger(const std::string &name);
 
-  /**
-   * @brief Destructor ensuring file is properly closed.
-   */
-  ~FileLogger(void) override;
+		/**
+		 * @brief Destructor ensuring file is properly closed.
+		 */
+		~FileLogger(void) override;
 
-  /**
-   * @brief Disable copy construction and assignment.
-   * @param other The FileLogger to copy from.
-   */
-  FileLogger(const FileLogger &other) = delete;
+		/**
+		 * @brief Disable copy construction and assignment.
+		 * @param other The FileLogger to copy from.
+		 */
+		FileLogger(const FileLogger &other) = delete;
 
-  /**
-   * @brief Disable copy assignment.
-   * @return Reference to this FileLogger.
-   */
-  FileLogger &operator=(const FileLogger &other) = delete;
+		/**
+		 * @brief Disable copy assignment.
+		 * @return Reference to this FileLogger.
+		 */
+		FileLogger &operator=(const FileLogger &other) = delete;
 
-  /**
-   * @brief Move constructor.
-   * @param other The FileLogger to move from.
-   */
-  FileLogger(FileLogger &&other) noexcept;
+		/**
+		 * @brief Move constructor.
+		 * @param other The FileLogger to move from.
+		 */
+		FileLogger(FileLogger &&other) noexcept;
 
-  /**
-   * @brief Move assignment operator.
-   * @param other The FileLogger to move from.
-   * @return Reference to this FileLogger.
-   */
-  FileLogger &operator=(FileLogger &&other) noexcept;
+		/**
+		 * @brief Move assignment operator.
+		 * @param other The FileLogger to move from.
+		 * @return Reference to this FileLogger.
+		 */
+		FileLogger &operator=(FileLogger &&other) noexcept;
 
-  /**
-   * @brief Log a debug message to file.
-   * @param message The message to log.
-   */
-  void debug(const std::string &message) override;
+		/**
+		 * @brief Log a debug message to file.
+		 * @param message The message to log.
+		 */
+		void debug(const std::string &message) override;
 
-  /**
-   * @brief Log an informational message to file.
-   * @param message The message to log.
-   */
-  void info(const std::string &message) override;
+		/**
+		 * @brief Log an informational message to file.
+		 * @param message The message to log.
+		 */
+		void info(const std::string &message) override;
 
-  /**
-   * @brief Log a warning message to file.
-   * @param message The message to log.
-   */
-  void warning(const std::string &message) override;
+		/**
+		 * @brief Log a warning message to file.
+		 * @param message The message to log.
+		 */
+		void warning(const std::string &message) override;
 
-  /**
-   * @brief Log an error message to file.
-   * @param message The message to log.
-   */
-  void error(const std::string &message) override;
+		/**
+		 * @brief Log an error message to file.
+		 * @param message The message to log.
+		 */
+		void error(const std::string &message) override;
 
-  /**
-   * @brief Log a message with specified level to file.
-   * @param level The severity level.
-   * @param message The message to log.
-   */
-  void log(LogLevel level, const std::string &message) override;
+		/**
+		 * @brief Log a message with specified level to file.
+		 * @param level The severity level.
+		 * @param message The message to log.
+		 */
+		void log(LogLevel level, const std::string &message) override;
 
-  /**
-   * @brief Get the path to the log file.
-   * @return The log file path.
-   */
-  const std::string &getFilePath() const;
+		/**
+		 * @brief Get the path to the log file.
+		 * @return The log file path.
+		 */
+		const std::string &getFilePath() const;
 
-  /**
-   * @brief Check if the log file is currently open.
-   * @return True if file is open, false otherwise.
-   */
-  bool isOpen(void) const;
-};
+		/**
+		 * @brief Check if the log file is currently open.
+		 * @return True if file is open, false otherwise.
+		 */
+		bool isOpen(void) const;
+	};
 
-} // namespace utility::logging
+}	 // namespace utility::logging

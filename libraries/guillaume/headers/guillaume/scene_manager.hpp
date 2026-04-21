@@ -48,8 +48,8 @@ namespace guillaume
 	 * application.
 	 */
 	class SceneManager:
-		public utility::logging::Loggable<
-			SceneManager, utility::logging::StandardLogger>
+		public utility::logging::Loggable<SceneManager,
+										  utility::logging::StandardLogger>
 	{
 		private:
 		std::map<std::type_index, std::unique_ptr<Scene>>
@@ -78,7 +78,7 @@ namespace guillaume
 			_scenes[typeIndex] =
 				std::make_unique<SceneType>(_localStorage, _sessionStorage);
 			getLogger().info("Registered scene type: "
-						 + std::string(typeid(SceneType).name()));
+							 + std::string(typeid(SceneType).name()));
 		}
 
 		public:
@@ -109,7 +109,7 @@ namespace guillaume
 			}
 			_activeSceneType = typeIndex;
 			getLogger().info("Switched active scene to type: "
-						 + std::string(typeid(SceneType).name()));
+							 + std::string(typeid(SceneType).name()));
 		}
 
 		/**
@@ -124,4 +124,4 @@ namespace guillaume
 		 */
 		ecs::ComponentRegistry &getActiveComponentRegistry(void);
 	};
-} // namespace guillaume
+}	 // namespace guillaume

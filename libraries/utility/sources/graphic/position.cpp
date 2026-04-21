@@ -22,6 +22,8 @@
 
 #include "utility/graphic/position.hpp"
 
-namespace utility::graphic {
-// Explicit template instantiations or future Scale implementation can go here.
-} // namespace utility::graphic
+namespace utility::graphic
+{
+	// Explicit template instantiations or future Scale implementation can go
+	// here.
+}	 // namespace utility::graphic

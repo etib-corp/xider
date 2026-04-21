@@ -22,4 +22,6 @@
 
 #include "utility/math/vector.hpp"
 
-namespace utility::math {} // namespace utility::math
+namespace utility::math
+{
+}	 // namespace utility::math

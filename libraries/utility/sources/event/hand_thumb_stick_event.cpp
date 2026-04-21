@@ -24,58 +24,78 @@
 
 #include "utility/math/common.hpp"
 
-namespace utility::event {
+namespace utility::event
+{
 
-HandThumbStickEvent::Factory::~Factory(void) = default;
+	HandThumbStickEvent::Factory::~Factory(void) = default;
 
-std::unique_ptr<Event> HandThumbStickEvent::Factory::create(void) const {
-  return std::make_unique<HandThumbStickEvent>();
-}
+	std::unique_ptr<Event> HandThumbStickEvent::Factory::create(void) const
+	{
+		return std::make_unique<HandThumbStickEvent>();
+	}
 
-std::unique_ptr<HandThumbStickEvent>
-HandThumbStickEvent::Factory::createTyped(void) const {
-  return std::make_unique<HandThumbStickEvent>();
-}
+	std::unique_ptr<HandThumbStickEvent>
+		HandThumbStickEvent::Factory::createTyped(void) const
+	{
+		return std::make_unique<HandThumbStickEvent>();
+	}
 
-HandThumbStickEvent::HandThumbStickEvent(void) = default;
+	HandThumbStickEvent::HandThumbStickEvent(void) = default;
 
-HandThumbStickEvent::~HandThumbStickEvent(void) = default;
+	HandThumbStickEvent::~HandThumbStickEvent(void) = default;
 
-HandThumbStickEvent &HandThumbStickEvent::setX(const float x) noexcept {
-  _x = utility::math::clamp(x, -1.0F, 1.0F);
-  return *this;
-}
+	HandThumbStickEvent &HandThumbStickEvent::setX(const float x) noexcept
+	{
+		_x = utility::math::clamp(x, -1.0F, 1.0F);
+		return *this;
+	}
 
-float HandThumbStickEvent::getX(void) const noexcept { return _x; }
+	float HandThumbStickEvent::getX(void) const noexcept
+	{
+		return _x;
+	}
 
-HandThumbStickEvent &HandThumbStickEvent::setY(const float y) noexcept {
-  _y = utility::math::clamp(y, -1.0F, 1.0F);
-  return *this;
-}
+	HandThumbStickEvent &HandThumbStickEvent::setY(const float y) noexcept
+	{
+		_y = utility::math::clamp(y, -1.0F, 1.0F);
+		return *this;
+	}
 
-float HandThumbStickEvent::getY(void) const noexcept { return _y; }
+	float HandThumbStickEvent::getY(void) const noexcept
+	{
+		return _y;
+	}
 
-HandThumbStickEvent &HandThumbStickEvent::setAxis(const float x,
-                                                   const float y) noexcept {
-  _x = utility::math::clamp(x, -1.0F, 1.0F);
-  _y = utility::math::clamp(y, -1.0F, 1.0F);
-  return *this;
-}
+	HandThumbStickEvent &HandThumbStickEvent::setAxis(const float x,
+													  const float y) noexcept
+	{
+		_x = utility::math::clamp(x, -1.0F, 1.0F);
+		_y = utility::math::clamp(y, -1.0F, 1.0F);
+		return *this;
+	}
 
-HandThumbStickEvent &
-HandThumbStickEvent::setTouched(const bool touched) noexcept {
-  _isTouched = touched;
-  return *this;
-}
+	HandThumbStickEvent &
+		HandThumbStickEvent::setTouched(const bool touched) noexcept
+	{
+		_isTouched = touched;
+		return *this;
+	}
 
-bool HandThumbStickEvent::isTouched(void) const noexcept { return _isTouched; }
+	bool HandThumbStickEvent::isTouched(void) const noexcept
+	{
+		return _isTouched;
+	}
 
-HandThumbStickEvent &
-HandThumbStickEvent::setClicked(const bool clicked) noexcept {
-  _isClicked = clicked;
-  return *this;
-}
+	HandThumbStickEvent &
+		HandThumbStickEvent::setClicked(const bool clicked) noexcept
+	{
+		_isClicked = clicked;
+		return *this;
+	}
 
-bool HandThumbStickEvent::isClicked(void) const noexcept { return _isClicked; }
+	bool HandThumbStickEvent::isClicked(void) const noexcept
+	{
+		return _isClicked;
+	}
 
-} // namespace utility::event
+}	 // namespace utility::event

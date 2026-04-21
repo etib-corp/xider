@@ -27,58 +27,62 @@
 
 #include "utility/event/event.hpp"
 
-namespace utility::event {
+namespace utility::event
+{
 
-/**
- * @brief Text input event for committed UTF-8 text.
- */
-class TextInputEvent : public Event {
-private:
-  std::string _text{};
+	/**
+	 * @brief Text input event for committed UTF-8 text.
+	 */
+	class TextInputEvent: public Event
+	{
+		private:
+		std::string _text {};
 
-public:
-  /**
-   * @brief Factory for creating TextInputEvent instances.
-   */
-  class Factory : public Event::AbstractFactory {
-  public:
-    ~Factory(void) override;
+		public:
+		/**
+		 * @brief Factory for creating TextInputEvent instances.
+		 */
+		class Factory: public Event::AbstractFactory
+		{
+			public:
+			~Factory(void) override;
 
-    /**
-     * @brief Create a TextInputEvent as a base Event pointer.
-     * @return Newly created TextInputEvent as std::unique_ptr<Event>.
-     */
-    std::unique_ptr<Event> create(void) const override;
+			/**
+			 * @brief Create a TextInputEvent as a base Event pointer.
+			 * @return Newly created TextInputEvent as std::unique_ptr<Event>.
+			 */
+			std::unique_ptr<Event> create(void) const override;
 
-    /**
-     * @brief Create a strongly-typed TextInputEvent.
-     * @return Newly created TextInputEvent as std::unique_ptr<TextInputEvent>.
-     */
-    std::unique_ptr<TextInputEvent> createTyped(void) const;
-  };
+			/**
+			 * @brief Create a strongly-typed TextInputEvent.
+			 * @return Newly created TextInputEvent as
+			 * std::unique_ptr<TextInputEvent>.
+			 */
+			std::unique_ptr<TextInputEvent> createTyped(void) const;
+		};
 
-  /**
-   * @brief Default constructor.
-   */
-  explicit TextInputEvent(void);
+		/**
+		 * @brief Default constructor.
+		 */
+		explicit TextInputEvent(void);
 
-  /**
-   * @brief Default destructor.
-   */
-  ~TextInputEvent(void) override;
+		/**
+		 * @brief Default destructor.
+		 */
+		~TextInputEvent(void) override;
 
-  /**
-   * @brief Set committed UTF-8 text.
-   * @param text The committed text.
-   * @return Reference to this TextInputEvent for method chaining.
-   */
-  TextInputEvent &setText(const std::string &text);
+		/**
+		 * @brief Set committed UTF-8 text.
+		 * @param text The committed text.
+		 * @return Reference to this TextInputEvent for method chaining.
+		 */
+		TextInputEvent &setText(const std::string &text);
 
-  /**
-   * @brief Get committed UTF-8 text.
-   * @return The committed text.
-   */
-  std::string getText(void) const;
-};
+		/**
+		 * @brief Get committed UTF-8 text.
+		 * @return The committed text.
+		 */
+		std::string getText(void) const;
+	};
 
-} // namespace utility::event
+}	 // namespace utility::event

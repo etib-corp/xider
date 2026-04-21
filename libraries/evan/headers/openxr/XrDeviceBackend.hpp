@@ -18,7 +18,7 @@
 #include <openxr/openxr_platform.h>
 #include <vector>
 
-#define LEFT_HAND_INDEX 0
+#define LEFT_HAND_INDEX	 0
 #define RIGHT_HAND_INDEX 1
 
 namespace evan
@@ -206,14 +206,17 @@ namespace evan
 		XrSpace _space = XR_NULL_HANDLE;
 
 		/**
-		 * @brief The action manager for handling input actions in the OpenXR session.
+		 * @brief The action manager for handling input actions in the OpenXR
+		 * session.
 		 *
-		 * This member variable is responsible for managing the input actions defined for the
-		 * OpenXR session, including actions for the left and right hands. It encapsulates the
-		 * functionality required to create and manage action sets, as well as to handle input from
-		 * various input sources such as controllers and hand tracking. The action manager is essential
-		 * for enabling interactive experiences in the XR environment by allowing the application to respond
-		 * to user input in a flexible and extensible manner.
+		 * This member variable is responsible for managing the input actions
+		 * defined for the OpenXR session, including actions for the left and
+		 * right hands. It encapsulates the functionality required to create and
+		 * manage action sets, as well as to handle input from various input
+		 * sources such as controllers and hand tracking. The action manager is
+		 * essential for enabling interactive experiences in the XR environment
+		 * by allowing the application to respond to user input in a flexible
+		 * and extensible manner.
 		 */
 		std::unique_ptr<XrManageActions> _actionManager;
 
@@ -234,7 +237,8 @@ namespace evan
 		 */
 		XrTime _predictedDisplayTime = 0;
 
-		const static size_t _handCount = 2; // Assuming two hands (left and right)
+		const static size_t _handCount =
+			2;	  // Assuming two hands (left and right)
 
 		/**
 		 * Subaction paths for hand input actions, used to differentiate

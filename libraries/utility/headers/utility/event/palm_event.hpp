@@ -26,43 +26,46 @@
 
 #include "utility/event/hand_event.hpp"
 
-namespace utility::event {
+namespace utility::event
+{
 
-/**
- * @brief Palm pose event.
- */
-class PalmEvent : public HandEvent {
-public:
-  /**
-   * @brief Factory for creating PalmEvent instances.
-   */
-  class Factory : public Event::AbstractFactory {
-  public:
-    ~Factory(void) override;
+	/**
+	 * @brief Palm pose event.
+	 */
+	class PalmEvent: public HandEvent
+	{
+		public:
+		/**
+		 * @brief Factory for creating PalmEvent instances.
+		 */
+		class Factory: public Event::AbstractFactory
+		{
+			public:
+			~Factory(void) override;
 
-    /**
-     * @brief Create a PalmEvent as base Event pointer.
-     * @return Newly created PalmEvent.
-     */
-    std::unique_ptr<Event> create(void) const override;
+			/**
+			 * @brief Create a PalmEvent as base Event pointer.
+			 * @return Newly created PalmEvent.
+			 */
+			std::unique_ptr<Event> create(void) const override;
 
-    /**
-     * @brief Create a strongly-typed PalmEvent.
-     * @return Newly created PalmEvent.
-     */
-    std::unique_ptr<PalmEvent> createTyped(void) const;
-  };
+			/**
+			 * @brief Create a strongly-typed PalmEvent.
+			 * @return Newly created PalmEvent.
+			 */
+			std::unique_ptr<PalmEvent> createTyped(void) const;
+		};
 
-public:
-  /**
-   * @brief Default constructor.
-   */
-  explicit PalmEvent(void);
+		public:
+		/**
+		 * @brief Default constructor.
+		 */
+		explicit PalmEvent(void);
 
-  /**
-   * @brief Default destructor.
-   */
-  ~PalmEvent(void) override;
-};
+		/**
+		 * @brief Default destructor.
+		 */
+		~PalmEvent(void) override;
+	};
 
-} // namespace utility::event
+}	 // namespace utility::event

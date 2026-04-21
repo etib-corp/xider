@@ -43,7 +43,8 @@ namespace guillaume::ecs::tests
 		std::vector<std::unique_ptr<Entity>> _entities;
 
 		protected:
-		std::vector<std::unique_ptr<Entity>> &accessDirectEntities(void) override
+		std::vector<std::unique_ptr<Entity>> &
+			accessDirectEntities(void) override
 		{
 			return _entities;
 		}
@@ -81,7 +82,7 @@ namespace guillaume::ecs::tests
 	TEST_F(TestEntityRegistry, AddEntityTracksAllEntityIdentifiersInOrder)
 	{
 		TestEntityRegistryContainer registry;
-		auto firstEntity	 = std::make_unique<DummyEntity>();
+		auto firstEntity  = std::make_unique<DummyEntity>();
 		auto secondEntity = std::make_unique<DummyEntity>();
 
 		const auto firstIdentifier	= firstEntity->getIdentifier();
@@ -106,7 +107,7 @@ namespace guillaume::ecs::tests
 		rootMatch->setSignature(rootSignature);
 		const auto rootIdentifier = rootMatch->getIdentifier();
 
-		auto parent				 = std::make_unique<DummyParentEntity>();
+		auto parent					= std::make_unique<DummyParentEntity>();
 		const auto parentIdentifier = parent->getIdentifier();
 
 		auto childMatch = std::make_unique<DummyEntity>();
@@ -126,4 +127,4 @@ namespace guillaume::ecs::tests
 		EXPECT_NE(parentIdentifier, Entity::InvalidIdentifier);
 	}
 
-}  // namespace guillaume::ecs::tests
+}	 // namespace guillaume::ecs::tests

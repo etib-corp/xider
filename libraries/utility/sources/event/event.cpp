@@ -22,4 +22,6 @@
 
 #include "utility/event/event.hpp"
 
-namespace utility::event {} // namespace utility::event
+namespace utility::event
+{
+}	 // namespace utility::event

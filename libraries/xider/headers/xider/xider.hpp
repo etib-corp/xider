@@ -71,7 +71,7 @@ namespace xider
 		std::shared_ptr<evan::Engine> getEngine(void) const;
 
 		private:
-		std::shared_ptr<evan::Engine> _engine;	 ///< Evan graphics engine
+		std::shared_ptr<evan::Engine> _engine;	  ///< Evan graphics engine
 	};
 
 }	 // namespace xider

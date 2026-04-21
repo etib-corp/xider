@@ -24,19 +24,20 @@
 
 #include <glm/trigonometric.hpp>
 
-namespace utility::math {
-using glm::acos;
-using glm::acosh;
-using glm::asin;
-using glm::asinh;
-using glm::atan;
-using glm::atanh;
-using glm::cos;
-using glm::cosh;
-using glm::degrees;
-using glm::radians;
-using glm::sin;
-using glm::sinh;
-using glm::tan;
-using glm::tanh;
-} // namespace utility::math
+namespace utility::math
+{
+	using glm::acos;
+	using glm::acosh;
+	using glm::asin;
+	using glm::asinh;
+	using glm::atan;
+	using glm::atanh;
+	using glm::cos;
+	using glm::cosh;
+	using glm::degrees;
+	using glm::radians;
+	using glm::sin;
+	using glm::sinh;
+	using glm::tan;
+	using glm::tanh;
+}	 // namespace utility::math

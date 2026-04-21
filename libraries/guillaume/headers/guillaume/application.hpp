@@ -240,17 +240,18 @@ namespace guillaume
 		}
 
 		/**
-		 * @brief Run the application main loop using a custom shouldQuit function.
+		 * @brief Run the application main loop using a custom shouldQuit
+		 * function.
 		 * @tparam ShouldQuitFn Type of the shouldQuit callable.
-		 * @param shouldQuitFn A callable that returns true when the loop should exit.
+		 * @param shouldQuitFn A callable that returns true when the loop should
+		 * exit.
 		 * @return Exit code.
 		 *
 		 * @code
 		 * app.run([](){ return some_condition; });
 		 * @endcode
 		 */
-		template<typename ShouldQuitFn>
-		int run(ShouldQuitFn shouldQuitFn)
+		template<typename ShouldQuitFn> int run(ShouldQuitFn shouldQuitFn)
 		{
 			this->getLogger().info("Entering main loop with custom shouldQuit");
 			while (!shouldQuitFn()) {
@@ -274,7 +275,8 @@ namespace guillaume
 		}
 
 		/**
-		 * @brief Run the application main loop using the event handler's shouldQuit.
+		 * @brief Run the application main loop using the event handler's
+		 * shouldQuit.
 		 * @return Exit code.
 		 */
 		int run(void)

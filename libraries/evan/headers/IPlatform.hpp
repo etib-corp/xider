@@ -69,8 +69,8 @@ namespace evan
 		/**
 		 * @brief Get platform-specific instance creation information.
 		 *
-		 * @return A pointer to an XrBaseInStructure containing instance creation
-		 * information, or nullptr if not applicable.
+		 * @return A pointer to an XrBaseInStructure containing instance
+		 * creation information, or nullptr if not applicable.
 		 *
 		 * This method can be used to provide additional instance creation
 		 * information specific to the platform, such as application info or

@@ -38,12 +38,10 @@ namespace guillaume::systems
 			_lastMouseMotionEvent = _mouseMotionSubscriber.getNextEvent();
 		}
 		while (_handButtonSubscriber.hasPendingEvents()) {
-			_lastHandButtonEvent =
-				_handButtonSubscriber.getNextEvent();
+			_lastHandButtonEvent = _handButtonSubscriber.getNextEvent();
 		}
 		while (_handMotionSubscriber.hasPendingEvents()) {
-			_lastHandMotionEvent =
-				_handMotionSubscriber.getNextEvent();
+			_lastHandMotionEvent = _handMotionSubscriber.getNextEvent();
 		}
 		while (_handPinchSubscriber.hasPendingEvents()) {
 			_lastHandPinchEvent = _handPinchSubscriber.getNextEvent();

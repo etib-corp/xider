@@ -22,44 +22,59 @@
 
 #include "utility/event/hand_motion_event.hpp"
 
-namespace utility::event {
+namespace utility::event
+{
 
-HandMotionEvent::Factory::~Factory(void) = default;
+	HandMotionEvent::Factory::~Factory(void) = default;
 
-std::unique_ptr<Event> HandMotionEvent::Factory::create(void) const {
-  return std::make_unique<HandMotionEvent>();
-}
+	std::unique_ptr<Event> HandMotionEvent::Factory::create(void) const
+	{
+		return std::make_unique<HandMotionEvent>();
+	}
 
-std::unique_ptr<HandMotionEvent> HandMotionEvent::Factory::createTyped(void) const {
-  return std::make_unique<HandMotionEvent>();
-}
+	std::unique_ptr<HandMotionEvent>
+		HandMotionEvent::Factory::createTyped(void) const
+	{
+		return std::make_unique<HandMotionEvent>();
+	}
 
-HandMotionEvent::HandMotionEvent(void) = default;
+	HandMotionEvent::HandMotionEvent(void) = default;
 
-HandMotionEvent::~HandMotionEvent(void) = default;
+	HandMotionEvent::~HandMotionEvent(void) = default;
 
-HandMotionEvent &HandMotionEvent::setAim(const graphic::PoseF &aim) noexcept {
-  _aim = aim;
-  return *this;
-}
+	HandMotionEvent &HandMotionEvent::setAim(const graphic::PoseF &aim) noexcept
+	{
+		_aim = aim;
+		return *this;
+	}
 
-graphic::PoseF HandMotionEvent::getAim(void) const noexcept { return _aim; }
+	graphic::PoseF HandMotionEvent::getAim(void) const noexcept
+	{
+		return _aim;
+	}
 
-HandMotionEvent &HandMotionEvent::setGrip(const graphic::PoseF &grip) noexcept {
-  _grip = grip;
-  return *this;
-}
+	HandMotionEvent &
+		HandMotionEvent::setGrip(const graphic::PoseF &grip) noexcept
+	{
+		_grip = grip;
+		return *this;
+	}
 
-graphic::PoseF HandMotionEvent::getGrip(void) const noexcept { return _grip; }
+	graphic::PoseF HandMotionEvent::getGrip(void) const noexcept
+	{
+		return _grip;
+	}
 
-HandMotionEvent &
-HandMotionEvent::setGripSurface(const graphic::PoseF &gripSurface) noexcept {
-  _gripSurface = gripSurface;
-  return *this;
-}
+	HandMotionEvent &HandMotionEvent::setGripSurface(
+		const graphic::PoseF &gripSurface) noexcept
+	{
+		_gripSurface = gripSurface;
+		return *this;
+	}
 
-graphic::PoseF HandMotionEvent::getGripSurface(void) const noexcept {
-  return _gripSurface;
-}
+	graphic::PoseF HandMotionEvent::getGripSurface(void) const noexcept
+	{
+		return _gripSurface;
+	}
 
-} // namespace utility::event
+}	 // namespace utility::event

@@ -25,7 +25,7 @@
 namespace guillaume::ecs
 {
 	EntityBuilder::EntityBuilder(ecs::ComponentRegistry &componentRegistry,
-						 ecs::EntityRegistry &entityRegistry)
+								 ecs::EntityRegistry &entityRegistry)
 		: _componentRegistry(componentRegistry)
 		, _entityRegistry(entityRegistry)
 	{

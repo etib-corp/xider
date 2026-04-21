@@ -22,60 +22,77 @@
 
 #include "utility/event/hand_button_event.hpp"
 
-namespace utility::event {
+namespace utility::event
+{
 
-bool HandButtonEvent::isButtonValidForHand(const HandType handType,
-																					 const Button button) noexcept {
-	switch (handType) {
-	case HandType::Left:
-		return button == Button::X || button == Button::Y || button == Button::Menu;
-	case HandType::Right:
-		return button == Button::A || button == Button::B || button == Button::System;
-	default:
-		return false;
+	bool HandButtonEvent::isButtonValidForHand(const HandType handType,
+											   const Button button) noexcept
+	{
+		switch (handType) {
+			case HandType::Left:
+				return button == Button::X || button == Button::Y
+					|| button == Button::Menu;
+			case HandType::Right:
+				return button == Button::A || button == Button::B
+					|| button == Button::System;
+			default:
+				return false;
+		}
 	}
-}
 
-HandButtonEvent::Factory::~Factory(void) = default;
+	HandButtonEvent::Factory::~Factory(void) = default;
 
-std::unique_ptr<Event> HandButtonEvent::Factory::create(void) const {
-	return std::make_unique<HandButtonEvent>();
-}
+	std::unique_ptr<Event> HandButtonEvent::Factory::create(void) const
+	{
+		return std::make_unique<HandButtonEvent>();
+	}
 
-std::unique_ptr<HandButtonEvent>
-HandButtonEvent::Factory::createTyped(void) const {
-	return std::make_unique<HandButtonEvent>();
-}
+	std::unique_ptr<HandButtonEvent>
+		HandButtonEvent::Factory::createTyped(void) const
+	{
+		return std::make_unique<HandButtonEvent>();
+	}
 
-HandButtonEvent::HandButtonEvent(void) = default;
+	HandButtonEvent::HandButtonEvent(void) = default;
 
-HandButtonEvent::~HandButtonEvent(void) = default;
+	HandButtonEvent::~HandButtonEvent(void) = default;
 
-HandButtonEvent &HandButtonEvent::setButton(const Button button) noexcept {
-	_button = button;
-	return *this;
-}
+	HandButtonEvent &HandButtonEvent::setButton(const Button button) noexcept
+	{
+		_button = button;
+		return *this;
+	}
 
-HandButtonEvent::Button HandButtonEvent::getButton(void) const noexcept {
-	return _button;
-}
+	HandButtonEvent::Button HandButtonEvent::getButton(void) const noexcept
+	{
+		return _button;
+	}
 
-bool HandButtonEvent::isValidForCurrentHand(void) const noexcept {
-	return isButtonValidForHand(getHandType(), _button);
-}
+	bool HandButtonEvent::isValidForCurrentHand(void) const noexcept
+	{
+		return isButtonValidForHand(getHandType(), _button);
+	}
 
-HandButtonEvent &HandButtonEvent::setTouched(const bool touched) noexcept {
-	_isTouched = touched;
-	return *this;
-}
+	HandButtonEvent &HandButtonEvent::setTouched(const bool touched) noexcept
+	{
+		_isTouched = touched;
+		return *this;
+	}
 
-bool HandButtonEvent::isTouched(void) const noexcept { return _isTouched; }
+	bool HandButtonEvent::isTouched(void) const noexcept
+	{
+		return _isTouched;
+	}
 
-HandButtonEvent &HandButtonEvent::setClicked(const bool clicked) noexcept {
-	_isClicked = clicked;
-	return *this;
-}
+	HandButtonEvent &HandButtonEvent::setClicked(const bool clicked) noexcept
+	{
+		_isClicked = clicked;
+		return *this;
+	}
 
-bool HandButtonEvent::isClicked(void) const noexcept { return _isClicked; }
+	bool HandButtonEvent::isClicked(void) const noexcept
+	{
+		return _isClicked;
+	}
 
-} // namespace utility::event
+}	 // namespace utility::event

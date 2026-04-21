@@ -26,43 +26,46 @@
 
 #include "utility/event/hand_event.hpp"
 
-namespace utility::event {
+namespace utility::event
+{
 
-/**
- * @brief Hand poke event.
- */
-class HandPokeEvent : public HandEvent {
-public:
-  /**
-   * @brief Factory for creating HandPokeEvent instances.
-   */
-  class Factory : public Event::AbstractFactory {
-  public:
-    ~Factory(void) override;
+	/**
+	 * @brief Hand poke event.
+	 */
+	class HandPokeEvent: public HandEvent
+	{
+		public:
+		/**
+		 * @brief Factory for creating HandPokeEvent instances.
+		 */
+		class Factory: public Event::AbstractFactory
+		{
+			public:
+			~Factory(void) override;
 
-    /**
-     * @brief Create a HandPokeEvent as base Event pointer.
-     * @return Newly created HandPokeEvent.
-     */
-    std::unique_ptr<Event> create(void) const override;
+			/**
+			 * @brief Create a HandPokeEvent as base Event pointer.
+			 * @return Newly created HandPokeEvent.
+			 */
+			std::unique_ptr<Event> create(void) const override;
 
-    /**
-     * @brief Create a strongly-typed HandPokeEvent.
-     * @return Newly created HandPokeEvent.
-     */
-    std::unique_ptr<HandPokeEvent> createTyped(void) const;
-  };
+			/**
+			 * @brief Create a strongly-typed HandPokeEvent.
+			 * @return Newly created HandPokeEvent.
+			 */
+			std::unique_ptr<HandPokeEvent> createTyped(void) const;
+		};
 
-public:
-  /**
-   * @brief Default constructor.
-   */
-  explicit HandPokeEvent(void);
+		public:
+		/**
+		 * @brief Default constructor.
+		 */
+		explicit HandPokeEvent(void);
 
-  /**
-   * @brief Default destructor.
-   */
-  ~HandPokeEvent(void) override;
-};
+		/**
+		 * @brief Default destructor.
+		 */
+		~HandPokeEvent(void) override;
+	};
 
-} // namespace utility::event
+}	 // namespace utility::event

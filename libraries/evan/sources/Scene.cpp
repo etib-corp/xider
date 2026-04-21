@@ -39,9 +39,10 @@ evan::Scene::~Scene()
 // Public Methods //
 ////////////////////
 
-void evan::Scene::updateScene(const DeviceContext &deviceContext, const Renderer &renderer,
-							 std::vector<std::string> texturePaths,
-							 std::map<std::string, std::vector<Mesh>> meshData)
+void evan::Scene::updateScene(const DeviceContext &deviceContext,
+							  const Renderer &renderer,
+							  std::vector<std::string> texturePaths,
+							  std::map<std::string, std::vector<Mesh>> meshData)
 {
 	// Clear existing meshes and materials
 	_meshes.clear();

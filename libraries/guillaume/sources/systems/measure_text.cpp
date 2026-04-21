@@ -56,8 +56,8 @@ namespace guillaume::systems
 
 		utility::graphic::Text text(
 			_renderer.getRessourceManager(), _renderer.getAssetManager(),
-			textComponent.getContent(),
-			textComponent.getFontSize(), _defaultFontPath);
+			textComponent.getContent(), textComponent.getFontSize(),
+			_defaultFontPath);
 		text.setColor(utility::graphic::Color32Bit());
 
 		auto textSize = _renderer.measureText(text);

@@ -22,4 +22,6 @@
 
 #include "utility/singleton.hpp"
 
-namespace utility {} // namespace utility
+namespace utility
+{
+}	 // namespace utility

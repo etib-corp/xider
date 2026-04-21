@@ -447,9 +447,9 @@ namespace guillaume::entities
 
 		const auto buttonWidth = static_cast<float>(calculWidth());
 		const auto labelWidth  = static_cast<float>(
-			getComponentRegistry()
-				.getComponent<components::Bound>(_labelIdentifier)
-				.getWidth());
+			 getComponentRegistry()
+				 .getComponent<components::Bound>(_labelIdentifier)
+				 .getWidth());
 		const float buttonLeft =
 			buttonPose.getPosition().getX() - (buttonWidth / 2.0f);
 		const float buttonCenterY = buttonPose.getPosition().getY()
@@ -473,9 +473,9 @@ namespace guillaume::entities
 
 		const auto buttonWidth = static_cast<float>(calculWidth());
 		const auto labelWidth  = static_cast<float>(
-			getComponentRegistry()
-				.getComponent<components::Bound>(_labelIdentifier)
-				.getWidth());
+			 getComponentRegistry()
+				 .getComponent<components::Bound>(_labelIdentifier)
+				 .getWidth());
 		const float buttonLeft =
 			buttonPose.getPosition().getX() - (buttonWidth / 2.0f);
 		const float buttonCenterY = buttonPose.getPosition().getY()

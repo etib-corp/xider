@@ -22,4 +22,6 @@
 
 #include "utility/demangle.hpp"
 
-namespace utility {} // namespace utility
+namespace utility
+{
+}	 // namespace utility

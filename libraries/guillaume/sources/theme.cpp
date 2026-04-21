@@ -33,9 +33,9 @@ namespace guillaume
 	}
 
 	ExtendedColor::ExtendedColor(const utility::graphic::Color32Bit &color,
-							   const std::string &name,
-							   const std::string &description,
-							   bool harmonized)
+								 const std::string &name,
+								 const std::string &description,
+								 bool harmonized)
 		: _color(color)
 		, _name(name)
 		, _description(description)
@@ -85,7 +85,8 @@ namespace guillaume
 
 	Scheme::Scheme(
 		const std::array<ExtendedColor,
-						 static_cast<std::size_t>(SchemeColorRole::Count)> &colors)
+						 static_cast<std::size_t>(SchemeColorRole::Count)>
+			&colors)
 		: _colors(colors)
 	{
 	}
@@ -106,10 +107,9 @@ namespace guillaume
 	}
 
 	void Scheme::setColor(SchemeColorRole role,
-					 const utility::graphic::Color32Bit &color,
-					 const std::string &name,
-					 const std::string &description,
-					 bool harmonized)
+						  const utility::graphic::Color32Bit &color,
+						  const std::string &name,
+						  const std::string &description, bool harmonized)
 	{
 		_colors[toIndex(role)] =
 			ExtendedColor(color, name, description, harmonized);
@@ -164,11 +164,9 @@ namespace guillaume
 		_tones[tone] = color;
 	}
 
-	void Palette::setTone(Tone tone,
-					 const utility::graphic::Color32Bit &color,
-					 const std::string &name,
-					 const std::string &description,
-					 bool harmonized)
+	void Palette::setTone(Tone tone, const utility::graphic::Color32Bit &color,
+						  const std::string &name,
+						  const std::string &description, bool harmonized)
 	{
 		_tones[tone] = ExtendedColor(color, name, description, harmonized);
 	}

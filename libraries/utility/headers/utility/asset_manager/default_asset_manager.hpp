@@ -29,54 +29,59 @@
 
 #include "utility/asset_manager/asset_manager.hpp"
 
-namespace utility {
+namespace utility
+{
 
-/**
- * @class DefaultAssetManager
- * @brief The DefaultAssetManager class is a concrete implementation of the
- * AssetManager interface that loads assets from the file system.
- */
-class DefaultAssetManager : public AssetManager {
-public:
-  /**
-   * @brief Constructs a DefaultAssetManager.
-   */
-  DefaultAssetManager() = default;
+	/**
+	 * @class DefaultAssetManager
+	 * @brief The DefaultAssetManager class is a concrete implementation of the
+	 * AssetManager interface that loads assets from the file system.
+	 */
+	class DefaultAssetManager: public AssetManager
+	{
+		public:
+		/**
+		 * @brief Constructs a DefaultAssetManager.
+		 */
+		DefaultAssetManager() = default;
 
-  using AssetManager::add;
-  using AssetManager::loadDirectory;
-  using AssetManager::remove;
-  using AssetManager::save;
+		using AssetManager::add;
+		using AssetManager::loadDirectory;
+		using AssetManager::remove;
+		using AssetManager::save;
 
-  /**
-   * @brief Default destructor for DefaultAssetManager.
-   * @param directory The path to the directory containing the assets.
-   * @return True if the assets were loaded successfully, false otherwise.
-   */
-  bool loadDirectory(const std::string &directory) override;
+		/**
+		 * @brief Default destructor for DefaultAssetManager.
+		 * @param directory The path to the directory containing the assets.
+		 * @return True if the assets were loaded successfully, false otherwise.
+		 */
+		bool loadDirectory(const std::string &directory) override;
 
-  /**
-   * @brief Adds an asset to the manager by loading it from the file system.
-   * @param path The path to the asset file.
-   * @return A shared pointer to the loaded FileAsset, or nullptr if loading
-   * failed.
-   */
-  std::shared_ptr<utility::FileAsset> add(const std::string &path) override;
+		/**
+		 * @brief Adds an asset to the manager by loading it from the file
+		 * system.
+		 * @param path The path to the asset file.
+		 * @return A shared pointer to the loaded FileAsset, or nullptr if
+		 * loading failed.
+		 */
+		std::shared_ptr<utility::FileAsset>
+			add(const std::string &path) override;
 
-  /**
-   * @brief Removes an asset from the manager.
-   * @param path The path to the asset to remove.
-   * @param save Whether to save the asset before removing it.
-   */
-  void remove(const std::string &path, bool save = true) override;
+		/**
+		 * @brief Removes an asset from the manager.
+		 * @param path The path to the asset to remove.
+		 * @param save Whether to save the asset before removing it.
+		 */
+		void remove(const std::string &path, bool save = true) override;
 
-  /**
-   * @brief Saves an asset to the file system.
-   * @param path The path to the asset to save.
-   * @param newPath An optional new path to save the asset to. If not provided,
-   * the asset will be saved to its original path.
-   * @return True if the asset was saved successfully, false otherwise.
-   */
-  bool save(const std::string &path, const std::string &newPath = "") override;
-};
-} // namespace utility
+		/**
+		 * @brief Saves an asset to the file system.
+		 * @param path The path to the asset to save.
+		 * @param newPath An optional new path to save the asset to. If not
+		 * provided, the asset will be saved to its original path.
+		 * @return True if the asset was saved successfully, false otherwise.
+		 */
+		bool save(const std::string &path,
+				  const std::string &newPath = "") override;
+	};
+}	 // namespace utility

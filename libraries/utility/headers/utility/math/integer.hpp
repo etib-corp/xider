@@ -24,15 +24,16 @@
 
 #include <glm/integer.hpp>
 
-namespace utility::math {
-using glm::bitCount;
-using glm::bitfieldExtract;
-using glm::bitfieldInsert;
-using glm::bitfieldReverse;
-using glm::findLSB;
-using glm::findMSB;
-using glm::imulExtended;
-using glm::uaddCarry;
-using glm::umulExtended;
-using glm::usubBorrow;
-} // namespace utility::math
+namespace utility::math
+{
+	using glm::bitCount;
+	using glm::bitfieldExtract;
+	using glm::bitfieldInsert;
+	using glm::bitfieldReverse;
+	using glm::findLSB;
+	using glm::findMSB;
+	using glm::imulExtended;
+	using glm::uaddCarry;
+	using glm::umulExtended;
+	using glm::usubBorrow;
+}	 // namespace utility::math

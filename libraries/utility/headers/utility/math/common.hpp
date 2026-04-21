@@ -24,30 +24,31 @@
 
 #include <glm/common.hpp>
 
-namespace utility::math {
-using glm::abs;
-using glm::ceil;
-using glm::clamp;
-using glm::floatBitsToInt;
-using glm::floatBitsToUint;
-using glm::floor;
-using glm::fma;
-using glm::fract;
-using glm::frexp;
-using glm::intBitsToFloat;
-using glm::isinf;
-using glm::isnan;
-using glm::ldexp;
-using glm::max;
-using glm::min;
-using glm::mix;
-using glm::mod;
-using glm::modf;
-using glm::round;
-using glm::roundEven;
-using glm::sign;
-using glm::smoothstep;
-using glm::step;
-using glm::trunc;
-using glm::uintBitsToFloat;
-} // namespace utility::math
+namespace utility::math
+{
+	using glm::abs;
+	using glm::ceil;
+	using glm::clamp;
+	using glm::floatBitsToInt;
+	using glm::floatBitsToUint;
+	using glm::floor;
+	using glm::fma;
+	using glm::fract;
+	using glm::frexp;
+	using glm::intBitsToFloat;
+	using glm::isinf;
+	using glm::isnan;
+	using glm::ldexp;
+	using glm::max;
+	using glm::min;
+	using glm::mix;
+	using glm::mod;
+	using glm::modf;
+	using glm::round;
+	using glm::roundEven;
+	using glm::sign;
+	using glm::smoothstep;
+	using glm::step;
+	using glm::trunc;
+	using glm::uintBitsToFloat;
+}	 // namespace utility::math

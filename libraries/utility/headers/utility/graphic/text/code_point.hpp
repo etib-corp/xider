@@ -24,7 +24,8 @@
  * @file code_point.hpp
  * @brief Code point definitions for text rendering.
  *
- * Defines types and utilities for handling Unicode code points in text rendering.
+ * Defines types and utilities for handling Unicode code points in text
+ * rendering.
  */
 
 #pragma once

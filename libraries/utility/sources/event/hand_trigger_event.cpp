@@ -24,41 +24,58 @@
 
 #include "utility/math/common.hpp"
 
-namespace utility::event {
+namespace utility::event
+{
 
-HandTriggerEvent::Factory::~Factory(void) = default;
+	HandTriggerEvent::Factory::~Factory(void) = default;
 
-std::unique_ptr<Event> HandTriggerEvent::Factory::create(void) const {
-  return std::make_unique<HandTriggerEvent>();
-}
+	std::unique_ptr<Event> HandTriggerEvent::Factory::create(void) const
+	{
+		return std::make_unique<HandTriggerEvent>();
+	}
 
-std::unique_ptr<HandTriggerEvent> HandTriggerEvent::Factory::createTyped(void) const {
-  return std::make_unique<HandTriggerEvent>();
-}
+	std::unique_ptr<HandTriggerEvent>
+		HandTriggerEvent::Factory::createTyped(void) const
+	{
+		return std::make_unique<HandTriggerEvent>();
+	}
 
-HandTriggerEvent::HandTriggerEvent(void) = default;
+	HandTriggerEvent::HandTriggerEvent(void) = default;
 
-HandTriggerEvent::~HandTriggerEvent(void) = default;
+	HandTriggerEvent::~HandTriggerEvent(void) = default;
 
-HandTriggerEvent &HandTriggerEvent::setValue(const float value) noexcept {
-  _value = utility::math::clamp(value, 0.0F, 1.0F);
-  return *this;
-}
+	HandTriggerEvent &HandTriggerEvent::setValue(const float value) noexcept
+	{
+		_value = utility::math::clamp(value, 0.0F, 1.0F);
+		return *this;
+	}
 
-float HandTriggerEvent::getValue(void) const noexcept { return _value; }
+	float HandTriggerEvent::getValue(void) const noexcept
+	{
+		return _value;
+	}
 
-HandTriggerEvent &HandTriggerEvent::setTouched(const bool touched) noexcept {
-  _isTouched = touched;
-  return *this;
-}
+	HandTriggerEvent &HandTriggerEvent::setTouched(const bool touched) noexcept
+	{
+		_isTouched = touched;
+		return *this;
+	}
 
-bool HandTriggerEvent::isTouched(void) const noexcept { return _isTouched; }
+	bool HandTriggerEvent::isTouched(void) const noexcept
+	{
+		return _isTouched;
+	}
 
-HandTriggerEvent &HandTriggerEvent::setProximity(const bool proximity) noexcept {
-  _isProximity = proximity;
-  return *this;
-}
+	HandTriggerEvent &
+		HandTriggerEvent::setProximity(const bool proximity) noexcept
+	{
+		_isProximity = proximity;
+		return *this;
+	}
 
-bool HandTriggerEvent::isProximity(void) const noexcept { return _isProximity; }
+	bool HandTriggerEvent::isProximity(void) const noexcept
+	{
+		return _isProximity;
+	}
 
-} // namespace utility::event
+}	 // namespace utility::event
