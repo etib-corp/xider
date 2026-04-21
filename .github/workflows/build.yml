@@ -7,8 +7,8 @@ on:
     branches: [ "main" ]
 
 env:
-  LUNARG_VULKAN_SDK_BASE_URL: https://sdk.lunarg.com/sdk/download/
   LUNARG_VULKAN_SDK_VERSION: 1.4.341.1
+  JAVA_VERSION: 21
 
 jobs:
   build:
@@ -41,7 +41,7 @@ jobs:
       - name: Setup Vulkan SDK
         uses: humbletim/setup-vulkan-sdk@v1.2.1
         with:
-          vulkan-query-version: latest
+          vulkan-query-version: ${{ env.LUNARG_VULKAN_SDK_VERSION }}
           vulkan-components: Vulkan-Headers, Vulkan-Loader
           vulkan-use-cache: true
 
@@ -50,7 +50,7 @@ jobs:
         uses: actions/setup-java@v5.2.0
         with:
           distribution: "temurin"
-          java-version: "21"
+          java-version: "${{ env.JAVA_VERSION }}"
 
       - name: Checkout the repository
         uses: actions/checkout@v6.0.2
