@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "xider/xider.hpp"
+#include <xider/xider.hpp>
 
 int main()
 {

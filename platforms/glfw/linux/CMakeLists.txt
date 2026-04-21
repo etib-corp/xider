@@ -3,6 +3,9 @@ if(NOT CMAKE_SYSTEM_NAME STREQUAL "Linux")
     return()
 endif()
 
+# Add subdirectory for local dependencies
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../../../libraries/xider ${CMAKE_CURRENT_BINARY_DIR}/xider)
+
 # Set the name of the target
 set(LINUX_DESKTOP_TARGET "xider-desktop-linux")
 
@@ -23,14 +26,4 @@ file(GLOB_RECURSE LINUX_DESKTOP_SOURCES CONFIGURE_DEPENDS
 # Create the Linux desktop target
 add_executable(${LINUX_DESKTOP_TARGET} ${LINUX_DESKTOP_SOURCES})
 
-# Link with xider library
 target_link_libraries(${LINUX_DESKTOP_TARGET} PRIVATE xider)
-
-# Set common properties
-set_target_properties(${LINUX_DESKTOP_TARGET} PROPERTIES
-    CXX_STANDARD 20
-    CXX_STANDARD_REQUIRED ON
-    CXX_EXTENSIONS OFF
-)
-
-target_compile_definitions(${LINUX_DESKTOP_TARGET} PRIVATE XIDER_DESKTOP_PLATFORM_LINUX=1)

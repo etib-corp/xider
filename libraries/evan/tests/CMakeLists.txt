@@ -22,9 +22,6 @@ FetchContent_MakeAvailable(googletest)
 # Create test executable
 add_executable(test_${PROJECT_NAME} ${TEST_SOURCES})
 
-# Set common target properties
-set_xider_target_properties(test_${PROJECT_NAME})
-
 # Configure include directories
 target_include_directories(test_${PROJECT_NAME} PRIVATE
     ${TEST_HEADERS_DIR}

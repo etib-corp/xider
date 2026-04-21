@@ -20,4 +20,11 @@
  SOFTWARE.
  */
 
-#include "test_xider.hpp"
+#include "test_engine.hpp"
+
+TEST_F(TestEngine, SampleTest)
+{
+	// This is a sample test case. Replace it with actual tests for the Engine
+	// class.
+	EXPECT_TRUE(true);
+}

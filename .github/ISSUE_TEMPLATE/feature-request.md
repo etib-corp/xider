@@ -3,7 +3,6 @@ name: Feature request
 about: Suggest and document a potential feature.
 title: 'feat: my game changer feature'
 labels: enhancement
-assignees: clement-antoine-xavier
 
 ---
 

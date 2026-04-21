@@ -11,70 +11,26 @@ project(evan
     LANGUAGES CXX
 )
 
-set(_xider_toolkit "${CMAKE_SOURCE_DIR}/cmake/ProjectToolkit.cmake")
-if(EXISTS "${_xider_toolkit}")
-    include("${_xider_toolkit}")
-endif()
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Include common functions
-include(${CMAKE_SOURCE_DIR}/cmake/CommonFunctions.cmake)
+# 01. Policy & standard setup
 
-# Set global C++ standard and build defaults
-if(COMMAND xider_apply_project_defaults)
-    xider_apply_project_defaults()
-else()
-    set(CMAKE_CXX_STANDARD 20)
-    set(CMAKE_CXX_STANDARD_REQUIRED ON)
-    set(CMAKE_CXX_EXTENSIONS OFF)
-    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-
-    if(NOT CMAKE_BUILD_TYPE)
-        set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build" FORCE)
-        set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
-    endif()
-endif()
-
-# Feature options
+# 02. Options & configuration
 option(BUILD_FOR_OPENXR "Build with OpenXR support" OFF)
 option(BUILD_FOR_GLFW "Build with GLFW support" OFF)
-option(BUILD_SHARED_LIBS "Build as shared library" OFF)
 
-# Platform-specific configuration (must come after feature options)
-if(ANDROID)
-    include(${CMAKE_SOURCE_DIR}/cmake/ConfigAndroid.cmake)
-elseif(WIN32)
-    include(${CMAKE_SOURCE_DIR}/cmake/ConfigWindows.cmake)
-elseif(APPLE)
-    include(${CMAKE_SOURCE_DIR}/cmake/ConfigMacOS.cmake)
-elseif(UNIX)
-    include(${CMAKE_SOURCE_DIR}/cmake/ConfigLinux.cmake)
-endif()
+# 03. Global properties
 
-# Global GLM defines
-add_compile_definitions(GLM_FORCE_RADIANS)
-add_compile_definitions(GLM_FORCE_DEPTH_ZERO_TO_ONE)
-add_compile_definitions(GLM_ENABLE_EXPERIMENTAL)
-
-# Check that at least one build mode is selected
-if(NOT BUILD_FOR_OPENXR AND NOT BUILD_FOR_GLFW)
-    if(BUILD_DOCS)
-        message(STATUS "No backend selected; proceeding because BUILD_DOCS=ON (docs target only).")
-    else()
-        message(FATAL_ERROR "At least one of BUILD_FOR_OPENXR or BUILD_FOR_GLFW must be ON.")
-    endif()
-endif()
-
-# Set the files directories
+# Paths
 set(HEADERS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/headers")
 set(SOURCES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/sources")
 
-# Add the headers directories
-include_directories(${HEADERS_DIR})
-
-# FetchContent module
+# Dependencies
 include(FetchContent)
 
-set(GLM_BUILD_TESTS OFF)
+set(GLM_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 FetchContent_Declare(glm
     GIT_REPOSITORY https://github.com/g-truc/glm.git
     GIT_TAG 1.0.2
@@ -91,107 +47,31 @@ FetchContent_Declare(stb
 )
 FetchContent_MakeAvailable(stb)
 
-if(NOT TARGET utility)
-    message(FATAL_ERROR "Target 'utility' is required. Add libraries/utility before libraries/evan in the monorepo root CMakeLists.txt.")
-endif()
-
 find_package(Vulkan REQUIRED)
 
-# Collect common source files
-file(GLOB SOURCES_COMMON "${SOURCES_DIR}/common/*.cpp" "${SOURCES_DIR}/*.cpp")
+# Add subdirectory for local dependencies
+if(NOT TARGET utility)
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../utility ${CMAKE_CURRENT_BINARY_DIR}/utility)
+endif()
+
+# 04. Library definition
+file(GLOB SOURCES_COMMON
+    "${SOURCES_DIR}/common/*.cpp"
+    "${SOURCES_DIR}/*.cpp"
+)
 
 if(BUILD_SHARED_LIBS)
-    add_library(${PROJECT_NAME} SHARED ${SOURCES_COMMON})
+    add_library(${PROJECT_NAME} SHARED)
 else()
-    add_library(${PROJECT_NAME} STATIC ${SOURCES_COMMON})
+    add_library(${PROJECT_NAME} STATIC)
 endif()
 
-# Link common dependencies
-target_link_libraries(${PROJECT_NAME} PUBLIC Vulkan::Vulkan glm utility)
+target_sources(${PROJECT_NAME}
+    PRIVATE
+        ${SOURCES_COMMON}
+)
 
-# Configure for OpenXR
-if(BUILD_FOR_OPENXR)
-    message(STATUS "Building with OpenXR support")
-
-    # Add OpenXR platform defines
-    add_compile_definitions(XR_USE_GRAPHICS_API_VULKAN)
-    # Android-specific defines and includes
-    if(ANDROID)
-        add_compile_definitions(XR_USE_PLATFORM_ANDROID)
-        add_compile_definitions(VK_USE_PLATFORM_ANDROID_KHR)
-        include_directories(${JAVA_INCLUDE_PATHS})
-        find_library(log-lib log)
-        find_library(android-lib android)
-        find_library(jnigraphics-lib jnigraphics)
-    endif()
-
-    # Disable OpenXR tests and other unnecessary components
-    set(BUILD_TESTS OFF CACHE BOOL "" FORCE)
-    set(BUILD_CONFORMANCE_TESTS OFF CACHE BOOL "" FORCE)
-    set(BUILD_API_LAYERS OFF CACHE BOOL "" FORCE)
-    set(BUILD_WITH_SYSTEM_JSONCPP OFF CACHE BOOL "Use bundled jsoncpp for OpenXR SDK" FORCE)
-
-    # Fetch OpenXR SDK
-    FetchContent_Declare(OpenXR-SDK
-        GIT_REPOSITORY https://github.com/KhronosGroup/OpenXR-SDK-Source.git
-        GIT_TAG release-1.1.54
-        GIT_SHALLOW TRUE
-        GIT_PROGRESS TRUE
-    )
-    FetchContent_MakeAvailable(OpenXR-SDK)
-
-    # Add OpenXR compile definition
-    add_compile_definitions(__OPENXR__)
-
-    # Collect OpenXR-specific source files
-    file(GLOB_RECURSE SOURCES_XR "${SOURCES_DIR}/openxr/*.cpp")
-
-    # Exclude Android-specific files on non-Android platforms
-    if(NOT ANDROID)
-        list(FILTER SOURCES_XR EXCLUDE REGEX ".*AndroidPlatform\\.cpp$")
-    endif()
-
-    # Create library with OpenXR support
-    target_sources(${PROJECT_NAME} PRIVATE ${SOURCES_XR})
-
-    # Link OpenXR dependencies
-    if(ANDROID)
-        target_link_libraries(${PROJECT_NAME} PRIVATE OpenXR::openxr_loader ${log-lib} ${android-lib} ${jnigraphics-lib})
-    else()
-        target_link_libraries(${PROJECT_NAME} PRIVATE OpenXR::openxr_loader)
-    endif()
-endif()
-
-# Configure for GLFW
-if(BUILD_FOR_GLFW)
-    message(STATUS "Building with GLFW support")
-
-    # Fetch GLFW for window management
-    FetchContent_Declare(glfw
-        GIT_REPOSITORY https://github.com/glfw/glfw.git
-        GIT_TAG 3.4
-        GIT_SHALLOW TRUE
-        GIT_PROGRESS TRUE
-    )
-    FetchContent_MakeAvailable(glfw)
-
-    # Add Vulkan compile definition
-    add_compile_definitions(__GLFW__)
-
-    # Collect Vulkan-specific source files
-    file(GLOB_RECURSE GLFW_SOURCES "${SOURCES_DIR}/glfw/*.cpp")
-
-    # Create library with Vulkan support
-    target_sources(${PROJECT_NAME} PRIVATE ${GLFW_SOURCES})
-
-    # Link Vulkan dependencies
-    target_link_libraries(${PROJECT_NAME} PUBLIC glfw)
-endif()
-
-# Set common target properties
-set_evan_target_properties(${PROJECT_NAME})
-
-# Configure public interface
+# 05. Include directories
 target_include_directories(${PROJECT_NAME}
     PUBLIC
         $<BUILD_INTERFACE:${HEADERS_DIR}>
@@ -199,7 +79,87 @@ target_include_directories(${PROJECT_NAME}
         $<BUILD_INTERFACE:${stb_SOURCE_DIR}>
 )
 
-# Add OpenXR headers if OpenXR support is enabled
+# 06. Compile definitions & options
+target_compile_definitions(${PROJECT_NAME}
+    PUBLIC
+        GLM_FORCE_RADIANS
+        GLM_FORCE_DEPTH_ZERO_TO_ONE
+        GLM_ENABLE_EXPERIMENTAL
+)
+
+# 07. Link dependencies
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC
+        Vulkan::Vulkan
+        glm
+        utility
+)
+
+# 08. Backend-specific configuration
+
+# OpenXR flags
+if(BUILD_FOR_OPENXR)
+    message(STATUS "Building with OpenXR support")
+    target_compile_definitions(${PROJECT_NAME}
+        PUBLIC
+            XR_USE_GRAPHICS_API_VULKAN
+            __OPENXR__
+    )
+endif()
+
+# OpenXR Android flags
+if(BUILD_FOR_OPENXR AND ANDROID)
+    target_compile_definitions(${PROJECT_NAME}
+        PUBLIC
+            XR_USE_PLATFORM_ANDROID
+            VK_USE_PLATFORM_ANDROID_KHR
+    )
+
+    if(JAVA_INCLUDE_PATHS)
+        target_include_directories(${PROJECT_NAME} PRIVATE ${JAVA_INCLUDE_PATHS})
+    endif()
+
+    find_library(log-lib log)
+    find_library(android-lib android)
+    find_library(jnigraphics-lib jnigraphics)
+endif()
+
+# OpenXR dependency options
+if(BUILD_FOR_OPENXR)
+    set(BUILD_TESTS OFF CACHE BOOL "" FORCE)
+    set(BUILD_CONFORMANCE_TESTS OFF CACHE BOOL "" FORCE)
+    set(BUILD_API_LAYERS OFF CACHE BOOL "" FORCE)
+    set(BUILD_WITH_SYSTEM_JSONCPP OFF CACHE BOOL "Use bundled jsoncpp for OpenXR SDK" FORCE)
+endif()
+
+# OpenXR fetch
+if(BUILD_FOR_OPENXR)
+    FetchContent_Declare(OpenXR-SDK
+        GIT_REPOSITORY https://github.com/KhronosGroup/OpenXR-SDK-Source.git
+        GIT_TAG release-1.1.54
+        GIT_SHALLOW TRUE
+        GIT_PROGRESS TRUE
+    )
+    FetchContent_MakeAvailable(OpenXR-SDK)
+endif()
+
+# OpenXR sources
+if(BUILD_FOR_OPENXR)
+    file(GLOB_RECURSE SOURCES_XR
+        "${SOURCES_DIR}/openxr/*.cpp"
+    )
+
+    if(NOT ANDROID)
+        list(FILTER SOURCES_XR EXCLUDE REGEX ".*AndroidPlatform\\.cpp$")
+    endif()
+
+    target_sources(${PROJECT_NAME}
+        PRIVATE
+            ${SOURCES_XR}
+    )
+endif()
+
+# OpenXR includes
 if(BUILD_FOR_OPENXR)
     target_include_directories(${PROJECT_NAME}
         PUBLIC
@@ -208,33 +168,78 @@ if(BUILD_FOR_OPENXR)
     )
 endif()
 
-# Optional components
-option(BUILD_DOCS "Build documentation" OFF)
-option(BUILD_EXAMPLES "Build the examples" OFF)
+# OpenXR links
 
-if(BUILD_GUILLAUME_DOCS)
-    file(GLOB_RECURSE HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/headers/*.hpp")
-    file(GLOB_RECURSE DOCS_FILES "${CMAKE_CURRENT_SOURCE_DIR}/docs/*.md")
-    file(GLOB_RECURSE EXAMPLE_DOCS_FILES "${CMAKE_CURRENT_SOURCE_DIR}/examples/*.md")
+if(BUILD_FOR_OPENXR)
+    target_link_libraries(${PROJECT_NAME}
+        PRIVATE
+            OpenXR::openxr_loader
+    )
+endif()
 
-    if(COMMAND xider_add_doxygen_docs)
-        xider_add_doxygen_docs(
-            evan_docs
-            MAINPAGE "${CMAKE_CURRENT_SOURCE_DIR}/README.md"
-            PROJECT_NAME "${PROJECT_NAME}"
-            PROJECT_BRIEF "${PROJECT_DESCRIPTION}"
-            PROJECT_NUMBER "${PROJECT_VERSION}"
-            INPUTS
-                ${HEADER_FILES}
-                ${DOCS_FILES}
-                ${EXAMPLE_DOCS_FILES}
-                "${CMAKE_CURRENT_SOURCE_DIR}/CONTRIBUTING.md"
-                "${CMAKE_CURRENT_SOURCE_DIR}/README.md"
-            COMMENT "Generating API documentation with Doxygen"
-        )
-    else()
-        message(FATAL_ERROR "Shared Doxygen helper not found. Ensure cmake/ProjectToolkit.cmake is available from the monorepo root.")
-    endif()
+if(BUILD_FOR_OPENXR AND ANDROID)
+    target_link_libraries(${PROJECT_NAME}
+        PRIVATE
+            ${log-lib}
+            ${android-lib}
+            ${jnigraphics-lib}
+    )
+endif()
+
+# GLFW fetch
+if(BUILD_FOR_GLFW)
+    message(STATUS "Building with GLFW support")
+
+    FetchContent_Declare(glfw
+        GIT_REPOSITORY https://github.com/glfw/glfw.git
+        GIT_TAG 3.4
+        GIT_SHALLOW TRUE
+        GIT_PROGRESS TRUE
+    )
+    FetchContent_MakeAvailable(glfw)
+endif()
+
+# GLFW definitions
+if(BUILD_FOR_GLFW)
+    target_compile_definitions(${PROJECT_NAME}
+        PUBLIC
+            __GLFW__
+    )
+endif()
+
+# GLFW sources
+if(BUILD_FOR_GLFW)
+    file(GLOB_RECURSE GLFW_SOURCES
+        "${SOURCES_DIR}/glfw/*.cpp"
+    )
+
+    target_sources(${PROJECT_NAME}
+        PRIVATE
+            ${GLFW_SOURCES}
+    )
+endif()
+
+# GLFW links
+if(BUILD_FOR_GLFW)
+    target_link_libraries(${PROJECT_NAME}
+        PUBLIC
+            glfw
+    )
+endif()
+
+# 09. Documentations
+
+if(BUILD_DOCS)
+    message(STATUS "Building documentation...")
 else()
-    message(STATUS "Skipping docs...")
+    message(STATUS "Skipping documentation...")
+endif()
+
+# 10. Tests
+
+if(BUILD_TESTING)
+    message(STATUS "Building tests...")
+    add_subdirectory(tests)
+else()
+    message(STATUS "Skipping tests...")
 endif()

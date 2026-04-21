@@ -20,17 +20,25 @@
  SOFTWARE.
  */
 
-#include "xider/xider.hpp"
+#pragma once
 
-namespace xider
+#include <filesystem>
+
+#include <gtest/gtest.h>
+
+#include <evan/Engine.hpp>
+
+namespace xider::tests
 {
 
-	XIDER::XIDER()
+	class TestEngine: public ::testing::Test
 	{
-	}
+		protected:
+		TestEngine(void)			= default;
+		~TestEngine(void) override = default;
 
-	XIDER::~XIDER()
-	{
-	}
+		void SetUp(void) override;
+		void TearDown(void) override;
+	};
 
-}	 // namespace xider
+}	 // namespace xider::tests

@@ -3,6 +3,9 @@ if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
     return()
 endif()
 
+# Add subdirectory for local dependencies
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../../../libraries/xider ${CMAKE_CURRENT_BINARY_DIR}/xider)
+
 # Set the name of the target
 set(WINDOWS_DESKTOP_TARGET "xider-desktop-windows")
 
@@ -26,11 +29,3 @@ add_executable(${WINDOWS_DESKTOP_TARGET} ${WINDOWS_DESKTOP_SOURCES})
 # Link with xider library
 target_link_libraries(${WINDOWS_DESKTOP_TARGET} PRIVATE xider)
 
-# Set common properties
-set_target_properties(${WINDOWS_DESKTOP_TARGET} PROPERTIES
-    CXX_STANDARD 20
-    CXX_STANDARD_REQUIRED ON
-    CXX_EXTENSIONS OFF
-)
-
-target_compile_definitions(${WINDOWS_DESKTOP_TARGET} PRIVATE XIDER_DESKTOP_PLATFORM_WINDOWS=1)

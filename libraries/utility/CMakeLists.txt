@@ -7,42 +7,21 @@ project(utility
     LANGUAGES CXX
 )
 
-# Include useful CMake modules
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+# 01. Policy & standard setup
+
+
+# 02. Options & configuration
+
+
+# 03. Global properties
 include(FetchContent)
 
-set(_xider_toolkit "${CMAKE_SOURCE_DIR}/cmake/ProjectToolkit.cmake")
-if(EXISTS "${_xider_toolkit}")
-    include("${_xider_toolkit}")
-endif()
 
-# Include common functions
-include(${CMAKE_SOURCE_DIR}/cmake/CommonFunctions.cmake)
-
-# Platform-specific configuration
-if(WIN32)
-    include(${CMAKE_SOURCE_DIR}/cmake/ConfigWindows.cmake)
-elseif(APPLE)
-    include(${CMAKE_SOURCE_DIR}/cmake/ConfigMacOS.cmake)
-elseif(UNIX)
-    include(${CMAKE_SOURCE_DIR}/cmake/ConfigLinux.cmake)
-endif()
-
-# Set global C++ standard and build defaults
-if(COMMAND xider_apply_project_defaults)
-    xider_apply_project_defaults()
-else()
-    set(CMAKE_CXX_STANDARD 20)
-    set(CMAKE_CXX_STANDARD_REQUIRED ON)
-    set(CMAKE_CXX_EXTENSIONS OFF)
-    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-
-    if(NOT CMAKE_BUILD_TYPE)
-        set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build" FORCE)
-        set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
-    endif()
-endif()
-
-# Fetch and configure dependencies
+# Fetch external dependencies
 FetchContent_Declare(
     tinyobjloader
     GIT_REPOSITORY https://github.com/tinyobjloader/tinyobjloader.git
@@ -100,15 +79,16 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
     "${SOURCES_DIR}/*.cpp"
 )
 
-# Create the main library
+# 04. Library definition
 add_library(${PROJECT_NAME} ${SOURCES})
 
+# 06. Compile definitions
 target_compile_definitions(${PROJECT_NAME}
     PUBLIC
         GLM_ENABLE_EXPERIMENTAL
 )
 
-# Link common dependencies
+# 07. Link dependencies
 target_link_libraries(${PROJECT_NAME}
     PUBLIC
         tinyobjloader
@@ -123,10 +103,7 @@ if(WIN32)
     )
 endif()
 
-# Set common target properties
-set_utility_target_properties(${PROJECT_NAME})
-
-# Configure public interface
+# 05. Include directories
 target_include_directories(${PROJECT_NAME}
     PUBLIC
         $<BUILD_INTERFACE:${HEADERS_DIR}>
@@ -134,41 +111,19 @@ target_include_directories(${PROJECT_NAME}
         $<BUILD_INTERFACE:${stb_SOURCE_DIR}>
 )
 
-# Optional components
-option(BUILD_UTILITY_TESTING "Build the tests" OFF)
-option(BUILD_UTILITY_DOCS "Build documentation" OFF)
+# 08. Documentations
 
-if(BUILD_UTILITY_TESTING)
-    include(CTest)
+if(BUILD_DOCS)
+    message(STATUS "Building documentation...")
+else()
+    message(STATUS "Skipping documentation...")
+endif()
+
+# 09. Tests
+
+if(BUILD_TESTING)
+    message(STATUS "Building tests...")
     add_subdirectory(tests)
 else()
     message(STATUS "Skipping tests...")
-endif()
-
-if(BUILD_UTILITY_DOCS)
-    file(GLOB_RECURSE HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/headers/*.hpp" "${CMAKE_CURRENT_SOURCE_DIR}/headers/*.h")
-
-    if(COMMAND xider_add_doxygen_docs)
-        xider_add_doxygen_docs(
-            utility_docs
-            MAINPAGE "${CMAKE_CURRENT_SOURCE_DIR}/README.md"
-            PROJECT_NAME "${PROJECT_NAME}"
-            PROJECT_BRIEF "${PROJECT_DESCRIPTION}"
-            PROJECT_NUMBER "${PROJECT_VERSION}"
-            INPUTS
-                ${HEADER_FILES}
-                "${CMAKE_CURRENT_SOURCE_DIR}/README.md"
-            COMMENT "Generating API documentation with Doxygen"
-        )
-    else()
-        message(FATAL_ERROR "Shared Doxygen helper not found. Ensure cmake/ProjectToolkit.cmake is available from the monorepo root.")
-    endif()
-else()
-    message(STATUS "Skipping docs...")
-endif()
-
-if(BUILD_GRAPHICAL_TESTS)
-    add_subdirectory(graphical_tests)
-else()
-    message(STATUS "Skipping graphical tests...")
 endif()

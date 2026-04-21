@@ -1,9 +1,8 @@
 ---
 name: Question about the project
 about: This issue has not for goal to code, but to understand.
-title: 'QnA: why is the architecture so weird ?'
+title: 'Question: why is the architecture so weird ?'
 labels: question
-assignees: ''
 
 ---
 

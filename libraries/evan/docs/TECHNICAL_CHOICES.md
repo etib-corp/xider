@@ -58,10 +58,9 @@ And why over other graphics APIs like OpenGL or DirectX:
 |---------|:-------:|:-----:|:-----:|:-------:|:---:|
 | Vulkan  |    ✅   |   ✅   |   ⚠️  |    ✅   |  ⚠️  |
 | DirectX |    ✅   |   ❌   |   ❌  |    ❌   |  ❌  |
-| OpenGL  |	   ✅   |   ✅   |   ✅  |    ✅   |  ✅  |
+| OpenGL  |    ✅   |   ✅   |   ✅  |    ✅   |  ✅  |
 
 > Clearly DirectX is made only for Windows. So we can not use it for the project. Maybe for an optimized Windows version further ?
-
 
 *See: [malekal (in french)](https://www.malekal.com/directx-vs-opengl-vs-vulkan-lequel-est-le-meilleur/), [windowsreport (comparison between VK and DX12)](https://windowsreport.com/directx-12-vs-vulkan-a-detailed-comparison/)*
 
@@ -110,4 +109,3 @@ Inside the CMake, we have the possibility to build two different versions of the
 - **OpenXR**: This version uses the OpenXR library for VR/AR support.
 
 Then, depending on the user's needs, they can choose which version to build and use.
-

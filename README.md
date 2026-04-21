@@ -31,4 +31,3 @@ For more detailed information on each part of the project, please refer to the f
 - [Evan](libraries/evan/README.md)
 - [Guillaume](libraries/guillaume/README.md)
 - [XIDER](libraries/xider/README.md)
-- [XIDER Android](libraries/xider-android/README.md)
