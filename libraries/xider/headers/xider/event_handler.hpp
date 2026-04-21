@@ -20,20 +20,18 @@
  SOFTWARE.
  */
 
-#include "xider/xider.hpp"
+#pragma once
+
+#include <guillaume/event/event_handler.hpp>
 
 namespace xider
 {
-	XIDER::XIDER(void)
-		: guillaume::Application<Renderer, EventHandler, scenes::Main,
-								 scenes::Settings>()
+	class EventHandler: public guillaume::event::EventHandler
 	{
-		getLogger().info("XIDER application initialized");
-	}
-
-	XIDER::~XIDER(void)
-	{
-		getLogger().info("XIDER application destroyed");
-	}
+		public:
+		EventHandler(void);
+		~EventHandler(void) override;
+		void pollEvents(void) override;
+	};
 
 }	 // namespace xider

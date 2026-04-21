@@ -61,8 +61,9 @@ namespace guillaume
 
 		private:
 		utility::graphic::ViewF _view;	  ///< View state
-			utility::RessourceManager _ressourceManager;	 ///< Shared text/resource manager
-			utility::DefaultAssetManager _assetManager;	 ///< Shared asset manager
+		utility::RessourceManager
+			_ressourceManager;	  ///< Shared text/resource manager
+		utility::DefaultAssetManager _assetManager;	   ///< Shared asset manager
 
 		public:
 		/**
@@ -113,7 +114,7 @@ namespace guillaume
 		 * @return A 2D vector containing the width and height of the rendered
 		 * text in pixels in the form of utility::math::Vector<float, 2>.
 		 */
-		virtual utility::math::Vector<float, 2>
+		virtual utility::math::Vector2F
 			measureText(const utility::graphic::Text &text) = 0;
 
 		/**

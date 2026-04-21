@@ -1,5 +1,5 @@
-if(NOT CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    message(STATUS "Skipping Linux XR target on non-Linux host")
+if(NOT BUILD_FOR_LINUX)
+    message(STATUS "Skipping Linux XR target because BUILD_FOR_LINUX is OFF")
     return()
 endif()
 

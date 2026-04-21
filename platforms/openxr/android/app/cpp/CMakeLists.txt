@@ -48,7 +48,6 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC
 target_link_libraries(${PROJECT_NAME}
     native_app_glue
     xider
-    jnigraphics
     android
     log
 )

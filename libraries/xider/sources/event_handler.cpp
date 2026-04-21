@@ -20,20 +20,24 @@
  SOFTWARE.
  */
 
-#include "xider/xider.hpp"
+#include "xider/event_handler.hpp"
 
 namespace xider
 {
-	XIDER::XIDER(void)
-		: guillaume::Application<Renderer, EventHandler, scenes::Main,
-								 scenes::Settings>()
+
+	EventHandler::EventHandler(void)
+		: guillaume::event::EventHandler()
 	{
-		getLogger().info("XIDER application initialized");
+		getLogger().info("SDL3 Event Handler initialized");
 	}
 
-	XIDER::~XIDER(void)
+	EventHandler::~EventHandler(void)
 	{
-		getLogger().info("XIDER application destroyed");
+		getLogger().info("SDL3 Event Handler destroyed");
+	}
+
+	void EventHandler::pollEvents(void)
+	{
 	}
 
 }	 // namespace xider

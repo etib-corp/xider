@@ -20,20 +20,33 @@
  SOFTWARE.
  */
 
-#include "xider/xider.hpp"
+#pragma once
+
+#include <guillaume/renderer.hpp>
 
 namespace xider
 {
-	XIDER::XIDER(void)
-		: guillaume::Application<Renderer, EventHandler, scenes::Main,
-								 scenes::Settings>()
+	class Renderer: public guillaume::Renderer
 	{
-		getLogger().info("XIDER application initialized");
-	}
+		public:
+		Renderer(void);
 
-	XIDER::~XIDER(void)
-	{
-		getLogger().info("XIDER application destroyed");
-	}
+		~Renderer(void) override;
+
+		void clear(void) override;
+
+		void present(void) override;
+
+		void drawVertices(
+			const std::vector<utility::graphic::VertexF> &vertices) override;
+
+		void drawText(const utility::graphic::Text &text,
+					  const utility::graphic::PoseF &pose) override;
+
+		utility::math::Vector2F
+			measureText(const utility::graphic::Text &text) override;
+
+		ViewportSize getViewportSize(void) const override;
+	};
 
 }	 // namespace xider

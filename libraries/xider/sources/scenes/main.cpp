@@ -20,20 +20,42 @@
  SOFTWARE.
  */
 
-#include "xider/xider.hpp"
+#include <guillaume/entities/button.hpp>
+#include <guillaume/entities/panel.hpp>
 
-namespace xider
+#include "xider/scenes/main.hpp"
+
+namespace xider::scenes
 {
-	XIDER::XIDER(void)
-		: guillaume::Application<Renderer, EventHandler, scenes::Main,
-								 scenes::Settings>()
+
+	Main::Main(guillaume::LocalStorage &localStorage,
+			   guillaume::SessionStorage &sessionStorage)
+		: guillaume::Scene(localStorage, sessionStorage)
 	{
-		getLogger().info("XIDER application initialized");
+		getLogger().info("Main scene created");
+
+		auto &panelBuilder =
+			getBuilderManager()
+				.getBuilder<guillaume::entities::Panel::Builder>();
+		auto &panelDirector =
+			getDirectorManager()
+				.getDirector<guillaume::entities::Panel::Director>();
+
+		auto &buttonBuilder =
+			getBuilderManager()
+				.getBuilder<guillaume::entities::Button::Builder>();
+		auto &buttonDirector =
+			getDirectorManager()
+				.getDirector<guillaume::entities::Button::Director>();
+
+		buttonDirector.makeIconTextButton(
+			buttonBuilder, "settings", "Settings", [this]() {
+				this->getLogger().info("Button icon text clicked!");
+			});
 	}
 
-	XIDER::~XIDER(void)
+	Main::~Main(void)
 	{
-		getLogger().info("XIDER application destroyed");
 	}
 
-}	 // namespace xider
+}	 // namespace xider::scenes

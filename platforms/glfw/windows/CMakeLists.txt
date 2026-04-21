@@ -1,5 +1,5 @@
-if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    message(STATUS "Skipping Windows desktop target on non-Windows host")
+if(NOT BUILD_FOR_WINDOWS)
+    message(STATUS "Skipping Windows desktop target because BUILD_FOR_WINDOWS is OFF")
     return()
 endif()
 

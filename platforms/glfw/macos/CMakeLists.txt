@@ -1,5 +1,5 @@
-if(NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    message(STATUS "Skipping macOS desktop target on non-macOS host")
+if(NOT BUILD_FOR_MACOS)
+    message(STATUS "Skipping macOS desktop target because BUILD_FOR_MACOS is OFF")
     return()
 endif()
 

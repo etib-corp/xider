@@ -20,20 +20,20 @@
  SOFTWARE.
  */
 
-#include "xider/xider.hpp"
+#include "xider/scenes/settings.hpp"
 
-namespace xider
+namespace xider::scenes
 {
-	XIDER::XIDER(void)
-		: guillaume::Application<Renderer, EventHandler, scenes::Main,
-								 scenes::Settings>()
+
+	Settings::Settings(guillaume::LocalStorage &localStorage,
+					   guillaume::SessionStorage &sessionStorage)
+		: guillaume::Scene(localStorage, sessionStorage)
 	{
-		getLogger().info("XIDER application initialized");
+		getLogger().info("Settings scene created");
 	}
 
-	XIDER::~XIDER(void)
+	Settings::~Settings(void)
 	{
-		getLogger().info("XIDER application destroyed");
 	}
 
-}	 // namespace xider
+}	 // namespace xider::scenes

@@ -44,7 +44,7 @@ public:
   /**
    * @brief Mouse buttons enumeration.
    */
-  enum class Button : const std::uint8_t {
+  enum class Button : std::uint8_t {
     Unknown = 0,
     Left = 1,
     Middle = 2,

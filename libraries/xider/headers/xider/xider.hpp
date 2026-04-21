@@ -22,24 +22,24 @@
 
 #pragma once
 
+#include <guillaume/application.hpp>
+
+#include "xider/renderer.hpp"
+#include "xider/event_handler.hpp"
+
+#include "scenes/main.hpp"
+#include "scenes/settings.hpp"
+
 namespace xider
 {
-	/**
-	 * @brief The XIDER class represents the main class for the XIDER IDE. It
-	 * provides the core functionality and serves as the entry point for the
-	 * application.
-	 */
-	class XIDER
+
+	class XIDER:
+		public guillaume::Application<Renderer, EventHandler, scenes::Main,
+									  scenes::Settings>
 	{
 		public:
-		/**
-		 * @brief Constructs a new XIDER instance.
-		 */
-
 		XIDER(void);
-		/**
-		 * @brief Destroys the XIDER instance.
-		 */
 		~XIDER(void);
 	};
+
 }	 // namespace xider
