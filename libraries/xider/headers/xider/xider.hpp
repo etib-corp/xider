@@ -22,7 +22,10 @@
 
 #pragma once
 
+#include <memory>
+
 #include <guillaume/application.hpp>
+#include <Engine.hpp>
 
 #include "xider/renderer.hpp"
 #include "xider/event_handler.hpp"
@@ -32,14 +35,43 @@
 
 namespace xider
 {
-
+	/**
+	 * @class XIDER
+	 * @brief Main XIDER application class combining the GUI framework with Evan
+	 * graphics engine.
+	 *
+	 * XIDER is the entry point for the application, managing the integration
+	 * between Guillaume (GUI framework) and Evan (graphics engine). It provides
+	 * a unified interface for application lifecycle management, rendering, and
+	 * event handling across all platforms.
+	 */
 	class XIDER:
 		public guillaume::Application<Renderer, EventHandler, scenes::Main,
 									  scenes::Settings>
 	{
 		public:
-		XIDER(void);
+		/**
+		 * @brief Constructs a XIDER application with an Evan graphics engine.
+		 * @param engine The Evan graphics engine to use for rendering.
+		 *
+		 * This constructor initializes the XIDER application and configures the
+		 * renderer to use the provided Evan engine for all graphics operations.
+		 */
+		XIDER(std::shared_ptr<evan::Engine> engine);
+
+		/**
+		 * @brief Default destructor.
+		 */
 		~XIDER(void);
+
+		/**
+		 * @brief Gets the Evan graphics engine instance.
+		 * @return A shared pointer to the Evan graphics engine.
+		 */
+		std::shared_ptr<evan::Engine> getEngine(void) const;
+
+		private:
+		std::shared_ptr<evan::Engine> _engine;	 ///< Evan graphics engine
 	};
 
 }	 // namespace xider

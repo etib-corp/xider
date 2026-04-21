@@ -1,8 +1,30 @@
+/*
+ Copyright (c) 2026 ETIB Corporation
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy of
+ this software and associated documentation files (the "Software"), to deal in
+ the Software without restriction, including without limitation the rights to
+ use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ of the Software, and to permit persons to whom the Software is furnished to do
+ so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+ */
+
 #include <jni.h>
 
 #define LOG_NDEBUG 0
 
-#define LOG_TAG	  "EvanEngine"
+#define LOG_TAG	  "XIderEngine"
 #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 
@@ -16,6 +38,8 @@
 #include <iostream>
 
 #include <openxr/platform/AndroidXrPlatform.hpp>
+
+#include <xider/xider.hpp>
 
 #include <iostream>
 #include <streambuf>
@@ -131,52 +155,37 @@ static void AppHandleCmd(struct android_app *app, int32_t cmd)
 void android_main(struct android_app *android_app)
 {
 	redirectStdoutToLogcat();
-	std::cout << "Hello from stdout!" << std::endl;
-	std::cerr << "Hello from stderr!" << std::endl;
+	std::cout << "XIDER Android Application Started" << std::endl;
 
 	JNIEnv *env;
 	android_app->activity->vm->AttachCurrentThread(&env, nullptr);
 
 	android_app->onAppCmd = AppHandleCmd;
 	evan::Engine::initializeAssetManager(android_app->activity->assetManager);
+
+	// Initialize XR platform data
 	evan::AndroidXrPlatform::AndroidPlatformData platformData {
 		.applicationVM		 = android_app->activity->vm,
 		.applicationActivity = android_app->activity->clazz,
 		.androidApp			 = android_app
 	};
+
+	// Create XR platform instance
 	auto xrPlatform = std::shared_ptr<evan::AndroidXrPlatform>(
 		new evan::AndroidXrPlatform(platformData));
 	android_app->userData = &xrPlatform->_appState;
-	evan::Engine engine(xrPlatform);
 
-	g_assetManager->add(std::string("texture1.png"));
+	// Create Evan graphics engine with XR platform
+	auto evanEngine = std::make_shared<evan::Engine>(xrPlatform);
 
-	std::vector<std::string> texturePaths = {
-		"texture1.png",
-	};
+	// Initialize XIDER application with Evan engine
+	xider::XIDER app(evanEngine);
 
-	std::map<std::string, std::vector<evan::Mesh>> meshData = {
-		{ "texture1.png",
-		  { evan::Mesh { std::vector<evan::Vertex> {
-							 evan::Vertex { { -0.5f, -0.5f, -2.0f },
-											{ 0.0f, 0.0f, 0.0f },
-											{ 0.0f, 0.0f } },
-							 evan::Vertex { { 0.5f, -0.5f, -2.0f },
-											{ 1.0f, 1.0f, 0.0f },
-											{ 1.0f, 0.0f } },
-							 evan::Vertex { { 0.5f, 0.5f, -2.0f },
-											{ 1.0f, 1.0f, 0.0f },
-											{ 1.0f, 1.0f } },
-							 evan::Vertex { { -0.5f, 0.5f, -2.0f },
-											{ 0.0f, 1.0f, 0.0f },
-											{ 0.0f, 1.0f } },
-						 },
-						 std::vector<unsigned int> { 0, 1, 2, 2, 3, 0 } } } },
-	};
+	std::cout << "XIDER Application initialized successfully" << std::endl;
+	std::cout << "Entering main application loop..." << std::endl;
 
-	engine.addScene(0, texturePaths, meshData);
-	std::cout << "Entering main loop..." << std::endl;
 	while (!android_app->destroyRequested) {
+		// Process Android events
 		for (;;) {
 			int events;
 			struct android_poll_source *source;
@@ -194,9 +203,11 @@ void android_main(struct android_app *android_app)
 				source->process(android_app, source);
 			}
 		}
-		engine.pollEvents();
-		engine.update();
-		engine.render();
+
+		// Application lifecycle
+		app.pollEvents();
+		app.update();
+		app.render();
 	}
 }
 }

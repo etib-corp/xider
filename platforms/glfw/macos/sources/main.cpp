@@ -20,10 +20,24 @@
  SOFTWARE.
  */
 
+#include <memory>
+
 #include <xider/xider.hpp>
+
+#include <Engine.hpp>
+
+#include <glfw/platform/MacOsDesktopPlatform.hpp>
 
 int main(void)
 {
-	xider::XIDER xider;
-	return xider.run();
+	// Create Mac OS Desktop platform for graphics
+	auto macOsDesktopPlatform = std::make_shared<evan::MacOsDesktopPlatform>("XIDER", 1280, 720);
+
+	// Create Evan graphics engine with Mac OS Desktop platform
+	auto evanEngine = std::make_shared<evan::Engine>(macOsDesktopPlatform);
+
+	// Initialize XIDER application with Evan engine
+	xider::XIDER app(evanEngine);
+
+	return app.run();
 }

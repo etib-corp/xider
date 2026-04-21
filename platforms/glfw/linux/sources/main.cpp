@@ -20,10 +20,24 @@
  SOFTWARE.
  */
 
+#include <memory>
+
 #include <xider/xider.hpp>
+
+#include <Engine.hpp>
+
+#include <glfw/platform/LinuxDesktopPlatform.hpp>
 
 int main(void)
 {
-	xider::XIDER xider;
-	return xider.run();
+	// Create Linux Desktop platform for graphics
+	auto linuxDesktopPlatform = std::make_shared<evan::LinuxDesktopPlatform>("XIDER", 1280, 720);
+
+	// Create Evan graphics engine with Linux Desktop platform
+	auto evanEngine = std::make_shared<evan::Engine>(linuxDesktopPlatform);
+
+	// Initialize XIDER application with Evan engine
+	xider::XIDER app(evanEngine);
+
+	return app.run();
 }

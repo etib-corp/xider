@@ -20,10 +20,25 @@
  SOFTWARE.
  */
 
+#include <memory>
+
 #include <xider/xider.hpp>
+
+#include <Engine.hpp>
+
+#include <openxr/platform/LinuxXrPlatform.hpp>
 
 int main(void)
 {
-	xider::XIDER xider;
-	return xider.run();
+	// Create Linux Xr platform for graphics (OpenXR on desktop uses windowed
+	// display)
+	auto linuxXrPlatform = std::make_shared<evan::LinuxXrPlatform>();
+
+	// Create Evan graphics engine with Linux Xr platform
+	auto evanEngine = std::make_shared<evan::Engine>(linuxXrPlatform);
+
+	// Initialize XIDER application with Evan engine
+	xider::XIDER app(evanEngine);
+
+	return app.run();
 }

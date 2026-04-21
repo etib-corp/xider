@@ -24,6 +24,14 @@ void evan::Engine::initializeAssetManager(void* platformAssetManager) {
 evan::Engine::Engine(const std::shared_ptr<IPlatform> &platform)
 	: _platform(platform)
 {
+	if (!g_assetManager) {
+#ifdef __ANDROID__
+		throw std::runtime_error("Asset manager must be initialized before creating Engine on Android");
+#else
+		initializeAssetManager(nullptr);
+#endif
+	}
+
 	g_assetManager->loadDirectory(std::string("shaders"));
 
 	_deviceContext	   = std::make_shared<DeviceContext>(*platform);

@@ -26,11 +26,28 @@ namespace xider
 {
 	Renderer::Renderer(void)
 		: guillaume::Renderer()
+		, _engine(nullptr)
+	{
+	}
+
+	Renderer::Renderer(std::shared_ptr<evan::Engine> engine)
+		: guillaume::Renderer()
+		, _engine(engine)
 	{
 	}
 
 	Renderer::~Renderer(void)
 	{
+	}
+
+	void Renderer::setEngine(std::shared_ptr<evan::Engine> engine)
+	{
+		_engine = engine;
+	}
+
+	std::shared_ptr<evan::Engine> Renderer::getEngine(void) const
+	{
+		return _engine;
 	}
 
 	void Renderer::clear(void)
@@ -39,11 +56,15 @@ namespace xider
 
 	void Renderer::present(void)
 	{
+		if (_engine) {
+			_engine->render();
+		}
 	}
 
 	void Renderer::drawVertices(
 		const std::vector<utility::graphic::VertexF> &vertices)
 	{
+		(void)vertices;
 	}
 
 	utility::math::Vector2F
@@ -60,6 +81,8 @@ namespace xider
 	void Renderer::drawText(const utility::graphic::Text &text,
 							const utility::graphic::PoseF &pose)
 	{
+		(void)text;	   // Suppress unused parameter warning
+		(void)pose;	   // Suppress unused parameter warning
 	}
 
 }	 // namespace xider

@@ -22,30 +22,94 @@
 
 #pragma once
 
+#include <memory>
+
 #include <guillaume/renderer.hpp>
+#include <Engine.hpp>
 
 namespace xider
 {
+	/**
+	 * @class Renderer
+	 * @brief XIDER's rendering system backed by the Evan graphics engine.
+	 *
+	 * This class provides a unified rendering interface that wraps the Evan
+	 * graphics engine, which uses Vulkan for high-performance graphics. It
+	 * integrates with the Guillaume framework to provide a consistent API
+	 * across all XIDER platforms.
+	 */
 	class Renderer: public guillaume::Renderer
 	{
+		private:
+		private:
+		std::shared_ptr<evan::Engine> _engine;	  ///< Evan graphics engine
 		public:
+		/**
+		 * @brief Default constructor for template compatibility.
+		 * Initialize with a null engine; must call setEngine() before
+		 * rendering.
+		 */
 		Renderer(void);
+
+		/**
+		 * @brief Constructs a Renderer with an Evan engine instance.
+		 * @param engine The Evan graphics engine to use for rendering.
+		 */
+		Renderer(std::shared_ptr<evan::Engine> engine);
 
 		~Renderer(void) override;
 
+		/**
+		 * @brief Sets the Evan engine for this renderer.
+		 * @param engine The Evan graphics engine to use for rendering.
+		 */
+		void setEngine(std::shared_ptr<evan::Engine> engine);
+
+		/**
+		 * @brief Gets the current Evan engine instance.
+		 * @return A shared pointer to the Evan graphics engine.
+		 */
+		std::shared_ptr<evan::Engine> getEngine(void) const;
+
+		/**
+		 * @brief Clears the current render target.
+		 * Prepares the rendering surface for the next frame.
+		 */
 		void clear(void) override;
 
+		/**
+		 * @brief Presents the rendered frame to the display.
+		 * Executes the Evan renderer's frame drawing pipeline.
+		 */
 		void present(void) override;
 
+		/**
+		 * @brief Draws a set of vertices.
+		 * @param vertices The vertices to draw.
+		 */
 		void drawVertices(
 			const std::vector<utility::graphic::VertexF> &vertices) override;
 
+		/**
+		 * @brief Draws text at the specified position.
+		 * @param text The text to render.
+		 * @param pose The position and orientation for the text.
+		 */
 		void drawText(const utility::graphic::Text &text,
 					  const utility::graphic::PoseF &pose) override;
 
+		/**
+		 * @brief Measures text dimensions.
+		 * @param text The text to measure.
+		 * @return A Vector2F containing the width and height.
+		 */
 		utility::math::Vector2F
 			measureText(const utility::graphic::Text &text) override;
 
+		/**
+		 * @brief Gets the current viewport size.
+		 * @return ViewportSize containing width and height.
+		 */
 		ViewportSize getViewportSize(void) const override;
 	};
 

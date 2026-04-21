@@ -140,6 +140,42 @@ namespace guillaume
 		}
 
 		/**
+		 * @brief Get a reference to the renderer.
+		 * @return Reference to the application renderer.
+		 */
+		RendererType &getRenderer(void)
+		{
+			return _renderer;
+		}
+
+		/**
+		 * @brief Get a const reference to the renderer.
+		 * @return Const reference to the application renderer.
+		 */
+		const RendererType &getRenderer(void) const
+		{
+			return _renderer;
+		}
+
+		/**
+		 * @brief Get a reference to the event handler.
+		 * @return Reference to the application event handler.
+		 */
+		EventHandlerType &getEventHandler(void)
+		{
+			return _eventHandler;
+		}
+
+		/**
+		 * @brief Get a const reference to the event handler.
+		 * @return Const reference to the application event handler.
+		 */
+		const EventHandlerType &getEventHandler(void) const
+		{
+			return _eventHandler;
+		}
+
+		/**
 		 * @brief Run one system update pass for the active scene.
 		 */
 		void routine(void)
@@ -162,7 +198,83 @@ namespace guillaume
 		}
 
 		/**
-		 * @brief Run the application main loop.
+		 * @brief Poll events from the event handler.
+		 */
+		void pollEvents(void)
+		{
+			_eventHandler.pollEvents();
+		}
+
+		/**
+		 * @brief Clear the renderer.
+		 */
+		void clear(void)
+		{
+			_renderer.clear();
+		}
+
+		/**
+		 * @brief Present the rendered frame.
+		 */
+		void present(void)
+		{
+			_renderer.present();
+		}
+
+		/**
+		 * @brief Check if the event handler has new events.
+		 * @return True if new events were received, false otherwise.
+		 */
+		bool gotNewEvents(void) const
+		{
+			return _eventHandler.gotNewEvents();
+		}
+
+		/**
+		 * @brief Check if the application should quit (using event handler).
+		 * @return True if the application should quit, false otherwise.
+		 */
+		bool shouldQuit(void) const
+		{
+			return _eventHandler.shouldQuit();
+		}
+
+		/**
+		 * @brief Run the application main loop using a custom shouldQuit function.
+		 * @tparam ShouldQuitFn Type of the shouldQuit callable.
+		 * @param shouldQuitFn A callable that returns true when the loop should exit.
+		 * @return Exit code.
+		 *
+		 * @code
+		 * app.run([](){ return some_condition; });
+		 * @endcode
+		 */
+		template<typename ShouldQuitFn>
+		int run(ShouldQuitFn shouldQuitFn)
+		{
+			this->getLogger().info("Entering main loop with custom shouldQuit");
+			while (!shouldQuitFn()) {
+				try {
+					_eventHandler.pollEvents();
+					if (!_eventHandler.gotNewEvents()) {
+						continue;
+					}
+					_renderer.clear();
+					routine();
+					_renderer.present();
+					this->getLogger().debug("Processed a frame");
+				} catch (const std::exception &exception) {
+					this->getLogger().error(std::string("Application error: ")
+											+ exception.what());
+					return EXIT_FAILURE;
+				}
+			}
+			this->getLogger().info("Exiting main loop");
+			return EXIT_SUCCESS;
+		}
+
+		/**
+		 * @brief Run the application main loop using the event handler's shouldQuit.
 		 * @return Exit code.
 		 */
 		int run(void)
