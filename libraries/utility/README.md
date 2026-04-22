@@ -1,19 +1,24 @@
 # Utility
 
-**A comprehensive C++ utilities library tailored for the development of modern desktop and extended reality (XR) applications.**
+Utility is the shared support library used by the other libraries in this
+workspace. It collects common math, graphics, event, logging, asset, and helper
+types so the higher layers can stay focused on UI and rendering.
 
-Utility is designed to streamline the development process by providing a robust set of tools and components that facilitate the creation of high-performance, cross-platform applications. Whether you're building traditional desktop software or immersive XR experiences, Utility offers the flexibility and functionality needed to bring your projects to life.
+## What It Provides
 
-## Features
+- Math primitives and helpers.
+- Graphics data types such as vertices, colors, poses, and meshes.
+- Event models for mouse, keyboard, text input, and XR hand interactions.
+- Logging and singleton helpers.
+- Asset manager abstractions for desktop and Android.
 
-- **Cross-Platform Compatibility**: Seamlessly develop applications that run on Windows, macOS, Linux, and various XR platforms.
+## Build Notes
 
-- **Modular Design**: Utilize a wide range of utility components that can be easily integrated into your projects.
+Utility is a C++20 library built with CMake and fetched dependencies such as
+GLM, tinyobjloader, stb, and freetype.
 
-- **Performance Optimization**: Benefit from optimized algorithms and data structures that enhance application performance.
+## Documentation
 
-- **Comprehensive Documentation**: Access detailed guides and API references to help you get started quickly.
-
-## Getting Started
-
-To discover more about Guillaume, visit the [official documentation](https://github.com/etib-corp/guillaume/wiki).
+- [Architecture](docs/ARCHITECTURE.MD)
+- [How Utility Works](docs/HOW_GUILLAUME_WORKS.MD)
+- [Technical Choices](docs/TECHNICAL_CHOICES.MD)

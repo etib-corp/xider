@@ -1,29 +1,21 @@
-# Technical Choices
+# Guillaume Technical Choices
 
-This document summarizes key technical decisions for Guillaume.
+## Language
 
-## Programming Languages
+Guillaume is written in C++20 for the same portability and performance reasons
+as the rest of the workspace.
 
-Guillaume is written in `C++20`.
+## Dependencies
 
-Reasons:
+- Utility provides shared helpers, math types, graphics types, and events.
+- SQLite3 is used for embedded local storage.
 
-- High performance and low-level control.
-- Mature ecosystem for graphics and systems programming.
-- Strong fit for cross-platform native applications.
+## Build Model
 
-## Libraries
+Guillaume is built with CMake and keeps its public headers under `headers` and
+its implementation files under `sources`.
 
-- Utility: Shared helpers and data structures.
-- SQLite: Embedded storage engine for local persistence.
-- GoogleTest: Unit testing framework for verification.
+## Design Choice
 
-## Build System
-
-Guillaume uses CMake.
-
-- Source files are under `sources`.
-- Headers are under `headers`.
-- External dependencies are integrated with `FetchContent`.
-
-This setup keeps the project portable and reproducible across environments.
+The framework favors a compact native API over framework-specific abstractions,
+which keeps it suitable for desktop and XR UIs.

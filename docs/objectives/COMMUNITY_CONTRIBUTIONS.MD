@@ -7,7 +7,7 @@ Open the project to the community and encourage external contributions.
 ## Expected Deliverables
 
 - Public repository with LICENSE
-- CONTRIBUTING.md file
+- CONTRIBUTING.MD file
 - Clear issues for external contributors
 - Evidence of discussions (PRs, threads)
 
@@ -35,7 +35,7 @@ Open the project to the community and encourage external contributions.
 
 ## Contribution Guidelines
 
-The project is hosted on a public GitHub repository with a clear LICENSE file. A CONTRIBUTING.md file outlines the process for contributing, including:
+The project is hosted on a public GitHub repository with a clear LICENSE file. A CONTRIBUTING.MD file outlines the process for contributing, including:
 
 - **Coding Standards**: Established code style and best practices
 - **Branch Management**: Clear branching strategy for contributions

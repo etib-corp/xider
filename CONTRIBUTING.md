@@ -12,8 +12,8 @@ with consistent quality and collaboration practices.
 
 ## Before You Start
 
-- Read [Code Conventions](docs/CODE_CONVENTIONS.md).
-- Read [Commit Conventions](docs/COMMIT_CONVENTIONS.md).
+- Read [Code Conventions](docs/CODE_CONVENTIONS.MD).
+- Read [Commit Conventions](docs/COMMIT_CONVENTIONS.MD).
 - Sync your branch with the latest `main`.
 
 ## Pull Request Workflow

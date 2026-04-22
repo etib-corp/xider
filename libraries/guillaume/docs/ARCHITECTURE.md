@@ -1,38 +1,24 @@
-# Architecture
+# Guillaume Architecture
 
-Guillaume follows an Entity-Component-System (ECS) architecture to separate
-state, behavior, and orchestration.
+Guillaume is organized around an entity-component-system model so UI state,
+presentation, and interaction logic stay separate.
 
-## Core Concepts
+## Main Building Blocks
 
-- Entity: A uniquely identified object in the scene graph (button, text, icon).
-- Component: Data attached to an entity (transform, bounds, text content, etc.).
-- System: Logic that processes entities matching a component signature.
+- Entities represent UI objects such as buttons, labels, panels, and icons.
+- Components store data such as transform, bounds, text, color, and borders.
+- Systems apply behavior such as rendering, interaction, and text measurement.
+- Scenes group entities into screens and let the application switch between
+	them.
 
-This design makes the framework easier to extend and maintain.
+## Runtime Flow
 
-## Components
+1. The application creates a renderer and event handler.
+2. Scenes populate the UI tree using the storage objects passed in by the app.
+3. Systems render and update entities every frame.
+4. Input events update component state and drive transitions.
 
-- `Transform`: Position, orientation, and scale.
-- `Bounds`: Width and height.
-- `Color`: Fill or display color.
-- `Border`: Border color and thickness.
-- `Text`: Label content and font properties.
-- `Click`: Click callback and click-related state.
-- `Hover`: Hover callback and hover-related state.
-- `Focus`: Focus gain/loss behavior.
-- `Icon`: Icon identifier and rendering metadata.
+## Design Goal
 
-## Systems
-
-- `RectangleRender`: Draws rectangle-based entities.
-- `TextRender`: Draws text entities.
-- `IconRender`: Draws icon entities.
-- `Interaction`: Handles click, hover, and focus events.
-- `KeyboardControl`: Handles keyboard interactions.
-- `MeasureText`: Computes text bounds and updates `Bounds`.
-
-## Entity Hierarchy
-
-Entities can own linked entities. This enables composition patterns such as a
-button containing both text and icon entities.
+Keep the UI framework composable enough for complex interfaces while keeping
+the public API small and predictable.
