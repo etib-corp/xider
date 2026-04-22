@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 env:
-  LUNARG_VULKAN_SDK_VERSION: 1.4.341.1
+  LUNARG_VULKAN_SDK_VERSION: 1.4.335.0
   JAVA_VERSION: 21
 
 jobs:
