@@ -50,6 +50,10 @@ FetchContent_MakeAvailable(glm)
 
 set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
 
+# Ensure FreeType is configured without HarfBuzz.
+set(FT_DISABLE_HARFBUZZ ON CACHE BOOL "Disable HarfBuzz in FreeType" FORCE)
+set(FT_REQUIRE_HARFBUZZ OFF CACHE BOOL "Do not require HarfBuzz in FreeType" FORCE)
+
 FetchContent_Declare(
     freetype
     GIT_REPOSITORY https://gitlab.freedesktop.org/freetype/freetype.git
