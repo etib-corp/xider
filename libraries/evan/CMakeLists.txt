@@ -159,20 +159,11 @@ if(BUILD_FOR_OPENXR)
     )
 endif()
 
-# OpenXR includes
-if(BUILD_FOR_OPENXR)
-    target_include_directories(${PROJECT_NAME}
-        PUBLIC
-            "${openxr_SOURCE_DIR}/src/common"
-            "${openxr_SOURCE_DIR}/external/include"
-    )
-endif()
-
 # OpenXR links
 
 if(BUILD_FOR_OPENXR)
     target_link_libraries(${PROJECT_NAME}
-        PRIVATE
+        PUBLIC
             OpenXR::openxr_loader
     )
 endif()
