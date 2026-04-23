@@ -26,6 +26,14 @@ target_include_directories(native_app_glue  PUBLIC
     ${ANDROID_NDK}/sources/android/native_app_glue
 )
 
+# Some third-party CMake checks rely on TRY_RUN to probe GNU strerror_r.
+# Android builds are cross-compiled, so provide deterministic cache values.
+if(ANDROID AND CMAKE_CROSSCOMPILING)
+    # On Android/Bionic, GNU strerror_r is not available.
+    set(HAVE_GNU_STRERROR_R_EXITCODE "1" CACHE STRING "Result for cross-compiled GNU strerror_r probe" FORCE)
+    set(HAVE_GNU_STRERROR_R_EXITCODE__TRYRUN_OUTPUT "" CACHE STRING "Output for cross-compiled GNU strerror_r probe" FORCE)
+endif()
+
 
 if(NOT TARGET xider)
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../../../../../libraries/xider ${CMAKE_CURRENT_BINARY_DIR}/xider)
