@@ -24,6 +24,3 @@ if(MSVC)
     # Disable specific warnings that are too noisy
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4996")  # Disable deprecated warnings
 endif()
-
-# Build evan for GLFW
-set(BUILD_FOR_GLFW ON)
