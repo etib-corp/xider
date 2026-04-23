@@ -25,7 +25,6 @@ include(FetchContent)
 FetchContent_Declare(
     tinyobjloader
     GIT_REPOSITORY https://github.com/tinyobjloader/tinyobjloader.git
-    GIT_BRANCH release
     GIT_TAG 966edceaf8cdca7996c4e9a1c5ced2938de63366
 )
 # tinyobjloader may call add_sanitizers() even when the helper module is unavailable.
