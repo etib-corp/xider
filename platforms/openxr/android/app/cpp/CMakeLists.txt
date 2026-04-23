@@ -34,6 +34,15 @@ if(ANDROID AND CMAKE_CROSSCOMPILING)
     set(HAVE_GNU_STRERROR_R_EXITCODE__TRYRUN_OUTPUT "" CACHE STRING "Output for cross-compiled GNU strerror_r probe" FORCE)
 endif()
 
+# This CMake project is configured directly by Gradle (not by the workspace root CMake).
+# Propagate backend/platform options so subprojects (notably evan) fetch/link OpenXR SDK.
+set(BUILD_FOR_OPENXR ON CACHE BOOL "Build with OpenXR support" FORCE)
+set(BUILD_FOR_ANDROID ON CACHE BOOL "Build for Android" FORCE)
+set(BUILD_FOR_GLFW OFF CACHE BOOL "Build with GLFW support" FORCE)
+set(BUILD_FOR_LINUX OFF CACHE BOOL "Build for Linux" FORCE)
+set(BUILD_FOR_WINDOWS OFF CACHE BOOL "Build for Windows" FORCE)
+set(BUILD_FOR_MACOS OFF CACHE BOOL "Build for macOS" FORCE)
+
 
 if(NOT TARGET xider)
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../../../../../libraries/xider ${CMAKE_CURRENT_BINARY_DIR}/xider)
