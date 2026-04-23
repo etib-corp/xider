@@ -42,6 +42,8 @@ set(BUILD_FOR_GLFW OFF CACHE BOOL "Build with GLFW support" FORCE)
 set(BUILD_FOR_LINUX OFF CACHE BOOL "Build for Linux" FORCE)
 set(BUILD_FOR_WINDOWS OFF CACHE BOOL "Build for Windows" FORCE)
 set(BUILD_FOR_MACOS OFF CACHE BOOL "Build for macOS" FORCE)
+set(BUILD_TESTING OFF CACHE BOOL "Build the tests" FORCE)
+set(BUILD_DOCS OFF CACHE BOOL "Build the documentation" FORCE)
 
 
 if(NOT TARGET xider)
