@@ -9,7 +9,7 @@
 
 #include "Renderer.hpp"
 
-evan::Scene::Scene(const DeviceContext &deviceContext, const Renderer &renderer,
+evan::Scene::Scene(std::shared_ptr<DeviceContext> deviceContext, const Renderer &renderer,
 				   std::vector<std::string> texturePaths,
 				   std::map<std::string, std::vector<Mesh>> meshData)
 {
@@ -39,7 +39,7 @@ evan::Scene::~Scene()
 // Public Methods //
 ////////////////////
 
-void evan::Scene::updateScene(const DeviceContext &deviceContext,
+void evan::Scene::updateScene(std::shared_ptr<DeviceContext> deviceContext,
 							  const Renderer &renderer,
 							  std::vector<std::string> texturePaths,
 							  std::map<std::string, std::vector<Mesh>> meshData)
