@@ -16,7 +16,7 @@ evan::Scene::Scene(const DeviceContext &deviceContext, const Renderer &renderer,
 	// Create materials for each texture path
 	for (const auto &texturePath: texturePaths) {
 		_materials.emplace(_materials.size(),
-						   Material(deviceContext, renderer, texturePath));
+						   GPUMaterial(deviceContext, renderer, texturePath));
 
 		auto correspondingMeshData = meshData.find(texturePath);
 
@@ -51,7 +51,7 @@ void evan::Scene::updateScene(const DeviceContext &deviceContext,
 	// Create new materials for each texture path
 	for (const auto &texturePath: texturePaths) {
 		_materials.emplace(_materials.size(),
-						   Material(deviceContext, renderer, texturePath));
+						   GPUMaterial(deviceContext, renderer, texturePath));
 
 		auto correspondingMeshData = meshData.find(texturePath);
 
@@ -86,7 +86,7 @@ const std::vector<evan::GPUMesh> &evan::Scene::getMeshes() const
 	return _meshes;
 }
 
-const std::map<uint32_t, evan::Material> &evan::Scene::getMaterials() const
+const std::map<uint32_t, evan::GPUMaterial> &evan::Scene::getMaterials() const
 {
 	return _materials;
 }

@@ -11,7 +11,7 @@
 
 #include "evan/Mesh.hpp"
 #include "evan/GPUMesh.hpp"
-#include "evan/Material.hpp"
+#include "evan/GPUMaterial.hpp"
 
 #include <map>
 
@@ -44,7 +44,7 @@ namespace evan
 		 * references to the DeviceContext and Renderer to access the necessary
 		 * Vulkan resources for creating GPU meshes. The constructor processes
 		 * the mesh data, creates GPUMesh instances for each mesh, and stores
-		 * them in the _meshes vector. It also creates Material instances for
+		 * them in the _meshes vector. It also creates GPUMaterial instances for
 		 * each unique material ID found in the mesh data and stores them in the
 		 * _materials map.
 		 *
@@ -61,7 +61,7 @@ namespace evan
 		 * the vertices, indices, and material ID associated with that mesh.
 		 *
 		 * @note The constructor is responsible for processing the mesh data,
-		 * creating GPUMesh instances for each mesh, and creating Material
+		 * creating GPUMesh instances for each mesh, and creating GPUMaterial
 		 * instances for each unique material ID found in the mesh data. It also
 		 * handles any necessary Vulkan resource management for the meshes and
 		 * materials.
@@ -83,7 +83,7 @@ namespace evan
 		 * the necessary Vulkan resources for creating GPU meshes. The method
 		 * processes the new mesh data, creates GPUMesh instances for each new
 		 * mesh, and updates the _meshes vector accordingly. It also creates
-		 * Material instances for any new unique material IDs found in the new
+		 * GPUMaterial instances for any new unique material IDs found in the new
 		 * mesh data and updates the _materials map accordingly.
 		 *
 		 * @param deviceContext A reference to the DeviceContext, which provides
@@ -149,13 +149,13 @@ namespace evan
 		 * @brief Retrieves the materials contained in the Scene.
 		 *
 		 * This method returns a constant reference to a map where the key is a
-		 * uint32_t representing the material ID, and the value is a Material
+		 * uint32_t representing the material ID, and the value is a GPUMaterial
 		 * object representing the material properties associated with that
 		 * material ID. The returned map allows access to the materials for
 		 * rendering or other operations while ensuring that the internal state
 		 * of the Scene is not modified.
 		 *
-		 * @return A constant reference to a map of material IDs to Material
+		 * @return A constant reference to a map of material IDs to GPUMaterial
 		 * objects representing the materials contained in the Scene.
 		 *
 		 * @note The method assumes that the materials have been properly
@@ -163,7 +163,7 @@ namespace evan
 		 * It also assumes that the caller will not modify the returned map, as
 		 * it is a constant reference to the internal state of the Scene.
 		 */
-		const std::map<uint32_t, Material> &getMaterials() const;
+		const std::map<uint32_t, GPUMaterial> &getMaterials() const;
 
 		/**
 		 * @brief Retrieves the vertex buffers associated with the meshes in the
@@ -225,11 +225,11 @@ namespace evan
 		std::vector<GPUMesh> _meshes;
 
 		/**
-		 * @brief A map of material IDs to Material objects representing the
+		 * @brief A map of material IDs to GPUMaterial objects representing the
 		 * materials contained in the Scene.
 		 *
 		 * The key of the map is a uint32_t representing the material ID, and
-		 * the value is a Material object representing the material properties
+		 * the value is a GPUMaterial object representing the material properties
 		 * associated with that material ID. This map is used to store and
 		 * manage the materials in the Scene for rendering and other operations.
 		 *
@@ -238,6 +238,6 @@ namespace evan
 		 * should be properly managed to ensure that GPU resources are cleaned
 		 * up when the Scene is destroyed.
 		 */
-		std::map<uint32_t, Material> _materials;
+		std::map<uint32_t, GPUMaterial> _materials;
 	};
 }	 // namespace evan
