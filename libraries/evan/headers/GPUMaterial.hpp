@@ -107,7 +107,7 @@ namespace evan
 		 * - Setting up descriptor sets for shader access to the material's
 		 * texture data.
 		 */
-		GPUMaterial(const DeviceContext &deviceContext, const Renderer &renderer,
+		GPUMaterial(std::shared_ptr<DeviceContext> deviceContext, const Renderer &renderer,
 				 const std::string &texturePath);
 
 		~GPUMaterial();

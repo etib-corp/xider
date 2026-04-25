@@ -11,15 +11,15 @@
 
 #include "evan/Renderer.hpp"
 
-evan::GPUMaterial::GPUMaterial(const DeviceContext &deviceContext,
+evan::GPUMaterial::GPUMaterial(std::shared_ptr<DeviceContext> deviceContext,
 						 const Renderer &renderer,
 						 const std::string &texturePath)
 {
-	auto deviceBackend = deviceContext.getDeviceBackend();
+	auto deviceBackend = deviceContext->getDeviceBackend();
 
 	this->createImage(*deviceBackend, texturePath,
-					  deviceContext.getCommandPool(),
-					  deviceContext.getGraphicsQueue());
+					  deviceContext->getCommandPool(),
+					  deviceContext->getGraphicsQueue());
 	this->createImageView(*deviceBackend);
 
 	// Passing the default sampler info to createSampler, which will be filled
