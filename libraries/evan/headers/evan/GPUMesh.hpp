@@ -63,7 +63,7 @@ namespace evan
 		 * DeviceContext is properly initialized and can be used to create GPU
 		 * resources.
 		 */
-		GPUMesh(const DeviceContext &deviceContext,
+		GPUMesh(std::shared_ptr<DeviceContext> deviceContext,
 				std::vector<Vertex> vertices, std::vector<uint32_t> indices,
 				uint32_t materialID);
 
@@ -172,7 +172,7 @@ namespace evan
 		 * Vulkan device associated with the
 		 * DeviceContext can be used for resource management.
 		 */
-		void createIndexBuffer(const DeviceContext &deviceContext,
+		void createIndexBuffer(std::shared_ptr<DeviceContext> deviceContext,
 							   std::vector<uint32_t> indices);
 
 		/**

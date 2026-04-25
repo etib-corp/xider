@@ -7,11 +7,11 @@
 
 #include "evan/GPUMesh.hpp"
 
-evan::GPUMesh::GPUMesh(const DeviceContext &deviceContext,
+evan::GPUMesh::GPUMesh(std::shared_ptr<DeviceContext> deviceContext,
 					   std::vector<Vertex> vertices,
 					   std::vector<uint32_t> indices, uint32_t materialID)
 {
-	auto deviceBackend = deviceContext.getDeviceBackend();
+	auto deviceBackend = deviceContext->getDeviceBackend();
 	_indexCount		   = indices.size();
 	_materialID		   = materialID;
 
@@ -52,8 +52,8 @@ evan::GPUMesh::GPUMesh(const DeviceContext &deviceContext,
 
 	ADeviceBackend::CopyBufferProperties copyBufferProperties = {
 		._logicalDevice = deviceBackend->_device,
-		._commandPool	= deviceContext.getCommandPool(),
-		._graphicsQueue = deviceContext.getGraphicsQueue(),
+		._commandPool	= deviceContext->getCommandPool(),
+		._graphicsQueue = deviceContext->getGraphicsQueue(),
 		._srcBuffer		= stagingBuffer,
 		._dstBuffer		= _vertexBuffer,
 		._size			= bufferSize
@@ -110,10 +110,10 @@ uint32_t evan::GPUMesh::getMaterialID() const
 // Protected methods //
 ///////////////////////
 
-void evan::GPUMesh::createIndexBuffer(const DeviceContext &deviceContext,
+void evan::GPUMesh::createIndexBuffer(std::shared_ptr<DeviceContext> deviceContext,
 									  std::vector<uint32_t> indices)
 {
-	auto deviceBackend = deviceContext.getDeviceBackend();
+	auto deviceBackend = deviceContext->getDeviceBackend();
 
 	VkDeviceSize bufferSize = sizeof(indices[0]) * indices.size();
 
@@ -151,8 +151,8 @@ void evan::GPUMesh::createIndexBuffer(const DeviceContext &deviceContext,
 
 	ADeviceBackend::CopyBufferProperties copyBufferProperties = {
 		._logicalDevice = deviceBackend->_device,
-		._commandPool	= deviceContext.getCommandPool(),
-		._graphicsQueue = deviceContext.getGraphicsQueue(),
+		._commandPool	= deviceContext->getCommandPool(),
+		._graphicsQueue = deviceContext->getGraphicsQueue(),
 		._srcBuffer		= stagingBuffer,
 		._dstBuffer		= _indexBuffer,
 		._size			= bufferSize
