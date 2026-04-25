@@ -2,16 +2,16 @@
 ** ETIB PROJECT, 2026
 ** evan
 ** File description:
-** Material
+** GPUGPUMaterial
 */
 
-#include "Material.hpp"
+#include "GPUMaterial.hpp"
 
 #include <stb_image.h>
 
 #include "Renderer.hpp"
 
-evan::Material::Material(const DeviceContext &deviceContext,
+evan::GPUMaterial::GPUMaterial(const DeviceContext &deviceContext,
 						 const Renderer &renderer,
 						 const std::string &texturePath)
 {
@@ -51,7 +51,7 @@ evan::Material::Material(const DeviceContext &deviceContext,
 		renderer.getDescriptorPool(), renderer.getUniformBuffers());
 }
 
-evan::Material::~Material()
+evan::GPUMaterial::~GPUMaterial()
 {
 }
 
@@ -59,7 +59,7 @@ evan::Material::~Material()
 // Public Methods //
 ////////////////////
 
-void evan::Material::destroy(VkDevice device)
+void evan::GPUMaterial::destroy(VkDevice device)
 {
 	vkDestroyImage(device, _image, nullptr);
 	vkFreeMemory(device, _memory, nullptr);
@@ -70,7 +70,7 @@ void evan::Material::destroy(VkDevice device)
 // Getters //
 /////////////
 
-std::vector<VkDescriptorSet> evan::Material::getDescriptorSets() const
+std::vector<VkDescriptorSet> evan::GPUMaterial::getDescriptorSets() const
 {
 	return _descriptorSets;
 }
@@ -79,7 +79,7 @@ std::vector<VkDescriptorSet> evan::Material::getDescriptorSets() const
 // Protected methods //
 ///////////////////////
 
-void evan::Material::createImage(const ADeviceBackend &deviceBackend,
+void evan::GPUMaterial::createImage(const ADeviceBackend &deviceBackend,
 								 const std::string &texturePath,
 								 VkCommandPool commandPool,
 								 VkQueue graphicsQueue)
@@ -177,13 +177,13 @@ void evan::Material::createImage(const ADeviceBackend &deviceBackend,
 	vkFreeMemory(deviceBackend._device, stagingBufferMemory, nullptr);
 }
 
-void evan::Material::createImageView(const ADeviceBackend &deviceBackend)
+void evan::GPUMaterial::createImageView(const ADeviceBackend &deviceBackend)
 {
 	_view = deviceBackend.createImageView(_image, VK_FORMAT_R8G8B8A8_SRGB,
 										  VK_IMAGE_ASPECT_COLOR_BIT, _mipLevel);
 }
 
-void evan::Material::createSampler(const ADeviceBackend &deviceBackend,
+void evan::GPUMaterial::createSampler(const ADeviceBackend &deviceBackend,
 								   VkSamplerCreateInfo samplerInfo)
 {
 	VkPhysicalDeviceProperties properties {};
@@ -203,7 +203,7 @@ void evan::Material::createSampler(const ADeviceBackend &deviceBackend,
 	}
 }
 
-void evan::Material::createDescriptorSets(
+void evan::GPUMaterial::createDescriptorSets(
 	VkDevice logicalDevice, VkDescriptorSetLayout descriptorSetLayout,
 	VkDescriptorPool descriptorPool,
 	const std::vector<VkBuffer> &uniformBuffers)
@@ -258,7 +258,7 @@ void evan::Material::createDescriptorSets(
 	}
 }
 
-VkSamplerCreateInfo evan::Material::getDefaultSamplerInfo(
+VkSamplerCreateInfo evan::GPUMaterial::getDefaultSamplerInfo(
 	const VkPhysicalDeviceProperties &properties)
 {
 	VkSamplerCreateInfo samplerInfo {};
@@ -281,7 +281,7 @@ VkSamplerCreateInfo evan::Material::getDefaultSamplerInfo(
 	return samplerInfo;
 }
 
-void evan::Material::generateMipmaps(
+void evan::GPUMaterial::generateMipmaps(
 	const GenerateMipmapsProperties &properties,
 	const ADeviceBackend &deviceBackend)
 {

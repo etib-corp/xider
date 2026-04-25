@@ -2,7 +2,7 @@
 ** ETIB PROJECT, 2026
 ** evan
 ** File description:
-** Material
+** GPUMaterial
 */
 
 #pragma once
@@ -17,13 +17,13 @@ namespace evan
 	class Renderer;
 
 	/**
-	 * @class Material
+	 * @class GPUMaterial
 	 *
 	 * @brief Represents a material in the rendering engine, encapsulating
 	 * texture data, image views, samplers, and descriptor sets for use in
 	 * Vulkan rendering operations.
 	 *
-	 * The Material class is responsible for managing the Vulkan resources
+	 * The GPUMaterial class is responsible for managing the Vulkan resources
 	 * associated with a material, including creating images from texture files,
 	 * generating mipmaps, creating image views and samplers, and setting up
 	 * descriptor sets for shader access. It provides methods for initializing
@@ -31,7 +31,7 @@ namespace evan
 	 * renderer instances. The class also includes functionality for cleaning up
 	 * Vulkan resources when they are no longer needed.
 	 */
-	class Material
+	class GPUMaterial
 	{
 		public:
 		/**
@@ -78,7 +78,7 @@ namespace evan
 		};
 
 		/**
-		 * @brief Constructs a Material instance using the provided device
+		 * @brief Constructs a GPUMaterial instance using the provided device
 		 * context, renderer, and texture path.
 		 *
 		 * This constructor initializes the material by creating a Vulkan image
@@ -107,10 +107,10 @@ namespace evan
 		 * - Setting up descriptor sets for shader access to the material's
 		 * texture data.
 		 */
-		Material(const DeviceContext &deviceContext, const Renderer &renderer,
+		GPUMaterial(const DeviceContext &deviceContext, const Renderer &renderer,
 				 const std::string &texturePath);
 
-		~Material();
+		~GPUMaterial();
 
 		/**
 		 * @brief Destroys the Vulkan resources associated with the material.
