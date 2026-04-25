@@ -83,7 +83,7 @@ void evan::Engine::addScene(size_t sceneIndex,
 							std::vector<std::string> texturePaths,
 							std::map<std::string, std::vector<Mesh>> meshData)
 {
-	Scene newScene(*_deviceContext, *_renderer, texturePaths, meshData);
+	Scene newScene(_deviceContext, *_renderer, texturePaths, meshData);
 	_scenes.emplace(sceneIndex, std::move(newScene));
 	if (_scenes.size() == 1) {
 		_currentScene = sceneIndex;
@@ -133,7 +133,7 @@ void evan::Engine::updateScene(
 {
 	auto sceneIt = _scenes.find(sceneIndex);
 	if (sceneIt != _scenes.end()) {
-		sceneIt->second.updateScene(*_deviceContext, *_renderer, texturePaths,
+		sceneIt->second.updateScene(_deviceContext, *_renderer, texturePaths,
 									meshData);
 	} else {
 		std::cerr << "Scene index " << sceneIndex << " does not exist."

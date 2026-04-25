@@ -66,7 +66,7 @@ namespace evan
 		 * handles any necessary Vulkan resource management for the meshes and
 		 * materials.
 		 */
-		Scene(const DeviceContext &deviceContext, const Renderer &renderer,
+		Scene(std::shared_ptr<DeviceContext> deviceContext, const Renderer &renderer,
 			  std::vector<std::string> texturePaths,
 			  std::map<std::string, std::vector<Mesh>> meshData);
 
@@ -98,7 +98,7 @@ namespace evan
 		 * data for that mesh name. Each Mesh object contains information about
 		 * the vertices, indices, and material ID associated with that mesh.
 		 */
-		void updateScene(const DeviceContext &deviceContext,
+		void updateScene(std::shared_ptr<DeviceContext> deviceContext,
 						 const Renderer &renderer,
 						 std::vector<std::string> texturePaths,
 						 std::map<std::string, std::vector<Mesh>> meshData);
