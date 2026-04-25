@@ -36,6 +36,7 @@
 #include "guillaume/ecs/component_type_id.hpp"
 #include "guillaume/ecs/entity.hpp"
 #include "guillaume/ecs/entity_registry.hpp"
+#include "guillaume/ecs/entity_tree_traveler.hpp"
 
 namespace guillaume::ecs
 {
@@ -206,9 +207,11 @@ namespace guillaume::ecs
 		 * @param componentRegistry The component registry instance.
 		 * @param entityRegistry The entity registry used to query matching
 		 * entities.
+		 * @param traveler Traversal strategy to use for hierarchy iteration.
 		 */
 		void routine(ecs::ComponentRegistry &componentRegistry,
-					 ecs::EntityRegistry &entityRegistry);
+					 ecs::EntityRegistry &entityRegistry,
+					 const ecs::EntityTreeTraveler &traveler);
 
 		/**
 		 * @brief Update the system, processing relevant entities.

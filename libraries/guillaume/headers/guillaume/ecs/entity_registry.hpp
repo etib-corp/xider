@@ -30,6 +30,7 @@
 
 namespace guillaume::ecs
 {
+	class EntityTreeTraveler;
 
 	/**
 	 * @brief Abstract base class for containers that own ECS entities.
@@ -104,5 +105,16 @@ namespace guillaume::ecs
 		 */
 		std::vector<Entity::Identifier>
 			getEntityWithSignature(Entity::Signature systemSignature) const;
+
+		/**
+		 * @brief Get all registered entity identifiers that match the
+		 * specified signature using the provided traversal strategy.
+		 * @param systemSignature The signature to match.
+		 * @param traveler Traversal strategy defining hierarchy walk order.
+		 * @return A vector containing matching entity identifiers.
+		 */
+		std::vector<Entity::Identifier> getEntityWithSignature(
+			Entity::Signature systemSignature,
+			const EntityTreeTraveler &traveler) const;
 	};
 }	 // namespace guillaume::ecs

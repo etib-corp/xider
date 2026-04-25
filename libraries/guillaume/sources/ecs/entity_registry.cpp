@@ -22,6 +22,8 @@
 
 #include "guillaume/ecs/entity_registry.hpp"
 
+#include "guillaume/ecs/level_order_traveler.hpp"
+
 namespace guillaume::ecs
 {
 
@@ -83,8 +85,16 @@ namespace guillaume::ecs
 	std::vector<Entity::Identifier> EntityRegistry::getEntityWithSignature(
 		Entity::Signature systemSignature) const
 	{
+		LevelOrderTraveler traveler;
+		return getEntityWithSignature(systemSignature, traveler);
+	}
+
+	std::vector<Entity::Identifier> EntityRegistry::getEntityWithSignature(
+		Entity::Signature systemSignature,
+		const EntityTreeTraveler &traveler) const
+	{
 		std::vector<Entity::Identifier> matchingIdentifiers;
-		for (const auto *entity: getEntitiesBreadthFirst()) {
+		for (const auto *entity: traveler.travel(*this)) {
 			if ((entity->getSignature() & systemSignature) == systemSignature) {
 				matchingIdentifiers.push_back(entity->getIdentifier());
 			}

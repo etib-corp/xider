@@ -29,6 +29,7 @@
 #include "guillaume/ecs/component_registry.hpp"
 #include "guillaume/ecs/entity_registry.hpp"
 #include "guillaume/ecs/entity_registry_container.hpp"
+#include "guillaume/ecs/level_order_traveler.hpp"
 #include "guillaume/event/event_bus.hpp"
 
 #include <utility/event/text_input_event.hpp>
@@ -44,6 +45,7 @@ namespace
 		guillaume::systems::TextInput textInputSystem { eventBus };
 		guillaume::ecs::ComponentRegistry componentRegistry;
 		guillaume::ecs::EntityRegistryContainer entityRegistry;
+		guillaume::ecs::LevelOrderTraveler traveler;
 		guillaume::ecs::Entity::Identifier entityIdentifier {
 			guillaume::ecs::Entity::InvalidIdentifier
 		};
@@ -68,7 +70,8 @@ namespace
 			auto event = std::make_unique<utility::event::TextInputEvent>();
 			event->setText(textInput);
 			eventBus.publish(std::move(event));
-			textInputSystem.routine(componentRegistry, entityRegistry);
+			textInputSystem.routine(componentRegistry, entityRegistry,
+							   traveler);
 		}
 
 		std::string getContent(void) const
