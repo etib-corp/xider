@@ -30,6 +30,7 @@
 #include "guillaume/ecs/component_registry.hpp"
 #include "guillaume/ecs/entity_registry.hpp"
 #include "guillaume/ecs/entity_registry_container.hpp"
+#include "guillaume/ecs/level_order_traveler.hpp"
 
 #include "systems/test_measure_text.hpp"
 
@@ -111,8 +112,9 @@ TEST_F(MeasureTextFixture, SynchronizesBoundSizeWithMeasuredText)
 		.setContent("Measure me")
 		.setFontSize(32);
 	renderer.measurement = { 140.0f, 28.0f };
+	guillaume::ecs::LevelOrderTraveler traveler;
 
-	measureTextSystem.routine(componentRegistry, entityRegistry);
+	measureTextSystem.routine(componentRegistry, entityRegistry, traveler);
 
 	const auto &bound =
 		componentRegistry.getComponent<guillaume::components::Bound>(
@@ -127,8 +129,9 @@ TEST_F(MeasureTextFixture, SkipsMeasurementWhenRequiredComponentIsMissing)
 {
 	componentRegistry.removeComponent<guillaume::components::Bound>(
 		entityIdentifier);
+	guillaume::ecs::LevelOrderTraveler traveler;
 
-	measureTextSystem.routine(componentRegistry, entityRegistry);
+	measureTextSystem.routine(componentRegistry, entityRegistry, traveler);
 
 	EXPECT_EQ(renderer.measureCallCount, 0);
 }

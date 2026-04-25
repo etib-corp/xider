@@ -60,15 +60,16 @@ namespace guillaume::ecs
 	}
 
 	void System::routine(ecs::ComponentRegistry &componentRegistry,
-						 ecs::EntityRegistry &entityRegistry)
+						 ecs::EntityRegistry &entityRegistry,
+						 const ecs::EntityTreeTraveler &traveler)
 	{
 		_activeComponentRegistry = &componentRegistry;
 		getLogger().debug("System routine started");
 
+		auto traversedEntities = traveler.travel(entityRegistry);
+
 		bool hasPendingChanges		= false;
-		std::size_t visitedEntities = 0;
-		for (auto *entity: entityRegistry.getEntitiesBreadthFirst()) {
-			++visitedEntities;
+		for (auto *entity: traversedEntities) {
 			if (!componentRegistry.hasChanged(entity->getIdentifier())) {
 				continue;
 			}
@@ -83,14 +84,16 @@ namespace guillaume::ecs
 		}
 
 		std::size_t matchingEntities = 0;
-		for (const auto &entityIdentifier:
-			 entityRegistry.getEntityWithSignature(getSignature())) {
+		for (const auto *entity: traversedEntities) {
+			if ((entity->getSignature() & getSignature()) != getSignature()) {
+				continue;
+			}
 			++matchingEntities;
-			update(entityIdentifier);
+			update(entity->getIdentifier());
 		}
 
 		getLogger().debug("System routine finished. Visited entities: "
-						  + std::to_string(visitedEntities)
+						  + std::to_string(traversedEntities.size())
 						  + ", matching entities: "
 						  + std::to_string(matchingEntities));
 

@@ -35,6 +35,8 @@
 #include <utility/demangle.hpp>
 
 #include "guillaume/ecs/system_registry.hpp"
+#include "guillaume/ecs/level_order_traveler.hpp"
+#include "guillaume/ecs/reverse_level_order_traveler.hpp"
 
 #include "guillaume/metadata.hpp"
 #include "guillaume/renderer.hpp"
@@ -180,16 +182,27 @@ namespace guillaume
 		 */
 		void routine(void)
 		{
+			ecs::LevelOrderTraveler levelOrderTraveler;
+			ecs::ReverseLevelOrderTraveler reverseLevelOrderTraveler;
+
 			for (const auto phase:
 				 { ecs::System::Phase::Event, ecs::System::Phase::Measure,
 				   ecs::System::Phase::Layout, ecs::System::Phase::Render }) {
+				const ecs::EntityTreeTraveler &traveler =
+					(phase == ecs::System::Phase::Measure)
+						? static_cast<const ecs::EntityTreeTraveler &>(
+							reverseLevelOrderTraveler)
+						: static_cast<const ecs::EntityTreeTraveler &>(
+							levelOrderTraveler);
+
 				this->getLogger().debug(
 					"Running systems for phase: "
 					+ std::to_string(static_cast<int>(phase)));
 				for (const auto &system:
 					 _systemRegistry.getSystemsByPhase(phase)) {
 					system->routine(_sceneManager->getActiveComponentRegistry(),
-									_sceneManager->getActiveEntityRegistry());
+									_sceneManager->getActiveEntityRegistry(),
+									traveler);
 				}
 				this->getLogger().debug(
 					"Finished systems for phase: "
