@@ -65,6 +65,10 @@ namespace evan
 		 */
 		void destroy(VkDevice device);
 
+		void addObject(uint32_t objectID, RenderObject object);
+
+		bool removeObject(uint32_t objectID);
+
 		/**
 		 * @brief Retrieves the meshes contained in the Scene.
 		 *
