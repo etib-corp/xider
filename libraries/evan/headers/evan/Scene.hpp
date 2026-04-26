@@ -7,11 +7,15 @@
 
 #pragma once
 
+#include <utility/graphic/material.hpp>
+
 #include "evan/EvanPlatform.hpp"
 
 #include "evan/Mesh.hpp"
 #include "evan/GPUMesh.hpp"
 #include "evan/GPUMaterial.hpp"
+
+#include "RenderObject.hpp"
 
 #include <map>
 
@@ -35,73 +39,9 @@ namespace evan
 	class Scene
 	{
 		public:
-		/**
-		 * @brief Constructs a Scene object by loading meshes and materials from
-		 * the provided data.
-		 *
-		 * This constructor initializes the Scene by loading meshes and
-		 * materials based on the provided texture paths and mesh data. It takes
-		 * references to the DeviceContext and Renderer to access the necessary
-		 * Vulkan resources for creating GPU meshes. The constructor processes
-		 * the mesh data, creates GPUMesh instances for each mesh, and stores
-		 * them in the _meshes vector. It also creates GPUMaterial instances for
-		 * each unique material ID found in the mesh data and stores them in the
-		 * _materials map.
-		 *
-		 * @param deviceContext A reference to the DeviceContext, which provides
-		 * access to Vulkan resources needed for creating GPU meshes.
-		 * @param renderer A reference to the Renderer, which may be used for
-		 * rendering the meshes and materials in the scene.
-		 * @param texturePaths A vector of strings representing the file paths
-		 * to the textures used in the scene. These textures may be associated
-		 * with the materials used by the meshes.
-		 * @param meshData A map where the key is a string representing the mesh
-		 * name, and the value is a vector of Mesh objects representing the mesh
-		 * data for that mesh name. Each Mesh object contains information about
-		 * the vertices, indices, and material ID associated with that mesh.
-		 *
-		 * @note The constructor is responsible for processing the mesh data,
-		 * creating GPUMesh instances for each mesh, and creating GPUMaterial
-		 * instances for each unique material ID found in the mesh data. It also
-		 * handles any necessary Vulkan resource management for the meshes and
-		 * materials.
-		 */
-		Scene(std::shared_ptr<DeviceContext> deviceContext, const Renderer &renderer,
-			  std::vector<std::string> texturePaths,
-			  std::map<std::string, std::vector<Mesh>> meshData);
-
 		Scene() = default;
 
 		~Scene();
-
-		/**
-		 * @brief Updates the Scene by loading new meshes and materials from the
-		 * provided data.
-		 *
-		 * This method allows updating the Scene with new mesh and material
-		 * data. It takes references to the DeviceContext and Renderer to access
-		 * the necessary Vulkan resources for creating GPU meshes. The method
-		 * processes the new mesh data, creates GPUMesh instances for each new
-		 * mesh, and updates the _meshes vector accordingly. It also creates
-		 * GPUMaterial instances for any new unique material IDs found in the new
-		 * mesh data and updates the _materials map accordingly.
-		 *
-		 * @param deviceContext A reference to the DeviceContext, which provides
-		 * access to Vulkan resources needed for creating GPU meshes.
-		 * @param renderer A reference to the Renderer, which may be used for
-		 * rendering the meshes and materials in the scene.
-		 * @param texturePaths A vector of strings representing the file paths
-		 * to the textures used in the scene. These textures may be associated
-		 * with the materials used by the meshes.
-		 * @param meshData A map where the key is a string representing the mesh
-		 * name, and the value is a vector of Mesh objects representing the mesh
-		 * data for that mesh name. Each Mesh object contains information about
-		 * the vertices, indices, and material ID associated with that mesh.
-		 */
-		void updateScene(std::shared_ptr<DeviceContext> deviceContext,
-						 const Renderer &renderer,
-						 std::vector<std::string> texturePaths,
-						 std::map<std::string, std::vector<Mesh>> meshData);
 
 		/**
 		 * @brief Destroys the Scene by cleaning up GPU resources associated
@@ -165,64 +105,17 @@ namespace evan
 		 */
 		const std::map<uint32_t, GPUMaterial> &getMaterials() const;
 
-		/**
-		 * @brief Retrieves the vertex buffers associated with the meshes in the
-		 * Scene.
-		 *
-		 * This method returns a pointer to an array of VkBuffer objects
-		 * representing the vertex buffers associated with the meshes in the
-		 * Scene. Each VkBuffer corresponds to a vertex buffer used for
-		 * rendering the meshes. The caller can use these vertex buffers for
-		 * rendering operations or other GPU-related tasks.
-		 *
-		 * @return A pointer to an array of VkBuffer objects representing the
-		 * vertex buffers associated with the meshes in the Scene.
-		 *
-		 * @note The method assumes that the vertex buffers have been properly
-		 * initialized and are ready for use in rendering or other GPU-related
-		 * operations. It also assumes that the caller will manage the lifetime
-		 * of the returned pointer and ensure that it is properly cleaned up
-		 * when no longer needed.
-		 */
-		VkBuffer *getVertexBuffers() const;
-
-		/**
-		 * @brief Retrieves the index buffers associated with the meshes in the
-		 * Scene.
-		 *
-		 * This method returns a pointer to an array of VkBuffer objects
-		 * representing the index buffers associated with the meshes in the
-		 * Scene. Each VkBuffer corresponds to an index buffer used for
-		 * rendering the meshes. The caller can use these index buffers for
-		 * rendering operations or other GPU-related tasks.
-		 *
-		 * @return A pointer to an array of VkBuffer objects representing the
-		 * index buffers associated with the meshes in the Scene.
-		 *
-		 * @note The method assumes that the index buffers have been properly
-		 * initialized and are ready for use in rendering or other GPU-related
-		 * operations. It also assumes that the caller will manage the lifetime
-		 * of the returned pointer and ensure that it is properly cleaned up
-		 * when no longer needed.
-		 */
-		VkBuffer *getIndexBuffers() const;
-
 		protected:
 		/**
-		 * @brief A vector of GPUMesh objects representing the meshes contained
-		 * in the Scene.
+		 * @brief A map of object IDs to RenderObject objects representing the
+		 * objects contained in the Scene.
 		 *
-		 * Each GPUMesh object contains information about the vertex and index
-		 * buffers, as well as the material ID associated with that mesh. This
-		 * vector is used to store and manage the meshes in the Scene for
-		 * rendering and other operations.
-		 *
-		 * @note The vector is initialized during the construction of the Scene
-		 * and is used to access the meshes for rendering or other operations.
-		 * It should be properly managed to ensure that GPU resources are
-		 * cleaned up when the Scene is destroyed.
+		 * The key of the map is a uint32_t representing the object ID, and the
+		 * value is a RenderObject object representing the renderable object
+		 * associated with that object ID. This map is used to store and manage
+		 * the renderable objects in the Scene for rendering and other operations.
 		 */
-		std::vector<GPUMesh> _meshes;
+		std::map<uint32_t, RenderObject> _objects;
 
 		/**
 		 * @brief A map of material IDs to GPUMaterial objects representing the
