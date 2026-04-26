@@ -29,7 +29,10 @@ namespace evan
 		 * its meshes and its associated material ID.
 		 */
 		RenderObject(std::shared_ptr<DeviceContext> deviceContext, const std::map<uint32_t, utility::graphic::Mesh> &rawObjects, const std::string &pipelineLayer);
+
 		~RenderObject();
+
+		void destroy(VkDevice device);
 
 		protected:
         std::vector<GPUMesh> _meshes;
