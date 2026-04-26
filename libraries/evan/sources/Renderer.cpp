@@ -162,24 +162,22 @@ VkDescriptorSetLayout evan::Renderer::getDescriptorSetLayout() const
 
 void evan::Renderer::createDescriptorSetLayout(VkDevice device)
 {
-	VkDescriptorSetLayoutBinding uboLayoutBinding {};
-	uboLayoutBinding.binding			= 0;
-	uboLayoutBinding.descriptorType		= VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-	uboLayoutBinding.descriptorCount	= 1;
-	uboLayoutBinding.stageFlags			= VK_SHADER_STAGE_VERTEX_BIT;
-	uboLayoutBinding.pImmutableSamplers = nullptr;
+	std::vector<VkDescriptorSetLayoutBinding> bindings;
 
-	VkDescriptorSetLayoutBinding samplerLayoutBinding {};
-	samplerLayoutBinding.binding		 = 1;
-	samplerLayoutBinding.descriptorCount = 1;
-	samplerLayoutBinding.descriptorType =
-		VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-	samplerLayoutBinding.pImmutableSamplers = nullptr;
-	samplerLayoutBinding.stageFlags			= VK_SHADER_STAGE_FRAGMENT_BIT;
+	// UBO
+	bindings.push_back({
+		0,
+		VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
+		1,
+		VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
+		nullptr
+	});
 
-	std::array<VkDescriptorSetLayoutBinding, 2> bindings = {
-		uboLayoutBinding, samplerLayoutBinding
-	};
+	// Textures -> TODO: Adapt this according to all the textures that will be supported by the engine (e.g. normal map, metallic roughness map, etc.)
+	bindings.push_back({1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1, VK_SHADER_STAGE_FRAGMENT_BIT}); // Albedo
+	bindings.push_back({2, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1, VK_SHADER_STAGE_FRAGMENT_BIT}); // Normal
+	bindings.push_back({3, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1, VK_SHADER_STAGE_FRAGMENT_BIT}); // MetallicRoughness
+
 	VkDescriptorSetLayoutCreateInfo layoutInfo {};
 	layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
 	layoutInfo.bindingCount = static_cast<uint32_t>(bindings.size());
