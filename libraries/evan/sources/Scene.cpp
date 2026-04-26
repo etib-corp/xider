@@ -28,6 +28,16 @@ void evan::Scene::destroy(VkDevice device)
 	}
 }
 
+void evan::Scene::addObject(uint32_t objectID, RenderObject object)
+{
+	_objects[objectID] = std::move(object);
+}
+
+bool evan::Scene::removeObject(uint32_t objectID)
+{
+	return _objects.erase(objectID) > 0;
+}
+
 /////////////
 // Getters //
 /////////////
