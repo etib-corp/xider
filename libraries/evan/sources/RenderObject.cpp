@@ -29,3 +29,17 @@ void evan::RenderObject::destroy(VkDevice device)
         mesh.destroy(device);
     }
 }
+
+/////////////
+// Getters //
+/////////////
+
+const std::vector<evan::GPUMesh> &evan::RenderObject::getMeshes() const
+{
+    return _meshes;
+}
+
+std::string evan::RenderObject::getPipelineLayer() const
+{
+    return _pipelineLayer;
+}

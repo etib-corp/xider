@@ -34,6 +34,10 @@ namespace evan
 
 		void destroy(VkDevice device);
 
+		[[nodiscard]] const std::vector<GPUMesh> &getMeshes() const;
+
+		[[nodiscard]] std::string getPipelineLayer() const;
+
 		protected:
         std::vector<GPUMesh> _meshes;
         std::string _pipelineLayer;
