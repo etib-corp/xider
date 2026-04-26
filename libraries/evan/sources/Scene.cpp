@@ -9,28 +9,6 @@
 
 #include "Renderer.hpp"
 
-evan::Scene::Scene(std::shared_ptr<DeviceContext> deviceContext, const Renderer &renderer,
-				   std::vector<std::string> texturePaths,
-				   std::map<std::string, std::vector<Mesh>> meshData)
-{
-	// Create materials for each texture path
-	for (const auto &texturePath: texturePaths) {
-		_materials.emplace(_materials.size(),
-						   GPUMaterial(deviceContext, renderer, texturePath));
-
-		auto correspondingMeshData = meshData.find(texturePath);
-
-		if (correspondingMeshData != meshData.end()) {
-			// If there is a mesh data corresponding to the texture path, create
-			// a GPUMesh for each mesh
-			for (const auto &mesh: correspondingMeshData->second) {
-				_meshes.emplace_back(deviceContext, mesh.vertices, mesh.indices,
-									 _materials.size() - 1);
-			}
-		}
-	}
-}
-
 evan::Scene::~Scene()
 {
 }
@@ -39,37 +17,10 @@ evan::Scene::~Scene()
 // Public Methods //
 ////////////////////
 
-void evan::Scene::updateScene(std::shared_ptr<DeviceContext> deviceContext,
-							  const Renderer &renderer,
-							  std::vector<std::string> texturePaths,
-							  std::map<std::string, std::vector<Mesh>> meshData)
-{
-	// Clear existing meshes and materials
-	_meshes.clear();
-	_materials.clear();
-
-	// Create new materials for each texture path
-	for (const auto &texturePath: texturePaths) {
-		_materials.emplace(_materials.size(),
-						   GPUMaterial(deviceContext, renderer, texturePath));
-
-		auto correspondingMeshData = meshData.find(texturePath);
-
-		if (correspondingMeshData != meshData.end()) {
-			// If there is a mesh data corresponding to the texture path, create
-			// a GPUMesh for each mesh
-			for (const auto &mesh: correspondingMeshData->second) {
-				_meshes.emplace_back(deviceContext, mesh.vertices, mesh.indices,
-									 _materials.size() - 1);
-			}
-		}
-	}
-}
-
 void evan::Scene::destroy(VkDevice device)
 {
-	for (auto &mesh: _meshes) {
-		mesh.destroy(device);
+	for (auto &[_, object]: _objects) {
+		object.destroy(device);
 	}
 
 	for (auto &[_, material]: _materials) {
@@ -83,30 +34,18 @@ void evan::Scene::destroy(VkDevice device)
 
 const std::vector<evan::GPUMesh> &evan::Scene::getMeshes() const
 {
-	return _meshes;
+	static std::vector<GPUMesh> meshes;
+	meshes.clear();
+
+	for (const auto &[_, object]: _objects) {
+		const std::vector<GPUMesh> &objectMeshes = object.getMeshes();
+		meshes.insert(meshes.end(), objectMeshes.begin(), objectMeshes.end());
+	}
+
+	return meshes;
 }
 
 const std::map<uint32_t, evan::GPUMaterial> &evan::Scene::getMaterials() const
 {
 	return _materials;
-}
-
-VkBuffer *evan::Scene::getVertexBuffers() const
-{
-	VkBuffer *vertexBuffers = new VkBuffer[_meshes.size()];
-
-	for (size_t i = 0; i < _meshes.size(); i++) {
-		vertexBuffers[i] = _meshes[i].getVertexBuffer();
-	}
-	return vertexBuffers;
-}
-
-VkBuffer *evan::Scene::getIndexBuffers() const
-{
-	VkBuffer *indexBuffers = new VkBuffer[_meshes.size()];
-
-	for (size_t i = 0; i < _meshes.size(); i++) {
-		indexBuffers[i] = _meshes[i].getIndexBuffer();
-	}
-	return indexBuffers;
 }
