@@ -18,3 +18,14 @@ evan::RenderObject::RenderObject(std::shared_ptr<DeviceContext> deviceContext, c
 evan::RenderObject::~RenderObject()
 {
 }
+
+////////////////////
+// Public methods //
+////////////////////
+
+void evan::RenderObject::destroy(VkDevice device)
+{
+    for (GPUMesh &mesh : _meshes) {
+        mesh.destroy(device);
+    }
+}
