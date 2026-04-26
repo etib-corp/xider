@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <utility/graphic/material.hpp>
+
 #include "evan/Version.hpp"
 
 #include "evan/DeviceContext.hpp"
@@ -171,8 +173,7 @@ namespace evan
 		 * core structure and functionality of the engine, with plans for
 		 * further improvements and optimizations in the future.
 		 */
-		void addScene(size_t sceneIndex, std::vector<std::string> texturePaths,
-					  std::map<std::string, std::vector<Mesh>> meshData);
+		void addScene(size_t sceneIndex);
 
 		/**
 		 * @brief Switches the current scene to the scene with the specified
