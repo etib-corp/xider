@@ -1,0 +1,53 @@
+/*
+** ETIB PROJECT, 2026
+** xider
+** File description:
+** renderable
+*/
+
+#include <utility/graphic/renderable.hpp>
+
+namespace utility::graphic
+{
+    /////////////
+    // Getters //
+    /////////////
+
+    const PoseF &Renderable::getPose(void) const
+    {
+        return _pose;
+    }
+
+    const Color32Bit &Renderable::getColor(void) const
+    {
+        return _color;
+    }
+
+
+    /////////////
+    // Setters //
+    /////////////
+
+    Renderable &Renderable::setPose(const PoseF &pose)
+    {
+        _pose = pose;
+        return *this;
+    }
+
+    void Renderable::setPose(PoseF &&pose)
+    {
+        _pose = std::move(pose);
+    }
+
+    Renderable &Renderable::setColor(const Color32Bit &color)
+    {
+        _color = color;
+        return *this;
+    }
+
+    void Renderable::setColor(Color32Bit &&color)
+    {
+        _color = std::move(color);
+    }
+
+}	 // namespace utility::graphic
