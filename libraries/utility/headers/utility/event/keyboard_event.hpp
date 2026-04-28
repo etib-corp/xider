@@ -105,8 +105,8 @@ namespace utility::event
 					   French Mac layout, and ASTERISK and MICRO SIGN in a
 					   French Windows layout. */
 			NonUsHash = 50,	 /**< ISO USB keyboards actually use this code
-								instead of 49 for the  same key, but all OSes I've
-								seen treat the two codes identically.
+								instead of 49 for the  same key, but all OSes
+								I've  seen treat the two codes identically.
 							  */
 			Semicolon  = 51, /**< Semicolon key */
 			Apostrophe = 52, /**< Apostrophe key */

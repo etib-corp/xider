@@ -49,7 +49,7 @@ namespace guillaume::ecs
 		return *_activeComponentRegistry;
 	}
 
-	System::Phase System::getPhase(void) const
+	Phase System::getPhase(void) const
 	{
 		return _phase;
 	}
@@ -68,7 +68,7 @@ namespace guillaume::ecs
 
 		auto traversedEntities = traveler.travel(entityRegistry);
 
-		bool hasPendingChanges		= false;
+		bool hasPendingChanges = false;
 		for (auto *entity: traversedEntities) {
 			if (!componentRegistry.hasChanged(entity->getIdentifier())) {
 				continue;

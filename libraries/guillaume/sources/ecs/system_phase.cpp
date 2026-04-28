@@ -20,30 +20,8 @@
  SOFTWARE.
  */
 
-#pragma once
-
-#include "guillaume/ecs/entity_tree_traveler.hpp"
+#include "guillaume/ecs/system_phase.hpp"
 
 namespace guillaume::ecs
 {
-
-	/**
-	 * @brief Traverse entities level-by-level from root to leaves.
-	 */
-	class LevelOrderTraveler final: public EntityTreeTraveler
-	{
-		public:
-		/**
-		 * @brief Traverse hierarchy in top-down level order.
-		 */
-		std::vector<Entity *>
-			travel(EntityRegistry &entityRegistry) const override;
-
-		/**
-		 * @brief Traverse hierarchy in top-down level order.
-		 */
-		std::vector<const Entity *>
-			travel(const EntityRegistry &entityRegistry) const override;
-	};
-
 }	 // namespace guillaume::ecs

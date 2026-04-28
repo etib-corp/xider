@@ -59,7 +59,7 @@ namespace guillaume::systems
 	GlyphRender::GlyphRender(Renderer &renderer)
 		: ecs::SystemFiller<components::Transform, components::Bound,
 							components::Glyph, components::Color>(
-			  ecs::System::Phase::Render)
+			  ecs::Phase::Render)
 		, _renderer(renderer)
 		, _defaultFontPath(
 			  "assets/fonts/Material_Symbols_Outlined/"

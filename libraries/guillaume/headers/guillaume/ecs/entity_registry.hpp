@@ -113,8 +113,8 @@ namespace guillaume::ecs
 		 * @param traveler Traversal strategy defining hierarchy walk order.
 		 * @return A vector containing matching entity identifiers.
 		 */
-		std::vector<Entity::Identifier> getEntityWithSignature(
-			Entity::Signature systemSignature,
-			const EntityTreeTraveler &traveler) const;
+		std::vector<Entity::Identifier>
+			getEntityWithSignature(Entity::Signature systemSignature,
+								   const EntityTreeTraveler &traveler) const;
 	};
 }	 // namespace guillaume::ecs

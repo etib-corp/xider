@@ -59,4 +59,12 @@ namespace guillaume::ecs
 			travel(const EntityRegistry &entityRegistry) const = 0;
 	};
 
-} // namespace guillaume::ecs
+	/**
+	 * @brief Concept to ensure a type inherits from EntityTreeTraveler.
+	 * @tparam Type The type to check.
+	 */
+	template<typename Type>
+	concept InheritFromEntityTreeTraveler =
+		std::is_base_of_v<EntityTreeTraveler, Type>;
+
+}	 // namespace guillaume::ecs

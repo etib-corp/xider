@@ -82,7 +82,7 @@ namespace
 			event->setIsDownEvent(isDownEvent);
 			eventBus.publish(std::move(event));
 			keyboardControl.routine(componentRegistry, entityRegistry,
-							 traveler);
+									traveler);
 		}
 
 		std::string getContent(void) const

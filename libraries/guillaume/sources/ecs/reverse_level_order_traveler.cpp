@@ -45,4 +45,4 @@ namespace guillaume::ecs
 		return entities;
 	}
 
-} // namespace guillaume::ecs
+}	 // namespace guillaume::ecs

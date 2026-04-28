@@ -39,4 +39,4 @@ namespace guillaume::ecs
 		return entityRegistry.getEntitiesBreadthFirst();
 	}
 
-} // namespace guillaume::ecs
+}	 // namespace guillaume::ecs
