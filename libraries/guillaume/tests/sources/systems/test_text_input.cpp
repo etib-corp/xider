@@ -71,7 +71,7 @@ namespace
 			event->setText(textInput);
 			eventBus.publish(std::move(event));
 			textInputSystem.routine(componentRegistry, entityRegistry,
-							   traveler);
+									traveler);
 		}
 
 		std::string getContent(void) const

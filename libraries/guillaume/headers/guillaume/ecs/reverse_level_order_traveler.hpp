@@ -46,4 +46,4 @@ namespace guillaume::ecs
 			travel(const EntityRegistry &entityRegistry) const override;
 	};
 
-} // namespace guillaume::ecs
+}	 // namespace guillaume::ecs

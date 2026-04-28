@@ -30,7 +30,7 @@ namespace guillaume::ecs
 	}
 
 	const std::vector<std::unique_ptr<System>> &
-		SystemRegistry::getSystemsByPhase(System::Phase phase) const
+		SystemRegistry::getSystemsByPhase(Phase phase) const
 	{
 		auto it = _systems.find(phase);
 		if (it != _systems.end()) {

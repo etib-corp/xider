@@ -62,7 +62,8 @@ namespace guillaume::systems
 		 * @brief Update the KeyboardControl system for the specified entity.
 		 * @param entityIdentifier The identifier of the entity to update.
 		 */
-		void update(const ecs::Entity::Identifier &entityIdentifier) override;
+		virtual void
+			update(const ecs::Entity::Identifier &entityIdentifier) override;
 	};
 
 }	 // namespace guillaume::systems

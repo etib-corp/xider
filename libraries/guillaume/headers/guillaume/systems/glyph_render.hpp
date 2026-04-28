@@ -66,7 +66,8 @@ namespace guillaume::systems
 		 * @brief Update the GlyphRender system for one entity.
 		 * @param entityIdentifier The target entity identifier.
 		 */
-		void update(const ecs::Entity::Identifier &entityIdentifier) override;
+		virtual void
+			update(const ecs::Entity::Identifier &entityIdentifier) override;
 
 		private:
 		/**

@@ -44,7 +44,7 @@ namespace guillaume::ecs
 		 * @param phase The update phase during which this system should be
 		 * executed.
 		 */
-		SystemFiller(System::Phase phase)
+		SystemFiller(Phase phase)
 			: System(phase)
 		{
 			setSignature<ComponentTypes...>();

@@ -134,11 +134,11 @@ namespace guillaume::ecs::tests
 		TestEntityRegistryContainer registry;
 		LevelOrderTraveler traveler;
 
-		auto firstRoot = std::make_unique<DummyEntity>();
+		auto firstRoot				   = std::make_unique<DummyEntity>();
 		const auto firstRootIdentifier = firstRoot->getIdentifier();
 
-		auto parent = std::make_unique<DummyParentEntity>();
-		auto child = std::make_unique<DummyEntity>();
+		auto parent					= std::make_unique<DummyParentEntity>();
+		auto child					= std::make_unique<DummyEntity>();
 		const auto parentIdentifier = parent->getIdentifier();
 		const auto childIdentifier	= child->getIdentifier();
 
@@ -159,11 +159,11 @@ namespace guillaume::ecs::tests
 		TestEntityRegistryContainer registry;
 		ReverseLevelOrderTraveler traveler;
 
-		auto firstRoot = std::make_unique<DummyEntity>();
+		auto firstRoot				   = std::make_unique<DummyEntity>();
 		const auto firstRootIdentifier = firstRoot->getIdentifier();
 
-		auto parent = std::make_unique<DummyParentEntity>();
-		auto child = std::make_unique<DummyEntity>();
+		auto parent					= std::make_unique<DummyParentEntity>();
+		auto child					= std::make_unique<DummyEntity>();
 		const auto parentIdentifier = parent->getIdentifier();
 		const auto childIdentifier	= child->getIdentifier();
 
@@ -192,7 +192,7 @@ namespace guillaume::ecs::tests
 		const auto firstRootIdentifier = firstRoot->getIdentifier();
 
 		auto parent = std::make_unique<DummyParentEntity>();
-		auto child = std::make_unique<DummyEntity>();
+		auto child	= std::make_unique<DummyEntity>();
 		child->setSignature(signature);
 		const auto childIdentifier = child->getIdentifier();
 

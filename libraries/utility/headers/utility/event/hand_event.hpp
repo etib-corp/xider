@@ -56,7 +56,7 @@ namespace utility::event
 		private:
 		HandType _handType {
 			HandType::Unknown
-		};						 /**< Type of hand involved in the event */
+		}; /**< Type of hand involved in the event */
 		graphic::PoseF _pose {}; /**< Pose of the hand, including position and
 									orientation */
 
