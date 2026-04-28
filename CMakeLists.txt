@@ -18,6 +18,8 @@ option(BUILD_DOCS "Build documentation" OFF)
 option(BUILD_TESTING "Build the tests" OFF)
 
 set(_platform_option_count 0)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/..)
+set(CMAKE_EXECUTABLE_SUFFIX ".bin")
 if(BUILD_FOR_ANDROID)
     math(EXPR _platform_option_count "${_platform_option_count} + 1")
 endif()
