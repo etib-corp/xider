@@ -33,6 +33,8 @@
 #include <cmath>
 #include <string>
 
+#include <utility/graphic/renderable.hpp>
+
 #include <utility/graphic/color.hpp>
 #include <utility/graphic/pose.hpp>
 
@@ -64,19 +66,16 @@ namespace utility::graphic
 	 * Encapsulates all properties needed to render text, including content,
 	 * font information and size.
 	 */
-	class Text
+	class Text : public Renderable
 	{
 		private:
 		std::string _content;		   ///< Text content to display
 		std::string _fontPath;		   ///< Path to the font file
 		float _fontSize;			   ///< Font size in points
-		graphic::Color32Bit _color;	   ///< Text RGBA color
-		PoseF _pose;	///< World pose (position and orientation) of the text
 
 		protected:
 		std::shared_ptr<Font>
 			_font;	  ///< Shared pointer to the font used for rendering
-		std::shared_ptr<Mesh> _mesh;	///< Mesh for rendering the text
 
 		/**
 		 * @brief Updates the mesh for rendering the text based on the current
@@ -209,32 +208,6 @@ namespace utility::graphic
 		 * @return Reference to this Text instance for chaining.
 		 */
 		Text &setFontSize(uint32_t fontSize);
-
-		/**
-		 * @brief Set the text pose
-		 * @param pose Text world pose (position and orientation).
-		 * @return Reference to this Text instance for chaining.
-		 */
-		Text &setPose(const PoseF &pose);
-
-		/**
-		 * @brief Get the text pose
-		 * @return Const reference to the text pose (position and orientation).
-		 */
-		const PoseF &getPose(void) const;
-
-		/**
-		 * @brief Set the text color.
-		 * @param color Text RGBA color.
-		 * @return Reference to this Text instance for chaining.
-		 */
-		Text &setColor(const graphic::Color32Bit &color);
-
-		/**
-		 * @brief Get the text color.
-		 * @return Const reference to the text color.
-		 */
-		const graphic::Color32Bit &getColor(void) const;
 
 		/**
 		 * @brief Check if text content is empty.
