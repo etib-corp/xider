@@ -35,7 +35,7 @@ evan::Engine::Engine(const std::shared_ptr<IPlatform> &platform)
 #endif
 	}
 
-	g_assetManager->loadDirectory(std::string("shaders"));
+	g_assetManager->loadDirectory(std::string("assets/shaders/"));
 
 	_deviceContext	  = std::make_shared<DeviceContext>(*platform);
 	_swapchainContext = platform->createSwapchainContext(*_deviceContext);
