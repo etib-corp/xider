@@ -11,6 +11,8 @@
 #include "glfw/DesktopBackend.hpp"
 #include "glfw/DesktopSwapchainContext.hpp"
 
+#include <utility/event/keyboard_event.hpp>
+
 #include <iostream>
 
 namespace evan
@@ -112,5 +114,9 @@ namespace evan
 			const DeviceContext &deviceContext) const override;
 
 		GLFWwindow *_window = nullptr;	  // Pointer to the GLFW window
+
+		private:
+
+			std::vector<std::unique_ptr<utility::event::KeyboardEvent>> getEventKeyboardEvents(void) const;
 	};
 }	 // namespace evan

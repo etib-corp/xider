@@ -55,3 +55,22 @@ bool evan::IDesktopPlatform::shouldClose() const
 {
 	return glfwWindowShouldClose(_window);
 }
+
+/////////////////////
+// Private Methods //
+/////////////////////
+
+std::vector<std::unique_ptr<utility::event::KeyboardEvent>>
+	evan::IDesktopPlatform::getEventKeyboardEvents(void) const
+{
+	std::vector<std::unique_ptr<utility::event::KeyboardEvent>> events;
+
+	for (int key = GLFW_KEY_SPACE; key <= GLFW_KEY_LAST; ++key) {
+		if (glfwGetKey(_window, key) == GLFW_PRESS) {
+			auto event = std::make_unique<utility::event::KeyboardEvent>();
+			event->setKeycode(static_cast<utility::event::KeyboardEvent::KeyCode>(key));
+			events.push_back(std::move(event));
+		}
+	}
+	return events;
+}

@@ -93,16 +93,17 @@ uint32_t evan::DesktopBackend::countSwapchainFormats() const
 std::vector<int64_t> evan::DesktopBackend::enumerateSwapchainFormats(
 	uint32_t swapchainFormatCount) const
 {
-	std::vector<int32_t> swapchainFormats(swapchainFormatCount);
+	std::vector<VkSurfaceFormatKHR> swapchainFormats(swapchainFormatCount);
 	vkGetPhysicalDeviceSurfaceFormatsKHR(
 		_physicalDevice, _surface, &swapchainFormatCount,
-		reinterpret_cast<VkSurfaceFormatKHR *>(swapchainFormats.data()));
+		swapchainFormats.data());
 
 	std::vector<int64_t> swapchainFormats64(swapchainFormatCount);
-	std::transform(swapchainFormats.begin(), swapchainFormats.end(),
-				   swapchainFormats64.begin(), [](int32_t format) {
-					   return static_cast<int64_t>(format);
-				   });
+	for (size_t i = 0; i < swapchainFormatCount; i++) {
+		swapchainFormats64[i] =
+			(static_cast<int64_t>(swapchainFormats[i].format) << 32) |
+			static_cast<int64_t>(swapchainFormats[i].colorSpace);
+	}
 	return swapchainFormats64;
 }
 
