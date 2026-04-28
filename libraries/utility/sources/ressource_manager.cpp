@@ -212,4 +212,90 @@ namespace utility
 		return _textures[textureAsset->path()];
 	}
 
+	std::shared_ptr<graphic::Model> RessourceManager::loadModel(const std::string &path,
+																AssetManager &assetManager)
+	{
+		auto it = _models.find(path);
+
+		if (it != _models.end()) {
+			return it->second;
+		}
+
+		auto modelAsset = assetManager.add(path);
+
+		if (!modelAsset) {
+			throw std::runtime_error("Failed to load model asset: " + path);
+		}
+
+		_models[path] = loadModelFromAsset(modelAsset);
+
+		return _models[path];
+	}
+
+	std::shared_ptr<graphic::Model> RessourceManager::loadModelFromAsset(
+		std::shared_ptr<utility::FileAsset> modelAsset)
+	{
+		auto it = _models.find(modelAsset->path());
+
+		if (it != _models.end()) {
+			return it->second;
+		}
+
+		auto model = std::make_shared<graphic::Model>(modelAsset);
+
+		_models[modelAsset->path()] = model;
+		return model;
+	}
+
+	std::shared_ptr<graphic::Model> RessourceManager::loadModelFromAsset(
+		std::shared_ptr<utility::FileAsset> modelAsset, graphic::Model::ModelType type)
+	{
+		auto it = _models.find(modelAsset->path());
+
+		if (it != _models.end()) {
+			return it->second;
+		}
+
+		auto model = std::make_shared<graphic::Model>(modelAsset, type);
+
+		_models[modelAsset->path()] = model;
+		return model;
+	}
+
+	std::shared_ptr<graphic::Model> RessourceManager::loadObj(const std::string &path, AssetManager &assetManager)
+	{
+		auto it = _models.find(path);
+
+		if (it != _models.end()) {
+			return it->second;
+		}
+
+		auto modelAsset = assetManager.add(path);
+
+		if (!modelAsset) {
+			throw std::runtime_error("Failed to load model asset: " + path);
+		}
+
+		auto model = std::make_shared<graphic::Model>(modelAsset,
+													   graphic::Model::ModelType::OBJ);
+
+		_models[path] = model;
+		return model;
+	}
+
+	std::shared_ptr<graphic::Model> RessourceManager::loadObjFromAsset(std::shared_ptr<utility::FileAsset> modelAsset)
+	{
+		auto it = _models.find(modelAsset->path());
+
+		if (it != _models.end()) {
+			return it->second;
+		}
+
+		auto model = std::make_shared<graphic::Model>(modelAsset,
+													   graphic::Model::ModelType::OBJ);
+
+		_models[modelAsset->path()] = model;
+		return model;
+	}
+
 }	 // namespace utility

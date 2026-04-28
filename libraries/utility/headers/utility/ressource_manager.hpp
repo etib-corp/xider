@@ -6,6 +6,8 @@
 #include <utility/graphic/text/font.hpp>
 #include <utility/graphic/text/text_material.hpp>
 #include <utility/graphic/material.hpp>
+#include <utility/graphic/texture.hpp>
+#include <utility/graphic/model.hpp>
 
 namespace utility
 {
@@ -142,6 +144,57 @@ namespace utility
 		// a directory But needs to be implemented in the AssetManager first to
 		// load all assets from a directory
 
+		/**
+		 * @brief Loads a model resource from a specified file path.
+		 *
+		 * @param path The file path to the model resource to be loaded.
+		 * @param assetManager A reference to the AssetManager instance used to
+		 * load the model asset.
+		 *
+		 * @return A shared pointer to the loaded Model object.
+		 */
+		std::shared_ptr<graphic::Model> loadModel(const std::string &path,
+												AssetManager &assetManager);
+
+		/**
+		 * @brief Loads a model resource from a specified asset.
+		 *
+		 * @param modelAsset A shared pointer to the FileAsset object containing the model data to be loaded.
+		 *
+		 * @return A shared pointer to the loaded Model object.
+		 */
+		std::shared_ptr<graphic::Model> loadModelFromAsset(std::shared_ptr<utility::FileAsset> modelAsset);
+
+		/**
+		 * @brief Loads a model resource from a specified file path and model type.
+		 *
+		 * @param path The file path to the model resource to be loaded.
+		 * @param type The type of the model (e.g., OBJ, FBX, GLTF) to be loaded.
+		 * @param assetManager A reference to the AssetManager instance
+		 *
+		 * @return A shared pointer to the loaded Model object.
+		 */
+		std::shared_ptr<graphic::Model> loadModelFromAsset(std::shared_ptr<utility::FileAsset> modelAsset, graphic::Model::ModelType type);
+
+		/**
+		 * @brief Loads an OBJ model resource from a specified file path.
+		 *
+		 * @param path The file path to the OBJ model resource to be loaded.
+		 * @param assetManager A reference to the AssetManager instance used to load the model asset
+		 *
+		 * @return A shared pointer to the loaded Model object representing the OBJ model.
+		 */
+		std::shared_ptr<graphic::Model> loadObj(const std::string &path, AssetManager &assetManager);
+
+		/**
+		 * @brief Loads an OBJ model resource from a specified asset.
+		 *
+		 * @param modelAsset A shared pointer to the FileAsset object containing the OBJ model data to be loaded.
+		 *
+		 * @return A shared pointer to the loaded Model object representing the OBJ model.
+		 */
+		std::shared_ptr<graphic::Model> loadObjFromAsset(std::shared_ptr<utility::FileAsset> modelAsset);
+
 		protected:
 		/**
 		 * @brief Internal maps to store loaded fonts for efficient retrieval.
@@ -158,5 +211,10 @@ namespace utility
 		 * @brief Internal map to store loaded textures for efficient retrieval.
 		 */
 		std::map<std::string, std::shared_ptr<graphic::Texture>> _textures;
+
+		/**
+		 * @brief Internal map to store loaded models for efficient retrieval.
+		 */
+		std::map<std::string, std::shared_ptr<graphic::Model>> _models;
 	};
 }	 // namespace utility
