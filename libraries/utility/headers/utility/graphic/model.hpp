@@ -10,6 +10,7 @@
 #include <sstream>
 #include <filesystem>
 #include <istream>
+#include <iostream>
 
 #include <tiny_obj_loader.h>
 

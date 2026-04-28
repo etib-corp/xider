@@ -11,12 +11,44 @@ namespace utility::graphic
 {
 	Model::Model(std::shared_ptr<utility::FileAsset> modelAsset)
 	{
+        std::string extension = modelAsset->path().substr(modelAsset->path().find_last_of(".") + 1);
+
+        if (extension == "obj") {
+            loadOBJ(modelAsset);
+            _type = ModelType::OBJ;
+        } else if (extension == "fbx") {
+            std::cout << "FBX loading not implemented yet. Skipping model loading." << std::endl;
+            // loadFBX(modelAsset); // Not implemented yet
+            _type = ModelType::FBX;
+        } else if (extension == "gltf" || extension == "glb") {
+            std::cout << "GLTF loading not implemented yet. Skipping model loading." << std::endl;
+            // loadGLTF(modelAsset); // Not implemented yet
+            _type = ModelType::GLTF;
+        } else {
+            throw std::runtime_error("Unsupported model format: " + extension);
+        }
 	}
 
 	Model::Model(std::shared_ptr<utility::FileAsset> modelAsset,
 				 ModelType modelType)
 	{
 		_type = modelType;
+
+        switch (modelType) {
+            case ModelType::OBJ:
+                loadOBJ(modelAsset);
+                break;
+            case ModelType::FBX:
+                std::cout << "FBX loading not implemented yet. Skipping model loading." << std::endl;
+                // loadFBX(modelAsset); // Not implemented yet
+                break;
+            case ModelType::GLTF:
+                std::cout << "GLTF loading not implemented yet. Skipping model loading." << std::endl;
+                // loadGLTF(modelAsset); // Not implemented yet
+                break;
+            default:
+                throw std::runtime_error("Unsupported model type");
+        }
 	}
 
 	////////////////////
