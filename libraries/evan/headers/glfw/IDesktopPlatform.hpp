@@ -118,5 +118,7 @@ namespace evan
 		private:
 
 			std::vector<std::unique_ptr<utility::event::KeyboardEvent>> getEventKeyboardEvents(void) const;
+
+			utility::event::KeyboardEvent::KeyCode convertGlfwKeyToKeyCode(int glfwKey) const;
 	};
 }	 // namespace evan

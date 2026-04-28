@@ -13,6 +13,10 @@ evan::IDesktopPlatform::~IDesktopPlatform()
 	glfwTerminate();
 }
 
+////////////////////
+// Public Methods //
+////////////////////
+
 std::shared_ptr<evan::ADeviceBackend>
 	evan::IDesktopPlatform::createDeviceBackend() const
 {
@@ -26,13 +30,11 @@ std::shared_ptr<evan::ASwapchainContext>
 	return std::make_shared<DesktopSwapchainContext>(deviceContext, _window);
 }
 
-////////////////////
-// Public Methods //
-////////////////////
 
 void evan::IDesktopPlatform::pollEvents(ADeviceBackend &deviceBackend)
 {
 	glfwPollEvents();
+	auto keyboardEvents = getEventKeyboardEvents();
 }
 
 std::vector<std::string>
@@ -70,7 +72,14 @@ std::vector<std::unique_ptr<utility::event::KeyboardEvent>>
 			auto event = std::make_unique<utility::event::KeyboardEvent>();
 			event->setKeycode(static_cast<utility::event::KeyboardEvent::KeyCode>(key));
 			events.push_back(std::move(event));
+			std::cout << "Key pressed: " << key << std::endl;
 		}
 	}
 	return events;
+}
+
+utility::event::KeyboardEvent::KeyCode
+	evan::IDesktopPlatform::convertGlfwKeyToKeyCode(int glfwKey) const
+{
+	return static_cast<utility::event::KeyboardEvent::KeyCode>(glfwKey);
 }
