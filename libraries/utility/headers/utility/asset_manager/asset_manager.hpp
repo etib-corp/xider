@@ -205,28 +205,6 @@ namespace utility
 			return open(path.string());
 		}
 
-		/**
-		 * @brief Loads a model from a file.
-		 * @param path The path to the model file.
-		 * @return A vector of Vertex objects representing the model.
-		 *
-		 * This method is responsible for loading a model from the specified
-		 * file and returning its vertices as a vector of Vertex objects.
-		 */
-		std::vector<utility::graphic::Vertex<float>>
-			loadModel(const std::string &path);
-
-		/**
-		 * @brief Loads a model from a file.
-		 * @param path The filesystem path to the model file.
-		 * @return A vector of Vertex objects representing the model.
-		 */
-		std::vector<utility::graphic::Vertex<float>>
-			loadModel(const std::filesystem::path &path)
-		{
-			return loadModel(path.string());
-		}
-
 		protected:
 		/**
 		 * @brief Map of loaded assets.
