@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v6.0.2
 
       - name: Install Doxygen
-        run: apt-get install doxygen graphviz -y
+        run: sudo apt-get install doxygen graphviz -y
 
       - name: Configure CMake for only building documentation
         run: cmake -S . -B build -DBUILD_DOCS_ONLY=ON -DBUILD_ALL_DOCS=ON
