@@ -1,4 +1,4 @@
-# XIDER - Technical Architecture
+# Technical Architecture
 
 ## Objective
 

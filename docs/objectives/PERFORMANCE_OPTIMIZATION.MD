@@ -1,4 +1,4 @@
-# XIDER - Performance and Optimization
+# Performance and Optimization
 
 ## Objective
 

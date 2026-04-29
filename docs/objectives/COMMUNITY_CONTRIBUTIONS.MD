@@ -1,4 +1,4 @@
-# XIDER - Community Contributions
+# Community Contributions
 
 ## Objective
 
