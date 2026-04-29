@@ -1,4 +1,4 @@
-# XIDER - Technological Watch
+# Technological Watch
 
 ## Objective
 

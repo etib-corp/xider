@@ -1,4 +1,4 @@
-# G-EIP-700_beta_test_plan
+# Beta Test Plan
 
 ## **1. Project context**
 
