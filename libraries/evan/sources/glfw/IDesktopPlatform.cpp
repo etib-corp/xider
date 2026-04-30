@@ -34,7 +34,21 @@ std::shared_ptr<evan::ASwapchainContext>
 void evan::IDesktopPlatform::pollEvents(ADeviceBackend &deviceBackend)
 {
 	glfwPollEvents();
-	auto keyboardEvents = getEventKeyboardEvents();
+
+	std::vector<std::unique_ptr<utility::event::Event>> events;
+
+	events.insert(events.end(),
+			   std::make_move_iterator(_keyboardEvents.begin()),
+			   std::make_move_iterator(_keyboardEvents.end()));
+
+	// Clear keyboard events after processing them
+	_keyboardEvents.clear();
+
+	auto mouseMotionEvent = getMouseMotionEvents();
+	events.push_back(std::move(mouseMotionEvent));
+
+	(void)events;
+	(void)deviceBackend;
 }
 
 std::vector<std::string>
@@ -58,28 +72,76 @@ bool evan::IDesktopPlatform::shouldClose() const
 	return glfwWindowShouldClose(_window);
 }
 
-/////////////////////
-// Private Methods //
-/////////////////////
-
-std::vector<std::unique_ptr<utility::event::KeyboardEvent>>
-	evan::IDesktopPlatform::getEventKeyboardEvents(void) const
-{
-	std::vector<std::unique_ptr<utility::event::KeyboardEvent>> events;
-
-	for (int key = GLFW_KEY_SPACE; key <= GLFW_KEY_LAST; ++key) {
-		if (glfwGetKey(_window, key) == GLFW_PRESS) {
-			auto event = std::make_unique<utility::event::KeyboardEvent>();
-			event->setKeycode(static_cast<utility::event::KeyboardEvent::KeyCode>(key));
-			events.push_back(std::move(event));
-			std::cout << "Key pressed: " << key << std::endl;
-		}
-	}
-	return events;
-}
-
 utility::event::KeyboardEvent::KeyCode
 	evan::IDesktopPlatform::convertGlfwKeyToKeyCode(int glfwKey) const
 {
 	return static_cast<utility::event::KeyboardEvent::KeyCode>(glfwKey);
+}
+
+utility::event::MouseButtonEvent::Button evan::IDesktopPlatform::convertGlfwMouseButtonToButton(int glfwButton) const
+{
+	switch (glfwButton) {
+	case GLFW_MOUSE_BUTTON_LEFT:
+		return utility::event::MouseButtonEvent::Button::Left;
+	case GLFW_MOUSE_BUTTON_RIGHT:
+		return utility::event::MouseButtonEvent::Button::Right;
+	case GLFW_MOUSE_BUTTON_MIDDLE:
+		return utility::event::MouseButtonEvent::Button::Middle;
+	case GLFW_MOUSE_BUTTON_4:
+		return utility::event::MouseButtonEvent::Button::X1;
+	case GLFW_MOUSE_BUTTON_5:
+		return utility::event::MouseButtonEvent::Button::X2;
+	default:
+		return utility::event::MouseButtonEvent::Button::Unknown;
+	}
+}
+
+utility::event::KeyboardEvent::KeyModifiers
+	evan::IDesktopPlatform::convertGlfwModsToKeyModifiers(int glfwMods) const
+{
+	std::uint16_t result = 0;
+
+	if (glfwMods & GLFW_MOD_SHIFT) {
+		result |= static_cast<std::uint16_t>(utility::event::KeyboardEvent::KeyModifiers::Shift);
+	}
+	if (glfwMods & GLFW_MOD_CONTROL) {
+		result |= static_cast<std::uint16_t>(utility::event::KeyboardEvent::KeyModifiers::Ctrl);
+	}
+	if (glfwMods & GLFW_MOD_ALT) {
+		result |= static_cast<std::uint16_t>(utility::event::KeyboardEvent::KeyModifiers::Alt);
+	}
+	if (glfwMods & GLFW_MOD_SUPER) {
+		result |= static_cast<std::uint16_t>(utility::event::KeyboardEvent::KeyModifiers::Gui);
+	}
+
+	return static_cast<utility::event::KeyboardEvent::KeyModifiers>(result);
+}
+
+utility::event::MouseMotionEvent::MousePosition
+	evan::IDesktopPlatform::getMousePosition() const
+{
+	double xPos = 0.0;
+	double yPos = 0.0;
+
+	glfwGetCursorPos(_window, &xPos, &yPos);
+	return {static_cast<float>(xPos), static_cast<float>(yPos)};
+}
+
+/////////////////////
+// Private Methods //
+/////////////////////
+
+
+std::unique_ptr<utility::event::MouseMotionEvent>
+	evan::IDesktopPlatform::getMouseMotionEvents(void) const
+{
+	std::unique_ptr<utility::event::MouseMotionEvent> event =
+		std::make_unique<utility::event::MouseMotionEvent>();
+	double xPox = 0.0;
+	double yPos = 0.0;
+
+	glfwGetCursorPos(_window, &xPox, &yPos);
+	event->setPosition({static_cast<float>(xPox), static_cast<float>(yPos)});
+	// std::cout << "Mouse position: (" << xPox << ", " << yPos << ")" << std::endl;
+	return event;
 }

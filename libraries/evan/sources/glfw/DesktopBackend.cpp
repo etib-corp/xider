@@ -56,6 +56,8 @@ evan::DesktopBackend::DesktopBackend(const IPlatform &platform)
 	this->pickPhysicalDevice();
 	this->createLogicalDevice();
 	this->createPresentQueue();
+
+	this->setupCallbackEvent(*glfwPlatform);
 }
 
 evan::DesktopBackend::~DesktopBackend()
@@ -438,4 +440,43 @@ void evan::DesktopBackend::populateDebugMessengerCreateInfo(
 		| VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT
 		| VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
 	createInfo.pfnUserCallback = debugCallback;
+}
+
+void evan::DesktopBackend::setupCallbackEvent(const IPlatform &platform)
+{
+	auto glfwPlatform = dynamic_cast<const IDesktopPlatform *>(&platform);
+
+	glfwSetWindowUserPointer(glfwPlatform->_window, const_cast<void*>(static_cast<const void*>(&glfwPlatform)));
+
+	glfwSetKeyCallback(glfwPlatform->_window, [](GLFWwindow *window, int key,
+												  int scancode, int action,
+												  int mods) {
+		auto* self = static_cast<evan::IDesktopPlatform*>(glfwGetWindowUserPointer(window));
+
+		(void)window;
+		(void)scancode;
+		auto event = std::make_unique<utility::event::KeyboardEvent>();
+		event->setKeycode(self->convertGlfwKeyToKeyCode(key));
+		event->setIsDownEvent(action == GLFW_PRESS);
+		event->setModifiers(self->convertGlfwModsToKeyModifiers(mods));
+		self->_keyboardEvents.push_back(std::move(event));
+		if (action == GLFW_PRESS) {
+			std::cout << "Key pressed: " << key << std::endl;
+		} else if (action == GLFW_RELEASE) {
+			std::cout << "Key released: " << key << std::endl;
+		}
+	});
+
+	glfwSetMouseButtonCallback(glfwPlatform->_window, [](GLFWwindow *window, int button,
+												  int action, int mods) {
+		auto* self = static_cast<evan::IDesktopPlatform*>(glfwGetWindowUserPointer(window));
+
+		(void)window;
+		(void)mods;
+		auto event = std::make_unique<utility::event::MouseButtonEvent>();
+		event->setButtonState(self->convertGlfwMouseButtonToButton(button), action == GLFW_PRESS);
+		self->_mouseButtonEvents.push_back(std::move(event));
+		std::string actionStr = (action == GLFW_PRESS) ? "pressed" : "released";
+		std::cout << "Mouse button " << actionStr << ": " << button << std::endl;
+	});
 }

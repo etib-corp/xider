@@ -15,6 +15,9 @@
 
 #include "Version.hpp"
 
+#include <utility/event/keyboard_event.hpp>
+#include <utility/event/mouse_button_event.hpp>
+
 /**
  * @brief List of Vulkan device extensions to enable.
  *
@@ -375,5 +378,7 @@ namespace evan
 		void populateDebugMessengerCreateInfo(
 			VkDebugUtilsMessengerCreateInfoEXT &createInfo,
 			debugCallback_t debugCallback);
+
+		void setupCallbackEvent(const IPlatform &platform);
 	};
 }	 // namespace evan

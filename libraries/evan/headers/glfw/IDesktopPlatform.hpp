@@ -12,6 +12,8 @@
 #include "glfw/DesktopSwapchainContext.hpp"
 
 #include <utility/event/keyboard_event.hpp>
+#include <utility/event/mouse_button_event.hpp>
+#include <utility/event/mouse_motion_event.hpp>
 
 #include <iostream>
 
@@ -113,12 +115,26 @@ namespace evan
 		std::shared_ptr<ASwapchainContext> createSwapchainContext(
 			const DeviceContext &deviceContext) const override;
 
+		utility::event::KeyboardEvent::KeyCode convertGlfwKeyToKeyCode(int glfwKey) const;
+
+		utility::event::MouseButtonEvent::Button convertGlfwMouseButtonToButton(int glfwMouseButton) const;
+
+		utility::event::KeyboardEvent::KeyModifiers convertGlfwModsToKeyModifiers(int glfwMods) const;
+
+		utility::event::MouseMotionEvent::MousePosition getMousePosition() const;
+
 		GLFWwindow *_window = nullptr;	  // Pointer to the GLFW window
+
+		std::vector<std::unique_ptr<utility::event::KeyboardEvent>> _keyboardEvents; // Vector to store keyboard events
+
+		std::vector<std::unique_ptr<utility::event::MouseButtonEvent>> _mouseButtonEvents; // Vector to store mouse button events
 
 		private:
 
-			std::vector<std::unique_ptr<utility::event::KeyboardEvent>> getEventKeyboardEvents(void) const;
+			// std::vector<std::unique_ptr<utility::event::KeyboardEvent>> getEventKeyboardEvents(void) const;
 
-			utility::event::KeyboardEvent::KeyCode convertGlfwKeyToKeyCode(int glfwKey) const;
+			std::unique_ptr<utility::event::MouseMotionEvent> getMouseMotionEvents(void) const;
+
+
 	};
 }	 // namespace evan
