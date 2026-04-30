@@ -405,15 +405,15 @@ namespace guillaume::entities
 	void Button::applyMaterialState(void)
 	{
 		auto &interaction =
-			getComponentRegistry().getComponent<components::Interaction>(
+			getComponentRegistry().getComponent<components::MouseInteraction>(
 				getIdentifier());
 
 		auto &buttonColor =
 			getComponentRegistry().getComponent<components::Color>(
 				getIdentifier());
 		buttonColor.setColor(getContainerColor(
-			_colorStyle, interaction.isMouseHovered(),
-			interaction.isMouseButtonClicked(
+			_colorStyle, interaction.isHovered(),
+			interaction.isClicked(
 				utility::event::MouseButtonEvent::Button::Left)));
 
 		auto &buttonBorders =
@@ -422,7 +422,7 @@ namespace guillaume::entities
 		const auto restingShape = getRestingShape(_shape, _isToggle, _isMorph);
 		buttonBorders.setBorderRadius(getBorderRadius(
 			_size, restingShape,
-			interaction.isMouseButtonClicked(
+			interaction.isClicked(
 				utility::event::MouseButtonEvent::Button::Left)));
 
 		if (_iconIdentifier != ecs::Entity::InvalidIdentifier) {
@@ -512,8 +512,9 @@ namespace guillaume::entities
 				   Color colorStyle, Shape shape, Size size, bool isMorph,
 				   std::function<void(void)> onClick)
 		: ecs::ParentEntityFiller<components::Transform, components::Bound,
-								  components::Interaction, components::Color,
-								  components::Borders>(registry)
+								  components::MouseInteraction,
+								  components::Color, components::Borders>(
+			  registry)
 		, _iconGlyphName(iconGlyphName)
 		, _labelContent(labelContent)
 		, _isToggle(isToggle)
@@ -721,13 +722,12 @@ namespace guillaume::entities
 		setOnClick(_onClick);
 
 		getComponentRegistry()
-			.getComponent<components::Interaction>(getIdentifier())
-			.setMouseOnHoverHandler(std::bind(&Button::hoverHandler, this))
-			.setMouseOnUnhoverHandler(std::bind(&Button::unHoverHandler, this))
-			.setMouseButtonOnClickHandler(
-				utility::event::MouseButtonEvent::Button::Left,
-				std::bind(&Button::leftClickPressHandler, this))
-			.setMouseButtonOnClickReleaseHandler(
+			.getComponent<components::MouseInteraction>(getIdentifier())
+			.setOnHoverHandler(std::bind(&Button::hoverHandler, this))
+			.setOnUnhoverHandler(std::bind(&Button::unHoverHandler, this))
+			.setOnClickHandler(utility::event::MouseButtonEvent::Button::Left,
+							   std::bind(&Button::leftClickPressHandler, this))
+			.setOnClickReleaseHandler(
 				utility::event::MouseButtonEvent::Button::Left,
 				std::bind(&Button::leftClickReleaseHandler, this));
 	}

@@ -48,7 +48,8 @@
 #include "guillaume/event/event_handler.hpp"
 
 #include "guillaume/systems/glyph_render.hpp"
-#include "guillaume/systems/interaction.hpp"
+#include "guillaume/systems/mouse_interaction.hpp"
+#include "guillaume/systems/hand_interaction.hpp"
 #include "guillaume/systems/keyboard_control.hpp"
 #include "guillaume/systems/measure_text.hpp"
 #include "guillaume/systems/rectangle_render.hpp"
@@ -120,7 +121,11 @@ namespace guillaume
 			_systemRegistry.registerNewSystem(
 				std::make_unique<systems::MeasureText>(_renderer));
 			_systemRegistry.registerNewSystem(
-				std::make_unique<systems::Interaction>(_eventBus, _renderer));
+				std::make_unique<systems::MouseInteraction>(_eventBus,
+															_renderer));
+			_systemRegistry.registerNewSystem(
+				std::make_unique<systems::HandInteraction>(_eventBus,
+														   _renderer));
 			_systemRegistry.registerNewSystem(
 				std::make_unique<systems::TextRender>(_renderer));
 			_systemRegistry.registerNewSystem(

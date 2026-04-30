@@ -20,47 +20,8 @@
  SOFTWARE.
  */
 
-#pragma once
-
-#include "guillaume/ecs/system_filler.hpp"
 #include "guillaume/event/event_manager.hpp"
 
-#include "guillaume/components/focus.hpp"
-#include "guillaume/components/text.hpp"
-
-#include <utility/event/event.hpp>
-#include <utility/event/keyboard_event.hpp>
-
-namespace guillaume::systems
+namespace guillaume::event
 {
-
-	/**
-	 * @brief System handling keyboard control keys for text entities.
-	 * @see components::Text
-	 */
-	class KeyboardControl:
-		public ecs::SystemFiller<components::Text, components::Focus>,
-		public event::EventManager<utility::event::KeyboardEvent>
-	{
-		private:
-		public:
-		/**
-		 * @brief Default constructor for the KeyboardControl system.
-		 * @param eventBus The event bus to subscribe to.
-		 */
-		KeyboardControl(event::EventBus &eventBus);
-
-		/**
-		 * @brief Default destructor for the KeyboardControl system.
-		 */
-		~KeyboardControl(void) = default;
-
-		/**
-		 * @brief Update the KeyboardControl system for the specified entity.
-		 * @param entityIdentifier The identifier of the entity to update.
-		 */
-		virtual void
-			update(const ecs::Entity::Identifier &entityIdentifier) override;
-	};
-
-}	 // namespace guillaume::systems
+}	 // namespace guillaume::event

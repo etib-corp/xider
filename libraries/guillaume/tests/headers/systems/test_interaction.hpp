@@ -24,7 +24,7 @@
 
 #include <gtest/gtest.h>
 
-#include <guillaume/systems/interaction.hpp>
+#include <guillaume/systems/mouse_interaction.hpp>
 
 namespace guillaume::systems::tests
 {

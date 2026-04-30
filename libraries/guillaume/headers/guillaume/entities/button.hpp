@@ -34,7 +34,7 @@
 #include "guillaume/components/borders.hpp"
 #include "guillaume/components/bound.hpp"
 #include "guillaume/components/color.hpp"
-#include "guillaume/components/interaction.hpp"
+#include "guillaume/components/mouse_interaction.hpp"
 #include "guillaume/components/transform.hpp"
 
 #include "guillaume/entities/icon.hpp"
@@ -49,7 +49,7 @@ namespace guillaume::entities
 	 */
 	class Button:
 		public ecs::ParentEntityFiller<components::Transform, components::Bound,
-									   components::Interaction,
+									   components::MouseInteraction,
 									   components::Color, components::Borders>
 	{
 		public:

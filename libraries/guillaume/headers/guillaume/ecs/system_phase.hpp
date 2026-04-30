@@ -43,8 +43,8 @@ namespace guillaume::ecs
 		Event,		///< Main update phase for application logic
 		Measure,	///< Measurement phase for calculating layout and text sizes
 		Layout,		///< Layout phase for arranging entities based on
-				   ///< measurements
-		Render	  ///< Render phase for drawing entities
+					///< measurements
+		Render		///< Render phase for drawing entities
 	};
 
 	/**

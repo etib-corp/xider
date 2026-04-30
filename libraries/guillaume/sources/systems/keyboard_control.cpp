@@ -49,7 +49,7 @@ namespace guillaume::systems
 	KeyboardControl::KeyboardControl(event::EventBus &eventBus)
 		: ecs::SystemFiller<components::Text, components::Focus>(
 			  ecs::Phase::Event)
-		, _keyboardSubscriber(eventBus)
+		, event::EventManager<utility::event::KeyboardEvent>(eventBus)
 	{
 	}
 
@@ -58,26 +58,21 @@ namespace guillaume::systems
 	{
 		getLogger().debug("Updating KeyboardControl system for entity "
 						  + std::to_string(entityIdentifier));
-		if (!_keyboardSubscriber.hasPendingEvents()) {
-			return;
-		}
-
 		auto &text			= getComponent<components::Text>(entityIdentifier);
 		std::string content = text.getContent();
 
-		while (_keyboardSubscriber.hasPendingEvents()) {
-			const auto keyboardEvent = _keyboardSubscriber.getNextEvent();
-			if (!keyboardEvent || !keyboardEvent->getIsDownEvent()) {
-				continue;
-			}
+		auto *lastEvent = getLastEvent<utility::event::KeyboardEvent>();
+		if (!lastEvent || !lastEvent->getIsDownEvent()) {
+			return;
+		}
 
-			if (keyboardEvent->getKeycode()
-				== utility::event::KeyboardEvent::KeyCode::Backspace) {
-				removeLastUtf8CodePoint(content);
-			}
+		if (lastEvent->getKeycode()
+			== utility::event::KeyboardEvent::KeyCode::Backspace) {
+			removeLastUtf8CodePoint(content);
 		}
 
 		text.setContent(content);
+		consumeNextEvent<utility::event::KeyboardEvent>();
 	}
 
 }	 // namespace guillaume::systems

@@ -28,7 +28,8 @@
 #include "guillaume/components/bound.hpp"
 #include "guillaume/components/color.hpp"
 #include "guillaume/components/focus.hpp"
-#include "guillaume/components/interaction.hpp"
+#include "guillaume/components/mouse_interaction.hpp"
+#include "guillaume/components/hand_interaction.hpp"
 #include "guillaume/components/text.hpp"
 #include "guillaume/components/transform.hpp"
 
@@ -41,9 +42,9 @@ namespace guillaume
 	 */
 	class ComponentRegistry:
 		public ecs::ComponentRegistryFiller<
-			components::Bound, components::Focus, components::Interaction,
-			components::Text, components::Transform, components::Color,
-			components::Borders>
+			components::Bound, components::Focus, components::MouseInteraction,
+			components::HandInteraction, components::Text,
+			components::Transform, components::Color, components::Borders>
 	{
 		public:
 		/**
@@ -51,7 +52,8 @@ namespace guillaume
 		 */
 		ComponentRegistry(void)
 			: ecs::ComponentRegistryFiller<
-				  components::Bound, components::Focus, components::Interaction,
+				  components::Bound, components::Focus,
+				  components::MouseInteraction, components::HandInteraction,
 				  components::Text, components::Transform, components::Color,
 				  components::Borders>()
 		{
