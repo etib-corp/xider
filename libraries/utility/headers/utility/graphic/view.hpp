@@ -53,16 +53,13 @@ namespace utility::graphic
 	template<CanBeViewComponent ViewComponentType> class View
 	{
 		private:
-		protected:
-		/**
-		 * @brief View pose (position + orientation).
-		 */
-		Pose<ViewComponentType> _pose;
+		Pose<ViewComponentType> _pose;	  //< View position and orientation
 
-		/**
-		 * @brief View field-of-view angles.
-		 */
-		FieldOfView<ViewComponentType> _fieldOfView;
+		FieldOfView<ViewComponentType>
+			_fieldOfView;	 ///< View field-of-view parameters
+
+		math::Vector2UI
+			_viewportSize;	  ///< Viewport size in pixels (width, height)
 
 		/**
 		 * @brief Validate perspective parameter constraints.
@@ -262,9 +259,10 @@ namespace utility::graphic
 		 * invalid.
 		 */
 		View(Pose<ViewComponentType> pose, ViewComponentType verticalFovDegrees,
-			 ViewComponentType aspectRatio)
+			 ViewComponentType aspectRatio, math::Vector2UI viewportSize)
 			: _pose(std::move(pose))
 			, _fieldOfView()
+			, _viewportSize(viewportSize)
 		{
 			setPerspective(verticalFovDegrees, aspectRatio);
 		}
@@ -502,6 +500,25 @@ namespace utility::graphic
 
 			return Ray<ViewComponentType>(_pose.getPosition(),
 										  math::normalize(rayDirection));
+		}
+
+		Ray<ViewComponentType> viewPointToRay(const math::Vector2I &point) const
+		{
+			if (point.x < 0 || point.x >= static_cast<int>(_viewportSize.x)
+				|| point.y < 0
+				|| point.y >= static_cast<int>(_viewportSize.y)) {
+				throw std::out_of_range("Point is outside of viewport bounds");
+			}
+
+			const ViewComponentType ndcX =
+				(static_cast<ViewComponentType>(point.x) / _viewportSize.x)
+					* ViewComponentType { 2 }
+				- ViewComponentType { 1 };
+			const ViewComponentType ndcY =
+				(static_cast<ViewComponentType>(point.y) / _viewportSize.y)
+					* ViewComponentType { 2 }
+				- ViewComponentType { 1 };
+			return viewRay(ndcX, ndcY);
 		}
 
 		/**
