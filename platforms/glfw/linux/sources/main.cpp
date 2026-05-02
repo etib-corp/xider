@@ -39,6 +39,10 @@ int main(void)
 
 	g_assetManager->add(std::string("assets/texture1.png"));
 
+
+	// Initialize XIDER application with Evan engine
+	xider::XIDER app(evanEngine);
+
 	std::vector<std::string> texturePaths = {
 		"assets/texture1.png",
 	};
@@ -63,11 +67,6 @@ int main(void)
 	};
 
 	evanEngine->addScene(0, texturePaths, meshData);
-	while (!linuxDesktopPlatform->shouldClose()) {
-		evanEngine->pollEvents();
 
-		evanEngine->update();
-		evanEngine->render();
-	}
-	return 0;
+	return app.run();
 }
