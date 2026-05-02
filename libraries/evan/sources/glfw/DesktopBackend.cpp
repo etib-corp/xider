@@ -446,7 +446,7 @@ void evan::DesktopBackend::setupCallbackEvent(const IPlatform &platform)
 {
 	auto glfwPlatform = dynamic_cast<const IDesktopPlatform *>(&platform);
 
-	glfwSetWindowUserPointer(glfwPlatform->_window, const_cast<void*>(static_cast<const void*>(&glfwPlatform)));
+	glfwSetWindowUserPointer( glfwPlatform->_window, (void*)glfwPlatform);
 
 	glfwSetKeyCallback(glfwPlatform->_window, [](GLFWwindow *window, int key,
 												  int scancode, int action,
@@ -475,8 +475,18 @@ void evan::DesktopBackend::setupCallbackEvent(const IPlatform &platform)
 		(void)mods;
 		auto event = std::make_unique<utility::event::MouseButtonEvent>();
 		event->setButtonState(self->convertGlfwMouseButtonToButton(button), action == GLFW_PRESS);
+		event->setPosition(self->getMousePosition());
 		self->_mouseButtonEvents.push_back(std::move(event));
 		std::string actionStr = (action == GLFW_PRESS) ? "pressed" : "released";
 		std::cout << "Mouse button " << actionStr << ": " << button << std::endl;
+	});
+
+	glfwSetCursorPosCallback(glfwPlatform->_window, [](GLFWwindow *window, double xpos, double ypos) {
+		auto* self = static_cast<evan::IDesktopPlatform*>(glfwGetWindowUserPointer(window));
+
+		auto event = std::make_unique<utility::event::MouseMotionEvent>();
+		event->setPosition({ static_cast<float>(xpos), static_cast<float>(ypos) });
+		self->_mouseMotionEvents.push_back(std::move(event));
+		std::cout << "Mouse moved to: (" << xpos << ", " << ypos << ")" << std::endl;
 	});
 }

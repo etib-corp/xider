@@ -45,8 +45,19 @@ std::vector<std::unique_ptr<utility::event::Event>>
 	// Clear keyboard events after processing them
 	_keyboardEvents.clear();
 
-	auto mouseMotionEvent = getMouseMotionEvents();
-	events.push_back(std::move(mouseMotionEvent));
+	events.insert(events.end(),
+			   std::make_move_iterator(_mouseButtonEvents.begin()),
+			   std::make_move_iterator(_mouseButtonEvents.end()));
+
+	// Clear mouse button events after processing them
+	_mouseButtonEvents.clear();
+
+	events.insert(events.end(),
+			   std::make_move_iterator(_mouseMotionEvents.begin()),
+			   std::make_move_iterator(_mouseMotionEvents.end()));
+
+	// Clear mouse motion events after processing them
+	_mouseMotionEvents.clear();
 
 	return events;
 }
@@ -125,23 +136,4 @@ utility::event::MouseMotionEvent::MousePosition
 
 	glfwGetCursorPos(_window, &xPos, &yPos);
 	return {static_cast<float>(xPos), static_cast<float>(yPos)};
-}
-
-/////////////////////
-// Private Methods //
-/////////////////////
-
-
-std::unique_ptr<utility::event::MouseMotionEvent>
-	evan::IDesktopPlatform::getMouseMotionEvents(void) const
-{
-	std::unique_ptr<utility::event::MouseMotionEvent> event =
-		std::make_unique<utility::event::MouseMotionEvent>();
-	double xPox = 0.0;
-	double yPos = 0.0;
-
-	glfwGetCursorPos(_window, &xPox, &yPos);
-	event->setPosition({static_cast<float>(xPox), static_cast<float>(yPos)});
-	// std::cout << "Mouse position: (" << xPox << ", " << yPos << ")" << std::endl;
-	return event;
 }

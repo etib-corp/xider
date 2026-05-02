@@ -379,6 +379,17 @@ namespace evan
 			VkDebugUtilsMessengerCreateInfoEXT &createInfo,
 			debugCallback_t debugCallback);
 
+		/**
+		 * @brief Set up callback events for the Desktop platform.
+		 * This function is responsible for setting up any necessary callback events
+		 * for the Desktop platform, such as input event callbacks or window event
+		 * callbacks. It may involve
+		 * registering callback functions with the underlying windowing system
+		 * (e.g., GLFW) to handle events such as keyboard input, mouse input, etc.,
+		 * and ensuring that these events are properly processed
+		 * and integrated with the application's event handling system.
+		 * @param platform The platform instance for which to set up callback events.
+		 */
 		void setupCallbackEvent(const IPlatform &platform);
 	};
 }	 // namespace evan
