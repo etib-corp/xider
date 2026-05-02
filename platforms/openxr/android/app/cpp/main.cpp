@@ -24,7 +24,7 @@
 
 #define LOG_NDEBUG 0
 
-#define LOG_TAG	  "XIderEngine"
+#define LOG_TAG	  "XiderEngine"
 #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 
@@ -163,6 +163,8 @@ void android_main(struct android_app *android_app)
 	android_app->onAppCmd = AppHandleCmd;
 	evan::Engine::initializeAssetManager(android_app->activity->assetManager);
 
+	g_assetManager->add(std::string("./texture1.png"));
+
 	// Initialize XR platform data
 	evan::AndroidXrPlatform::AndroidPlatformData platformData {
 		.applicationVM		 = android_app->activity->vm,
@@ -184,6 +186,31 @@ void android_main(struct android_app *android_app)
 	std::cout << "XIDER Application initialized successfully" << std::endl;
 	std::cout << "Entering main application loop..." << std::endl;
 
+	std::vector<std::string> texturePaths = {
+		"./texture1.png",
+	};
+
+	std::map<std::string, std::vector<evan::Mesh>> meshData = {
+		{ "./texture1.png",
+		  { evan::Mesh { std::vector<evan::Vertex> {
+							 evan::Vertex { { -0.5f, -0.5f, -2.0f },
+											{ 0.0f, 0.0f, 0.0f },
+											{ 0.0f, 0.0f } },
+							 evan::Vertex { { 0.5f, -0.5f, -2.0f },
+											{ 1.0f, 1.0f, 0.0f },
+											{ 1.0f, 0.0f } },
+							 evan::Vertex { { 0.5f, 0.5f, -2.0f },
+											{ 1.0f, 1.0f, 0.0f },
+											{ 1.0f, 1.0f } },
+							 evan::Vertex { { -0.5f, 0.5f, -2.0f },
+											{ 0.0f, 1.0f, 0.0f },
+											{ 0.0f, 1.0f } },
+						 },
+						 std::vector<unsigned int> { 0, 1, 2, 2, 3, 0 } } } },
+	};
+
+	evanEngine->addScene(0, texturePaths, meshData);
+
 	while (!android_app->destroyRequested) {
 		// Process Android events
 		for (;;) {
@@ -204,11 +231,13 @@ void android_main(struct android_app *android_app)
 			}
 		}
 
+		// TODO: Poll the events from the Evan engine and handle them in the XIDER application
+		evanEngine->pollEvents();
+
 		// Application lifecycle
 		app.pollEvents();
-		if (!app.gotNewEvents()) {
+		if (app.gotNewEvents())
 			continue;
-		}
 		app.clear();
 		app.routine();
 		app.present();
