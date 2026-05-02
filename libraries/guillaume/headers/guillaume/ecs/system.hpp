@@ -36,6 +36,8 @@
 #include "guillaume/ecs/component_type_id.hpp"
 #include "guillaume/ecs/entity.hpp"
 #include "guillaume/ecs/entity_registry.hpp"
+#include "guillaume/ecs/system_phase.hpp"
+#include "guillaume/ecs/entity_tree_traveler.hpp"
 
 namespace guillaume::ecs
 {
@@ -52,23 +54,6 @@ namespace guillaume::ecs
 		protected utility::logging::Loggable<System,
 											 utility::logging::StandardLogger>
 	{
-		public:
-		/**
-		 * @brief Enumeration of system update phases.
-		 *
-		 * Defines the different phases during which systems can be updated,
-		 * allowing for organized and efficient processing of entities based on
-		 * their components.
-		 */
-		enum class Phase {
-			Event,		///< Main update phase for application logic
-			Measure,	///< Measurement phase for calculating layout and text
-						///< sizes
-			Layout,		///< Layout phase for arranging entities based on
-						///< measurements
-			Render		///< Render phase for drawing entities
-		};
-
 		private:
 		Phase _phase;					 ///< Update phase of the system
 		Entity::Signature _signature;	 ///< System signature
@@ -206,9 +191,11 @@ namespace guillaume::ecs
 		 * @param componentRegistry The component registry instance.
 		 * @param entityRegistry The entity registry used to query matching
 		 * entities.
+		 * @param traveler Traversal strategy to use for hierarchy iteration.
 		 */
 		void routine(ecs::ComponentRegistry &componentRegistry,
-					 ecs::EntityRegistry &entityRegistry);
+					 ecs::EntityRegistry &entityRegistry,
+					 const ecs::EntityTreeTraveler &traveler);
 
 		/**
 		 * @brief Update the system, processing relevant entities.

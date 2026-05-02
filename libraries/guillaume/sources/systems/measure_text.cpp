@@ -29,7 +29,7 @@ namespace guillaume::systems
 
 	MeasureText::MeasureText(Renderer &renderer)
 		: ecs::SystemFiller<components::Text, components::Bound>(
-			  ecs::System::Phase::Measure)
+			  ecs::Phase::Measure)
 		, _renderer(renderer)
 		, _defaultFontPath(
 			  "assets/fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf")

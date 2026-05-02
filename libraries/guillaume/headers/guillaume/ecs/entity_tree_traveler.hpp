@@ -22,48 +22,49 @@
 
 #pragma once
 
-#include "guillaume/ecs/system_filler.hpp"
+#include <vector>
 
-#include "guillaume/components/text.hpp"
-#include "guillaume/components/transform.hpp"
-#include "guillaume/components/color.hpp"
+#include "guillaume/ecs/entity.hpp"
 
-#include "guillaume/renderer.hpp"
-
-namespace guillaume::systems
+namespace guillaume::ecs
 {
 
-	/**
-	 * @brief System handling text rendering from ECS components.
-	 * @see components::Text
-	 * @see components::Transform
-	 */
-	class TextRender:
-		public ecs::SystemFiller<components::Transform, components::Text,
-								 components::Color>
-	{
-		private:
-		Renderer &_renderer;			 ///< Renderer instance
-		std::string _defaultFontPath;	 ///< Default font for text rendering
+	class EntityRegistry;
 
+	/**
+	 * @brief Strategy interface used to traverse an entity hierarchy.
+	 */
+	class EntityTreeTraveler
+	{
 		public:
 		/**
-		 * @brief Construct a text rendering system.
-		 * @param renderer The renderer used to draw text.
+		 * @brief Default virtual destructor.
 		 */
-		TextRender(Renderer &renderer);
+		virtual ~EntityTreeTraveler(void) = default;
 
 		/**
-		 * @brief Default destructor.
+		 * @brief Traverse the entity hierarchy and return mutable entities.
+		 * @param entityRegistry Root entity registry to traverse.
+		 * @return Ordered mutable entity pointers.
 		 */
-		~TextRender(void);
+		virtual std::vector<Entity *>
+			travel(EntityRegistry &entityRegistry) const = 0;
 
 		/**
-		 * @brief Update the TextRender system for one entity.
-		 * @param entityIdentifier The target entity identifier.
+		 * @brief Traverse the entity hierarchy and return const entities.
+		 * @param entityRegistry Root entity registry to traverse.
+		 * @return Ordered const entity pointers.
 		 */
-		virtual void
-			update(const ecs::Entity::Identifier &entityIdentifier) override;
+		virtual std::vector<const Entity *>
+			travel(const EntityRegistry &entityRegistry) const = 0;
 	};
 
-}	 // namespace guillaume::systems
+	/**
+	 * @brief Concept to ensure a type inherits from EntityTreeTraveler.
+	 * @tparam Type The type to check.
+	 */
+	template<typename Type>
+	concept InheritFromEntityTreeTraveler =
+		std::is_base_of_v<EntityTreeTraveler, Type>;
+
+}	 // namespace guillaume::ecs

@@ -20,42 +20,8 @@
  SOFTWARE.
  */
 
-#include "guillaume/systems/text_input.hpp"
+#include "guillaume/ecs/system_phase.hpp"
 
-namespace guillaume::systems
+namespace guillaume::ecs
 {
-
-	TextInput::TextInput(event::EventBus &eventBus)
-		: ecs::SystemFiller<components::Text, components::Focus>(
-			  ecs::Phase::Event)
-		, _textInputSubscriber(eventBus)
-	{
-	}
-
-	void TextInput::update(const ecs::Entity::Identifier &entityIdentifier)
-	{
-		getLogger().debug("Updating TextInput system for entity "
-						  + std::to_string(entityIdentifier));
-		if (!_textInputSubscriber.hasPendingEvents()) {
-			return;
-		}
-
-		auto &text			= getComponent<components::Text>(entityIdentifier);
-		std::string content = text.getContent();
-
-		while (_textInputSubscriber.hasPendingEvents()) {
-			const auto textInputEvent = _textInputSubscriber.getNextEvent();
-			if (!textInputEvent) {
-				continue;
-			}
-
-			const auto committedText = textInputEvent->getText();
-			if (!committedText.empty()) {
-				content += committedText;
-			}
-		}
-
-		text.setContent(content);
-	}
-
-}	 // namespace guillaume::systems
+}	 // namespace guillaume::ecs

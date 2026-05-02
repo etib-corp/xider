@@ -20,42 +20,30 @@
  SOFTWARE.
  */
 
-#include "guillaume/systems/text_input.hpp"
+#pragma once
 
-namespace guillaume::systems
+#include "guillaume/ecs/entity_tree_traveler.hpp"
+
+namespace guillaume::ecs
 {
 
-	TextInput::TextInput(event::EventBus &eventBus)
-		: ecs::SystemFiller<components::Text, components::Focus>(
-			  ecs::Phase::Event)
-		, _textInputSubscriber(eventBus)
+	/**
+	 * @brief Traverse entities from leaves toward roots.
+	 */
+	class ReverseLevelOrderTraveler final: public EntityTreeTraveler
 	{
-	}
+		public:
+		/**
+		 * @brief Traverse hierarchy in reverse level order.
+		 */
+		std::vector<Entity *>
+			travel(EntityRegistry &entityRegistry) const override;
 
-	void TextInput::update(const ecs::Entity::Identifier &entityIdentifier)
-	{
-		getLogger().debug("Updating TextInput system for entity "
-						  + std::to_string(entityIdentifier));
-		if (!_textInputSubscriber.hasPendingEvents()) {
-			return;
-		}
+		/**
+		 * @brief Traverse hierarchy in reverse level order.
+		 */
+		std::vector<const Entity *>
+			travel(const EntityRegistry &entityRegistry) const override;
+	};
 
-		auto &text			= getComponent<components::Text>(entityIdentifier);
-		std::string content = text.getContent();
-
-		while (_textInputSubscriber.hasPendingEvents()) {
-			const auto textInputEvent = _textInputSubscriber.getNextEvent();
-			if (!textInputEvent) {
-				continue;
-			}
-
-			const auto committedText = textInputEvent->getText();
-			if (!committedText.empty()) {
-				content += committedText;
-			}
-		}
-
-		text.setContent(content);
-	}
-
-}	 // namespace guillaume::systems
+}	 // namespace guillaume::ecs

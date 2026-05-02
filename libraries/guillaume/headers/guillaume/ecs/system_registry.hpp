@@ -97,7 +97,7 @@ namespace guillaume::ecs
 	{
 		public:
 		private:
-		std::map<ecs::System::Phase, std::vector<std::unique_ptr<System>>>
+		std::map<ecs::Phase, std::vector<std::unique_ptr<System>>>
 			_systems;	 ///< Map of registered systems
 
 		public:
@@ -129,7 +129,7 @@ namespace guillaume::ecs
 		 * specified phase.
 		 */
 		const std::vector<std::unique_ptr<System>> &
-			getSystemsByPhase(System::Phase phase) const;
+			getSystemsByPhase(Phase phase) const;
 	};
 
 }	 // namespace guillaume::ecs

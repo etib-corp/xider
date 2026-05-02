@@ -20,42 +20,23 @@
  SOFTWARE.
  */
 
-#include "guillaume/systems/text_input.hpp"
+#include "guillaume/ecs/level_order_traveler.hpp"
 
-namespace guillaume::systems
+#include "guillaume/ecs/entity_registry.hpp"
+
+namespace guillaume::ecs
 {
 
-	TextInput::TextInput(event::EventBus &eventBus)
-		: ecs::SystemFiller<components::Text, components::Focus>(
-			  ecs::Phase::Event)
-		, _textInputSubscriber(eventBus)
+	std::vector<Entity *>
+		LevelOrderTraveler::travel(EntityRegistry &entityRegistry) const
 	{
+		return entityRegistry.getEntitiesBreadthFirst();
 	}
 
-	void TextInput::update(const ecs::Entity::Identifier &entityIdentifier)
+	std::vector<const Entity *>
+		LevelOrderTraveler::travel(const EntityRegistry &entityRegistry) const
 	{
-		getLogger().debug("Updating TextInput system for entity "
-						  + std::to_string(entityIdentifier));
-		if (!_textInputSubscriber.hasPendingEvents()) {
-			return;
-		}
-
-		auto &text			= getComponent<components::Text>(entityIdentifier);
-		std::string content = text.getContent();
-
-		while (_textInputSubscriber.hasPendingEvents()) {
-			const auto textInputEvent = _textInputSubscriber.getNextEvent();
-			if (!textInputEvent) {
-				continue;
-			}
-
-			const auto committedText = textInputEvent->getText();
-			if (!committedText.empty()) {
-				content += committedText;
-			}
-		}
-
-		text.setContent(content);
+		return entityRegistry.getEntitiesBreadthFirst();
 	}
 
-}	 // namespace guillaume::systems
+}	 // namespace guillaume::ecs

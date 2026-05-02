@@ -29,6 +29,7 @@
 #include "guillaume/ecs/component_registry.hpp"
 #include "guillaume/ecs/entity_registry.hpp"
 #include "guillaume/ecs/entity_registry_container.hpp"
+#include "guillaume/ecs/level_order_traveler.hpp"
 #include "guillaume/event/event_bus.hpp"
 
 namespace
@@ -42,6 +43,7 @@ namespace
 		guillaume::systems::KeyboardControl keyboardControl { eventBus };
 		guillaume::ecs::ComponentRegistry componentRegistry;
 		guillaume::ecs::EntityRegistryContainer entityRegistry;
+		guillaume::ecs::LevelOrderTraveler traveler;
 		guillaume::ecs::Entity::Identifier entityIdentifier {
 			guillaume::ecs::Entity::InvalidIdentifier
 		};
@@ -79,7 +81,8 @@ namespace
 			event->setModifiers(modifiers);
 			event->setIsDownEvent(isDownEvent);
 			eventBus.publish(std::move(event));
-			keyboardControl.routine(componentRegistry, entityRegistry);
+			keyboardControl.routine(componentRegistry, entityRegistry,
+									traveler);
 		}
 
 		std::string getContent(void) const

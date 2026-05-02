@@ -26,6 +26,7 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
+#include <tuple>
 #include <typeinfo>
 #include <utility>
 
@@ -34,6 +35,7 @@
 
 #include <utility/demangle.hpp>
 
+#include "guillaume/ecs/system_phase.hpp"
 #include "guillaume/ecs/system_registry.hpp"
 
 #include "guillaume/metadata.hpp"
@@ -90,6 +92,25 @@ namespace guillaume
 			_sceneManager;			  ///< Manager for application scenes
 		event::EventBus _eventBus;	  ///< Event bus dispatching to systems
 		ecs::SystemRegistry _systemRegistry;	///< Shared system registry
+		ecs::SystemPhaseList _systemPhases;		///< Ordered list of phases and
+												///< traversal strategies
+
+		template<typename PhaseType> void runPhase(PhaseType &phaseDefinition)
+		{
+			const ecs::Phase phase = phaseDefinition.getPhase();
+			const ecs::EntityTreeTraveler &traveler =
+				phaseDefinition.getTraveler();
+
+			this->getLogger().debug("Running systems for phase: "
+									+ std::to_string(static_cast<int>(phase)));
+			for (const auto &system: _systemRegistry.getSystemsByPhase(phase)) {
+				system->routine(_sceneManager->getActiveComponentRegistry(),
+								_sceneManager->getActiveEntityRegistry(),
+								traveler);
+			}
+			this->getLogger().debug("Finished systems for phase: "
+									+ std::to_string(static_cast<int>(phase)));
+		}
 
 		/**
 		 * @brief Register core systems used by the application.
@@ -122,6 +143,7 @@ namespace guillaume
 			, _sceneManager(nullptr)
 			, _eventBus()
 			, _systemRegistry()
+			, _systemPhases()
 		{
 			registerCoreSystems();
 			_eventHandler.setEventCallback(
@@ -180,21 +202,11 @@ namespace guillaume
 		 */
 		void routine(void)
 		{
-			for (const auto phase:
-				 { ecs::System::Phase::Event, ecs::System::Phase::Measure,
-				   ecs::System::Phase::Layout, ecs::System::Phase::Render }) {
-				this->getLogger().debug(
-					"Running systems for phase: "
-					+ std::to_string(static_cast<int>(phase)));
-				for (const auto &system:
-					 _systemRegistry.getSystemsByPhase(phase)) {
-					system->routine(_sceneManager->getActiveComponentRegistry(),
-									_sceneManager->getActiveEntityRegistry());
-				}
-				this->getLogger().debug(
-					"Finished systems for phase: "
-					+ std::to_string(static_cast<int>(phase)));
-			}
+			std::apply(
+				[this](auto &...phaseDefinition) {
+					(this->runPhase(phaseDefinition), ...);
+				},
+				_systemPhases);
 		}
 
 		/**
@@ -237,41 +249,6 @@ namespace guillaume
 		bool shouldQuit(void) const
 		{
 			return _eventHandler.shouldQuit();
-		}
-
-		/**
-		 * @brief Run the application main loop using a custom shouldQuit
-		 * function.
-		 * @tparam ShouldQuitFn Type of the shouldQuit callable.
-		 * @param shouldQuitFn A callable that returns true when the loop should
-		 * exit.
-		 * @return Exit code.
-		 *
-		 * @code
-		 * app.run([](){ return some_condition; });
-		 * @endcode
-		 */
-		template<typename ShouldQuitFn> int run(ShouldQuitFn shouldQuitFn)
-		{
-			this->getLogger().info("Entering main loop with custom shouldQuit");
-			while (!shouldQuitFn()) {
-				try {
-					_eventHandler.pollEvents();
-					if (!_eventHandler.gotNewEvents()) {
-						continue;
-					}
-					_renderer.clear();
-					routine();
-					_renderer.present();
-					this->getLogger().debug("Processed a frame");
-				} catch (const std::exception &exception) {
-					this->getLogger().error(std::string("Application error: ")
-											+ exception.what());
-					return EXIT_FAILURE;
-				}
-			}
-			this->getLogger().info("Exiting main loop");
-			return EXIT_SUCCESS;
 		}
 
 		/**

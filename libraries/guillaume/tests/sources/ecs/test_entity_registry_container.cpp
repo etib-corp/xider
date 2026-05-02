@@ -24,7 +24,9 @@
 
 #include <memory>
 
+#include "guillaume/ecs/level_order_traveler.hpp"
 #include "guillaume/ecs/parent_entity.hpp"
+#include "guillaume/ecs/reverse_level_order_traveler.hpp"
 
 namespace guillaume::ecs::tests
 {
@@ -125,6 +127,85 @@ namespace guillaume::ecs::tests
 		EXPECT_EQ(matchingIdentifiers[0], rootIdentifier);
 		EXPECT_EQ(matchingIdentifiers[1], childIdentifier);
 		EXPECT_NE(parentIdentifier, Entity::InvalidIdentifier);
+	}
+
+	TEST_F(TestEntityRegistry, LevelOrderTravelerTraversesTopDown)
+	{
+		TestEntityRegistryContainer registry;
+		LevelOrderTraveler traveler;
+
+		auto firstRoot				   = std::make_unique<DummyEntity>();
+		const auto firstRootIdentifier = firstRoot->getIdentifier();
+
+		auto parent					= std::make_unique<DummyParentEntity>();
+		auto child					= std::make_unique<DummyEntity>();
+		const auto parentIdentifier = parent->getIdentifier();
+		const auto childIdentifier	= child->getIdentifier();
+
+		parent->addEntity(std::move(child));
+		registry.addEntity(std::move(firstRoot));
+		registry.addEntity(std::move(parent));
+
+		const auto entities = traveler.travel(registry);
+
+		ASSERT_EQ(entities.size(), 3U);
+		EXPECT_EQ(entities[0]->getIdentifier(), firstRootIdentifier);
+		EXPECT_EQ(entities[1]->getIdentifier(), parentIdentifier);
+		EXPECT_EQ(entities[2]->getIdentifier(), childIdentifier);
+	}
+
+	TEST_F(TestEntityRegistry, ReverseLevelOrderTravelerTraversesBottomUp)
+	{
+		TestEntityRegistryContainer registry;
+		ReverseLevelOrderTraveler traveler;
+
+		auto firstRoot				   = std::make_unique<DummyEntity>();
+		const auto firstRootIdentifier = firstRoot->getIdentifier();
+
+		auto parent					= std::make_unique<DummyParentEntity>();
+		auto child					= std::make_unique<DummyEntity>();
+		const auto parentIdentifier = parent->getIdentifier();
+		const auto childIdentifier	= child->getIdentifier();
+
+		parent->addEntity(std::move(child));
+		registry.addEntity(std::move(firstRoot));
+		registry.addEntity(std::move(parent));
+
+		const auto entities = traveler.travel(registry);
+
+		ASSERT_EQ(entities.size(), 3U);
+		EXPECT_EQ(entities[0]->getIdentifier(), childIdentifier);
+		EXPECT_EQ(entities[1]->getIdentifier(), parentIdentifier);
+		EXPECT_EQ(entities[2]->getIdentifier(), firstRootIdentifier);
+	}
+
+	TEST_F(TestEntityRegistry,
+		   GetEntityWithSignatureUsesProvidedTraversalStrategy)
+	{
+		TestEntityRegistryContainer registry;
+		ReverseLevelOrderTraveler traveler;
+
+		auto firstRoot = std::make_unique<DummyEntity>();
+		Entity::Signature signature;
+		signature.set(2);
+		firstRoot->setSignature(signature);
+		const auto firstRootIdentifier = firstRoot->getIdentifier();
+
+		auto parent = std::make_unique<DummyParentEntity>();
+		auto child	= std::make_unique<DummyEntity>();
+		child->setSignature(signature);
+		const auto childIdentifier = child->getIdentifier();
+
+		parent->addEntity(std::move(child));
+		registry.addEntity(std::move(firstRoot));
+		registry.addEntity(std::move(parent));
+
+		const auto matchingIdentifiers =
+			registry.getEntityWithSignature(signature, traveler);
+
+		ASSERT_EQ(matchingIdentifiers.size(), 2U);
+		EXPECT_EQ(matchingIdentifiers[0], childIdentifier);
+		EXPECT_EQ(matchingIdentifiers[1], firstRootIdentifier);
 	}
 
 }	 // namespace guillaume::ecs::tests
