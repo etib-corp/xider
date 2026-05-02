@@ -206,14 +206,15 @@ std::vector<XrViewConfigurationView>
 	return viewConfigurations;
 }
 
-void evan::XrDeviceBackend::pollActions()
+std::vector<std::unique_ptr<utility::event::Event>> evan::XrDeviceBackend::pollActions()
 {
 	if (!_sessionRunning) {
-		return;
+		return {};
 	}
 	if (_actionManager) {
-		_actionManager->pollActions(*this);
+		return _actionManager->pollActions(*this);
 	}
+	return {};
 }
 
 ///////////////////////

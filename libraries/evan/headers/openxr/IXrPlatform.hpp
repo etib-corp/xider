@@ -76,7 +76,7 @@ namespace evan
 		 * application loop to ensure that events are processed in a timely
 		 * manner.
 		 */
-		virtual void pollEvents(ADeviceBackend &deviceBackend) override;
+		virtual std::vector<std::unique_ptr<utility::event::Event>> pollEvents(ADeviceBackend &deviceBackend) override;
 
 		/**
 		 * @brief Create a device context for the OpenXR platform.

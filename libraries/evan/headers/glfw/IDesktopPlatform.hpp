@@ -70,7 +70,7 @@ namespace evan
 		 * event polling functions to handle events specific to the Desktop
 		 * platform.
 		 */
-		void pollEvents(ADeviceBackend &deviceBackend) override;
+		virtual std::vector<std::unique_ptr<utility::event::Event>> pollEvents(ADeviceBackend &deviceBackend) override;
 
 		/**
 		 * @brief Create a Vulkan surface for the Desktop platform.

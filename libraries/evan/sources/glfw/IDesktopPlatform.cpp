@@ -31,7 +31,8 @@ std::shared_ptr<evan::ASwapchainContext>
 }
 
 
-void evan::IDesktopPlatform::pollEvents(ADeviceBackend &deviceBackend)
+std::vector<std::unique_ptr<utility::event::Event>>
+	evan::IDesktopPlatform::pollEvents(ADeviceBackend &deviceBackend)
 {
 	glfwPollEvents();
 
@@ -47,8 +48,7 @@ void evan::IDesktopPlatform::pollEvents(ADeviceBackend &deviceBackend)
 	auto mouseMotionEvent = getMouseMotionEvents();
 	events.push_back(std::move(mouseMotionEvent));
 
-	(void)events;
-	(void)deviceBackend;
+	return events;
 }
 
 std::vector<std::string>
