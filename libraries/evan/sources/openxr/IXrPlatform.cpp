@@ -71,7 +71,6 @@ void evan::IXrPlatform::processSessionStateChangedEvent(
 {
 	switch (eventData.state) {
 		case XR_SESSION_STATE_READY: {
-			std::cout << "HOOOOO)OOO Session state changed: " << eventData.state << std::endl;
 			XrSessionBeginInfo sessionBeginInfo;
 			sessionBeginInfo.type = XR_TYPE_SESSION_BEGIN_INFO;
 			sessionBeginInfo.primaryViewConfigurationType =
