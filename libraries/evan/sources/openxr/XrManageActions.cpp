@@ -47,6 +47,7 @@ std::vector<std::unique_ptr<utility::event::Event>>
 
 	XrResult result = xrSyncActions(deviceBackend._session, &syncInfo);
 	if (result != XR_SUCCESS) {
+		std::cerr << "Failed to sync actions: " << result << std::endl;
 		return events;
 	}
 	auto handEvents = _handsMotionActions->getEvents(deviceBackend);
