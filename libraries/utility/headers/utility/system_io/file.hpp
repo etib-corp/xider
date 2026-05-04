@@ -35,13 +35,13 @@
 namespace utility
 {
 	/**
-	 * @class FileAsset
-	 * @brief The FileAsset class represents a file asset in the evan project.
+	 * @class File
+	 * @brief The File class represents a I/O file asset.
 	 *
 	 * This class provides methods to read and write binary data to and from a
 	 * file.
 	 */
-	class FileAsset
+	class File
 	{
 		public:
 		/**
@@ -57,16 +57,16 @@ namespace utility
 		};
 
 		/**
-		 * @brief Constructs a FileAsset object with its content and size.
+		 * @brief Constructs a File object with its content and size.
 		 * @param path The path to the file.
 		 * @param content The content of the file.
 		 */
-		FileAsset(const std::string &path, const std::string &content);
+		File(const std::string &path, const std::string &content);
 
 		/**
-		 * @brief Destructs the FileAsset object.
+		 * @brief Destructs the File object.
 		 */
-		~FileAsset();
+		~File();
 
 		/**
 		 * @brief Writes data to the file.

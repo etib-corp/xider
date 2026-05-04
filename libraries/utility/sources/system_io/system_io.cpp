@@ -20,7 +20,7 @@
  SOFTWARE.
  */
 
-#include "utility/asset_manager/asset_manager.hpp"
+#include "utility/system_io/system_io.hpp"
 
 namespace
 {
@@ -30,13 +30,13 @@ namespace
 	}
 }	 // namespace
 
-bool utility::AssetManager::exists(const std::string &path) const
+bool utility::SystemIO::exists(const std::string &path) const
 {
 	return _assets.find(NormalizePath(path)) != _assets.end();
 }
 
-std::shared_ptr<utility::FileAsset>
-	utility::AssetManager::open(const std::string &path) const
+std::shared_ptr<utility::File>
+	utility::SystemIO::open(const std::string &path) const
 {
 	const auto it = _assets.find(NormalizePath(path));
 	if (it == _assets.end()) {

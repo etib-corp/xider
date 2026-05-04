@@ -9,7 +9,7 @@ the rest of the workspace can reuse them without pulling in higher-level code.
 - `utility::graphic` contains rendering-friendly types such as colors, poses,
   textures, vertices, and text helpers.
 - `utility::event` contains platform and input event models.
-- `utility::asset_manager` contains desktop and Android asset loading helpers.
+- `utility::system_io` contains desktop and Android asset loading helpers.
 - `utility::logging` contains logger interfaces and implementations.
 
 ## Design Goal

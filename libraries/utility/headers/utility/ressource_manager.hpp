@@ -1,7 +1,7 @@
 #pragma once
 
-#include <utility/asset_manager/file_asset.hpp>
-#include <utility/asset_manager/asset_manager.hpp>
+#include <utility/system_io/file.hpp>
+#include <utility/system_io/system_io.hpp>
 
 #include <utility/graphic/text/font.hpp>
 #include <utility/graphic/text/text_material.hpp>
@@ -49,44 +49,44 @@ namespace utility
 		 * @brief Loads a font resource from a specified file path.
 		 *
 		 * @param path The file path to the font resource to be loaded.
-		 * @param assetManager A reference to the AssetManager instance used to
+		 * @param assetManager A reference to the SystemIO instance used to
 		 * load the font asset.
 		 *
 		 * @return A shared pointer to the loaded Font object.
 		 */
 		std::shared_ptr<graphic::Font> loadFont(const std::string &path,
-												AssetManager &assetManager);
+												SystemIO &assetManager);
 
 		/**
 		 * @brief Loads a font resource from a specified asset.
 		 *
-		 * @param fontAsset A shared pointer to the FileAsset object containing
+		 * @param fontAsset A shared pointer to the File object containing
 		 * the font data to be loaded.
 		 *
 		 * @return A shared pointer to the loaded Font object.
 		 */
 		std::shared_ptr<graphic::Font>
-			loadFontFromAsset(std::shared_ptr<utility::FileAsset> fontAsset);
+			loadFontFromAsset(std::shared_ptr<utility::File> fontAsset);
 
 		// TODO: add loadFontsFromDirectory method to load all fonts from a
-		// directory But needs to be implemented in the AssetManager first to
+		// directory But needs to be implemented in the SystemIO first to
 		// load all assets from a directory
 
 		// TODO: add loadFontFamily method to load all fonts from a directory
-		// But needs to be implemented in the AssetManager first to load all
+		// But needs to be implemented in the SystemIO first to load all
 		// assets from a directory
 
 		/**
 		 * @brief Loads a font family resource from a vector of font assets.
 		 *
-		 * @param fontAssets A vector of shared pointers to FileAsset objects
+		 * @param fontAssets A vector of shared pointers to File objects
 		 * containing the font data for the font family to be loaded.
 		 *
 		 * @return A shared pointer to the loaded Font object representing the
 		 * font family.
 		 */
 		std::shared_ptr<graphic::Font> loadFontFamilyFromAssets(
-			const std::vector<std::shared_ptr<utility::FileAsset>> &fontAssets);
+			const std::vector<std::shared_ptr<utility::File>> &fontAssets);
 
 		/**
 		 * @brief Loads a material resource from a specified file path.
@@ -94,106 +94,106 @@ namespace utility
 		 * @param path The file path to the material resource to be loaded.
 		 * @param shaderType The type of shader to be associated with the loaded
 		 * material.
-		 * @param assetManager A reference to the AssetManager instance used to
+		 * @param assetManager A reference to the SystemIO instance used to
 		 * load the material asset.
 		 *
 		 * @return A shared pointer to the loaded Material object.
 		 */
 		std::shared_ptr<graphic::Material>
 			loadMaterial(const std::string &path, ShaderType shaderType,
-						 AssetManager &assetManager);
+						 SystemIO &assetManager);
 
 		/**
 		 * @brief Loads a material resource from a specified asset.
 		 *
 		 * @param shaderType The type of shader to be associated with the loaded
 		 * material.
-		 * @param materialAsset A shared pointer to the FileAsset object
+		 * @param materialAsset A shared pointer to the File object
 		 * containing the material data to be loaded.
 		 *
 		 * @return A shared pointer to the loaded Material object.
 		 */
 		std::shared_ptr<graphic::Material> loadMaterialFromAsset(
 			ShaderType shaderType,
-			std::shared_ptr<utility::FileAsset> materialAsset);
+			std::shared_ptr<utility::File> materialAsset);
 
 		/**
 		 * @brief Loads a texture resource from a specified file path.
 		 *
 		 * @param path The file path to the texture resource to be loaded.
-		 * @param assetManager A reference to the AssetManager instance used to
+		 * @param assetManager A reference to the SystemIO instance used to
 		 * load the texture asset
 		 *
 		 * @return A shared pointer to the loaded Texture object.
 		 */
 		std::shared_ptr<graphic::Texture>
-			loadTexture(const std::string &path, AssetManager &assetManager);
+			loadTexture(const std::string &path, SystemIO &assetManager);
 
 		/**
 		 * @brief Loads a texture resource from a specified asset.
 		 *
-		 * @param textureAsset A shared pointer to the FileAsset object
+		 * @param textureAsset A shared pointer to the File object
 		 * containing the texture data to be loaded.
 		 *
 		 * @return A shared pointer to the loaded Texture object.
 		 */
 		std::shared_ptr<graphic::Texture> loadTextureFromAsset(
-			std::shared_ptr<utility::FileAsset> textureAsset);
+			std::shared_ptr<utility::File> textureAsset);
 
 		// TODO: add loadTexturesFromDirectory method to load all textures from
-		// a directory But needs to be implemented in the AssetManager first to
+		// a directory But needs to be implemented in the SystemIO first to
 		// load all assets from a directory
 
 		/**
 		 * @brief Loads a model resource from a specified file path.
 		 *
 		 * @param path The file path to the model resource to be loaded.
-		 * @param assetManager A reference to the AssetManager instance used to
+		 * @param assetManager A reference to the SystemIO instance used to
 		 * load the model asset.
 		 *
 		 * @return A shared pointer to the loaded Model object.
 		 */
 		std::shared_ptr<graphic::Model> loadModel(const std::string &path,
-												AssetManager &assetManager);
+												SystemIO &assetManager);
 
 		/**
 		 * @brief Loads a model resource from a specified asset.
 		 *
-		 * @param modelAsset A shared pointer to the FileAsset object containing the model data to be loaded.
+		 * @param modelAsset A shared pointer to the File object containing the model data to be loaded.
 		 *
 		 * @return A shared pointer to the loaded Model object.
 		 */
-		std::shared_ptr<graphic::Model> loadModelFromAsset(std::shared_ptr<utility::FileAsset> modelAsset);
+		std::shared_ptr<graphic::Model> loadModelFromAsset(std::shared_ptr<utility::File> modelAsset);
 
 		/**
 		 * @brief Loads a model resource from a specified file path and model type.
 		 *
 		 * @param path The file path to the model resource to be loaded.
 		 * @param type The type of the model (e.g., OBJ, FBX, GLTF) to be loaded.
-		 * @param assetManager A reference to the AssetManager instance
+		 * @param assetManager A reference to the SystemIO instance
 		 *
 		 * @return A shared pointer to the loaded Model object.
 		 */
-		std::shared_ptr<graphic::Model> loadModelFromAsset(std::shared_ptr<utility::FileAsset> modelAsset, graphic::Model::ModelType type);
+		std::shared_ptr<graphic::Model> loadModelFromAsset(std::shared_ptr<utility::File> modelAsset, graphic::Model::ModelType type);
 
 		/**
 		 * @brief Loads an OBJ model resource from a specified file path.
 		 *
 		 * @param path The file path to the OBJ model resource to be loaded.
-		 * @param assetManager A reference to the AssetManager instance used to load the model asset
+		 * @param assetManager A reference to the SystemIO instance used to load the model asset
 		 *
 		 * @return A shared pointer to the loaded Model object representing the OBJ model.
 		 */
-		std::shared_ptr<graphic::Model> loadObj(const std::string &path, AssetManager &assetManager);
+		std::shared_ptr<graphic::Model> loadObj(const std::string &path, SystemIO &assetManager);
 
 		/**
 		 * @brief Loads an OBJ model resource from a specified asset.
 		 *
-		 * @param modelAsset A shared pointer to the FileAsset object containing the OBJ model data to be loaded.
+		 * @param modelAsset A shared pointer to the File object containing the OBJ model data to be loaded.
 		 *
 		 * @return A shared pointer to the loaded Model object representing the OBJ model.
 		 */
-		std::shared_ptr<graphic::Model> loadObjFromAsset(std::shared_ptr<utility::FileAsset> modelAsset);
+		std::shared_ptr<graphic::Model> loadObjFromAsset(std::shared_ptr<utility::File> modelAsset);
 
 		protected:
 		/**

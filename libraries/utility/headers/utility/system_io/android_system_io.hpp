@@ -27,17 +27,17 @@
 	#include <android/asset_manager.h>
 	#include <android/asset_manager_jni.h>
 
-	#include "utility/asset_manager/asset_manager.hpp"
+	#include "utility/system_io/system_io.hpp"
 
 namespace utility
 {
 
 	/**
-	 * @class AndroidAssetManager
-	 * @brief The AndroidAssetManager class is an implementation of AssetManager
+	 * @class AndroidSystemIO
+	 * @brief The AndroidSystemIO class is an implementation of FileSystem
 	 * that uses the Android NDK's AAssetManager to load assets from the APK.
 	 */
-	class AndroidAssetManager: public AssetManager
+	class AndroidSystemIO: public FileSystem
 	{
 		private:
 		AAssetManager
@@ -45,16 +45,16 @@ namespace utility
 
 		public:
 		/**
-		 * @brief Constructs an AndroidAssetManager with the given
+		 * @brief Constructs an AndroidSystemIO with the given
 		 * AAssetManager.
 		 * @param assetManager The AAssetManager to use for loading assets.
 		 */
-		explicit AndroidAssetManager(AAssetManager *assetManager);
+		explicit AndroidSystemIO(AAssetManager *assetManager);
 
 		/**
-		 * @brief Default destructor for AndroidAssetManager.
+		 * @brief Default destructor for AndroidSystemIO.
 		 */
-		~AndroidAssetManager() override = default;
+		~AndroidSystemIO() override = default;
 
 		/**
 		 * @brief Loads assets from a directory in the APK.
@@ -67,10 +67,10 @@ namespace utility
 		/**
 		 * @brief Loads an asset from the APK.
 		 * @param path The path to the asset in the APK.
-		 * @return A shared pointer to the loaded FileAsset, or nullptr if
+		 * @return A shared pointer to the loaded File, or nullptr if
 		 * loading failed.
 		 */
-		std::shared_ptr<utility::FileAsset>
+		std::shared_ptr<utility::File>
 			add(const std::string &path) override;
 
 		/**

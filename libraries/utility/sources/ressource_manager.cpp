@@ -14,7 +14,7 @@ namespace utility
 {
 	std::shared_ptr<graphic::Font>
 		RessourceManager::loadFont(const std::string &path,
-								   AssetManager &assetManager)
+								   SystemIO &assetManager)
 	{
 		auto it = _fonts.find(path);
 
@@ -34,7 +34,7 @@ namespace utility
 	}
 
 	std::shared_ptr<graphic::Font> RessourceManager::loadFontFromAsset(
-		std::shared_ptr<utility::FileAsset> fontAsset)
+		std::shared_ptr<utility::File> fontAsset)
 	{
 		auto font = std::make_shared<graphic::Font>(std::vector { *fontAsset });
 
@@ -69,9 +69,9 @@ namespace utility
 	}
 
 	std::shared_ptr<graphic::Font> RessourceManager::loadFontFamilyFromAssets(
-		const std::vector<std::shared_ptr<utility::FileAsset>> &fontAssets)
+		const std::vector<std::shared_ptr<utility::File>> &fontAssets)
 	{
-		std::vector<FileAsset> assets;
+		std::vector<File> assets;
 		std::string familyName;
 
 		if (!fontAssets.empty()) {
@@ -129,7 +129,7 @@ namespace utility
 	std::shared_ptr<graphic::Material>
 		RessourceManager::loadMaterial(const std::string &path,
 									   ShaderType shaderType,
-									   AssetManager &assetManager)
+									   SystemIO &assetManager)
 	{
 		auto it = _materials.find(path);
 
@@ -150,12 +150,12 @@ namespace utility
 
 	std::shared_ptr<graphic::Material> RessourceManager::loadMaterialFromAsset(
 		ShaderType shaderType,
-		std::shared_ptr<utility::FileAsset> materialAsset)
+		std::shared_ptr<utility::File> materialAsset)
 	{
 		std::string shaderName = (shaderType == ShaderType::TEXT_SHADER)
 			? "text_shader"
 			: "mesh_shader";
-		std::vector<FileAsset> textureAssets = { *materialAsset };
+		std::vector<File> textureAssets = { *materialAsset };
 		auto material = std::make_shared<graphic::Material>(*this, shaderName,
 															textureAssets);
 
@@ -168,7 +168,7 @@ namespace utility
 
 	std::shared_ptr<graphic::Texture>
 		RessourceManager::loadTexture(const std::string &path,
-									  AssetManager &assetManager)
+									  SystemIO &assetManager)
 	{
 		auto it = _textures.find(path);
 
@@ -188,7 +188,7 @@ namespace utility
 	}
 
 	std::shared_ptr<graphic::Texture> RessourceManager::loadTextureFromAsset(
-		std::shared_ptr<utility::FileAsset> textureAsset)
+		std::shared_ptr<utility::File> textureAsset)
 	{
 		int texWidth	= 0;
 		int texHeight	= 0;
@@ -213,7 +213,7 @@ namespace utility
 	}
 
 	std::shared_ptr<graphic::Model> RessourceManager::loadModel(const std::string &path,
-																AssetManager &assetManager)
+																SystemIO &assetManager)
 	{
 		auto it = _models.find(path);
 
@@ -233,7 +233,7 @@ namespace utility
 	}
 
 	std::shared_ptr<graphic::Model> RessourceManager::loadModelFromAsset(
-		std::shared_ptr<utility::FileAsset> modelAsset)
+		std::shared_ptr<utility::File> modelAsset)
 	{
 		auto it = _models.find(modelAsset->path());
 
@@ -248,7 +248,7 @@ namespace utility
 	}
 
 	std::shared_ptr<graphic::Model> RessourceManager::loadModelFromAsset(
-		std::shared_ptr<utility::FileAsset> modelAsset, graphic::Model::ModelType type)
+		std::shared_ptr<utility::File> modelAsset, graphic::Model::ModelType type)
 	{
 		auto it = _models.find(modelAsset->path());
 
@@ -262,7 +262,7 @@ namespace utility
 		return model;
 	}
 
-	std::shared_ptr<graphic::Model> RessourceManager::loadObj(const std::string &path, AssetManager &assetManager)
+	std::shared_ptr<graphic::Model> RessourceManager::loadObj(const std::string &path, SystemIO &assetManager)
 	{
 		auto it = _models.find(path);
 
@@ -283,7 +283,7 @@ namespace utility
 		return model;
 	}
 
-	std::shared_ptr<graphic::Model> RessourceManager::loadObjFromAsset(std::shared_ptr<utility::FileAsset> modelAsset)
+	std::shared_ptr<graphic::Model> RessourceManager::loadObjFromAsset(std::shared_ptr<utility::File> modelAsset)
 	{
 		auto it = _models.find(modelAsset->path());
 

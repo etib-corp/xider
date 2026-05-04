@@ -13,7 +13,7 @@
 #include <functional>
 #include <iostream>
 
-#include <utility/asset_manager/file_asset.hpp>
+#include <utility/system_io/file.hpp>
 
 #include <utility/graphic/text/font_sized.hpp>
 
@@ -37,13 +37,13 @@ namespace utility::graphic
 		 * @brief Constructs a Font object by loading font data from the
 		 * provided file assets.
 		 *
-		 * @param fontAssets A vector of FileAsset objects containing the font
+		 * @param fontAssets A vector of File objects containing the font
 		 * data to load.
 		 *
 		 * @throws std::runtime_error if the FreeType library cannot be
 		 * initialized or if any of the font assets cannot be loaded.
 		 */
-		Font(const std::vector<FileAsset> &fontAssets);
+		Font(const std::vector<File> &fontAssets);
 
 		/**
 		 * @brief Destructs the Font object, releasing any allocated resources.
@@ -78,7 +78,7 @@ namespace utility::graphic
 		 *
 		 * This method returns a vector of strings containing the paths of the
 		 * font assets that were loaded into this Font object. The paths are
-		 * extracted from the FileAsset objects used to initialize the Font.
+		 * extracted from the File objects used to initialize the Font.
 		 *
 		 * @return A const reference to a vector of strings containing the paths
 		 * of the loaded font assets.

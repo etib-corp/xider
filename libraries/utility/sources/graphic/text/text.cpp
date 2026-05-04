@@ -24,7 +24,7 @@
 
 namespace utility::graphic
 {
-	Text::Text(RessourceManager &ressourceManager, AssetManager &assetManager,
+	Text::Text(RessourceManager &ressourceManager, SystemIO &assetManager,
 			   const std::string &content, uint32_t fontSize,
 			   const std::string &font)
 	{
