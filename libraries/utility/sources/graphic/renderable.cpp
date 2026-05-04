@@ -23,6 +23,10 @@ namespace utility::graphic
         return _color;
     }
 
+    std::vector<std::shared_ptr<Mesh>> Renderable::getMeshes() const
+    {
+        return _meshes;
+    }
 
     /////////////
     // Setters //
