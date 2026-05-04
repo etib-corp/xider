@@ -35,6 +35,12 @@ evan::Engine::Engine(const std::shared_ptr<IPlatform> &platform)
 #endif
 	}
 
+	/**
+	 * We load shaders from both "assets/shaders/" and "shaders/" directories to
+	 * accommodate different platforms and build configurations. On Android, assets
+	 * are typically stored in the "assets/" directory, while on other platforms,
+	 * shaders may be stored in a "shaders/" directory within the project.
+	 */
 	g_assetManager->loadDirectory(std::string("assets/shaders/"));
 	g_assetManager->loadDirectory(std::string("shaders/"));
 

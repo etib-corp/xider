@@ -200,6 +200,8 @@ void evan::Renderer::createGraphicsPipeline(VkDevice device,
 	auto vertShaderFile = g_assetManager->open(std::string("assets/shaders/vert.spv"));
 
 	if (!vertShaderFile || !fragShaderFile) {
+		// If the shaders are not found in the "assets/shaders/" directory, we try
+		// to load them from the "shaders/" directory.
 		fragShaderFile = g_assetManager->open(std::string("shaders/frag.spv"));
 		vertShaderFile = g_assetManager->open(std::string("shaders/vert.spv"));
 	}
