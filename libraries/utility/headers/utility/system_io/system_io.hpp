@@ -31,7 +31,7 @@
 #include <utility>
 #include <vector>
 
-#include "utility/asset_manager/file_asset.hpp"
+#include "utility/system_io/file.hpp"
 #include "utility/graphic/vertex.hpp"
 
 #include <tiny_obj_loader.h>
@@ -44,17 +44,17 @@
 namespace utility
 {
 	/**
-	 * @class AssetManager
-	 * @brief The AssetManager class is an abstract base class for managing
+	 * @class SystemIO
+	 * @brief The SystemIO class is an abstract base class for managing
 	 * file assets.
 	 */
-	class AssetManager
+	class SystemIO
 	{
 		public:
 		/**
-		 * @brief Default destructor for AssetManager.
+		 * @brief Default destructor for SystemIO.
 		 */
-		virtual ~AssetManager() = default;
+		virtual ~SystemIO() = default;
 
 		/**
 		 * @brief Loads assets from a directory.
@@ -82,22 +82,22 @@ namespace utility
 		/**
 		 * @brief Adds an asset to the manager.
 		 * @param path The path to the asset.
-		 * @return A shared pointer to the FileAsset object.
+		 * @return A shared pointer to the File object.
 		 *
 		 * This method is pure virtual and must be implemented by derived
 		 * classes. This method is responsible for loading the asset from the
 		 * specified path by reading the file content and storing it in the
 		 * _assets map.
 		 */
-		virtual std::shared_ptr<utility::FileAsset>
+		virtual std::shared_ptr<utility::File>
 			add(const std::string &path) = 0;
 
 		/**
 		 * @brief Adds an asset to the manager.
 		 * @param path The filesystem path to the asset.
-		 * @return A shared pointer to the FileAsset object.
+		 * @return A shared pointer to the File object.
 		 */
-		std::shared_ptr<utility::FileAsset>
+		std::shared_ptr<utility::File>
 			add(const std::filesystem::path &path)
 		{
 			return add(path.string());
@@ -187,19 +187,19 @@ namespace utility
 		/**
 		 * @brief Opens an asset from the manager.
 		 * @param path The path to the asset.
-		 * @return A shared pointer to the FileAsset object.
+		 * @return A shared pointer to the File object.
 		 *
 		 * This method retrieves the asset from the _assets map.
 		 * If the asset does not exist, it returns a nullptr.
 		 */
-		std::shared_ptr<utility::FileAsset> open(const std::string &path) const;
+		std::shared_ptr<utility::File> open(const std::string &path) const;
 
 		/**
 		 * @brief Opens an asset from the manager.
 		 * @param path The filesystem path to the asset.
-		 * @return A shared pointer to the FileAsset object.
+		 * @return A shared pointer to the File object.
 		 */
-		std::shared_ptr<utility::FileAsset>
+		std::shared_ptr<utility::File>
 			open(const std::filesystem::path &path) const
 		{
 			return open(path.string());
@@ -210,8 +210,8 @@ namespace utility
 		 * @brief Map of loaded assets.
 		 *
 		 * Key: asset path.
-		 * Value: shared pointer to the corresponding FileAsset.
+		 * Value: shared pointer to the corresponding File.
 		 */
-		std::map<std::string, std::shared_ptr<utility::FileAsset>> _assets;
+		std::map<std::string, std::shared_ptr<utility::File>> _assets;
 	};
 }	 // namespace utility

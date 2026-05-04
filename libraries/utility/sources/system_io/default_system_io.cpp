@@ -22,7 +22,7 @@
 
 #include <filesystem>
 
-#include "utility/asset_manager/default_asset_manager.hpp"
+#include "utility/system_io/default_system_io.hpp"
 
 namespace
 {
@@ -32,7 +32,7 @@ namespace
 	}
 }	 // namespace
 
-bool utility::DefaultAssetManager::loadDirectory(const std::string &directory)
+bool utility::DefaultSystemIO::loadDirectory(const std::string &directory)
 {
 	std::error_code error;
 	const std::filesystem::path directoryPath(directory);
@@ -64,8 +64,8 @@ bool utility::DefaultAssetManager::loadDirectory(const std::string &directory)
 	return success;
 }
 
-std::shared_ptr<utility::FileAsset>
-	utility::DefaultAssetManager::add(const std::string &path)
+std::shared_ptr<utility::File>
+	utility::DefaultSystemIO::add(const std::string &path)
 {
 	const std::string key = NormalizePath(path);
 	if (this->exists(key)) {
@@ -97,9 +97,9 @@ std::shared_ptr<utility::FileAsset>
 	}
 	file.close();
 
-	auto asset = std::make_shared<utility::FileAsset>(path, content);
+	auto asset = std::make_shared<utility::File>(path, content);
 	if (!asset) {
-		std::cerr << "Failed to create FileAsset for: " << key << std::endl;
+		std::cerr << "Failed to create File for: " << key << std::endl;
 		return nullptr;
 	}
 
@@ -107,7 +107,7 @@ std::shared_ptr<utility::FileAsset>
 	return asset;
 }
 
-void utility::DefaultAssetManager::remove(const std::string &path, bool save)
+void utility::DefaultSystemIO::remove(const std::string &path, bool save)
 {
 	const std::string key = NormalizePath(path);
 	auto it				  = _assets.find(key);
@@ -121,8 +121,8 @@ void utility::DefaultAssetManager::remove(const std::string &path, bool save)
 	}
 }
 
-bool utility::DefaultAssetManager::save(const std::string &path,
-										const std::string &newPath)
+bool utility::DefaultSystemIO::save(const std::string &path,
+									const std::string &newPath)
 {
 	const std::string key = NormalizePath(path);
 	auto it				  = _assets.find(key);

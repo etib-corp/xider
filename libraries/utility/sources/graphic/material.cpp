@@ -13,12 +13,12 @@ namespace utility::graphic
 {
 	Material::Material(RessourceManager &ressourceManager,
 					   const std::string &shaderName,
-					   const std::vector<FileAsset> &textureAssets)
+					   const std::vector<File> &textureAssets)
 		: _shaderName(shaderName)
 	{
 		for (const auto &textureAsset: textureAssets) {
 			auto texture = ressourceManager.loadTextureFromAsset(
-				std::make_shared<FileAsset>(textureAsset));
+				std::make_shared<File>(textureAsset));
 
 			if (!texture) {
 				throw std::runtime_error("Failed to load texture asset: "

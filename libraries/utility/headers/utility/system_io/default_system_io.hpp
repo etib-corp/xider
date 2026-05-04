@@ -27,31 +27,31 @@
 #include <iostream>
 #include <string>
 
-#include "utility/asset_manager/asset_manager.hpp"
+#include "utility/system_io/system_io.hpp"
 
 namespace utility
 {
 
 	/**
-	 * @class DefaultAssetManager
-	 * @brief The DefaultAssetManager class is a concrete implementation of the
-	 * AssetManager interface that loads assets from the file system.
+	 * @class DefaultSystemIO
+	 * @brief The DefaultSystemIO class is a concrete implementation of the
+	 * SystemIO interface that loads assets from the file system.
 	 */
-	class DefaultAssetManager: public AssetManager
+	class DefaultSystemIO: public SystemIO
 	{
 		public:
 		/**
-		 * @brief Constructs a DefaultAssetManager.
+		 * @brief Constructs a DefaultSystemIO.
 		 */
-		DefaultAssetManager() = default;
+		DefaultSystemIO() = default;
 
-		using AssetManager::add;
-		using AssetManager::loadDirectory;
-		using AssetManager::remove;
-		using AssetManager::save;
+		using SystemIO::add;
+		using SystemIO::loadDirectory;
+		using SystemIO::remove;
+		using SystemIO::save;
 
 		/**
-		 * @brief Default destructor for DefaultAssetManager.
+		 * @brief Default destructor for DefaultSystemIO.
 		 * @param directory The path to the directory containing the assets.
 		 * @return True if the assets were loaded successfully, false otherwise.
 		 */
@@ -61,10 +61,10 @@ namespace utility
 		 * @brief Adds an asset to the manager by loading it from the file
 		 * system.
 		 * @param path The path to the asset file.
-		 * @return A shared pointer to the loaded FileAsset, or nullptr if
+		 * @return A shared pointer to the loaded File, or nullptr if
 		 * loading failed.
 		 */
-		std::shared_ptr<utility::FileAsset>
+		std::shared_ptr<utility::File>
 			add(const std::string &path) override;
 
 		/**

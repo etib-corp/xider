@@ -20,7 +20,7 @@
  SOFTWARE.
  */
 
-#include "utility/asset_manager/android_asset_manager.hpp"
+#include "utility/system_io/android_system_io.hpp"
 
 #ifdef __ANDROID__
 
@@ -35,12 +35,12 @@ namespace
 	}
 }	 // namespace
 
-utility::AndroidAssetManager::AndroidAssetManager(AAssetManager *assetManager)
+utility::AndroidSystemIO::AndroidSystemIO(AAssetManager *assetManager)
 	: _assetManager(assetManager)
 {
 }
 
-bool utility::AndroidAssetManager::loadDirectory(const std::string &directory)
+bool utility::AndroidSystemIO::loadDirectory(const std::string &directory)
 {
 	AAssetDir *assetDir =
 		AAssetManager_openDir(_assetManager, directory.c_str());
@@ -61,8 +61,8 @@ bool utility::AndroidAssetManager::loadDirectory(const std::string &directory)
 	return true;
 }
 
-std::shared_ptr<utility::FileAsset>
-	utility::AndroidAssetManager::add(const std::string &path)
+std::shared_ptr<utility::File>
+	utility::AndroidSystemIO::add(const std::string &path)
 {
 	const std::string key = NormalizePath(path);
 	if (this->exists(key)) {
@@ -92,12 +92,12 @@ std::shared_ptr<utility::FileAsset>
 	}
 	AAsset_close(file);
 
-	auto asset	 = std::make_shared<utility::FileAsset>(path, content);
+	auto asset	 = std::make_shared<utility::File>(path, content);
 	_assets[key] = asset;
 	return asset;
 }
 
-void utility::AndroidAssetManager::remove(const std::string &path, bool save)
+void utility::AndroidSystemIO::remove(const std::string &path, bool save)
 {
 	const std::string key = NormalizePath(path);
 	auto it				  = _assets.find(key);
@@ -111,8 +111,8 @@ void utility::AndroidAssetManager::remove(const std::string &path, bool save)
 	}
 }
 
-bool utility::AndroidAssetManager::save(const std::string &path,
-										const std::string &newPath)
+bool utility::AndroidSystemIO::save(const std::string &path,
+									const std::string &newPath)
 {
 	const std::string key = NormalizePath(path);
 	auto it				  = _assets.find(key);

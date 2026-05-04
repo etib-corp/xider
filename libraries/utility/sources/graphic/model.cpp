@@ -9,7 +9,7 @@
 
 namespace utility::graphic
 {
-	Model::Model(std::shared_ptr<utility::FileAsset> modelAsset)
+	Model::Model(std::shared_ptr<utility::File> modelAsset)
 	{
         std::string extension = modelAsset->path().substr(modelAsset->path().find_last_of(".") + 1);
 
@@ -29,7 +29,7 @@ namespace utility::graphic
         }
 	}
 
-	Model::Model(std::shared_ptr<utility::FileAsset> modelAsset,
+	Model::Model(std::shared_ptr<utility::File> modelAsset,
 				 ModelType modelType)
 	{
 		_type = modelType;
@@ -64,7 +64,7 @@ namespace utility::graphic
 	// Protected methods //
 	///////////////////////
 
-	void Model::loadOBJ(std::shared_ptr<utility::FileAsset> modelAsset)
+	void Model::loadOBJ(std::shared_ptr<utility::File> modelAsset)
 	{
         std::vector<VertexD> vertices;
         std::vector<uint32_t> indices;

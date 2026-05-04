@@ -14,7 +14,7 @@
 
 #include <tiny_obj_loader.h>
 
-#include <utility/asset_manager/file_asset.hpp>
+#include <utility/system_io/file.hpp>
 
 #include <utility/graphic/renderable.hpp>
 
@@ -50,28 +50,28 @@ namespace utility::graphic
         };
 
         /**
-         * @brief Constructs a Model object from a given FileAsset containing the model data.
+         * @brief Constructs a Model object from a given File containing the model data.
          *
-         * @param modelAsset A shared pointer to the FileAsset object containing the model data to be loaded.
-         * This constructor is responsible for initializing the Model object by loading the model data from the provided FileAsset.
+         * @param modelAsset A shared pointer to the File object containing the model data to be loaded.
+         * This constructor is responsible for initializing the Model object by loading the model data from the provided File.
          * It processes the model data and populates the necessary properties of the Model object, such as
-         * vertices, textures, and materials, based on the content of the FileAsset.
+         * vertices, textures, and materials, based on the content of the File.
          *
          * @note This implementation will parse the model according to the extensions of the file (e.g., .obj, .fbx, .gltf)
          * and set the appropriate ModelType based on the file format.
          */
-        Model(std::shared_ptr<utility::FileAsset> modelAsset);
+        Model(std::shared_ptr<utility::File> modelAsset);
 
         /**
-         * @brief Constructs a Model object from a given FileAsset containing the model data and a specified ModelType.
+         * @brief Constructs a Model object from a given File containing the model data and a specified ModelType.
          *
-         * @param modelAsset A shared pointer to the FileAsset object containing the model data to be loaded.
+         * @param modelAsset A shared pointer to the File object containing the model data to be loaded.
          * @param type The type of the model (e.g., OBJ, FBX, GLTF) to be loaded.
          *
          * This constructor is responsible for initializing the Model object by loading the model data from the provided
-         * FileAsset and setting the ModelType based on the specified type parameter.
+         * File and setting the ModelType based on the specified type parameter.
          */
-        Model(std::shared_ptr<utility::FileAsset> modelAsset, ModelType type);
+        Model(std::shared_ptr<utility::File> modelAsset, ModelType type);
 
         /**
          * @brief Destructs the Model object, releasing any allocated resources.
@@ -87,14 +87,14 @@ namespace utility::graphic
 
         protected:
         /**
-         * @brief Loads a model from a given FileAsset containing the model data.
+         * @brief Loads a model from a given File containing the model data.
          * 
-         * @param modelAsset A shared pointer to the FileAsset object containing the model data to be loaded.
+         * @param modelAsset A shared pointer to the File object containing the model data to be loaded.
          * 
-         * This method is responsible for parsing the model data from the provided FileAsset and populating the necessary properties of the Model object, such as vertices, textures, and materials, based on the content of the FileAsset. The parsing process will depend on the format of the model data (e.g., OBJ, FBX, GLTF) and will set the appropriate ModelType based on the file format.
+         * This method is responsible for parsing the model data from the provided File and populating the necessary properties of the Model object, such as vertices, textures, and materials, based on the content of the File. The parsing process will depend on the format of the model data (e.g., OBJ, FBX, GLTF) and will set the appropriate ModelType based on the file format.
          * @note This method is called internally by the constructors to load the model data when a Model object is created.
          */
-        void loadOBJ(std::shared_ptr<utility::FileAsset> modelAsset);
+        void loadOBJ(std::shared_ptr<utility::File> modelAsset);
 
         ModelType _type; ///< The type of the model (e.g., OBJ, FBX, GLTF)
     };

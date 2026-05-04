@@ -45,7 +45,7 @@
 #include <utility/graphic/color.hpp>
 #include <utility/math/vector.hpp>
 
-#include <utility/asset_manager/file_asset.hpp>
+#include <utility/system_io/file.hpp>
 #include <utility/ressource_manager.hpp>
 
 // Types
@@ -114,19 +114,19 @@ namespace utility::graphic
 		 *
 		 * This constructor initializes a Text object with the specified
 		 * content, font size, and font path. It also takes references to a
-		 * RessourceManager and an AssetManager, which are used to load the
+		 * RessourceManager and an SystemIO, which are used to load the
 		 * necessary font resources for rendering the text.
 		 *
 		 * @param ressourceManager A reference to the RessourceManager instance
 		 * used to load font resources.
-		 * @param assetManager A reference to the AssetManager instance used to
+		 * @param assetManager A reference to the SystemIO instance used to
 		 * load font assets.
 		 * @param content The text content to be displayed.
 		 * @param fontSize The font size in points for rendering the text.
 		 * @param font The file path to the font resource to be used for
 		 * rendering the text (default is "assets/fonts/Roboto.ttf").
 		 */
-		Text(RessourceManager &ressourceManager, AssetManager &assetManager,
+		Text(RessourceManager &ressourceManager, SystemIO &assetManager,
 			 const std::string &content, uint32_t fontSize,
 			 const std::string &font = "assets/fonts/Roboto.ttf");
 
