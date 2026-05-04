@@ -35,8 +35,8 @@ namespace
 	}
 }	 // namespace
 
-utility::AndroidSystemIO::AndroidSystemIO(AAssetManager *assetManager)
-	: _assetManager(assetManager)
+utility::AndroidSystemIO::AndroidSystemIO(AAssetManager *systemInterface)
+	: _assetManager(systemInterface)
 {
 }
 

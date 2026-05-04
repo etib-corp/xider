@@ -2,10 +2,10 @@
 ** ETIB PROJECT, 2026
 ** utility
 ** File description:
-** ressource_manager
+** ressource_provider
 */
 
-#include <utility/ressource_manager.hpp>
+#include <utility/ressource_provider.hpp>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
@@ -13,8 +13,8 @@
 namespace utility
 {
 	std::shared_ptr<graphic::Font>
-		RessourceManager::loadFont(const std::string &path,
-								   SystemIO &assetManager)
+		RessourceProvider::loadFont(const std::string &path,
+								   SystemIO &systemInterface)
 	{
 		auto it = _fonts.find(path);
 
@@ -22,7 +22,7 @@ namespace utility
 			return it->second;
 		}
 
-		auto fontAsset = assetManager.add(path);
+		auto fontAsset = systemInterface.add(path);
 
 		if (!fontAsset) {
 			throw std::runtime_error("Failed to load font asset: " + path);
@@ -33,7 +33,7 @@ namespace utility
 		return font;
 	}
 
-	std::shared_ptr<graphic::Font> RessourceManager::loadFontFromAsset(
+	std::shared_ptr<graphic::Font> RessourceProvider::loadFontFromAsset(
 		std::shared_ptr<utility::File> fontAsset)
 	{
 		auto font = std::make_shared<graphic::Font>(std::vector { *fontAsset });
@@ -68,7 +68,7 @@ namespace utility
 		return font;
 	}
 
-	std::shared_ptr<graphic::Font> RessourceManager::loadFontFamilyFromAssets(
+	std::shared_ptr<graphic::Font> RessourceProvider::loadFontFamilyFromAssets(
 		const std::vector<std::shared_ptr<utility::File>> &fontAssets)
 	{
 		std::vector<File> assets;
@@ -127,9 +127,9 @@ namespace utility
 	}
 
 	std::shared_ptr<graphic::Material>
-		RessourceManager::loadMaterial(const std::string &path,
+		RessourceProvider::loadMaterial(const std::string &path,
 									   ShaderType shaderType,
-									   SystemIO &assetManager)
+									   SystemIO &systemInterface)
 	{
 		auto it = _materials.find(path);
 
@@ -137,7 +137,7 @@ namespace utility
 			return it->second;
 		}
 
-		auto materialAsset = assetManager.add(path);
+		auto materialAsset = systemInterface.add(path);
 
 		if (!materialAsset) {
 			throw std::runtime_error("Failed to load material asset: " + path);
@@ -148,7 +148,7 @@ namespace utility
 		return material;
 	}
 
-	std::shared_ptr<graphic::Material> RessourceManager::loadMaterialFromAsset(
+	std::shared_ptr<graphic::Material> RessourceProvider::loadMaterialFromAsset(
 		ShaderType shaderType,
 		std::shared_ptr<utility::File> materialAsset)
 	{
@@ -167,8 +167,8 @@ namespace utility
 	}
 
 	std::shared_ptr<graphic::Texture>
-		RessourceManager::loadTexture(const std::string &path,
-									  SystemIO &assetManager)
+		RessourceProvider::loadTexture(const std::string &path,
+									  SystemIO &systemInterface)
 	{
 		auto it = _textures.find(path);
 
@@ -176,7 +176,7 @@ namespace utility
 			return it->second;
 		}
 
-		auto textureAsset = assetManager.add(path);
+		auto textureAsset = systemInterface.add(path);
 
 		if (!textureAsset) {
 			throw std::runtime_error("Failed to load texture asset: " + path);
@@ -187,7 +187,7 @@ namespace utility
 		return texture;
 	}
 
-	std::shared_ptr<graphic::Texture> RessourceManager::loadTextureFromAsset(
+	std::shared_ptr<graphic::Texture> RessourceProvider::loadTextureFromAsset(
 		std::shared_ptr<utility::File> textureAsset)
 	{
 		int texWidth	= 0;
@@ -212,8 +212,8 @@ namespace utility
 		return _textures[textureAsset->path()];
 	}
 
-	std::shared_ptr<graphic::Model> RessourceManager::loadModel(const std::string &path,
-																SystemIO &assetManager)
+	std::shared_ptr<graphic::Model> RessourceProvider::loadModel(const std::string &path,
+																SystemIO &systemInterface)
 	{
 		auto it = _models.find(path);
 
@@ -221,7 +221,7 @@ namespace utility
 			return it->second;
 		}
 
-		auto modelAsset = assetManager.add(path);
+		auto modelAsset = systemInterface.add(path);
 
 		if (!modelAsset) {
 			throw std::runtime_error("Failed to load model asset: " + path);
@@ -232,7 +232,7 @@ namespace utility
 		return _models[path];
 	}
 
-	std::shared_ptr<graphic::Model> RessourceManager::loadModelFromAsset(
+	std::shared_ptr<graphic::Model> RessourceProvider::loadModelFromAsset(
 		std::shared_ptr<utility::File> modelAsset)
 	{
 		auto it = _models.find(modelAsset->path());
@@ -247,7 +247,7 @@ namespace utility
 		return model;
 	}
 
-	std::shared_ptr<graphic::Model> RessourceManager::loadModelFromAsset(
+	std::shared_ptr<graphic::Model> RessourceProvider::loadModelFromAsset(
 		std::shared_ptr<utility::File> modelAsset, graphic::Model::ModelType type)
 	{
 		auto it = _models.find(modelAsset->path());
@@ -262,7 +262,7 @@ namespace utility
 		return model;
 	}
 
-	std::shared_ptr<graphic::Model> RessourceManager::loadObj(const std::string &path, SystemIO &assetManager)
+	std::shared_ptr<graphic::Model> RessourceProvider::loadObj(const std::string &path, SystemIO &systemInterface)
 	{
 		auto it = _models.find(path);
 
@@ -270,7 +270,7 @@ namespace utility
 			return it->second;
 		}
 
-		auto modelAsset = assetManager.add(path);
+		auto modelAsset = systemInterface.add(path);
 
 		if (!modelAsset) {
 			throw std::runtime_error("Failed to load model asset: " + path);
@@ -283,7 +283,7 @@ namespace utility
 		return model;
 	}
 
-	std::shared_ptr<graphic::Model> RessourceManager::loadObjFromAsset(std::shared_ptr<utility::File> modelAsset)
+	std::shared_ptr<graphic::Model> RessourceProvider::loadObjFromAsset(std::shared_ptr<utility::File> modelAsset)
 	{
 		auto it = _models.find(modelAsset->path());
 
