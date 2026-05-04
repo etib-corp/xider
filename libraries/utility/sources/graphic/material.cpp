@@ -7,17 +7,17 @@
 
 #include <utility/graphic/material.hpp>
 
-#include <utility/ressource_manager.hpp>
+#include <utility/ressource_provider.hpp>
 
 namespace utility::graphic
 {
-	Material::Material(RessourceManager &ressourceManager,
+	Material::Material(RessourceProvider &ressourceProvider,
 					   const std::string &shaderName,
 					   const std::vector<File> &textureAssets)
 		: _shaderName(shaderName)
 	{
 		for (const auto &textureAsset: textureAssets) {
-			auto texture = ressourceManager.loadTextureFromAsset(
+			auto texture = ressourceProvider.loadTextureFromAsset(
 				std::make_shared<File>(textureAsset));
 
 			if (!texture) {

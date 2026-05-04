@@ -12,16 +12,16 @@
 namespace utility
 {
 	/**
-	 * @brief The RessourceManager class is responsible for managing and loading
+	 * @brief The RessourceProvider class is responsible for managing and loading
 	 * various resources such as fonts, materials, and textures in a graphics
 	 * application.
 	 *
-	 * The RessourceManager provides methods to load resources from file paths
+	 * The RessourceProvider provides methods to load resources from file paths
 	 * or from asset objects, and it maintains internal maps to store loaded
 	 * resources for efficient retrieval. It supports loading fonts, materials,
 	 * and textures, and it can handle different shader types for materials.
 	 */
-	class RessourceManager
+	class RessourceProvider
 	{
 		public:
 		/**
@@ -36,26 +36,26 @@ namespace utility
 		enum class ShaderType { TEXT_SHADER, MESH_SHADER };
 
 		/**
-		 * @brief Constructs a RessourceManager object.
+		 * @brief Constructs a RessourceProvider object.
 		 */
-		RessourceManager() = default;
+		RessourceProvider() = default;
 
 		/**
-		 * @brief Destructs the RessourceManager object.
+		 * @brief Destructs the RessourceProvider object.
 		 */
-		~RessourceManager() = default;
+		~RessourceProvider() = default;
 
 		/**
 		 * @brief Loads a font resource from a specified file path.
 		 *
 		 * @param path The file path to the font resource to be loaded.
-		 * @param assetManager A reference to the SystemIO instance used to
+		 * @param systemInterface A reference to the SystemIO instance used to
 		 * load the font asset.
 		 *
 		 * @return A shared pointer to the loaded Font object.
 		 */
 		std::shared_ptr<graphic::Font> loadFont(const std::string &path,
-												SystemIO &assetManager);
+												SystemIO &systemInterface);
 
 		/**
 		 * @brief Loads a font resource from a specified asset.
@@ -94,14 +94,14 @@ namespace utility
 		 * @param path The file path to the material resource to be loaded.
 		 * @param shaderType The type of shader to be associated with the loaded
 		 * material.
-		 * @param assetManager A reference to the SystemIO instance used to
+		 * @param systemInterface A reference to the SystemIO instance used to
 		 * load the material asset.
 		 *
 		 * @return A shared pointer to the loaded Material object.
 		 */
 		std::shared_ptr<graphic::Material>
 			loadMaterial(const std::string &path, ShaderType shaderType,
-						 SystemIO &assetManager);
+						 SystemIO &systemInterface);
 
 		/**
 		 * @brief Loads a material resource from a specified asset.
@@ -121,13 +121,13 @@ namespace utility
 		 * @brief Loads a texture resource from a specified file path.
 		 *
 		 * @param path The file path to the texture resource to be loaded.
-		 * @param assetManager A reference to the SystemIO instance used to
+		 * @param systemInterface A reference to the SystemIO instance used to
 		 * load the texture asset
 		 *
 		 * @return A shared pointer to the loaded Texture object.
 		 */
 		std::shared_ptr<graphic::Texture>
-			loadTexture(const std::string &path, SystemIO &assetManager);
+			loadTexture(const std::string &path, SystemIO &systemInterface);
 
 		/**
 		 * @brief Loads a texture resource from a specified asset.
@@ -148,13 +148,13 @@ namespace utility
 		 * @brief Loads a model resource from a specified file path.
 		 *
 		 * @param path The file path to the model resource to be loaded.
-		 * @param assetManager A reference to the SystemIO instance used to
+		 * @param systemInterface A reference to the SystemIO instance used to
 		 * load the model asset.
 		 *
 		 * @return A shared pointer to the loaded Model object.
 		 */
 		std::shared_ptr<graphic::Model> loadModel(const std::string &path,
-												SystemIO &assetManager);
+												SystemIO &systemInterface);
 
 		/**
 		 * @brief Loads a model resource from a specified asset.
@@ -170,7 +170,7 @@ namespace utility
 		 *
 		 * @param path The file path to the model resource to be loaded.
 		 * @param type The type of the model (e.g., OBJ, FBX, GLTF) to be loaded.
-		 * @param assetManager A reference to the SystemIO instance
+		 * @param systemInterface A reference to the SystemIO instance
 		 *
 		 * @return A shared pointer to the loaded Model object.
 		 */
@@ -180,11 +180,11 @@ namespace utility
 		 * @brief Loads an OBJ model resource from a specified file path.
 		 *
 		 * @param path The file path to the OBJ model resource to be loaded.
-		 * @param assetManager A reference to the SystemIO instance used to load the model asset
+		 * @param systemInterface A reference to the SystemIO instance used to load the model asset
 		 *
 		 * @return A shared pointer to the loaded Model object representing the OBJ model.
 		 */
-		std::shared_ptr<graphic::Model> loadObj(const std::string &path, SystemIO &assetManager);
+		std::shared_ptr<graphic::Model> loadObj(const std::string &path, SystemIO &systemInterface);
 
 		/**
 		 * @brief Loads an OBJ model resource from a specified asset.

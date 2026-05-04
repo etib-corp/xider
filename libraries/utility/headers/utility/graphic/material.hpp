@@ -17,7 +17,7 @@
 
 namespace utility
 {
-	class RessourceManager;
+	class RessourceProvider;
 }
 
 namespace utility::graphic
@@ -58,7 +58,7 @@ namespace utility::graphic
 		 * are loaded using the stb_image library, and the pixel data is stored
 		 * in Texture objects for later use in rendering operations.
 		 *
-		 * @param ressourceManager A reference to the RessourceManager instance.
+		 * @param ressourceProvider A reference to the RessourceProvider instance.
 		 * @param shaderName The name of the shader associated with this
 		 * material.
 		 * @param textureAssets A vector of File objects representing the
@@ -67,7 +67,7 @@ namespace utility::graphic
 		 * @throws std::runtime_error if any of the textures fail to load from
 		 * the provided File objects.
 		 */
-		Material(RessourceManager &ressourceManager,
+		Material(RessourceProvider &ressourceProvider,
 				 const std::string &shaderName,
 				 const std::vector<File> &textureAssets);
 

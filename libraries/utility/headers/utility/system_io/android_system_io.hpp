@@ -47,9 +47,9 @@ namespace utility
 		/**
 		 * @brief Constructs an AndroidSystemIO with the given
 		 * AAssetManager.
-		 * @param assetManager The AAssetManager to use for loading assets.
+		 * @param systemInterface The AAssetManager to use for loading assets.
 		 */
-		explicit AndroidSystemIO(AAssetManager *assetManager);
+		explicit AndroidSystemIO(AAssetManager *systemInterface);
 
 		/**
 		 * @brief Default destructor for AndroidSystemIO.
