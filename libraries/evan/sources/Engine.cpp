@@ -79,6 +79,30 @@ evan::Engine::~Engine()
 // Public Methods //
 ////////////////////
 
+void evan::Engine::drawText(std::shared_ptr<utility::graphic::Text> text)
+{
+	std::map<uint32_t, utility::graphic::Mesh> rawObjects;
+	uint32_t material_id = 0;
+
+	for (const auto &mesh: text->getMeshes()) {
+		rawObjects.emplace(material_id, *mesh);
+	}
+
+	RenderObject textObject = RenderObject(_deviceContext, rawObjects, "text");
+
+	_scenes[_currentScene].addObject(_nextObjectID++, textObject);
+}
+
+void evan::Engine::drawPrimitive(std::shared_ptr<utility::graphic::Primitive> primitive)
+{
+
+}
+
+void evan::Engine::drawModel(std::shared_ptr<utility::graphic::Model> model)
+{
+
+}
+
 void evan::Engine::addScene(size_t sceneIndex)
 {
 	Scene newScene = Scene();

@@ -17,7 +17,16 @@
 #include "evan/ASwapchainContext.hpp"
 #include "evan/IPlatform.hpp"
 
+#include <utility/graphic/model.hpp>
+#include <utility/graphic/primitive.hpp>
+#include <utility/graphic/text/text.hpp>
+
+#include <utility/ressource_manager.hpp>
+
 #include <utility/event/event.hpp>
+
+#include "Scene.hpp"
+#include "RenderObject.hpp"
 
 #include <string>
 #include <memory>
@@ -85,6 +94,86 @@ namespace evan
 		Engine(const std::shared_ptr<IPlatform> &platform);
 
 		~Engine();
+
+		/**
+		 * @brief Draws a text object on the screen. This method takes a shared
+		 * pointer to a Text object, which contains the necessary information for
+		 * rendering the text, such as the string content, font, size, and color.
+		 *
+		 * The drawText method is responsible for setting up the appropriate graphics
+		 * pipeline, binding the necessary resources, and issuing the draw calls to
+		 * render the text on the screen. It interacts with the Renderer and DeviceContext
+		 * to ensure that the text is rendered correctly, taking into account factors
+		 * such as the current scene, camera position, and any transformations applied to the text.
+		 *
+		 * @param text A shared pointer to the Text object to be drawn on the screen.
+		 */
+		void drawText(std::shared_ptr<utility::graphic::Text> text);
+
+		/**
+		 * @brief Draws a primitive object on the screen. This method takes a shared
+		 * pointer to a Primitive object, which contains the necessary information for
+		 * rendering the primitive, such as the mesh data, material properties, and any
+		 * transformations applied to the primitive.
+		 *
+		 * The drawPrimitive method is responsible for setting up the appropriate graphics
+		 * pipeline, binding the necessary resources, and issuing the draw calls to
+		 * render the primitive on the screen. It interacts with the Renderer and DeviceContext
+		 * to ensure that the primitive is rendered correctly, taking into account factors
+		 * such as the current scene, camera position, and any transformations applied to the primitive.
+		 *
+		 * @param primitive A shared pointer to the Primitive object to be drawn on the screen.
+		 */
+		void drawPrimitive(std::shared_ptr<utility::graphic::Primitive> primitive);
+
+		/**
+		 * @brief Draws a model object on the screen. This method takes a shared
+		 * pointer to a Model object, which contains the necessary information for
+		 * rendering the model, such as the mesh data, material properties, and any
+		 * transformations applied to the model.
+		 *
+		 * The drawModel method is responsible for setting up the appropriate graphics
+		 * pipeline, binding the necessary resources, and issuing the draw calls to
+		 * render the model on the screen. It interacts with the Renderer and DeviceContext
+		 * to ensure that the model is rendered correctly, taking into account factors
+		 * such as the current scene, camera position, and any transformations applied to the model.
+		 *
+		 * @param model A shared pointer to the Model object to be drawn on the screen.
+		 */
+		void drawModel(std::shared_ptr<utility::graphic::Model> model);
+
+		/**
+		 * @brief Draws a generic renderable object on the screen. This method takes a shared
+		 * pointer to a Renderable object, which is a base class for various types of render
+		 * objects, such as Text, Primitive, and Model. The method also takes a string parameter
+		 * representing the render method to be used for drawing the object, allowing for flexibility in how the object is rendered.
+		 *
+		 * The drawObject method is responsible for determining the appropriate graphics pipeline and rendering approach based on the type of the Renderable object and the specified render method. It interacts with the Renderer and DeviceContext to ensure that the object is rendered correctly, taking into account factors such as the current scene, camera position, and any transformations applied to the object.
+		 *
+		 * @param object A shared pointer to the Renderable object to be drawn on the screen.
+		 * @param renderMethod A string representing the render method to be used for drawing the object, allowing for flexibility in how the object is rendered.
+		 */
+		void drawObject(std::shared_ptr<utility::graphic::Renderable> object, const std::string &renderMethod);
+
+		/**
+		 * @brief Adds a new scene to the engine. This method allows users to
+		 * add a new scene to the engine by providing the necessary data, such
+		 * as texture paths and mesh data. The method takes in a vector of
+		 * texture paths, which are used to load the textures for the scene, and
+		 * a map of mesh data, which contains the information about the meshes
+		 * to be rendered in the scene. The method creates a new Scene object
+		 * using the provided data and adds it to the vector of scenes managed
+		 * by the engine. This allows users to easily create and manage multiple
+		 * scenes within the engine, enabling them to switch between different
+		 * scenes as needed.
+		 *
+		 * @note The Engine class is designed to be flexible and extensible,
+		 * allowing for future enhancements and additions to the engine's
+		 * capabilities. The current implementation focuses on establishing the
+		 * core structure and functionality of the engine, with plans for
+		 * further improvements and optimizations in the future.
+		 */
+		void addScene(size_t sceneIndex);
 
 		/**
 		 * @brief Updates the state of the engine. This method is responsible
@@ -306,5 +395,6 @@ namespace evan
 		std::shared_ptr<IPlatform> _platform;
 
 		private:
+		size_t _nextObjectID = 1;
 	};
 }	 // namespace evan
