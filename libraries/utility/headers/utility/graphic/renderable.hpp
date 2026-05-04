@@ -75,6 +75,8 @@ namespace utility::graphic
 		 */
 		const graphic::Color32Bit &getColor(void) const;
 
+        [[nodiscard]] std::vector<std::shared_ptr<Mesh>> getMeshes() const;
+
         protected:
 		std::vector<std::shared_ptr<Mesh>> _meshes;
         Color32Bit _color;	   ///< Text RGBA color
