@@ -3,7 +3,6 @@ name: Refactor request
 about: Suggest and document a potential refactor.
 title: 'refactor: my game changer refactor'
 labels: enhancement
-assignees: MAILLOTNathan
 
 ---
 
