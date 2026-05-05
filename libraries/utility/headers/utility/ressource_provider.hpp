@@ -46,6 +46,30 @@ namespace utility
 		~RessourceProvider() = default;
 
 		/**
+		 * @brief Retrieves a map of loaded materials.
+		 *
+		 * @return A map where the keys are material names (strings) and the values
+		 * are shared pointers to the corresponding Material objects.
+		 */
+		[[nodiscard]] std::map<std::string, std::shared_ptr<graphic::Material>> getMaterials() const;
+
+		/**
+		 * @brief Retrieves a map of loaded textures.
+		 *
+		 * @return A map where the keys are texture names (strings) and the values
+		 * are shared pointers to the corresponding Texture objects.
+		 */
+		[[nodiscard]] std::map<std::string, std::shared_ptr<graphic::Texture>> getTextures() const;
+
+		/**
+		 * @brief Retrieves a map of loaded models.
+		 *
+		 * @return A map where the keys are model names (strings) and the values
+		 * are shared pointers to the corresponding Model objects.
+		 */
+		[[nodiscard]] std::map<std::string, std::shared_ptr<graphic::Model>> getModels() const;
+
+		/**
 		 * @brief Loads a font resource from a specified file path.
 		 *
 		 * @param path The file path to the font resource to be loaded.
