@@ -12,6 +12,30 @@
 
 namespace utility
 {
+
+	/////////////
+	// Getters //
+	/////////////
+
+	std::map<std::string, std::shared_ptr<graphic::Material>> RessourceProvider::getMaterials() const
+	{
+		return _materials;
+	}
+
+	std::map<std::string, std::shared_ptr<graphic::Texture>> RessourceProvider::getTextures() const
+	{
+		return _textures;
+	}
+
+	std::map<std::string, std::shared_ptr<graphic::Model>> RessourceProvider::getModels() const
+	{
+		return _models;
+	}
+
+	////////////////////
+	// Public Methods //
+	////////////////////
+
 	std::shared_ptr<graphic::Font>
 		RessourceProvider::loadFont(const std::string &path,
 								   SystemIO &systemInterface)
