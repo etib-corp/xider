@@ -167,8 +167,17 @@ namespace evan
 		 * input actions and to handle any user interactions within the XR
 		 * environment. Polling actions is essential for enabling responsive and
 		 * interactive experiences in the XR application.
+		 *
+		 * @note The implementation of this method may involve querying the action
+		 * manager for the state of various input actions and generating events based
+		 * on the retrieved state, which can then be processed by the application to
+		 * respond to user input in the XR environment.
+		 *
+		 * @return A vector of unique pointers to events representing the current state
+		 * of all managed actions, which can be used by the application to respond to
+		 * user input in the XR environment.
 		 */
-		void pollActions();
+		std::vector<std::unique_ptr<utility::event::Event>> pollActions();
 
 		/**
 		 * The OpenXR instance, which represents the

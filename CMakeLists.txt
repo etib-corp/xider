@@ -17,6 +17,10 @@ option(BUILD_FOR_MACOS "Build for macOS" OFF)
 option(BUILD_DOCS "Build documentation" OFF)
 option(BUILD_TESTING "Build the tests" OFF)
 
+# Change default output of bin
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/..)
+set(CMAKE_EXECUTABLE_SUFFIX ".bin")
+
 # Option to build documentation for all libraries
 option(BUILD_ALL_DOCS "Build documentation for all libraries" OFF)
 
@@ -29,6 +33,7 @@ if(BUILD_ALL_DOCS OR BUILD_DOCS_ONLY)
 endif()
 
 set(PLATFORM_OPTION_COUNT 0)
+
 if(BUILD_FOR_ANDROID)
     math(EXPR PLATFORM_OPTION_COUNT "${PLATFORM_OPTION_COUNT} + 1")
 endif()

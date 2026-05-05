@@ -22,6 +22,8 @@
 
 #pragma once
 
+#include <Engine.hpp>
+
 #include <guillaume/event/event_handler.hpp>
 
 namespace xider
@@ -32,6 +34,9 @@ namespace xider
 		EventHandler(void);
 		~EventHandler(void) override;
 		void pollEvents(void) override;
+		void setEngine(std::shared_ptr<evan::Engine> engine);
+		private:
+		std::shared_ptr<evan::Engine> _engine;	///< Reference to the
 	};
 
 }	 // namespace xider

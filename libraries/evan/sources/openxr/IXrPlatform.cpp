@@ -17,13 +17,13 @@ bool evan::IXrPlatform::shouldClose() const
 	return _shouldClose;
 }
 
-void evan::IXrPlatform::pollEvents(ADeviceBackend &deviceBackend)
+std::vector<std::unique_ptr<utility::event::Event>> evan::IXrPlatform::pollEvents(ADeviceBackend &deviceBackend)
 {
 	XrEventDataBuffer eventDataBuffer { XR_TYPE_EVENT_DATA_BUFFER };
 	evan::XrDeviceBackend &xrDeviceBackend =
 		dynamic_cast<evan::XrDeviceBackend &>(deviceBackend);
 
-	xrDeviceBackend.pollActions();
+	std::vector<std::unique_ptr<utility::event::Event>> events = xrDeviceBackend.pollActions();
 
 	while (xrPollEvent(xrDeviceBackend._XrInstance, &eventDataBuffer)
 		   == XR_SUCCESS) {
@@ -45,6 +45,7 @@ void evan::IXrPlatform::pollEvents(ADeviceBackend &deviceBackend)
 		}
 		eventDataBuffer = { XR_TYPE_EVENT_DATA_BUFFER };
 	}
+	return events;
 }
 
 std::shared_ptr<evan::ADeviceBackend>

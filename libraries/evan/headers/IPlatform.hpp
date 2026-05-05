@@ -9,6 +9,8 @@
 
 #include "EvanPlatform.hpp"
 
+#include <utility/event/event.hpp>
+
 #include <string>
 
 namespace evan
@@ -53,8 +55,15 @@ namespace evan
 		 * @brief Poll for platform events.
 		 *
 		 * This method should be called regularly to process platform events.
+		 *
+		 * @param deviceBackend The device backend to use for event processing, if
+		 * needed.
+		 * @return A vector of unique pointers to Event objects representing the
+		 * events that were polled from the platform. Each Event object contains
+		 * information about the type of event, such as input events.
 		 */
-		virtual void pollEvents(ADeviceBackend &deviceBackend) = 0;
+		virtual std::vector<std::unique_ptr<utility::event::Event>>
+				pollEvents(ADeviceBackend &deviceBackend) = 0;
 
 		/**
 		 * @brief Create a device context for the platform.

@@ -35,7 +35,14 @@ evan::Engine::Engine(const std::shared_ptr<IPlatform> &platform)
 #endif
 	}
 
-	g_assetManager->loadDirectory(std::string("shaders"));
+	/**
+	 * We load shaders from both "assets/shaders/" and "shaders/" directories to
+	 * accommodate different platforms and build configurations. On Android, assets
+	 * are typically stored in the "assets/" directory, while on other platforms,
+	 * shaders may be stored in a "shaders/" directory within the project.
+	 */
+	g_assetManager->loadDirectory(std::string("assets/shaders/"));
+	g_assetManager->loadDirectory(std::string("shaders/"));
 
 	_deviceContext	  = std::make_shared<DeviceContext>(*platform);
 	_swapchainContext = platform->createSwapchainContext(*_deviceContext);
@@ -104,9 +111,9 @@ void evan::Engine::render()
 						 currentSceneIt->second);
 }
 
-void evan::Engine::pollEvents()
+std::vector<std::unique_ptr<utility::event::Event>> evan::Engine::pollEvents()
 {
-	_platform->pollEvents(*_deviceContext->getDeviceBackend());
+	return _platform->pollEvents(*_deviceContext->getDeviceBackend());
 }
 
 void evan::Engine::switchScene(size_t sceneIndex)
