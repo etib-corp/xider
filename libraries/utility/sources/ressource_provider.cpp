@@ -60,6 +60,12 @@ namespace utility
 	std::shared_ptr<graphic::Font> RessourceProvider::loadFontFromAsset(
 		std::shared_ptr<utility::File> fontAsset)
 	{
+		auto it = _fonts.find(fontAsset->path());
+
+		if (it != _fonts.end()) {
+			return it->second;
+		}
+
 		auto font = std::make_shared<graphic::Font>(std::vector { *fontAsset });
 
 		font->onNewTextureCreated =
@@ -118,6 +124,12 @@ namespace utility
 			assets.push_back(*asset);
 		}
 
+		auto it = _fonts.find(familyName);
+
+		if (it != _fonts.end()) {
+			return it->second;
+		}
+
 		auto font = std::make_shared<graphic::Font>(assets);
 
 		font->onNewTextureCreated =
@@ -147,7 +159,7 @@ namespace utility
 			};
 
 		_fonts[familyName] = font;
-		return font;
+		return _fonts[familyName];
 	}
 
 	std::shared_ptr<graphic::Material>
@@ -176,6 +188,12 @@ namespace utility
 		ShaderType shaderType,
 		std::shared_ptr<utility::File> materialAsset)
 	{
+		auto it = _materials.find(materialAsset->path());
+
+		if (it != _materials.end()) {
+			return it->second;
+		}
+
 		std::string shaderName = (shaderType == ShaderType::TEXT_SHADER)
 			? "text_shader"
 			: "mesh_shader";
@@ -187,7 +205,7 @@ namespace utility
 		// able to load the textures from the material file and store them in
 		// the material object
 		_materials[materialAsset->path()] = material;
-		return material;
+		return _materials[materialAsset->path()];
 	}
 
 	std::shared_ptr<graphic::Texture>
@@ -214,6 +232,12 @@ namespace utility
 	std::shared_ptr<graphic::Texture> RessourceProvider::loadTextureFromAsset(
 		std::shared_ptr<utility::File> textureAsset)
 	{
+		auto it = _textures.find(textureAsset->path());
+
+		if (it != _textures.end()) {
+			return it->second;
+		}
+
 		int texWidth	= 0;
 		int texHeight	= 0;
 		int texChannels = 0;
