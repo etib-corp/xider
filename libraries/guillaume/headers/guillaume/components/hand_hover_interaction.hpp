@@ -72,8 +72,13 @@ namespace guillaume::components
 		 * @return Reference to this HandHoverInteraction for method chaining.
 		 */
 		HandHoverInteraction &setOnHoverHandler(const HoverHandler &handler);
-		HandHoverInteraction &
-			setOnUnhoverHandler(const UnhoverHandler &handler);
+
+		/**
+		 * @brief Set the handler for an unhover event.
+		 * @param handler The function to call when an unhover event occurs.
+		 * @return Reference to this HandHoverInteraction for method chaining.
+		 */
+		HandHoverInteraction &setOnUnhoverHandler(const UnhoverHandler &handler);
 
 		/**
 		 * @brief Get the handler for hover events.

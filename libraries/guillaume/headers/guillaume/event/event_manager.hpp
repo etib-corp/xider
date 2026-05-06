@@ -55,7 +55,6 @@ namespace guillaume::event
 	 * @see HandPinch
 	 * @see HandPoke
 	 *
-	 * @example
 	 * @code
 	 * class MySystem : public EventManager<MouseButtonEvent>
 	 * {
@@ -93,7 +92,7 @@ namespace guillaume::event
 		 * specified type and stores it for retrieval. If no pending events
 		 * exist, the previously stored event remains unchanged.
 		 *
-		 * @example
+
 		 * @code
 		 * void update()
 		 * {
@@ -125,7 +124,7 @@ namespace guillaume::event
 		 * @note The returned pointer remains valid until consumeNextEvent is
 		 * called for the same type, or until EventManager is destroyed.
 		 *
-		 * @example
+
 		 * @code
 		 * auto *motionEvent = getLastEvent<MouseMotionEvent>();
 		 * if (motionEvent) {
@@ -154,7 +153,7 @@ namespace guillaume::event
 		 *
 		 * @param eventBus The event bus to subscribe to.
 		 *
-		 * @example
+
 		 * @code
 		 * class MySystem : public EventManager<MouseButtonEvent,
 		 * MouseMotionEvent>

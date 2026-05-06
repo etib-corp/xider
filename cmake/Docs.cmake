@@ -29,11 +29,17 @@ function(add_doxygen_docs_for_library LIB_NAME LIB_ROOT)
     set(DOXYGEN_GENERATE_TREEVIEW YES)
 
     set(DOXYGEN_USE_MDFILE_AS_MAINPAGE "${LIB_ROOT}/README.md")
-    set(DOXYGEN_FILE_PATTERNS *.cpp *.hpp *.md *.markdown *.png *.jpg *.jpeg *.gif *.svg)
+    # Only parse source and markdown files; treat images as assets via IMAGE_PATH
+    set(DOXYGEN_FILE_PATTERNS *.cpp *.hpp *.md *.markdown)
     
-    # Configure image paths for assets
-    set(IMAGE_PATH_LIST "${LIB_ROOT}/assets" "${LIB_ROOT}/docs/assets" "${CMAKE_SOURCE_DIR}/assets" "${CMAKE_SOURCE_DIR}/docs/assets")
-    string(REPLACE ";" " " DOXYGEN_IMAGE_PATH "${IMAGE_PATH_LIST}")
+    # Configure image paths for assets. Only include existing directories
+    set(IMAGE_PATH_CANDIDATES "${LIB_ROOT}/assets" "${LIB_ROOT}/docs/assets" "${CMAKE_SOURCE_DIR}/assets" "${CMAKE_SOURCE_DIR}/docs/assets")
+    set(DOXYGEN_IMAGE_PATH)
+    foreach(img IN LISTS IMAGE_PATH_CANDIDATES)
+        if(EXISTS "${img}")
+            list(APPEND DOXYGEN_IMAGE_PATH "${img}")
+        endif()
+    endforeach()
     
     set(DOXYGEN_EXCLUDE_PATTERNS
         */build/*
@@ -50,8 +56,9 @@ function(add_doxygen_docs_for_library LIB_NAME LIB_ROOT)
     set(DOXYGEN_WARN_IF_DOC_ERROR YES)
     set(DOXYGEN_WARN_NO_PARAMDOC YES)
     set(DOXYGEN_QUIET NO)
-    # Allow warnings but don't fail on them during doc generation
-    set(DOXYGEN_WARN_AS_ERROR NO)
+    # Treat warnings (including undocumented items) as errors during doc generation
+    # This causes the Doxygen build to fail if undocumented public symbols are found
+    set(DOXYGEN_WARN_AS_ERROR YES)
 
     set(DOXYGEN_SOURCE_BROWSER YES)
     set(DOXYGEN_INLINE_SOURCES NO)
@@ -132,7 +139,6 @@ function(add_doxygen_docs_for_library LIB_NAME LIB_ROOT)
         ${DOCS_FILES}
         ${EXAMPLE_DOCS_FILES}
         ${OPTIONAL_DOCS}
-        ${ASSET_FILES}
         ALL
         USE_STAMP_FILE
         COMMENT "Generating API documentation with Doxygen for ${LIB_NAME}"

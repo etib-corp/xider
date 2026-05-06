@@ -28,15 +28,38 @@
 
 namespace xider
 {
+	/**
+	 * @brief Event handling adapter for the xider application.
+	 *
+	 * Integrates the underlying `guillaume::event::EventHandler` with the
+	 * xider engine so events can be polled and dispatched to game systems.
+	 */
 	class EventHandler: public guillaume::event::EventHandler
 	{
-		public:
+	public:
+		/**
+		 * @brief Construct a new EventHandler
+		 */
 		EventHandler(void);
+
+		/**
+		 * @brief Destroy the EventHandler
+		 */
 		~EventHandler(void) override;
+
+		/**
+		 * @brief Poll for OS/input events and dispatch them.
+		 */
 		void pollEvents(void) override;
+
+		/**
+		 * @brief Set the engine instance used by the handler.
+		 * @param engine Shared pointer to the `evan::Engine` instance.
+		 */
 		void setEngine(std::shared_ptr<evan::Engine> engine);
-		private:
-		std::shared_ptr<evan::Engine> _engine;	///< Reference to the
+
+	private:
+		std::shared_ptr<evan::Engine> _engine; ///< Reference to the engine instance
 	};
 
 }	 // namespace xider

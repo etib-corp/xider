@@ -90,7 +90,8 @@ namespace guillaume::components
 
 		/**
 		 * @brief Get the map of button press handlers.
-		 * @return Map of button press handlers for each button.
+		 * @param button The button whose handler is requested.
+		 * @return Reference to the handler for the specified button.
 		 */
 		const ButtonPressHandler &getOnButtonPressHandler(
 			const utility::event::HandButtonEvent::Button &button) const;
@@ -107,7 +108,8 @@ namespace guillaume::components
 
 		/**
 		 * @brief Get the map of button release handlers.
-		 * @return Map of button release handlers for each button.
+		 * @param button The button whose release handler is requested.
+		 * @return Reference to the release handler for the specified button.
 		 */
 		const ButtonReleaseHandler &getOnButtonReleaseHandler(
 			const utility::event::HandButtonEvent::Button &button) const;
