@@ -8,6 +8,7 @@
 #include <utility/graphic/material.hpp>
 #include <utility/graphic/texture.hpp>
 #include <utility/graphic/model.hpp>
+#include <utility/graphic/shader.hpp>
 
 namespace utility
 {
@@ -219,7 +220,38 @@ namespace utility
 		 */
 		std::shared_ptr<graphic::Model> loadObjFromAsset(std::shared_ptr<utility::File> modelAsset);
 
+		/**
+		 * @brief Loads a shader resource from specified vertex and fragment shader file paths.
+		 *
+		 * @param vertexPath The file path to the vertex shader resource to be loaded.
+		 * @param fragmentPath The file path to the fragment shader resource to be loaded.
+		 * @param systemInterface A reference to the SystemIO instance used to load the shader assets
+		 *
+		 * @return A shared pointer to the loaded Shader object.
+		 */
+		std::shared_ptr<graphic::Shader> loadShader(const std::string &vertexPath, const std::string &fragmentPath, SystemIO &systemInterface);
+
+		/**
+		 * @brief Loads a shader resource from specified vertex and fragment shader assets.
+		 *
+		 * @param vertexAsset A shared pointer to the File object containing the vertex shader data to be loaded.
+		 * @param fragmentAsset A shared pointer to the File object containing the fragment shader data to be loaded.
+		 *
+		 * @return A shared pointer to the loaded Shader object.
+		 */
+		std::shared_ptr<graphic::Shader> loadShaderFromAssets(std::shared_ptr<utility::File> vertexAsset, std::shared_ptr<utility::File> fragmentAsset);
+
 		protected:
+		/**
+		 * @brief Builds a unique shader name based on the vertex and fragment shader file paths.
+		 *
+		 * This method constructs a unique name for a shader by combining the vertex and fragment shader file paths.
+		 * The resulting name can be used as a key in the internal map to store and retrieve shader resources efficiently.
+		 * The method ensures that shaders with the same vertex and fragment paths will have the same name,
+		 * allowing for proper caching and reuse of shader resources.
+		 */
+		const std::string &buildShaderPath(const std::string &vertexPath, const std::string &fragmentPath) const;
+
 		/**
 		 * @brief Retrieves the next unique ID for a resource.
 		 *
@@ -257,6 +289,11 @@ namespace utility
 		 * @brief Internal map to store loaded models for efficient retrieval.
 		 */
 		std::map<uint32_t, std::shared_ptr<graphic::Model>> _models;
+
+		/**
+		 * @brief Internal map to store loaded shaders for efficient retrieval.
+		 */
+		std::map<uint32_t, std::shared_ptr<graphic::Shader>> _shaders;
 
 		/**
 		 * @brief Internal map to store resource IDs for efficient lookup based on file paths.
