@@ -37,7 +37,12 @@ namespace xider
 		Renderer *renderer_ptr = dynamic_cast<Renderer *>(&getRenderer());
 		if (renderer_ptr && _engine) {
 			renderer_ptr->setEngine(_engine);
+
 			getLogger().info("Renderer configured with Evan engine");
+		}
+		EventHandler *eventHandler_ptr = dynamic_cast<EventHandler *>(&getEventHandler());
+		if (eventHandler_ptr && _engine) {
+			eventHandler_ptr->setEngine(_engine);
 		}
 	}
 

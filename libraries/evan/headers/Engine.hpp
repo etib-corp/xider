@@ -15,6 +15,8 @@
 #include "ASwapchainContext.hpp"
 #include "IPlatform.hpp"
 
+#include <utility/event/event.hpp>
+
 #include <string>
 #include <memory>
 
@@ -128,8 +130,18 @@ namespace evan
 		 * capabilities. The current implementation focuses on establishing the
 		 * core structure and functionality of the engine, with plans for
 		 * further improvements and optimizations in the future.
+		 *
+		 * @return A vector of unique pointers to Event objects representing the
+		 * events that were polled from the platform. Each Event object contains
+		 * information about the type of event, such as input events.
+		 * The vector may contain events such as keyboard input, mouse input, or
+		 * xr controller input, depending on the specific events that were polled from
+		 * the platform during the current frame.
+		 *
+		 * see utility::event::Event for more details on the Event class and its
+		 * derived classes representing specific types of events.
 		 */
-		void pollEvents();	  // For handling input and other events.
+		std::vector<std::unique_ptr<utility::event::Event>> pollEvents();
 
 		/**
 		 * @brief Adds a new scene to the engine. This method allows users to

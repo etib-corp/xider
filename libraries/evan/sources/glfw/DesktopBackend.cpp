@@ -56,6 +56,8 @@ evan::DesktopBackend::DesktopBackend(const IPlatform &platform)
 	this->pickPhysicalDevice();
 	this->createLogicalDevice();
 	this->createPresentQueue();
+
+	this->setupCallbackEvent(*glfwPlatform);
 }
 
 evan::DesktopBackend::~DesktopBackend()
@@ -93,16 +95,17 @@ uint32_t evan::DesktopBackend::countSwapchainFormats() const
 std::vector<int64_t> evan::DesktopBackend::enumerateSwapchainFormats(
 	uint32_t swapchainFormatCount) const
 {
-	std::vector<int32_t> swapchainFormats(swapchainFormatCount);
+	std::vector<VkSurfaceFormatKHR> swapchainFormats(swapchainFormatCount);
 	vkGetPhysicalDeviceSurfaceFormatsKHR(
 		_physicalDevice, _surface, &swapchainFormatCount,
-		reinterpret_cast<VkSurfaceFormatKHR *>(swapchainFormats.data()));
+		swapchainFormats.data());
 
 	std::vector<int64_t> swapchainFormats64(swapchainFormatCount);
-	std::transform(swapchainFormats.begin(), swapchainFormats.end(),
-				   swapchainFormats64.begin(), [](int32_t format) {
-					   return static_cast<int64_t>(format);
-				   });
+	for (size_t i = 0; i < swapchainFormatCount; i++) {
+		swapchainFormats64[i] =
+			(static_cast<int64_t>(swapchainFormats[i].format) << 32) |
+			static_cast<int64_t>(swapchainFormats[i].colorSpace);
+	}
 	return swapchainFormats64;
 }
 
@@ -437,4 +440,53 @@ void evan::DesktopBackend::populateDebugMessengerCreateInfo(
 		| VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT
 		| VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
 	createInfo.pfnUserCallback = debugCallback;
+}
+
+void evan::DesktopBackend::setupCallbackEvent(const IPlatform &platform)
+{
+	auto glfwPlatform = dynamic_cast<const IDesktopPlatform *>(&platform);
+
+	glfwSetWindowUserPointer( glfwPlatform->_window, (void*)glfwPlatform);
+
+	glfwSetKeyCallback(glfwPlatform->_window, [](GLFWwindow *window, int key,
+												  int scancode, int action,
+												  int mods) {
+		auto* self = static_cast<evan::IDesktopPlatform*>(glfwGetWindowUserPointer(window));
+
+		(void)window;
+		(void)scancode;
+		auto event = std::make_unique<utility::event::KeyboardEvent>();
+		event->setKeycode(self->convertGlfwKeyToKeyCode(key));
+		event->setIsDownEvent(action == GLFW_PRESS);
+		event->setModifiers(self->convertGlfwModsToKeyModifiers(mods));
+		self->_keyboardEvents.push_back(std::move(event));
+		if (action == GLFW_PRESS) {
+			std::cout << "Key pressed: " << key << std::endl;
+		} else if (action == GLFW_RELEASE) {
+			std::cout << "Key released: " << key << std::endl;
+		}
+	});
+
+	glfwSetMouseButtonCallback(glfwPlatform->_window, [](GLFWwindow *window, int button,
+												  int action, int mods) {
+		auto* self = static_cast<evan::IDesktopPlatform*>(glfwGetWindowUserPointer(window));
+
+		(void)window;
+		(void)mods;
+		auto event = std::make_unique<utility::event::MouseButtonEvent>();
+		event->setButtonState(self->convertGlfwMouseButtonToButton(button), action == GLFW_PRESS);
+		event->setPosition(self->getMousePosition());
+		self->_mouseButtonEvents.push_back(std::move(event));
+		std::string actionStr = (action == GLFW_PRESS) ? "pressed" : "released";
+		std::cout << "Mouse button " << actionStr << ": " << button << std::endl;
+	});
+
+	glfwSetCursorPosCallback(glfwPlatform->_window, [](GLFWwindow *window, double xpos, double ypos) {
+		auto* self = static_cast<evan::IDesktopPlatform*>(glfwGetWindowUserPointer(window));
+
+		auto event = std::make_unique<utility::event::MouseMotionEvent>();
+		event->setPosition({ static_cast<float>(xpos), static_cast<float>(ypos) });
+		self->_mouseMotionEvents.push_back(std::move(event));
+		std::cout << "Mouse moved to: (" << xpos << ", " << ypos << ")" << std::endl;
+	});
 }

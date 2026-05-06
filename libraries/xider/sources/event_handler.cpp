@@ -38,6 +38,13 @@ namespace xider
 
 	void EventHandler::pollEvents(void)
 	{
+		_engine->pollEvents();
+	}
+
+	void EventHandler::setEngine(std::shared_ptr<evan::Engine> engine)
+	{
+		getLogger().info("Setting engine for event handler");
+		_engine = engine;
 	}
 
 }	 // namespace xider

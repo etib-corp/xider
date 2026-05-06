@@ -37,8 +37,36 @@ int main(void)
 	// Create Evan graphics engine with Linux Desktop platform
 	auto evanEngine = std::make_shared<evan::Engine>(linuxDesktopPlatform);
 
+	g_assetManager->add(std::string("assets/texture1.png"));
+
+
 	// Initialize XIDER application with Evan engine
 	xider::XIDER app(evanEngine);
+
+	std::vector<std::string> texturePaths = {
+		"assets/texture1.png",
+	};
+
+	std::map<std::string, std::vector<evan::Mesh>> meshData = {
+		{ "assets/texture1.png",
+		  { evan::Mesh { std::vector<evan::Vertex> {
+							 evan::Vertex { { -0.5f, -0.5f, -2.0f },
+											{ 0.0f, 0.0f, 0.0f },
+											{ 0.0f, 0.0f } },
+							 evan::Vertex { { 0.5f, -0.5f, -2.0f },
+											{ 1.0f, 1.0f, 0.0f },
+											{ 1.0f, 0.0f } },
+							 evan::Vertex { { 0.5f, 0.5f, -2.0f },
+											{ 1.0f, 1.0f, 0.0f },
+											{ 1.0f, 1.0f } },
+							 evan::Vertex { { -0.5f, 0.5f, -2.0f },
+											{ 0.0f, 1.0f, 0.0f },
+											{ 0.0f, 1.0f } },
+						 },
+						 std::vector<unsigned int> { 0, 1, 2, 2, 3, 0 } } } },
+	};
+
+	evanEngine->addScene(0, texturePaths, meshData);
 
 	return app.run();
 }
