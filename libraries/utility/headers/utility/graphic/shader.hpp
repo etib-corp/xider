@@ -33,6 +33,20 @@ namespace utility::graphic
          */
         ~Shader() = default;
 
+        /**
+         * @brief Retrieves the SPIR-V bytecode for the vertex shader.
+         *
+         * @return A reference to a vector containing the SPIR-V bytecode for the vertex shader.
+         */
+        const std::vector<uint32_t> &getVertexCode() const;
+
+        /**
+         * @brief Retrieves the SPIR-V bytecode for the fragment shader.
+         *
+         * @return A reference to a vector containing the SPIR-V bytecode for the fragment shader.
+         */
+        const std::vector<uint32_t> &getFragmentCode() const;
+
         protected:
         /**
          * @brief SPIR-V bytecode for the vertex shader.
