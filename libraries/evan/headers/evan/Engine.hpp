@@ -21,7 +21,7 @@
 #include <utility/graphic/primitive.hpp>
 #include <utility/graphic/text/text.hpp>
 
-#include <utility/ressource_manager.hpp>
+#include <utility/ressource_provider.hpp>
 
 #include <utility/event/event.hpp>
 

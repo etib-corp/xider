@@ -8,26 +8,26 @@
 #include "evan/Engine.hpp"
 
 #ifdef __ANDROID__
-std::unique_ptr<utility::AndroidAssetManager> g_assetManager;
+std::unique_ptr<utility::AndroidSystemIO> g_systemIO;
 #else
-std::unique_ptr<utility::AssetManager> g_assetManager;
+std::unique_ptr<utility::SystemIO> g_systemIO;
 #endif
 
 
 void evan::Engine::initializeAssetManager(void *platformAssetManager)
 {
 #ifdef __ANDROID__
-	g_assetManager = std::make_unique<utility::AndroidAssetManager>(
+	g_systemIO = std::make_unique<utility::AndroidSystemIO>(
 		static_cast<AAssetManager *>(platformAssetManager));
 #else
-	g_assetManager = std::make_unique<utility::DefaultAssetManager>();
+	g_systemIO = std::make_unique<utility::DefaultSystemIO>();
 #endif
 }
 
 evan::Engine::Engine(const std::shared_ptr<IPlatform> &platform)
 	: _platform(platform)
 {
-	if (!g_assetManager) {
+	if (!g_systemIO) {
 #ifdef __ANDROID__
 		throw std::runtime_error("Asset manager must be initialized before "
 								 "creating Engine on Android");

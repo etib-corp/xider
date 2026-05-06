@@ -104,8 +104,8 @@ typedef VkBool32 debugCallback_t(VkDebugUtilsMessageSeverityFlagBitsEXT,
 								 const VkDebugUtilsMessengerCallbackDataEXT *,
 								 void *);
 
-#ifdef __ANDROID__
-extern std::unique_ptr<utility::AndroidSystemIO> g_systemIO;
-#else
-extern std::unique_ptr<utility::DefaultSystemIO> g_systemIO;
-#endif
+// #ifdef __ANDROID__
+// extern std::unique_ptr<utility::AndroidSystemIO> g_systemIO;
+// #else
+// extern std::unique_ptr<utility::DefaultSystemIO> g_systemIO;
+// #endif
