@@ -84,13 +84,13 @@ namespace utility::event
 		return _isTouched;
 	}
 
-	HandButtonEvent &HandButtonEvent::setClicked(const bool clicked) noexcept
+	HandButtonEvent &HandButtonEvent::setButtonPressed(const bool clicked) noexcept
 	{
 		_isClicked = clicked;
 		return *this;
 	}
 
-	bool HandButtonEvent::isClicked(void) const noexcept
+	bool HandButtonEvent::isButtonPressed(void) const noexcept
 	{
 		return _isClicked;
 	}

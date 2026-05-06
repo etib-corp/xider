@@ -53,16 +53,13 @@ namespace utility::graphic
 	template<CanBeViewComponent ViewComponentType> class View
 	{
 		private:
-		protected:
-		/**
-		 * @brief View pose (position + orientation).
-		 */
-		Pose<ViewComponentType> _pose;
+		Pose<ViewComponentType> _pose;	  //< View position and orientation
 
-		/**
-		 * @brief View field-of-view angles.
-		 */
-		FieldOfView<ViewComponentType> _fieldOfView;
+		FieldOfView<ViewComponentType>
+			_fieldOfView;	 ///< View field-of-view parameters
+
+		math::Vector2UI
+			_viewportSize;	  ///< Viewport size in pixels (width, height)
 
 		/**
 		 * @brief Validate perspective parameter constraints.
@@ -164,7 +161,7 @@ namespace utility::graphic
 			const ViewComponentType s = q[3];
 
 			return u * (ViewComponentType { 2 } * math::dot(u, vector))
-				+ vector * (s * s - math::dot(u, u))
+				+ vector.operator*(s * s - math::dot(u, u))
 				+ math::cross(u, vector) * (ViewComponentType { 2 } * s);
 		}
 
@@ -262,9 +259,10 @@ namespace utility::graphic
 		 * invalid.
 		 */
 		View(Pose<ViewComponentType> pose, ViewComponentType verticalFovDegrees,
-			 ViewComponentType aspectRatio)
+			 ViewComponentType aspectRatio, math::Vector2UI viewportSize)
 			: _pose(std::move(pose))
 			, _fieldOfView()
+			, _viewportSize(viewportSize)
 		{
 			setPerspective(verticalFovDegrees, aspectRatio);
 		}
@@ -336,10 +334,10 @@ namespace utility::graphic
 		 */
 		math::Vector<ViewComponentType, 3> getForward(void) const
 		{
-			return math::normalize(rotateVectorByRotation(
-				math::Vector<ViewComponentType, 3>(ViewComponentType {},
-												   ViewComponentType {},
-												   ViewComponentType { -1 })));
+			return math::normalize(
+				rotateVectorByRotation(math::Vector<ViewComponentType, 3> {
+					ViewComponentType {}, ViewComponentType {},
+					ViewComponentType { -1 } }));
 		}
 
 		/**
@@ -360,9 +358,9 @@ namespace utility::graphic
 		math::Vector<ViewComponentType, 3> getUp(void) const
 		{
 			return math::normalize(rotateVectorByRotation(
-				math::Vector<ViewComponentType, 3>(ViewComponentType {},
-												   ViewComponentType { 1 },
-												   ViewComponentType {})));
+				math::Vector<ViewComponentType, 3> { ViewComponentType {},
+													 ViewComponentType { 1 },
+													 ViewComponentType {} }));
 		}
 
 		/**
@@ -430,9 +428,9 @@ namespace utility::graphic
 		math::Vector<ViewComponentType, 3> right(void) const
 		{
 			return math::normalize(rotateVectorByRotation(
-				math::Vector<ViewComponentType, 3>(ViewComponentType { 1 },
-												   ViewComponentType {},
-												   ViewComponentType {})));
+				math::Vector<ViewComponentType, 3> { ViewComponentType { 1 },
+													 ViewComponentType {},
+													 ViewComponentType {} }));
 		}
 
 		/**
@@ -466,9 +464,9 @@ namespace utility::graphic
 		 */
 		void lookAt(const math::Vector<ViewComponentType, 3> &target,
 					const math::Vector<ViewComponentType, 3> &worldUp =
-						math::Vector<ViewComponentType, 3>(
+						math::Vector<ViewComponentType, 3> {
 							ViewComponentType {}, ViewComponentType { 1 },
-							ViewComponentType {}))
+							ViewComponentType {} })
 		{
 			const auto targetVector = target - _pose.getPosition();
 			if (math::dot(targetVector, targetVector) == ViewComponentType {}) {
@@ -502,6 +500,24 @@ namespace utility::graphic
 
 			return Ray<ViewComponentType>(_pose.getPosition(),
 										  math::normalize(rayDirection));
+		}
+
+		Ray<ViewComponentType>
+			viewPointToRay(const math::Vector2UI &point) const
+		{
+			if (point.x >= _viewportSize.x || point.y >= _viewportSize.y) {
+				throw std::out_of_range("Point is outside of viewport bounds");
+			}
+
+			const ViewComponentType ndcX =
+				(static_cast<ViewComponentType>(point.x) / _viewportSize.x)
+					* ViewComponentType { 2 }
+				- ViewComponentType { 1 };
+			const ViewComponentType ndcY =
+				(static_cast<ViewComponentType>(point.y) / _viewportSize.y)
+					* ViewComponentType { 2 }
+				- ViewComponentType { 1 };
+			return viewRay(ndcX, ndcY);
 		}
 
 		/**

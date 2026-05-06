@@ -24,7 +24,12 @@
 
 #include <gtest/gtest.h>
 
-#include <guillaume/systems/interaction.hpp>
+#include <guillaume/systems/hand_button.hpp>
+#include <guillaume/systems/hand_motion.hpp>
+#include <guillaume/systems/hand_pinch.hpp>
+#include <guillaume/systems/hand_poke.hpp>
+#include <guillaume/systems/mouse_button.hpp>
+#include <guillaume/systems/mouse_motion.hpp>
 
 namespace guillaume::systems::tests
 {

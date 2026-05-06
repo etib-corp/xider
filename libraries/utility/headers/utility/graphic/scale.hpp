@@ -71,7 +71,7 @@ namespace utility::graphic
 		 * with.
 		 */
 		explicit Scale(ScaleComponentType value)
-			: math::Vector<ScaleComponentType, 3>(value, value, value)
+			: math::Vector<ScaleComponentType, 3>({ value, value, value })
 		{
 		}
 
@@ -103,7 +103,9 @@ namespace utility::graphic
 		 * @throws std::invalid_argument if the list size is not 3.
 		 */
 		Scale(std::initializer_list<ScaleComponentType> values)
-			: math::Vector<ScaleComponentType, 3>(1.0f, 1.0f, 1.0f)
+			: math::Vector<ScaleComponentType, 3>(
+				  { ScaleComponentType { 1.0f }, ScaleComponentType { 1.0f },
+					ScaleComponentType { 1.0f } })
 		{
 			if (values.size() != 3) {
 				throw std::invalid_argument(

@@ -32,7 +32,7 @@ std::vector<std::unique_ptr<utility::event::Event>>
 	if (state.isActive) {
 		auto buttonEvent = std::make_unique<utility::event::HandButtonEvent>();
 		buttonEvent->setButton(_buttonType);
-		buttonEvent->setClicked(state.currentState);
+		buttonEvent->setButtonPressed(state.currentState);
 
 		std::cout << "Button " << static_cast<int>(_buttonType) << " is "
 				  << (state.currentState ? "pressed" : "not pressed")

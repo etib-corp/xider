@@ -26,10 +26,10 @@
 
 #include "utility/graphic/orientation.hpp"
 #include "utility/graphic/position.hpp"
+#include "utility/graphic/ray.hpp"
 
 namespace utility::graphic
 {
-
 	/**
 	 * @brief Concept to constrain pose component type.
 	 * @tparam Type Candidate component type.
@@ -179,6 +179,34 @@ namespace utility::graphic
 		}
 
 		/**
+		 * @brief Rotate pose orientation by a given orientation.
+		 * @param rotation Orientation to apply as rotation.
+		 * @return Reference to this pose for chaining.
+		 */
+		Ray<PoseComponentType> toForwardRay() const noexcept
+		{
+			return Ray<PoseComponentType>(_position, _orientation.getForward());
+		}
+
+		/**
+		 * @brief Get a ray representing the right direction of the pose.
+		 * @return Ray pointing in the right direction from the pose position.
+		 */
+		Ray<PoseComponentType> toUpRay() const noexcept
+		{
+			return Ray<PoseComponentType>(_position, _orientation.getUp());
+		}
+
+		/**
+		 * @brief Get a ray representing the up direction of the pose.
+		 * @return Ray pointing in the up direction from the pose position.
+		 */
+		Ray<PoseComponentType> toRightRay() const noexcept
+		{
+			return Ray<PoseComponentType>(_position, _orientation.getRight());
+		}
+
+		/**
 		 * @brief Equality comparison.
 		 * @param other Pose to compare with.
 		 * @return True when position and orientation are equal.
@@ -210,4 +238,4 @@ namespace utility::graphic
 	 */
 	using PoseD = Pose<double>;
 
-}	 // namespace utility::graphic
+} // namespace utility::graphic

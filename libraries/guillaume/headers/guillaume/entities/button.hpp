@@ -32,10 +32,20 @@
 #include "guillaume/ecs/entity_filler.hpp"
 
 #include "guillaume/components/borders.hpp"
+#include "guillaume/components/transform.hpp"
 #include "guillaume/components/bound.hpp"
 #include "guillaume/components/color.hpp"
-#include "guillaume/components/interaction.hpp"
-#include "guillaume/components/transform.hpp"
+#include "guillaume/components/focus.hpp"
+#include "guillaume/components/hand_button_interaction.hpp"
+#include "guillaume/components/hand_hover_interaction.hpp"
+#include "guillaume/components/hand_squeeze_interaction.hpp"
+#include "guillaume/components/hand_pinch_interaction.hpp"
+#include "guillaume/components/hand_poke_interaction.hpp"
+#include "guillaume/components/hand_thumb_rest_interaction.hpp"
+#include "guillaume/components/hand_thumb_stick_interaction.hpp"
+#include "guillaume/components/hand_trigger_interaction.hpp"
+#include "guillaume/components/mouse_hover_interaction.hpp"
+#include "guillaume/components/mouse_button_interaction.hpp"
 
 #include "guillaume/entities/icon.hpp"
 #include "guillaume/entities/text.hpp"
@@ -48,9 +58,17 @@ namespace guillaume::entities
 	 * components.
 	 */
 	class Button:
-		public ecs::ParentEntityFiller<components::Transform, components::Bound,
-									   components::Interaction,
-									   components::Color, components::Borders>
+		public ecs::ParentEntityFiller<
+			components::Transform, components::Bound,
+			components::HandButtonInteraction, components::HandHoverInteraction,
+			components::HandPinchInteraction, components::HandPokeInteraction,
+			components::HandSqueezeInteraction,
+			components::HandThumbRestInteraction,
+			components::HandThumbStickInteraction,
+			components::HandTriggerInteraction,
+			components::MouseHoverInteraction,
+			components::MouseButtonInteraction, components::Color,
+			components::Borders, components::Focus>
 	{
 		public:
 		/**
@@ -276,7 +294,7 @@ namespace guillaume::entities
 		/**
 		 * @brief Apply the current Material button state to components.
 		 */
-		void applyMaterialState(void);
+		void applyState(void);
 
 		/**
 		 * @brief Calculate the pose for the button's text child when no

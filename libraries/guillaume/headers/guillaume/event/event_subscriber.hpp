@@ -88,15 +88,6 @@ namespace guillaume::event
 			_eventQueue.pop();
 			return event;
 		}
-
-		/**
-		 * @brief Add an event to the queue.
-		 * @param event The event to add.
-		 */
-		template<typename U> void pushUnhandledEvent(U &&event)
-		{
-			_eventQueue.push(std::forward<U>(event));
-		}
 	};
 
 }	 // namespace guillaume::event

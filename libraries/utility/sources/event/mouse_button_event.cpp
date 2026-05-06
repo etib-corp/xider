@@ -56,22 +56,28 @@ namespace utility::event
 	}
 
 	MouseButtonEvent &
-		MouseButtonEvent::setButtonState(const Button button,
-										 const bool pressed) noexcept
+		MouseButtonEvent::setButton(const Button button) noexcept
 	{
-		_buttonStates.set(static_cast<std::size_t>(button), pressed);
+		_button = button;
 		return *this;
 	}
 
-	bool MouseButtonEvent::isButtonPressed(const Button button) const noexcept
+	MouseButtonEvent::Button
+		MouseButtonEvent::getButton(void) const noexcept
 	{
-		return _buttonStates.test(static_cast<std::size_t>(button));
+		return _button;
 	}
 
-	const MouseButtonEvent::MouseButtonsState &
-		MouseButtonEvent::getButtonsState(void) const noexcept
+	MouseButtonEvent &
+		MouseButtonEvent::setPressed(const bool pressed) noexcept
 	{
-		return _buttonStates;
+		_pressed = pressed;
+		return *this;
+	}
+
+	bool MouseButtonEvent::isPressed(void) const noexcept
+	{
+		return _pressed;
 	}
 
 }	 // namespace utility::event

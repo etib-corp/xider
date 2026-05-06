@@ -111,17 +111,17 @@ namespace utility::event
 			Semicolon  = 51, /**< Semicolon key */
 			Apostrophe = 52, /**< Apostrophe key */
 			Grave =
-				53, /**< Grave key. Located in the top left corner (on both ANSI
-					   and ISO keyboards). Produces GRAVE ACCENT and TILDE in a
-					   US Windows layout and in US and UK Mac layouts on ANSI
-					   keyboards, GRAVE ACCENT and NOT SIGN in a UK Windows
-					   layout, SECTION SIGN and PLUS-MINUS SIGN in US and UK Mac
-					   layouts on ISO keyboards, SECTION SIGN and DEGREE SIGN in
-					   a Swiss German layout (Mac: only on ISO keyboards),
-					   CIRCUMFLEX ACCENT and DEGREE SIGN in a German layout
-					   (Mac: only on ISO keyboards), SUPERSCRIPT TWO and TILDE
-					   in a French Windows layout, COMMERCIAL AT and NUMBER SIGN
-					   in a French Mac layout on ISO keyboards, and LESS-THAN
+				53, /**< Grave key (grave accent). Located in the top left corner
+					   (on both ANSI and ISO keyboards). Produces GRAVE ACCENT and
+					   TILDE in a US Windows layout and in US and UK Mac layouts
+					   on ANSI keyboards, GRAVE ACCENT and NOT SIGN in a UK
+					   Windows layout, SECTION SIGN and PLUS-MINUS SIGN in US and
+					   UK Mac layouts on ISO keyboards, SECTION SIGN and DEGREE
+					   SIGN in a Swiss German layout (Mac: only on ISO
+					   keyboards), CIRCUMFLEX ACCENT and DEGREE SIGN in a German
+					   layout (Mac: only on ISO keyboards), SUPERSCRIPT TWO and
+					   TILDE in a French Windows layout, COMMERCIAL AT and NUMBER
+					   SIGN in a French Mac layout on ISO keyboards, and LESS-THAN
 					   SIGN and GREATER-THAN SIGN in a Swiss German, German, or
 					   French Mac layout on ANSI keyboards. */
 			Comma  = 54, /**< Comma key */
@@ -362,9 +362,9 @@ namespace utility::event
 		 */
 		enum class				 KeyCode : std::int32_t {
 			Unknown				 = -0x00000001, /**< Unknown key */
-			Space				 = 0x00000020u, /**< Space key (' ') */
-			Apostrophe			 = 0x00000027u, /**< Apostrophe key ('\'') */
-			Comma				 = 0x0000002Cu, /**< Comma key (',') */
+			Space			 = 0x00000020u, /**< Space key (' ') */
+			Apostrophe		 = 0x00000027u, /**< Apostrophe key (apostrophe) */
+			Comma			 = 0x0000002Cu, /**< Comma key (',') */
 			Minus				 = 0x0000002Du, /**< Minus key ('-') */
 			Period				 = 0x0000002Eu, /**< Period key ('.') */
 			Slash				 = 0x0000002Fu, /**< Slash key ('/') */
@@ -406,16 +406,16 @@ namespace utility::event
 			X				 = 0x00000058u, /**< X key ('x') */
 			Y				 = 0x00000059u, /**< Y key ('y') */
 			Z				 = 0x0000005Au, /**< Z key ('z') */
-			LeftBracket				= 0x0000005Bu, /**< Left bracket key ('[') */
-			Backslash				= 0x0000005Cu, /**< Backslash key ('\\') */
-			RightBracket			= 0x0000005Du, /**< Right bracket key (']') */
-			Grave				    = 0x00000060u, /**< Grave key ('`') */
-			Escape				    = 0x00000100u, /**< Escape key ('\x1B') */
-			Enter				    = 0x00000101u, /**< Return key ('\r') */
-			Tab				       	= 0x00000102u, /**< Tab key ('\t') */
-			Backspace				= 0x00000103u, /**< Backspace key ('\b') */
-			Insert				    = 0x00000104u, /**< Insert key */
-			Delete				    = 0x00000105u, /**< Delete key ('\x7F') */
+			LeftBracket			= 0x0000005Bu, /**< Left bracket key ('[') */
+			Backslash			= 0x0000005Cu, /**< Backslash key (backslash) */
+			RightBracket		= 0x0000005Du, /**< Right bracket key (']') */
+			Grave			    = 0x00000060u, /**< Grave key (grave accent) */
+			Escape			    = 0x00000100u, /**< Escape key (0x1B) */
+			Enter			    = 0x00000101u, /**< Return key (CR, 0x0D) */
+			Tab			        = 0x00000102u, /**< Tab key (TAB, 0x09) */
+			Backspace			= 0x00000103u, /**< Backspace key (BS, 0x08) */
+			Insert			    = 0x00000104u, /**< Insert key */
+			Delete		    = 0x00000105u, /**< Delete key (0x7F) */
 			Right				 	= 0x00000106u, /**< Right arrow key */
 			Left				  	= 0x00000107u, /**< Left arrow key */
 			Down				  	= 0x00000108u, /**< Down arrow key */

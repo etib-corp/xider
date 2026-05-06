@@ -42,7 +42,6 @@
 
 namespace utility::graphic
 {
-
 	/**
 	 * @brief Concept to ensure the type can be used as a ray component.
 	 * @tparam Type The type to check.
@@ -295,16 +294,76 @@ namespace utility::graphic
 		{
 			return !(*this == other);
 		}
+
+		/**
+		 * @brief Check for intersection with an axis-aligned rectangle
+		 * plane.
+		 * @param rectanglePose Pose-like object providing position and
+		 * orientation accessors.
+		 * @param rectangleSize Size of the rectangle (width, height).
+		 * @return True if the ray intersects the rectangle, false if it misses
+		 * or is parallel. Note that rays originating inside the rectangle are
+		 * considered intersecting. Rays parallel to the rectangle plane that
+		 * lie in the plane are also considered intersecting, while those that
+		 * do not lie in the plane are considered non-intersecting.
+		 */
+		template<typename RectanglePoseType>
+		bool intersectRectangle(const RectanglePoseType &rectanglePose,
+								const math::Vector2UI &rectangleSize) const
+		{
+			const auto rectangleCenter		= rectanglePose.getPosition();
+			const auto rectangleOrientation = rectanglePose.getOrientation();
+
+			math::Vector<RayComponentType, 3> planeNormal =
+				rectangleOrientation.getForward();
+
+			const RayComponentType denominator =
+				math::dot(_direction, planeNormal);
+
+			if (denominator == RayComponentType {}) {
+				math::Vector<RayComponentType, 3> toOrigin =
+					math::Vector<RayComponentType, 3>(_origin)
+					- math::Vector<RayComponentType, 3>(rectangleCenter);
+				if (math::dot(toOrigin, planeNormal) == RayComponentType {}) {
+					return true;
+				}
+				return false;
+			}
+
+			math::Vector<RayComponentType, 3> toCenter =
+				math::Vector<RayComponentType, 3>(rectangleCenter)
+				- math::Vector<RayComponentType, 3>(_origin);
+			const RayComponentType t =
+				math::dot(toCenter, planeNormal) / denominator;
+
+			if (t < RayComponentType {}) {
+				return false;
+			}
+
+			math::Vector<RayComponentType, 3> intersectionPoint = pointAt(t);
+			math::Vector<RayComponentType, 3> localPoint = intersectionPoint
+				- math::Vector<RayComponentType, 3>(rectangleCenter);
+
+			math::Vector<RayComponentType, 3> right =
+				rectangleOrientation.getRight();
+			math::Vector<RayComponentType, 3> up = rectangleOrientation.getUp();
+
+			RayComponentType rightCoord = math::dot(localPoint, right);
+			RayComponentType upCoord	= math::dot(localPoint, up);
+
+			RayComponentType halfWidth =
+				static_cast<RayComponentType>(rectangleSize[0])
+				/ RayComponentType { 2 };
+			RayComponentType halfHeight =
+				static_cast<RayComponentType>(rectangleSize[1])
+				/ RayComponentType { 2 };
+
+			return (rightCoord >= -halfWidth && rightCoord <= halfWidth
+					&& upCoord >= -halfHeight && upCoord <= halfHeight);
+		}
+
+		using RayF = Ray<float>;
+		using RayD = Ray<double>;
 	};
 
-	/**
-	 * @brief Type alias for single-precision ray component.
-	 */
-	using RayF = Ray<float>;
-
-	/**
-	 * @brief Type alias for double-precision ray component.
-	 */
-	using RayD = Ray<double>;
-
-}	 // namespace utility::graphic
+} // namespace utility::graphic

@@ -136,13 +136,13 @@ namespace utility::event
 		 * @param clicked True if clicked.
 		 * @return Reference to this HandButtonEvent.
 		 */
-		HandButtonEvent &setClicked(const bool clicked) noexcept;
+		HandButtonEvent &setButtonPressed(const bool clicked) noexcept;
 
 		/**
 		 * @brief Get clicked state.
 		 * @return True if clicked.
 		 */
-		bool isClicked(void) const noexcept;
+		bool isButtonPressed(void) const noexcept;
 	};
 
 }	 // namespace utility::event

@@ -67,17 +67,16 @@ namespace utility::math
 	 * @tparam Type Candidate component type.
 	 */
 	template<typename Type>
-	concept CanBeVectorComponent = std::is_floating_point_v<Type>;
+	concept CanBeVectorComponent =
+		std::is_floating_point_v<Type> || std::is_integral_v<Type>;
 
 	/**
 	 * @brief 3D vector class inheriting from glm::vec3.
 	 *
 	 * @tparam Type Floating-point type for vector components.
 	 */
-	template<typename VectorComponentType, std::size_t VectorDimension,
-			 typename = std::enable_if_t<
-				 std::is_floating_point_v<VectorComponentType>
-				 && (VectorDimension > 0) && (VectorDimension <= 4)>>
+	template<CanBeVectorComponent VectorComponentType,
+			 std::size_t VectorDimension>
 	class Vector: public glm::vec<VectorDimension, VectorComponentType>
 	{
 		public:
@@ -377,6 +376,39 @@ namespace utility::math
 		}
 	};
 
+	template<CanBeVectorComponent VectorComponentType,
+			 std::size_t VectorDimension>
+	VectorComponentType
+		dot(const Vector<VectorComponentType, VectorDimension> &lhs,
+			const Vector<VectorComponentType, VectorDimension> &rhs)
+	{
+		return glm::dot(
+			static_cast<const glm::vec<VectorDimension, VectorComponentType> &>(
+				lhs),
+			static_cast<const glm::vec<VectorDimension, VectorComponentType> &>(
+				rhs));
+	}
+
+	template<CanBeVectorComponent VectorComponentType>
+	Vector<VectorComponentType, 3>
+		cross(const Vector<VectorComponentType, 3> &lhs,
+			  const Vector<VectorComponentType, 3> &rhs)
+	{
+		return Vector<VectorComponentType, 3>(glm::cross(
+			static_cast<const glm::vec<3, VectorComponentType> &>(lhs),
+			static_cast<const glm::vec<3, VectorComponentType> &>(rhs)));
+	}
+
+	template<CanBeVectorComponent VectorComponentType,
+			 std::size_t VectorDimension>
+	Vector<VectorComponentType, VectorDimension>
+		normalize(const Vector<VectorComponentType, VectorDimension> &vector)
+	{
+		return Vector<VectorComponentType, VectorDimension>(glm::normalize(
+			static_cast<const glm::vec<VectorDimension, VectorComponentType> &>(
+				vector)));
+	}
+
 	/**
 	 * @brief Type alias for 2D single-precision vector.
 	 */
@@ -386,6 +418,16 @@ namespace utility::math
 	 * @brief Type alias for 2D double-precision vector.
 	 */
 	using Vector2D = Vector<double, 2>;
+
+	/**
+	 * @brief Type alias for 2D integer vector.
+	 */
+	using Vector2I = Vector<int, 2>;
+
+	/**
+	 * @brief Type alias for 2D unsigned integer vector.
+	 */
+	using Vector2UI = Vector<unsigned int, 2>;
 
 	/**
 	 * @brief Type alias for 3D single-precision vector.
@@ -398,6 +440,16 @@ namespace utility::math
 	using Vector3D = Vector<double, 3>;
 
 	/**
+	 * @brief Type alias for 3D integer vector.
+	 */
+	using Vector3I = Vector<int, 3>;
+
+	/**
+	 * @brief Type alias for 3D unsigned integer vector.
+	 */
+	using Vector3UI = Vector<unsigned int, 3>;
+
+	/**
 	 * @brief Type alias for 4D single-precision vector.
 	 */
 	using Vector4F = Vector<float, 4>;
@@ -406,5 +458,15 @@ namespace utility::math
 	 * @brief Type alias for 4D double-precision vector.
 	 */
 	using Vector4D = Vector<double, 4>;
+
+	/**
+	 * @brief Type alias for 4D integer vector.
+	 */
+	using Vector4I = Vector<int, 4>;
+
+	/**
+	 * @brief Type alias for 4D unsigned integer vector.
+	 */
+	using Vector4UI = Vector<unsigned int, 4>;
 
 }	 // namespace utility::math

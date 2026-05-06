@@ -22,7 +22,6 @@
 
 #pragma once
 
-#include <bitset>
 #include <cstdint>
 #include <memory>
 
@@ -41,7 +40,9 @@ namespace utility::event
 	class MouseButtonEvent: public Event
 	{
 		public:
-		using MousePosition = math::Vector2F; /**< 2D mouse position type */
+		using MousePosition =
+			math::Vector2UI; /**< Type alias for mouse position as a 2D unsigned
+								integer vector (x, y) */
 
 		/**
 		 * @brief Mouse buttons enumeration.
@@ -53,15 +54,7 @@ namespace utility::event
 			Right	= 3,
 			X1		= 4,
 			X2		= 5,
-			Last = 6	// Sentinel value to indicate the number of buttons, not
-						// an actual button
 		};
-
-		using MouseButtonsState =
-			std::bitset<sizeof(std::uint8_t)
-						* static_cast<std::size_t>(Button::Last)>; /**< Bitset
-																	  for button
-																	  states */
 
 		/**
 		 * @brief Factory for creating MouseButtonEvent instances.
@@ -87,8 +80,8 @@ namespace utility::event
 
 		private:
 		MousePosition _position { 0, 0 }; /**< Current mouse position (x, y) */
-		MouseButtonsState
-			_buttonStates; /**< Bitset to track the state of mouse buttons */
+		Button _button { Button::Unknown };	 /**< Currently active mouse button */
+		bool _pressed { false };			 /**< True when the button is pressed */
 
 		public:
 		/**
@@ -117,24 +110,28 @@ namespace utility::event
 		/**
 		 * @brief Set the state of a mouse button.
 		 * @param button The mouse button to set.
+		 * @return Reference to this MouseButtonEvent for method chaining.
+		 */
+		MouseButtonEvent &setButton(const Button button) noexcept;
+
+		/**
+		 * @brief Get the current mouse button.
+		 * @return The current button.
+		 */
+		Button getButton(void) const noexcept;
+
+		/**
+		 * @brief Set the pressed state of the button.
 		 * @param pressed True if the button is pressed, false if released.
 		 * @return Reference to this MouseButtonEvent for method chaining.
 		 */
-		MouseButtonEvent &setButtonState(const Button button,
-										 const bool pressed) noexcept;
+		MouseButtonEvent &setPressed(const bool pressed) noexcept;
 
 		/**
-		 * @brief Check if a mouse button is currently pressed.
-		 * @param button The mouse button to check.
+		 * @brief Get the pressed state of the button.
 		 * @return True if the button is pressed, false otherwise.
 		 */
-		bool isButtonPressed(const Button button) const noexcept;
-
-		/**
-		 * @brief Get the current state of all mouse buttons.
-		 * @return A bitset representing the state of all mouse buttons.
-		 */
-		const MouseButtonsState &getButtonsState(void) const noexcept;
+		bool isPressed(void) const noexcept;
 	};
 
 }	 // namespace utility::event

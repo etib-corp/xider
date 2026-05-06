@@ -16,18 +16,18 @@ This project focuses on four key strategic objectives to ensure successful devel
 
 | **Focus Area** | **Description** |
 | --- | --- |
-| **[Technological Watch](docs/objectives/technological_watch.md)** | Actively explore, test, and integrate emerging technologies with a critical approach. |
-| **[Technical Architecture](docs/objectives/technical_architecture.md)** | Structure, document, and ensure the reliability of the project's architecture. |
-| **[Community Contributions](docs/objectives/community_contributions.md)** | Open the project to the community and encourage external contributions. |
-| **[Performance and Optimization](docs/objectives/performance_optimization.md)** | Measure, test, and optimize technical performance. |
+| **[Technological Watch](docs/objectives/TECHNOLOGICAL_WATCH.MD)** | Actively explore, test, and integrate emerging technologies with a critical approach. |
+| **[Technical Architecture](docs/objectives/TECHNICAL_ARCHITECTURE.MD)** | Structure, document, and ensure the reliability of the project's architecture. |
+| **[Community Contributions](docs/objectives/COMMUNITY_CONTRIBUTIONS.MD)** | Open the project to the community and encourage external contributions. |
+| **[Performance and Optimization](docs/objectives/PERFORMANCE_OPTIMIZATION.MD)** | Measure, test, and optimize technical performance. |
 
 ## Documentation
 
 For more detailed information on each part of the project, please refer to the following documentation files:
 
-- [Building Guide](docs/building.md)
-- [Project Architecture](docs/project_architecture.md)
-- [Beta Test Plan](docs/beta_test_plan.md)
+- [Building Guide](docs/BUILDING.MD)
+- [Project Architecture](docs/PROJECT_ARCHITECTURE.MD)
+- [Beta Test Plan](docs/BETA_TEST_PLAN.MD)
 
 ## Contributing
 

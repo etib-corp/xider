@@ -128,13 +128,13 @@ namespace utility::event
 		 * @param clicked True if clicked.
 		 * @return Reference to this HandThumbStickEvent.
 		 */
-		HandThumbStickEvent &setClicked(const bool clicked) noexcept;
+		HandThumbStickEvent &setButtonPressed(const bool clicked) noexcept;
 
 		/**
 		 * @brief Get clicked state.
 		 * @return True if clicked.
 		 */
-		bool isClicked(void) const noexcept;
+		bool isButtonPressed(void) const noexcept;
 	};
 
 }	 // namespace utility::event

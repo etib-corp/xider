@@ -378,17 +378,17 @@ namespace guillaume::entities
 
 	void Button::hoverHandler(void)
 	{
-		applyMaterialState();
+		applyState();
 	}
 
 	void Button::unHoverHandler(void)
 	{
-		applyMaterialState();
+		applyState();
 	}
 
 	void Button::leftClickPressHandler()
 	{
-		applyMaterialState();
+		applyState();
 	}
 
 	void Button::leftClickReleaseHandler()
@@ -396,24 +396,29 @@ namespace guillaume::entities
 		if (_isToggle) {
 			_isMorph = !_isMorph;
 		}
-		applyMaterialState();
+		applyState();
 		if (_onClick) {
 			_onClick();
 		}
 	}
 
-	void Button::applyMaterialState(void)
+	void Button::applyState(void)
 	{
-		auto &interaction =
-			getComponentRegistry().getComponent<components::Interaction>(
-				getIdentifier());
+		auto &hoverInteraction =
+			getComponentRegistry()
+				.getComponent<components::MouseHoverInteraction>(
+					getIdentifier());
+		auto &buttonInteraction =
+			getComponentRegistry()
+				.getComponent<components::MouseButtonInteraction>(
+					getIdentifier());
 
 		auto &buttonColor =
 			getComponentRegistry().getComponent<components::Color>(
 				getIdentifier());
 		buttonColor.setColor(getContainerColor(
-			_colorStyle, interaction.isMouseHovered(),
-			interaction.isMouseButtonClicked(
+			_colorStyle, hoverInteraction.isHovered(),
+			buttonInteraction.isButtonPressed(
 				utility::event::MouseButtonEvent::Button::Left)));
 
 		auto &buttonBorders =
@@ -422,7 +427,7 @@ namespace guillaume::entities
 		const auto restingShape = getRestingShape(_shape, _isToggle, _isMorph);
 		buttonBorders.setBorderRadius(getBorderRadius(
 			_size, restingShape,
-			interaction.isMouseButtonClicked(
+			buttonInteraction.isButtonPressed(
 				utility::event::MouseButtonEvent::Button::Left)));
 
 		if (_iconIdentifier != ecs::Entity::InvalidIdentifier) {
@@ -447,9 +452,9 @@ namespace guillaume::entities
 
 		const auto buttonWidth = static_cast<float>(calculWidth());
 		const auto labelWidth  = static_cast<float>(
-			 getComponentRegistry()
-				 .getComponent<components::Bound>(_labelIdentifier)
-				 .getWidth());
+			getComponentRegistry()
+				.getComponent<components::Bound>(_labelIdentifier)
+				.getWidth());
 		const float buttonLeft =
 			buttonPose.getPosition().getX() - (buttonWidth / 2.0f);
 		const float buttonCenterY = buttonPose.getPosition().getY()
@@ -473,9 +478,9 @@ namespace guillaume::entities
 
 		const auto buttonWidth = static_cast<float>(calculWidth());
 		const auto labelWidth  = static_cast<float>(
-			 getComponentRegistry()
-				 .getComponent<components::Bound>(_labelIdentifier)
-				 .getWidth());
+			getComponentRegistry()
+				.getComponent<components::Bound>(_labelIdentifier)
+				.getWidth());
 		const float buttonLeft =
 			buttonPose.getPosition().getX() - (buttonWidth / 2.0f);
 		const float buttonCenterY = buttonPose.getPosition().getY()
@@ -511,9 +516,19 @@ namespace guillaume::entities
 				   const std::string &labelContent, bool isToggle,
 				   Color colorStyle, Shape shape, Size size, bool isMorph,
 				   std::function<void(void)> onClick)
-		: ecs::ParentEntityFiller<components::Transform, components::Bound,
-								  components::Interaction, components::Color,
-								  components::Borders>(registry)
+		: ecs::ParentEntityFiller<
+			  components::Transform, components::Bound,
+			  components::HandButtonInteraction,
+			  components::HandHoverInteraction,
+			  components::HandPinchInteraction,
+			  components::HandPokeInteraction,
+			  components::HandSqueezeInteraction,
+			  components::HandThumbRestInteraction,
+			  components::HandThumbStickInteraction,
+			  components::HandTriggerInteraction,
+			  components::MouseHoverInteraction,
+			  components::MouseButtonInteraction, components::Color,
+			  components::Borders, components::Focus>(registry)
 		, _iconGlyphName(iconGlyphName)
 		, _labelContent(labelContent)
 		, _isToggle(isToggle)
@@ -564,7 +579,7 @@ namespace guillaume::entities
 					.setPose(calculTextPoseWithoutIcon());
 			}
 
-			applyMaterialState();
+			applyState();
 			return *this;
 		}
 
@@ -596,7 +611,7 @@ namespace guillaume::entities
 				.setPose(calculTextPoseWithIcon());
 		}
 
-		applyMaterialState();
+		applyState();
 
 		return *this;
 	}
@@ -625,7 +640,7 @@ namespace guillaume::entities
 			.setWidth(calculWidth());
 
 		if (_labelIdentifier == ecs::Entity::InvalidIdentifier) {
-			applyMaterialState();
+			applyState();
 			return *this;
 		}
 
@@ -641,7 +656,7 @@ namespace guillaume::entities
 			.getComponent<components::Transform>(_labelIdentifier)
 			.setPose(labelPose);
 
-		applyMaterialState();
+		applyState();
 
 		return *this;
 	}
@@ -649,21 +664,21 @@ namespace guillaume::entities
 	Button &Button::setIsToggle(const bool &isToggle)
 	{
 		_isToggle = isToggle;
-		applyMaterialState();
+		applyState();
 		return *this;
 	}
 
 	Button &Button::setColorStyle(const Color &colorStyle)
 	{
 		_colorStyle = colorStyle;
-		applyMaterialState();
+		applyState();
 		return *this;
 	}
 
 	Button &Button::setShape(const Shape &shape)
 	{
 		_shape = shape;
-		applyMaterialState();
+		applyState();
 
 		return *this;
 	}
@@ -685,7 +700,7 @@ namespace guillaume::entities
 			setLabelContent(_labelContent);
 		}
 
-		applyMaterialState();
+		applyState();
 
 		return *this;
 	}
@@ -693,7 +708,7 @@ namespace guillaume::entities
 	Button &Button::setMorph(const bool &isMorph)
 	{
 		_isMorph = isMorph;
-		applyMaterialState();
+		applyState();
 		return *this;
 	}
 
@@ -721,13 +736,16 @@ namespace guillaume::entities
 		setOnClick(_onClick);
 
 		getComponentRegistry()
-			.getComponent<components::Interaction>(getIdentifier())
-			.setMouseOnHoverHandler(std::bind(&Button::hoverHandler, this))
-			.setMouseOnUnhoverHandler(std::bind(&Button::unHoverHandler, this))
-			.setMouseButtonOnClickHandler(
+			.getComponent<components::MouseHoverInteraction>(getIdentifier())
+			.setOnHoverHandler(std::bind(&Button::hoverHandler, this))
+			.setOnUnhoverHandler(std::bind(&Button::unHoverHandler, this));
+
+		getComponentRegistry()
+			.getComponent<components::MouseButtonInteraction>(getIdentifier())
+			.setOnButtonPressHandler(
 				utility::event::MouseButtonEvent::Button::Left,
 				std::bind(&Button::leftClickPressHandler, this))
-			.setMouseButtonOnClickReleaseHandler(
+			.setOnButtonReleaseHandler(
 				utility::event::MouseButtonEvent::Button::Left,
 				std::bind(&Button::leftClickReleaseHandler, this));
 	}
