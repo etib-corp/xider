@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-namespace utility
+namespace utility::graphic
 {
     /**
      * @brief The Shader class represents a shader program consisting of vertex and fragment shaders.

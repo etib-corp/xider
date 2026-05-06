@@ -7,7 +7,7 @@
 
 #include <utility/graphic/shader.hpp>
 
-namespace utility
+namespace utility::graphic
 {
     Shader::Shader(const std::string &vertString, const std::string &fragString)
     {
