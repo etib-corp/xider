@@ -11,7 +11,7 @@ evan::GPUTexture::GPUTexture(const ADeviceBackend &deviceBackend,
                 const utility::graphic::Texture &texture,
                 VkCommandPool commandPool,
                 VkQueue graphicsQueue,
-                TextureType type = TextureType::Albedo
+                TextureType type
             ) : type(type)
 {
     this->createImage(deviceBackend, texture, commandPool, graphicsQueue);
