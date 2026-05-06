@@ -71,6 +71,14 @@ namespace utility
 		[[nodiscard]] std::map<uint32_t, std::shared_ptr<graphic::Model>> getModels() const;
 
 		/**
+		 * @brief Retrieves a map of loaded shaders.
+		 *
+		 * @return A map where the keys are shader IDs (uint32_t) and the values
+		 * are shared pointers to the corresponding Shader objects.
+		 */
+		[[nodiscard]] std::map<uint32_t, std::shared_ptr<graphic::Shader>> getShaders() const;
+
+		/**
 		 * @brief Loads a font resource from a specified file path.
 		 *
 		 * @param path The file path to the font resource to be loaded.

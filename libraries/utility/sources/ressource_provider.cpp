@@ -32,6 +32,11 @@ namespace utility
 		return _models;
 	}
 
+	std::map<uint32_t, std::shared_ptr<graphic::Shader>> RessourceProvider::getShaders() const
+	{
+		return _shaders;
+	}
+
 	////////////////////
 	// Public Methods //
 	////////////////////
