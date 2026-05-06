@@ -37,13 +37,11 @@
 #include <utility>
 
 #include "utility/graphic/position.hpp"
-#include "utility/graphic/pose.hpp"
 
 #include "utility/math/vector.hpp"
 
 namespace utility::graphic
 {
-
 	/**
 	 * @brief Concept to ensure the type can be used as a ray component.
 	 * @tparam Type The type to check.
@@ -300,8 +298,8 @@ namespace utility::graphic
 		/**
 		 * @brief Check for intersection with an axis-aligned rectangle
 		 * plane.
-		 * @param rectanglePose Pose of the rectangle (position and orientation)
-		 * of the center of the rectangle.
+		 * @param rectanglePose Pose-like object providing position and
+		 * orientation accessors.
 		 * @param rectangleSize Size of the rectangle (width, height).
 		 * @return True if the ray intersects the rectangle, false if it misses
 		 * or is parallel. Note that rays originating inside the rectangle are
@@ -309,37 +307,29 @@ namespace utility::graphic
 		 * lie in the plane are also considered intersecting, while those that
 		 * do not lie in the plane are considered non-intersecting.
 		 */
-		bool intersectRectangle(const Pose<RayComponentType> &rectanglePose,
+		template<typename RectanglePoseType>
+		bool intersectRectangle(const RectanglePoseType &rectanglePose,
 								const math::Vector2UI &rectangleSize) const
 		{
-			// Get rectangle center and orientation
 			const auto rectangleCenter		= rectanglePose.getPosition();
 			const auto rectangleOrientation = rectanglePose.getOrientation();
 
-			// Get the normal to the rectangle plane (forward direction)
 			math::Vector<RayComponentType, 3> planeNormal =
 				rectangleOrientation.getForward();
 
-			// Check if ray is parallel to plane
 			const RayComponentType denominator =
 				math::dot(_direction, planeNormal);
 
 			if (denominator == RayComponentType {}) {
-				// Ray is parallel to plane
-				// Check if ray lies in the plane by checking if origin is on
-				// the plane
 				math::Vector<RayComponentType, 3> toOrigin =
 					math::Vector<RayComponentType, 3>(_origin)
 					- math::Vector<RayComponentType, 3>(rectangleCenter);
 				if (math::dot(toOrigin, planeNormal) == RayComponentType {}) {
-					// Ray lies in the plane - considered intersecting
 					return true;
 				}
-				// Ray is parallel but not in plane
 				return false;
 			}
 
-			// Find intersection parameter t
 			math::Vector<RayComponentType, 3> toCenter =
 				math::Vector<RayComponentType, 3>(rectangleCenter)
 				- math::Vector<RayComponentType, 3>(_origin);
@@ -347,28 +337,20 @@ namespace utility::graphic
 				math::dot(toCenter, planeNormal) / denominator;
 
 			if (t < RayComponentType {}) {
-				// Intersection is behind ray origin
 				return false;
 			}
 
-			// Get intersection point
 			math::Vector<RayComponentType, 3> intersectionPoint = pointAt(t);
-
-			// Transform intersection point to rectangle's local coordinate
-			// system
 			math::Vector<RayComponentType, 3> localPoint = intersectionPoint
 				- math::Vector<RayComponentType, 3>(rectangleCenter);
 
-			// Get local axes (right and up)
 			math::Vector<RayComponentType, 3> right =
 				rectangleOrientation.getRight();
 			math::Vector<RayComponentType, 3> up = rectangleOrientation.getUp();
 
-			// Project intersection point onto local axes
 			RayComponentType rightCoord = math::dot(localPoint, right);
 			RayComponentType upCoord	= math::dot(localPoint, up);
 
-			// Check if within rectangle bounds
 			RayComponentType halfWidth =
 				static_cast<RayComponentType>(rectangleSize[0])
 				/ RayComponentType { 2 };
@@ -380,15 +362,8 @@ namespace utility::graphic
 					&& upCoord >= -halfHeight && upCoord <= halfHeight);
 		}
 
-		/**
-		 * @brief Type alias for single-precision ray component.
-		 */
 		using RayF = Ray<float>;
-
-		/**
-		 * @brief Type alias for double-precision ray component.
-		 */
 		using RayD = Ray<double>;
 	};
 
-}	 // namespace utility::graphic
+} // namespace utility::graphic

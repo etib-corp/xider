@@ -48,8 +48,16 @@
 #include "guillaume/event/event_handler.hpp"
 
 #include "guillaume/systems/glyph_render.hpp"
-#include "guillaume/systems/mouse_interaction.hpp"
-#include "guillaume/systems/hand_interaction.hpp"
+#include "guillaume/systems/hand_button.hpp"
+#include "guillaume/systems/hand_motion.hpp"
+#include "guillaume/systems/hand_pinch.hpp"
+#include "guillaume/systems/hand_poke.hpp"
+#include "guillaume/systems/hand_squeeze.hpp"
+#include "guillaume/systems/hand_thumb_rest.hpp"
+#include "guillaume/systems/hand_thumb_stick.hpp"
+#include "guillaume/systems/hand_trigger.hpp"
+#include "guillaume/systems/mouse_button.hpp"
+#include "guillaume/systems/mouse_motion.hpp"
 #include "guillaume/systems/keyboard_control.hpp"
 #include "guillaume/systems/measure_text.hpp"
 #include "guillaume/systems/rectangle_render.hpp"
@@ -121,11 +129,25 @@ namespace guillaume
 			_systemRegistry.registerNewSystem(
 				std::make_unique<systems::MeasureText>(_renderer));
 			_systemRegistry.registerNewSystem(
-				std::make_unique<systems::MouseInteraction>(_eventBus,
-															_renderer));
+				std::make_unique<systems::MouseMotion>(_eventBus, _renderer));
 			_systemRegistry.registerNewSystem(
-				std::make_unique<systems::HandInteraction>(_eventBus,
-														   _renderer));
+				std::make_unique<systems::MouseButton>(_eventBus, _renderer));
+			_systemRegistry.registerNewSystem(
+				std::make_unique<systems::HandMotion>(_eventBus));
+			_systemRegistry.registerNewSystem(
+				std::make_unique<systems::HandButton>(_eventBus));
+			_systemRegistry.registerNewSystem(
+				std::make_unique<systems::HandPinch>(_eventBus));
+			_systemRegistry.registerNewSystem(
+				std::make_unique<systems::HandPoke>(_eventBus));
+			_systemRegistry.registerNewSystem(
+				std::make_unique<systems::HandSqueeze>(_eventBus));
+			_systemRegistry.registerNewSystem(
+				std::make_unique<systems::HandThumbRest>(_eventBus));
+			_systemRegistry.registerNewSystem(
+				std::make_unique<systems::HandThumbStick>(_eventBus));
+			_systemRegistry.registerNewSystem(
+				std::make_unique<systems::HandTrigger>(_eventBus));
 			_systemRegistry.registerNewSystem(
 				std::make_unique<systems::TextRender>(_renderer));
 			_systemRegistry.registerNewSystem(

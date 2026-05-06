@@ -22,7 +22,7 @@ SOFTWARE.
 
 #pragma once
 
-#include <utility/math/vector.hpp>
+#include <utility/graphic/size.hpp>
 
 #include "guillaume/ecs/component.hpp"
 
@@ -32,48 +32,22 @@ namespace guillaume::components
 	/**
 	 * @brief Component representing a bounding rectangle.
 	 */
-	class Bound: public ecs::Component
+	class Bound: public ecs::Component, public utility::graphic::SizeUI
 	{
-		private:
-		std::size_t _width { 0 };	  ///< Width of the bounding rectangle
-		std::size_t _height { 0 };	  ///< Height of the bounding rectangle
-
 		public:
 		/**
 		 * @brief Default constructor for the Bound component.
 		 */
-		Bound(void) = default;
+		Bound(void)
+			: ecs::Component()
+			, utility::graphic::SizeUI()
+		{
+		}
 
 		/**
 		 * @brief Default destructor for the Bound component.
 		 */
 		~Bound(void) = default;
-
-		/**
-		 * @brief Set the width of the bounding rectangle.
-		 * @param width The new width of the bounding rectangle.
-		 * @return Reference to this Bound for chaining.
-		 */
-		Bound &setWidth(std::size_t width);
-
-		/**
-		 * @brief Get the width of the bounding rectangle.
-		 * @return The width of the bounding rectangle.
-		 */
-		std::size_t getWidth(void) const;
-
-		/**
-		 * @brief Set the height of the bounding rectangle.
-		 * @param height The new height of the bounding rectangle.
-		 * @return Reference to this Bound for chaining.
-		 */
-		Bound &setHeight(std::size_t height);
-
-		/**
-		 * @brief Get the height of the bounding rectangle.
-		 * @return The height of the bounding rectangle.
-		 */
-		std::size_t getHeight(void) const;
 	};
 
 }	 // namespace guillaume::components

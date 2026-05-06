@@ -77,13 +77,13 @@ namespace utility::event
 		return _isTouched;
 	}
 
-	HandSqueezeEvent &HandSqueezeEvent::setClicked(const bool clicked) noexcept
+	HandSqueezeEvent &HandSqueezeEvent::setButtonPressed(const bool clicked) noexcept
 	{
 		_isClicked = clicked;
 		return *this;
 	}
 
-	bool HandSqueezeEvent::isClicked(void) const noexcept
+	bool HandSqueezeEvent::isButtonPressed(void) const noexcept
 	{
 		return _isClicked;
 	}

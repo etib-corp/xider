@@ -22,9 +22,8 @@
 
 #pragma once
 
-#include <stdexcept>
-#include <tuple>
 #include <memory>
+#include <type_traits>
 
 #include <utility/event/event.hpp>
 
@@ -36,12 +35,12 @@ namespace guillaume::event
 	 * @brief Base class providing typed event subscription and last-event
 	 * storage.
 	 *
-	 * EventManager is a variadic template that manages subscriptions to
-	 * multiple event types and stores the last received event for each type.
-	 * Systems that need to respond to events can inherit from EventManager to
-	 * automatically register subscribers for specified event types.
+	 * EventManager manages one event subscription and stores the last received
+	 * event for that type. Systems that need to respond to events can inherit
+	 * from EventManager to automatically register a subscriber for a specific
+	 * event type.
 	 *
-	 * @tparam EventTypes... The event types to subscribe to. Must satisfy
+	 * @tparam EventType The event type to subscribe to. Must satisfy
 	 * utility::event::InheritFromEvent constraint.
 	 *
 	 * @note This is a header-only template class. No instantiation of
@@ -49,12 +48,16 @@ namespace guillaume::event
 	 *
 	 * @see EventSubscriber
 	 * @see EventBus
-	 * @see MouseInteraction
-	 * @see HandInteraction
+	 * @see MouseMotion
+	 * @see MouseButton
+	 * @see HandMotion
+	 * @see HandButton
+	 * @see HandPinch
+	 * @see HandPoke
 	 *
 	 * @example
 	 * @code
-	 * class MySystem : public EventManager<MouseButtonEvent, MouseMotionEvent>
+	 * class MySystem : public EventManager<MouseButtonEvent>
 	 * {
 	 *   public:
 	 *     MySystem(EventBus &eventBus) : EventManager(eventBus) { }
@@ -69,21 +72,18 @@ namespace guillaume::event
 	 * };
 	 * @endcode
 	 */
-	template<utility::event::InheritFromEvent... EventTypes> class EventManager
+	template<utility::event::InheritFromEvent EventType> class EventManager
 	{
 		private:
+
 		EventBus &_eventBus;	///< Reference to the event bus for managing
 								///< event subscriptions and dispatching
 
-		std::tuple<std::unique_ptr<EventSubscriber<EventTypes>>...>
-			_subscribers;	 ///< Typed subscribers stored as a tuple for O(1)
-							 ///< access by type
+		std::unique_ptr<EventSubscriber<EventType>> _subscriber;
 
-		std::tuple<std::unique_ptr<EventTypes>...>
-			_lastEvents;	///< Stores the
-							///< most recent event for each
-							///< type, enabling queries
-							///< without polling subscribers
+		std::unique_ptr<EventType>
+			_lastEvent;	   ///< Stores the most recent
+						   ///< event for the subscribed type
 
 		protected:
 		/**
@@ -92,29 +92,23 @@ namespace guillaume::event
 		 * This method processes only the next event in the queue for the
 		 * specified type and stores it for retrieval. If no pending events
 		 * exist, the previously stored event remains unchanged.
-		 * @tparam EventType The event type to consume and store.
 		 *
 		 * @example
 		 * @code
 		 * void update()
 		 * {
 		 *     consumeNextEvent<MouseButtonEvent>();
-		 *     auto *lastButton = getLastEvent<MouseButtonEvent>();
+		 *     auto *lastButton = getLastEvent();
 		 *     if (lastButton) {
 		 *         // Process button event...
 		 *     }
 		 * }
 		 * @endcode
 		 */
-		template<utility::event::InheritFromEvent EventType>
 		void consumeNextEvent(void)
 		{
-			auto &subscriber =
-				*std::get<std::unique_ptr<EventSubscriber<EventType>>>(
-					_subscribers);
-			if (subscriber.hasPendingEvents()) {
-				std::get<std::unique_ptr<EventType>>(_lastEvents) =
-					subscriber.getNextEvent();
+			if (_subscriber->hasPendingEvents()) {
+				_lastEvent = _subscriber->getNextEvent();
 			}
 		}
 
@@ -141,11 +135,12 @@ namespace guillaume::event
 		 * }
 		 * @endcode
 		 */
-		template<utility::event::InheritFromEvent EventType>
-		EventType *getLastEvent(void)
+		std::unique_ptr<EventType> getLastEvent(void)
 		{
-			auto &ptr = std::get<std::unique_ptr<EventType>>(_lastEvents);
-			return ptr ? ptr.get() : nullptr;
+			if (!_lastEvent) {
+				return nullptr;
+			}
+			return std::move(_lastEvent);
 		}
 
 		public:
@@ -171,8 +166,8 @@ namespace guillaume::event
 		 */
 		EventManager(EventBus &eventBus)
 			: _eventBus(eventBus)
-			, _subscribers(
-				  std::make_unique<EventSubscriber<EventTypes>>(_eventBus)...)
+			, _subscriber(
+				  std::make_unique<EventSubscriber<EventType>>(_eventBus))
 		{
 		}
 

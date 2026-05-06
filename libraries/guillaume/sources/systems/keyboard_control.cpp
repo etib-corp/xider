@@ -61,18 +61,18 @@ namespace guillaume::systems
 		auto &text			= getComponent<components::Text>(entityIdentifier);
 		std::string content = text.getContent();
 
-		auto *lastEvent = getLastEvent<utility::event::KeyboardEvent>();
-		if (!lastEvent || !lastEvent->getIsDownEvent()) {
+		auto lastKeyboardEvent = getLastEvent();
+		if (!lastKeyboardEvent || !lastKeyboardEvent->getIsDownEvent()) {
 			return;
 		}
 
-		if (lastEvent->getKeycode()
+		if (lastKeyboardEvent->getKeycode()
 			== utility::event::KeyboardEvent::KeyCode::Backspace) {
 			removeLastUtf8CodePoint(content);
 		}
 
 		text.setContent(content);
-		consumeNextEvent<utility::event::KeyboardEvent>();
+		consumeNextEvent();
 	}
 
 }	 // namespace guillaume::systems

@@ -1,0 +1,54 @@
+/*
+ Copyright (c) 2026 ETIB Corporation
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy of
+ this software and associated documentation files (the "Software"), to deal in
+ the Software without restriction, including without limitation the rights to
+ use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ of the Software, and to permit persons to whom the Software is furnished to do
+ so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+ */
+
+#pragma once
+
+#include "guillaume/ecs/system_filler.hpp"
+
+#include "guillaume/event/event_manager.hpp"
+#include "guillaume/event/event_bus.hpp"
+
+#include "guillaume/components/bound.hpp"
+#include "guillaume/components/hand_thumb_rest_interaction.hpp"
+#include "guillaume/components/transform.hpp"
+
+#include <utility/event/hand_thumb_rest_event.hpp>
+
+namespace guillaume::systems
+{
+	/**
+	 * @brief System handling hand thumb-rest interactions.
+	 */
+	class HandThumbRest:
+		public ecs::SystemFiller<components::HandThumbRestInteraction,
+								 components::Transform, components::Bound>,
+		public event::EventManager<utility::event::HandThumbRestEvent>
+	{
+		public:
+		HandThumbRest(event::EventBus &eventBus);
+		~HandThumbRest(void);
+
+		virtual void
+			update(const ecs::Entity::Identifier &entityIdentifier) override;
+	};
+
+} 	// namespace guillaume::systems

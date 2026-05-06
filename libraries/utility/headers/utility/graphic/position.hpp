@@ -65,7 +65,7 @@ namespace utility::graphic
 		 * with.
 		 */
 		explicit Position(PositionComponentType value)
-			: math::Vector<PositionComponentType, 3>(value, value, value)
+			: math::Vector<PositionComponentType, 3>({ value, value, value })
 		{
 		}
 
@@ -99,8 +99,8 @@ namespace utility::graphic
 		 */
 		Position(std::initializer_list<PositionComponentType> values)
 			: math::Vector<PositionComponentType, 3>(
-				  PositionComponentType { 0 }, PositionComponentType { 0 },
-				  PositionComponentType { 0 })
+				  { PositionComponentType { 0 }, PositionComponentType { 0 },
+					PositionComponentType { 0 } })
 		{
 			if (values.size() != 3) {
 				throw std::invalid_argument(

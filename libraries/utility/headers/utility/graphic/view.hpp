@@ -161,7 +161,7 @@ namespace utility::graphic
 			const ViewComponentType s = q[3];
 
 			return u * (ViewComponentType { 2 } * math::dot(u, vector))
-				+ vector * (s * s - math::dot(u, u))
+				+ vector.operator*(s * s - math::dot(u, u))
 				+ math::cross(u, vector) * (ViewComponentType { 2 } * s);
 		}
 
@@ -334,10 +334,10 @@ namespace utility::graphic
 		 */
 		math::Vector<ViewComponentType, 3> getForward(void) const
 		{
-			return math::normalize(rotateVectorByRotation(
-				math::Vector<ViewComponentType, 3>(ViewComponentType {},
-												   ViewComponentType {},
-												   ViewComponentType { -1 })));
+			return math::normalize(
+				rotateVectorByRotation(math::Vector<ViewComponentType, 3> {
+					ViewComponentType {}, ViewComponentType {},
+					ViewComponentType { -1 } }));
 		}
 
 		/**
@@ -358,9 +358,9 @@ namespace utility::graphic
 		math::Vector<ViewComponentType, 3> getUp(void) const
 		{
 			return math::normalize(rotateVectorByRotation(
-				math::Vector<ViewComponentType, 3>(ViewComponentType {},
-												   ViewComponentType { 1 },
-												   ViewComponentType {})));
+				math::Vector<ViewComponentType, 3> { ViewComponentType {},
+													 ViewComponentType { 1 },
+													 ViewComponentType {} }));
 		}
 
 		/**
@@ -428,9 +428,9 @@ namespace utility::graphic
 		math::Vector<ViewComponentType, 3> right(void) const
 		{
 			return math::normalize(rotateVectorByRotation(
-				math::Vector<ViewComponentType, 3>(ViewComponentType { 1 },
-												   ViewComponentType {},
-												   ViewComponentType {})));
+				math::Vector<ViewComponentType, 3> { ViewComponentType { 1 },
+													 ViewComponentType {},
+													 ViewComponentType {} }));
 		}
 
 		/**
@@ -464,9 +464,9 @@ namespace utility::graphic
 		 */
 		void lookAt(const math::Vector<ViewComponentType, 3> &target,
 					const math::Vector<ViewComponentType, 3> &worldUp =
-						math::Vector<ViewComponentType, 3>(
+						math::Vector<ViewComponentType, 3> {
 							ViewComponentType {}, ViewComponentType { 1 },
-							ViewComponentType {}))
+							ViewComponentType {} })
 		{
 			const auto targetVector = target - _pose.getPosition();
 			if (math::dot(targetVector, targetVector) == ViewComponentType {}) {
@@ -502,11 +502,10 @@ namespace utility::graphic
 										  math::normalize(rayDirection));
 		}
 
-		Ray<ViewComponentType> viewPointToRay(const math::Vector2I &point) const
+		Ray<ViewComponentType>
+			viewPointToRay(const math::Vector2UI &point) const
 		{
-			if (point.x < 0 || point.x >= static_cast<int>(_viewportSize.x)
-				|| point.y < 0
-				|| point.y >= static_cast<int>(_viewportSize.y)) {
+			if (point.x >= _viewportSize.x || point.y >= _viewportSize.y) {
 				throw std::out_of_range("Point is outside of viewport bounds");
 			}
 

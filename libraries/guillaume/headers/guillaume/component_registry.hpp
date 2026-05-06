@@ -28,8 +28,16 @@
 #include "guillaume/components/bound.hpp"
 #include "guillaume/components/color.hpp"
 #include "guillaume/components/focus.hpp"
-#include "guillaume/components/mouse_interaction.hpp"
-#include "guillaume/components/hand_interaction.hpp"
+#include "guillaume/components/hand_button_interaction.hpp"
+#include "guillaume/components/hand_hover_interaction.hpp"
+#include "guillaume/components/hand_squeeze_interaction.hpp"
+#include "guillaume/components/hand_pinch_interaction.hpp"
+#include "guillaume/components/hand_poke_interaction.hpp"
+#include "guillaume/components/hand_thumb_rest_interaction.hpp"
+#include "guillaume/components/hand_thumb_stick_interaction.hpp"
+#include "guillaume/components/hand_trigger_interaction.hpp"
+#include "guillaume/components/mouse_button_interaction.hpp"
+#include "guillaume/components/mouse_hover_interaction.hpp"
 #include "guillaume/components/text.hpp"
 #include "guillaume/components/transform.hpp"
 
@@ -42,9 +50,17 @@ namespace guillaume
 	 */
 	class ComponentRegistry:
 		public ecs::ComponentRegistryFiller<
-			components::Bound, components::Focus, components::MouseInteraction,
-			components::HandInteraction, components::Text,
-			components::Transform, components::Color, components::Borders>
+			components::Bound, components::Focus,
+			components::MouseHoverInteraction,
+			components::MouseButtonInteraction,
+			components::HandHoverInteraction, components::HandButtonInteraction,
+			components::HandPinchInteraction, components::HandPokeInteraction,
+			components::HandSqueezeInteraction,
+			components::HandThumbRestInteraction,
+			components::HandThumbStickInteraction,
+			components::HandTriggerInteraction,
+			components::Text, components::Transform, components::Color,
+			components::Borders>
 	{
 		public:
 		/**
@@ -53,8 +69,17 @@ namespace guillaume
 		ComponentRegistry(void)
 			: ecs::ComponentRegistryFiller<
 				  components::Bound, components::Focus,
-				  components::MouseInteraction, components::HandInteraction,
-				  components::Text, components::Transform, components::Color,
+				  components::MouseHoverInteraction,
+				  components::MouseButtonInteraction,
+				  components::HandHoverInteraction,
+				  components::HandButtonInteraction,
+				  components::HandPinchInteraction,
+				  components::HandPokeInteraction,
+				  components::HandSqueezeInteraction,
+				  components::HandThumbRestInteraction,
+				  components::HandThumbStickInteraction,
+				  components::HandTriggerInteraction, components::Text,
+				  components::Transform, components::Color,
 				  components::Borders>()
 		{
 		}

@@ -87,13 +87,13 @@ namespace utility::event
 	}
 
 	HandThumbStickEvent &
-		HandThumbStickEvent::setClicked(const bool clicked) noexcept
+		HandThumbStickEvent::setButtonPressed(const bool clicked) noexcept
 	{
 		_isClicked = clicked;
 		return *this;
 	}
 
-	bool HandThumbStickEvent::isClicked(void) const noexcept
+	bool HandThumbStickEvent::isButtonPressed(void) const noexcept
 	{
 		return _isClicked;
 	}

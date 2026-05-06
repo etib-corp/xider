@@ -376,6 +376,39 @@ namespace utility::math
 		}
 	};
 
+	template<CanBeVectorComponent VectorComponentType,
+			 std::size_t VectorDimension>
+	VectorComponentType
+		dot(const Vector<VectorComponentType, VectorDimension> &lhs,
+			const Vector<VectorComponentType, VectorDimension> &rhs)
+	{
+		return glm::dot(
+			static_cast<const glm::vec<VectorDimension, VectorComponentType> &>(
+				lhs),
+			static_cast<const glm::vec<VectorDimension, VectorComponentType> &>(
+				rhs));
+	}
+
+	template<CanBeVectorComponent VectorComponentType>
+	Vector<VectorComponentType, 3>
+		cross(const Vector<VectorComponentType, 3> &lhs,
+			  const Vector<VectorComponentType, 3> &rhs)
+	{
+		return Vector<VectorComponentType, 3>(glm::cross(
+			static_cast<const glm::vec<3, VectorComponentType> &>(lhs),
+			static_cast<const glm::vec<3, VectorComponentType> &>(rhs)));
+	}
+
+	template<CanBeVectorComponent VectorComponentType,
+			 std::size_t VectorDimension>
+	Vector<VectorComponentType, VectorDimension>
+		normalize(const Vector<VectorComponentType, VectorDimension> &vector)
+	{
+		return Vector<VectorComponentType, VectorDimension>(glm::normalize(
+			static_cast<const glm::vec<VectorDimension, VectorComponentType> &>(
+				vector)));
+	}
+
 	/**
 	 * @brief Type alias for 2D single-precision vector.
 	 */
