@@ -2,12 +2,12 @@
 ** ETIB PROJECT, 2025
 ** evan
 ** File description:
-** Shader
+** GPUShader
 */
 
-#include "Shader.hpp"
+#include "GPUShader.hpp"
 
-evan::Shader::Shader(const std::vector<uint32_t> &vertexCode,
+evan::GPUShader::GPUShader(const std::vector<uint32_t> &vertexCode,
 					 const std::vector<uint32_t> &fragmentCode, VkDevice device)
 {
 	VkShaderModuleCreateInfo createInfo {};
@@ -37,7 +37,7 @@ evan::Shader::Shader(const std::vector<uint32_t> &vertexCode,
 	}
 }
 
-evan::Shader::~Shader()
+evan::GPUShader::~GPUShader()
 {
 }
 
@@ -45,7 +45,7 @@ evan::Shader::~Shader()
 // Public Methods //
 ////////////////////
 
-void evan::Shader::destroy()
+void evan::GPUShader::destroy()
 {
 	vkDestroyShaderModule(_logicalDevice, _vertexShaderModule, nullptr);
 	vkDestroyShaderModule(_logicalDevice, _fragmentShaderModule, nullptr);
@@ -55,12 +55,12 @@ void evan::Shader::destroy()
 // Getters //
 /////////////
 
-VkShaderModule evan::Shader::getVertexShaderModule() const
+VkShaderModule evan::GPUShader::getVertexShaderModule() const
 {
 	return _vertexShaderModule;
 }
 
-VkShaderModule evan::Shader::getFragmentShaderModule() const
+VkShaderModule evan::GPUShader::getFragmentShaderModule() const
 {
 	return _fragmentShaderModule;
 }
