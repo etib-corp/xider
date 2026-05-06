@@ -424,13 +424,18 @@ namespace utility
 			}
 		}
 
-		auto shaderAsset = systemInterface.add(path);
+		auto vertex = systemInterface.add(vertexPath);
+		auto fragment = systemInterface.add(fragmentPath);
 
-		if (!shaderAsset) {
-			throw std::runtime_error("Failed to load shader asset: " + path);
+		if (!vertex) {
+			throw std::runtime_error("Failed to load shader assets: " + vertexPath);
 		}
 
-		auto shader = std::make_shared<graphic::Shader>(shaderAsset);
+		if (!fragment) {
+			throw std::runtime_error("Failed to load shader assets: " + fragmentPath);
+		}
+
+		auto shader = std::make_shared<graphic::Shader>(vertex->content(), fragment->content());
 		auto id = getNextID();
 
 		_shaders[id] = shader;
@@ -450,7 +455,7 @@ namespace utility
 			}
 		}
 
-		auto shader = std::make_shared<graphic::Shader>(vertexAsset, fragmentAsset);
+		auto shader = std::make_shared<graphic::Shader>(vertexAsset->content(), fragmentAsset->content());
 		auto id = getNextID();
 
 		_shaders[id] = shader;
@@ -465,7 +470,9 @@ namespace utility
 
 	const std::string &RessourceProvider::buildShaderPath(const std::string &vertexPath, const std::string &fragmentPath) const
 	{
-		return vertexPath + "_with_" + fragmentPath;
+		auto path = new std::string(vertexPath + "_with_" + fragmentPath);
+
+		return *path;
 	}
 
 	uint32_t RessourceProvider::getNextID()
