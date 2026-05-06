@@ -17,17 +17,17 @@ namespace utility
 	// Getters //
 	/////////////
 
-	std::map<std::string, std::shared_ptr<graphic::Material>> RessourceProvider::getMaterials() const
+	std::map<uint32_t, std::shared_ptr<graphic::Material>> RessourceProvider::getMaterials() const
 	{
 		return _materials;
 	}
 
-	std::map<std::string, std::shared_ptr<graphic::Texture>> RessourceProvider::getTextures() const
+	std::map<uint32_t, std::shared_ptr<graphic::Texture>> RessourceProvider::getTextures() const
 	{
 		return _textures;
 	}
 
-	std::map<std::string, std::shared_ptr<graphic::Model>> RessourceProvider::getModels() const
+	std::map<uint32_t, std::shared_ptr<graphic::Model>> RessourceProvider::getModels() const
 	{
 		return _models;
 	}
@@ -40,10 +40,12 @@ namespace utility
 		RessourceProvider::loadFont(const std::string &path,
 								   SystemIO &systemInterface)
 	{
-		auto it = _fonts.find(path);
+		auto it = _elementsIDs.find(path);
 
-		if (it != _fonts.end()) {
-			return it->second;
+		if (it != _elementsIDs.end()) {
+			if (_fonts.find(it->second) != _fonts.end()) {
+				return _fonts[it->second];
+			}
 		}
 
 		auto fontAsset = systemInterface.add(path);
@@ -60,42 +62,56 @@ namespace utility
 	std::shared_ptr<graphic::Font> RessourceProvider::loadFontFromAsset(
 		std::shared_ptr<utility::File> fontAsset)
 	{
-		auto it = _fonts.find(fontAsset->path());
+		auto it = _elementsIDs.find(fontAsset->path());
 
-		if (it != _fonts.end()) {
-			return it->second;
+		if (it != _elementsIDs.end()) {
+			if (_fonts.find(it->second) != _fonts.end()) {
+				return _fonts[it->second];
+			}
 		}
 
 		auto font = std::make_shared<graphic::Font>(std::vector { *fontAsset });
 
 		font->onNewTextureCreated =
 			[this, fontAsset](std::string name,
-							  std::shared_ptr<graphic::Texture> atlas) {
-				_textures[name] = atlas;
+							   std::shared_ptr<graphic::Texture> atlas) {
+				auto textureID = getNextID();
 
-				if (_materials.find(fontAsset->path()) != _materials.end()) {
-					auto textMaterial =
-						std::dynamic_pointer_cast<graphic::TextMaterial>(
-							_materials[fontAsset->path()]);
+				_textures[textureID] = atlas;
+				_elementsIDs[name] = textureID;
 
-					if (textMaterial) {
-						textMaterial->addAtlas(name, atlas);
-					} else {
-						throw std::runtime_error(
-							"Miss configured material for font: "
-							+ fontAsset->path() + " is not a TextMaterial");
+				auto familyIt = _elementsIDs.find(fontAsset->path());
+
+				if (familyIt != _elementsIDs.end()) {
+					auto materialIt = _materials.find(familyIt->second);
+
+					if (materialIt != _materials.end()) {
+						auto textMaterial =
+							std::dynamic_pointer_cast<graphic::TextMaterial>(
+								materialIt->second);
+
+						if (textMaterial) {
+							textMaterial->addAtlas(name, atlas);
+						} else {
+							throw std::runtime_error(
+								"Miss configured material for font: " + name
+								+ " is not a TextMaterial");
+						}
 					}
 				} else {
 					auto textMaterial =
 						std::make_shared<graphic::TextMaterial>();
 
 					textMaterial->addAtlas(name, atlas);
-					_materials[fontAsset->path()] = textMaterial;
+
+					_materials[familyIt->second] = textMaterial;
 				}
 			};
 
-		_fonts[fontAsset->path()] = font;
-		return font;
+		auto id = getNextID();
+
+		_fonts[id] = font;
+		return _fonts[id];
 	}
 
 	std::shared_ptr<graphic::Font> RessourceProvider::loadFontFamilyFromAssets(
@@ -124,10 +140,12 @@ namespace utility
 			assets.push_back(*asset);
 		}
 
-		auto it = _fonts.find(familyName);
+		auto it = _elementsIDs.find(familyName);
 
-		if (it != _fonts.end()) {
-			return it->second;
+		if (it != _elementsIDs.end()) {
+			if (_fonts.find(it->second) != _fonts.end()) {
+				return _fonts[it->second];
+			}
 		}
 
 		auto font = std::make_shared<graphic::Font>(assets);
@@ -135,31 +153,43 @@ namespace utility
 		font->onNewTextureCreated =
 			[this, familyName](std::string name,
 							   std::shared_ptr<graphic::Texture> atlas) {
-				_textures[name] = atlas;
+				auto textureID = getNextID();
 
-				if (_materials.find(familyName) != _materials.end()) {
-					auto textMaterial =
-						std::dynamic_pointer_cast<graphic::TextMaterial>(
-							_materials[familyName]);
+				_textures[textureID] = atlas;
+				_elementsIDs[name] = textureID;
 
-					if (textMaterial) {
-						textMaterial->addAtlas(name, atlas);
-					} else {
-						throw std::runtime_error(
-							"Miss configured material for font: " + name
-							+ " is not a TextMaterial");
+				auto familyIt = _elementsIDs.find(familyName);
+
+				if (familyIt != _elementsIDs.end()) {
+					auto materialIt = _materials.find(familyIt->second);
+
+					if (materialIt != _materials.end()) {
+						auto textMaterial =
+							std::dynamic_pointer_cast<graphic::TextMaterial>(
+								materialIt->second);
+
+						if (textMaterial) {
+							textMaterial->addAtlas(name, atlas);
+						} else {
+							throw std::runtime_error(
+								"Miss configured material for font: " + name
+								+ " is not a TextMaterial");
+						}
 					}
 				} else {
 					auto textMaterial =
 						std::make_shared<graphic::TextMaterial>();
 
 					textMaterial->addAtlas(name, atlas);
-					_materials[familyName] = textMaterial;
+
+					_materials[familyIt->second] = textMaterial;
 				}
 			};
 
-		_fonts[familyName] = font;
-		return _fonts[familyName];
+		auto id = getNextID();
+
+		_fonts[id] = font;
+		return _fonts[id];
 	}
 
 	std::shared_ptr<graphic::Material>
@@ -167,10 +197,12 @@ namespace utility
 									   ShaderType shaderType,
 									   SystemIO &systemInterface)
 	{
-		auto it = _materials.find(path);
+		auto it = _elementsIDs.find(path);
 
-		if (it != _materials.end()) {
-			return it->second;
+		if (it != _elementsIDs.end()) {
+			if (_materials.find(it->second) != _materials.end()) {
+				return _materials[it->second];
+			}
 		}
 
 		auto materialAsset = systemInterface.add(path);
@@ -188,10 +220,12 @@ namespace utility
 		ShaderType shaderType,
 		std::shared_ptr<utility::File> materialAsset)
 	{
-		auto it = _materials.find(materialAsset->path());
+		auto it = _elementsIDs.find(materialAsset->path());
 
-		if (it != _materials.end()) {
-			return it->second;
+		if (it != _elementsIDs.end()) {
+			if (_materials.find(it->second) != _materials.end()) {
+				return _materials[it->second];
+			}
 		}
 
 		std::string shaderName = (shaderType == ShaderType::TEXT_SHADER)
@@ -200,22 +234,26 @@ namespace utility
 		std::vector<File> textureAssets = { *materialAsset };
 		auto material = std::make_shared<graphic::Material>(*this, shaderName,
 															textureAssets);
+		auto id = getNextID();
 
 		// TODO: we should discuss about the format of the material file to be
 		// able to load the textures from the material file and store them in
 		// the material object
-		_materials[materialAsset->path()] = material;
-		return _materials[materialAsset->path()];
+		_materials[id] = material;
+
+		return _materials[id];
 	}
 
 	std::shared_ptr<graphic::Texture>
 		RessourceProvider::loadTexture(const std::string &path,
 									  SystemIO &systemInterface)
 	{
-		auto it = _textures.find(path);
+		auto it = _elementsIDs.find(path);
 
-		if (it != _textures.end()) {
-			return it->second;
+		if (it != _elementsIDs.end()) {
+			if (_textures.find(it->second) != _textures.end()) {
+				return _textures[it->second];
+			}
 		}
 
 		auto textureAsset = systemInterface.add(path);
@@ -232,10 +270,12 @@ namespace utility
 	std::shared_ptr<graphic::Texture> RessourceProvider::loadTextureFromAsset(
 		std::shared_ptr<utility::File> textureAsset)
 	{
-		auto it = _textures.find(textureAsset->path());
+		auto it = _elementsIDs.find(textureAsset->path());
 
-		if (it != _textures.end()) {
-			return it->second;
+		if (it != _elementsIDs.end()) {
+			if (_textures.find(it->second) != _textures.end()) {
+				return _textures[it->second];
+			}
 		}
 
 		int texWidth	= 0;
@@ -252,21 +292,25 @@ namespace utility
 									 + textureAsset->path());
 		}
 
-		_textures[textureAsset->path()] =
+		auto id = getNextID();
+
+		_textures[id] =
 			std::make_shared<graphic::Texture>(texWidth, texHeight);
 		std::copy(pixels, pixels + (texWidth * texHeight * 4),
-				  _textures[textureAsset->path()]->_pixels.data());
+				  _textures[id]->_pixels.data());
 
-		return _textures[textureAsset->path()];
+		return _textures[id];
 	}
 
 	std::shared_ptr<graphic::Model> RessourceProvider::loadModel(const std::string &path,
 																SystemIO &systemInterface)
 	{
-		auto it = _models.find(path);
+		auto it = _elementsIDs.find(path);
 
-		if (it != _models.end()) {
-			return it->second;
+		if (it != _elementsIDs.end()) {
+			if (_models.find(it->second) != _models.end()) {
+				return _models[it->second];
+			}
 		}
 
 		auto modelAsset = systemInterface.add(path);
@@ -275,47 +319,59 @@ namespace utility
 			throw std::runtime_error("Failed to load model asset: " + path);
 		}
 
-		_models[path] = loadModelFromAsset(modelAsset);
+		auto id = getNextID();
 
-		return _models[path];
+		_models[id] = loadModelFromAsset(modelAsset);
+
+		return _models[id];
 	}
 
 	std::shared_ptr<graphic::Model> RessourceProvider::loadModelFromAsset(
 		std::shared_ptr<utility::File> modelAsset)
 	{
-		auto it = _models.find(modelAsset->path());
+		auto it = _elementsIDs.find(modelAsset->path());
 
-		if (it != _models.end()) {
-			return it->second;
+		if (it != _elementsIDs.end()) {
+			if (_models.find(it->second) != _models.end()) {
+				return _models[it->second];
+			}
 		}
 
 		auto model = std::make_shared<graphic::Model>(modelAsset);
+		auto id = getNextID();
 
-		_models[modelAsset->path()] = model;
-		return model;
+		_models[id] = model;
+
+		return _models[id];
 	}
 
 	std::shared_ptr<graphic::Model> RessourceProvider::loadModelFromAsset(
 		std::shared_ptr<utility::File> modelAsset, graphic::Model::ModelType type)
 	{
-		auto it = _models.find(modelAsset->path());
+		auto it = _elementsIDs.find(modelAsset->path());
 
-		if (it != _models.end()) {
-			return it->second;
+		if (it != _elementsIDs.end()) {
+			if (_models.find(it->second) != _models.end()) {
+				return _models[it->second];
+			}
 		}
 
 		auto model = std::make_shared<graphic::Model>(modelAsset, type);
+		auto id = getNextID();
 
-		_models[modelAsset->path()] = model;
-		return model;
+		_models[id] = model;
+
+		return _models[id];
 	}
 
 	std::shared_ptr<graphic::Model> RessourceProvider::loadObj(const std::string &path, SystemIO &systemInterface)
 	{
-		auto it = _models.find(path);
+		auto it = _elementsIDs.find(path);
 
-		if (it != _models.end()) {
-			return it->second;
+		if (it != _elementsIDs.end()) {
+			if (_models.find(it->second) != _models.end()) {
+				return _models[it->second];
+			}
 		}
 
 		auto modelAsset = systemInterface.add(path);
@@ -326,24 +382,39 @@ namespace utility
 
 		auto model = std::make_shared<graphic::Model>(modelAsset,
 													   graphic::Model::ModelType::OBJ);
+		auto id = getNextID();
 
-		_models[path] = model;
-		return model;
+		_models[id] = model;
+
+		return _models[id];
 	}
 
 	std::shared_ptr<graphic::Model> RessourceProvider::loadObjFromAsset(std::shared_ptr<utility::File> modelAsset)
 	{
-		auto it = _models.find(modelAsset->path());
+		auto it = _elementsIDs.find(modelAsset->path());
 
-		if (it != _models.end()) {
-			return it->second;
+		if (it != _elementsIDs.end()) {
+			if (_models.find(it->second) != _models.end()) {
+				return _models[it->second];
+			}
 		}
 
 		auto model = std::make_shared<graphic::Model>(modelAsset,
 													   graphic::Model::ModelType::OBJ);
+		auto id = getNextID();
 
-		_models[modelAsset->path()] = model;
-		return model;
+		_models[id] = model;
+
+		return _models[id];
+	}
+
+	///////////////////////
+	// Protected Methods //
+	///////////////////////
+
+	uint32_t RessourceProvider::getNextID()
+	{
+		return _currentID++;
 	}
 
 }	 // namespace utility

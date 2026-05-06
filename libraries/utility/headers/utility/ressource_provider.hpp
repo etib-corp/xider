@@ -48,26 +48,26 @@ namespace utility
 		/**
 		 * @brief Retrieves a map of loaded materials.
 		 *
-		 * @return A map where the keys are material names (strings) and the values
+		 * @return A map where the keys are material IDs (uint32_t) and the values
 		 * are shared pointers to the corresponding Material objects.
 		 */
-		[[nodiscard]] std::map<std::string, std::shared_ptr<graphic::Material>> getMaterials() const;
+		[[nodiscard]] std::map<uint32_t, std::shared_ptr<graphic::Material>> getMaterials() const;
 
 		/**
 		 * @brief Retrieves a map of loaded textures.
 		 *
-		 * @return A map where the keys are texture names (strings) and the values
+		 * @return A map where the keys are texture IDs (uint32_t) and the values
 		 * are shared pointers to the corresponding Texture objects.
 		 */
-		[[nodiscard]] std::map<std::string, std::shared_ptr<graphic::Texture>> getTextures() const;
+		[[nodiscard]] std::map<uint32_t, std::shared_ptr<graphic::Texture>> getTextures() const;
 
 		/**
 		 * @brief Retrieves a map of loaded models.
 		 *
-		 * @return A map where the keys are model names (strings) and the values
+		 * @return A map where the keys are model IDs (uint32_t) and the values
 		 * are shared pointers to the corresponding Model objects.
 		 */
-		[[nodiscard]] std::map<std::string, std::shared_ptr<graphic::Model>> getModels() const;
+		[[nodiscard]] std::map<uint32_t, std::shared_ptr<graphic::Model>> getModels() const;
 
 		/**
 		 * @brief Loads a font resource from a specified file path.
@@ -221,24 +221,47 @@ namespace utility
 
 		protected:
 		/**
+		 * @brief Retrieves the next unique ID for a resource.
+		 *
+		 * This method increments the internal `nextID` counter and returns the next unique ID for a resource.
+		 * It is used internally to assign unique IDs to loaded resources such as fonts, materials,
+		 * textures, and models. The returned ID can be used as a key in the internal maps to store and retrieve resources efficiently.
+		 */
+		uint32_t getNextID();
+
+		/**
+		 * @brief Internal counter for generating unique IDs for resources
+		 *
+		 * @note Do not modify this variable directly.
+		 * Use the getNextID() method to retrieve the next unique ID for a resource.
+		 */
+		uint32_t _currentID = 0;
+
+		/**
 		 * @brief Internal maps to store loaded fonts for efficient retrieval.
 		 */
-		std::map<std::string, std::shared_ptr<graphic::Font>> _fonts;
+		std::map<uint32_t, std::shared_ptr<graphic::Font>> _fonts;
 
 		/**
 		 * @brief Internal map to store loaded materials for efficient
 		 * retrieval.
 		 */
-		std::map<std::string, std::shared_ptr<graphic::Material>> _materials;
+		std::map<uint32_t, std::shared_ptr<graphic::Material>> _materials;
 
 		/**
 		 * @brief Internal map to store loaded textures for efficient retrieval.
 		 */
-		std::map<std::string, std::shared_ptr<graphic::Texture>> _textures;
+		std::map<uint32_t, std::shared_ptr<graphic::Texture>> _textures;
 
 		/**
 		 * @brief Internal map to store loaded models for efficient retrieval.
 		 */
-		std::map<std::string, std::shared_ptr<graphic::Model>> _models;
+		std::map<uint32_t, std::shared_ptr<graphic::Model>> _models;
+
+		/**
+		 * @brief Internal map to store resource IDs for efficient lookup based on file paths.
+		 */
+		std::unordered_map<std::string, uint32_t> _elementsIDs;
+
 	};
 }	 // namespace utility
