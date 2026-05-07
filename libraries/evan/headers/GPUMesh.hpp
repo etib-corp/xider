@@ -163,13 +163,13 @@ namespace evan
 		 *
 		 * @param deviceContext A reference to the DeviceContext instance used
 		 * for Vulkan device management and resource creation.
-		 * @param vertices A vector of Vertex structures containing the vertex
-		 * data to be uploaded to the GPU for the vertex buffer.
+		 * @param indices A vector of uint32_t values containing the index data
+		 * for the index buffer.
 		 *
 		 * @note The method assumes that the DeviceContext is properly
 		 * initialized and can be used to create GPU resources. It also assumes
-		 * that the vertex data is provided in a specific format defined by the
-		 * Vertex structure and that the Vulkan device associated with the
+		 * that the index data is provided in a specific format and that the
+		 * Vulkan device associated with the
 		 * DeviceContext can be used for resource management.
 		 */
 		void createIndexBuffer(const DeviceContext &deviceContext,
