@@ -91,8 +91,6 @@ namespace evan
 		 * This structure encapsulates all necessary Vulkan objects and
 		 * parameters needed to perform a buffer-to-image copy operation.
 		 *
-		 * @note TODO: Remove useless properties (such as the logical device
-		 * which is already a member of the class).
 		 */
 		struct CopyBufferToImageProperties {
 			/*
@@ -133,8 +131,6 @@ namespace evan
 		 * pool, queue, image, format, old and new layouts, and the number of
 		 * mipmap levels.
 		 *
-		 * @note TODO: Remove useless properties (such as the logical device
-		 * which is already a member of the class).
 		 */
 		struct TransitionImageLayoutProperties {
 			/*
@@ -179,8 +175,6 @@ namespace evan
 		 * includes device handles, image dimensions, format, usage flags, and
 		 * references to the resulting image and memory objects.
 		 *
-		 * @note TODO: Remove useless properties (such as the logical device
-		 * which is already a member of the class).
 		 */
 		struct CreateImageProperties {
 			/*
@@ -314,6 +308,9 @@ namespace evan
 		 * graphics and presentation queue families, if they are found. If the
 		 * required queue families are not found, the corresponding optional
 		 * values in the QueueFamilyIndices structure will be empty.
+		 *
+		 * @return evan::QueueFamilyIndices A structure containing the indices of
+		 * the graphics and presentation queue families for the Vulkan physical device.
 		 */
 		virtual evan::QueueFamilyIndices findQueueFamilies() = 0;
 
@@ -381,8 +378,9 @@ namespace evan
 		 * buffer and allocate the necessary memory for it, ensuring that it is
 		 * ready for use in Vulkan operations.
 		 *
-		 * @param properties A structure containing all necessary parameters for
-		 * buffer creation and memory allocation.
+		 * @param properties A structure containing all necessary parameters for buffer
+		 * creation and memory allocation, including device handles, buffer size, usage flags,
+		 * memory properties, and references to the resulting buffer and memory objects.
 		 *
 		 * @throws std::runtime_error If buffer creation or memory allocation
 		 * fails, an exception will be thrown with details about the failure.
@@ -398,8 +396,9 @@ namespace evan
 		 * for the layout transition and performs the operation on the specified
 		 * image.
 		 *
-		 * @param properties A structure containing all necessary parameters for
-		 * the image layout transition.
+		 * @param properties A structure containing all necessary parameters for the image layout
+		 * transition, including device, command pool, queue, image, format, old and new layouts,
+		 * and the number of mipmap levels.
 		 *
 		 * @throws std::runtime_error If the layout transition fails, an
 		 * exception will be thrown with details about the failure.
@@ -463,7 +462,9 @@ namespace evan
 		 * it, ensuring that it is ready for use in Vulkan operations.
 		 *
 		 * @param properties A structure containing all necessary parameters for
-		 * image creation and memory allocation.
+		 * image creation and memory allocation, including device handles, image
+		 * dimensions, format, usage flags, and references to the resulting image
+		 * and memory objects.
 		 *
 		 * @throws std::runtime_error If image creation or memory allocation
 		 * fails, an exception will be thrown with details about the failure.
@@ -482,7 +483,9 @@ namespace evan
 		 * the image.
 		 *
 		 * @param properties A structure containing all necessary parameters for
-		 * copying data from a buffer to an image.
+		 * copying data from a buffer to an image, including device handles,
+		 * command pool, graphics queue, source buffer, destination image,
+		 * and image dimensions.
 		 *
 		 * @throws std::runtime_error If the copy operation fails, an exception
 		 * will be thrown with details about the failure.
@@ -502,9 +505,11 @@ namespace evan
 		 * correctly from the source buffer to the destination buffer.
 		 *
 		 * @param properties A structure containing all necessary parameters for
-		 * copying data from one buffer to another.
+		 * copying data from a buffer to another buffer, including device handles,
+		 * command pool, graphics queue, source buffer, destination buffer,
+		 * and the size of the data to copy.
 		 *
-		 * @throws std::runtime_error If the copy operation fails, an exception
+ 		 * @throws std::runtime_error If the copy operation fails, an exception
 		 * will be thrown with details about the failure.
 		 */
 		void copyBuffer(const CopyBufferProperties &properties) const;
@@ -522,8 +527,6 @@ namespace evan
 		 * @param aspectFlags Specifies which aspect(s) of the image are
 		 * included in the view (e.g., VK_IMAGE_ASPECT_COLOR_BIT for color
 		 * images).
-		 * @param logicalDevice The Vulkan logical device used to create the
-		 * image view.
 		 *
 		 * @return A VkImageView handle representing the created image view.
 		 *
