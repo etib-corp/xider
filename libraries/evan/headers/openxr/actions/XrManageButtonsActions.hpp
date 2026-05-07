@@ -20,14 +20,16 @@ namespace evan
 	class XrButtonAction: public AXrAction
 	{
 		public:
-		/** @brief Default constructor for the XrButtonAAction class.
+		/**
+		 * @brief Constructs an XrButtonAction instance for a specific button type.
 		 *
+		 * @param buttonType The type of button this action represents (e.g., A, B, X, Y, Menu, System).
 		 */
 		XrButtonAction(utility::event::HandButtonEvent::Button buttonType =
 						   utility::event::HandButtonEvent::Button::Unknown);
 
-		/** @brief Destructor for the XrButtonAAction class.
-		 *
+		/**
+		 * @brief Destructor for the XrButtonAAction class.
 		 */
 		~XrButtonAction() = default;
 
