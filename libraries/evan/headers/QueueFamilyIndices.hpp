@@ -20,18 +20,18 @@ namespace evan
 	 */
 	struct QueueFamilyIndices {
 		/**
-		 * An optional value representing the index of the queue family
+		 * @brief An optional value representing the index of the queue family
 		 * that supports graphics operations.
 		 */
 		std::optional<uint32_t> graphicsFamily;
 
 		/**
-		 * An optional value representing the index of the queue family
+		 * @brief An optional value representing the index of the queue family
 		 * that supports presentation operations.
 		 */
 		std::optional<uint32_t> presentFamily;
 
-		/*
+		/**
 		 * @brief isComplete
 		 *
 		 * A method to check if both graphicsFamily and presentFamily
