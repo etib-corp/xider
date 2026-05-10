@@ -78,6 +78,9 @@ namespace evan
 		/**
 		 * @brief Get platform-specific instance creation information.
 		 *
+		 * @param deviceContext The device context to use for creating
+		 * the swapchain context.
+		 *
 		 * @return A pointer to an XrBaseInStructure containing instance
 		 * creation information, or nullptr if not applicable.
 		 *
