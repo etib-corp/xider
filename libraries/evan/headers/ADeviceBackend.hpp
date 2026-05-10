@@ -55,30 +55,30 @@ namespace evan
 		 * which is already a member of the class).
 		 */
 		struct CopyBufferProperties {
-			/*
+			/**
 			 * @brief The Vulkan logical device used for command buffer
 			 * operations.
 			 */
 			VkDevice _logicalDevice;
-			/*
+			/**
 			 * @brief The Vulkan command pool used to allocate command buffers
 			 * for the copy operation.
 			 */
 			VkCommandPool _commandPool;
-			/*
+			/**
 			 * @brief The Vulkan graphics queue used to submit the command
 			 * buffer for execution.
 			 */
 			VkQueue _graphicsQueue;
-			/*
+			/**
 			 * @brief The Vulkan buffer from which data will be copied.
 			 */
 			VkBuffer _srcBuffer;
-			/*
+			/**
 			 * @brief The Vulkan buffer to which data will be copied.
 			 */
 			VkBuffer _dstBuffer;
-			/*
+			/**
 			 * @brief The size of the data to copy in bytes.
 			 */
 			VkDeviceSize _size;
@@ -93,30 +93,30 @@ namespace evan
 		 *
 		 */
 		struct CopyBufferToImageProperties {
-			/*
+			/**
 			 * @brief The Vulkan command pool used to allocate command buffers
 			 * for the copy operation.
 			 */
 			VkCommandPool _commandPool;
-			/*
+			/**
 			 * @brief The Vulkan graphics queue used to submit the command
 			 * buffer for execution.
 			 */
 			VkQueue _graphicsQueue;
-			/*
+			/**
 			 * @brief The Vulkan buffer containing the image data to be copied.
 			 */
 			VkBuffer _buffer;
-			/*
+			/**
 			 * @brief The Vulkan image to which the data will be copied.
 			 */
 			VkImage _image;
-			/*
-			 * @brief The layout of the image before the copy operation.
+			/**
+			 * @brief The width of the image in pixels.
 			 */
 			uint32_t _width;
-			/*
-			 * @brief The layout of the image before the copy operation.
+			/**
+			 * @brief The height of the image in pixels.
 			 */
 			uint32_t _height;
 		};
@@ -133,33 +133,33 @@ namespace evan
 		 *
 		 */
 		struct TransitionImageLayoutProperties {
-			/*
+			/**
 			 * @brief The Vulkan command pool used to allocate command buffers
 			 * for the layout transition.
 			 */
 			VkCommandPool _commandPool;
-			/*
+			/**
 			 * @brief The Vulkan graphics queue used to submit the command
 			 * buffer for execution.
 			 */
 			VkQueue _graphicsQueue;
-			/*
+			/**
 			 * @brief The Vulkan image whose layout is to be transitioned.
 			 */
 			VkImage _image;
-			/*
+			/**
 			 * @brief The format of the image being transitioned.
 			 */
 			VkFormat _format;
-			/*
+			/**
 			 * @brief The old layout of the image before the transition.
 			 */
 			VkImageLayout _oldLayout;
-			/*
+			/**
 			 * @brief The new layout of the image after the transition.
 			 */
 			VkImageLayout _newLayout;
-			/*
+			/**
 			 * @brief The number of mipmap levels in the image.
 			 */
 			uint32_t _mipLevels;
@@ -177,47 +177,47 @@ namespace evan
 		 *
 		 */
 		struct CreateImageProperties {
-			/*
+			/**
 			 * @brief The width of the image in pixels.
 			 */
 			uint32_t _width;
-			/*
+			/**
 			 * @brief The height of the image in pixels.
 			 */
 			uint32_t _height;
-			/*
+			/**
 			 * @brief The number of mipmap levels for the image.
 			 */
 			uint32_t _mipLevels;
-			/*
+			/**
 			 * @brief The number of samples for multisample anti-aliasing
 			 * (MSAA).
 			 */
 			VkSampleCountFlagBits _numSamples;
-			/*
+			/**
 			 * @brief The format of the image (e.g., VK_FORMAT_R8G8B8A8_SRGB).
 			 */
 			VkFormat _format;
-			/*
+			/**
 			 * @brief The tiling arrangement of the image (e.g.,
 			 * VK_IMAGE_TILING_OPTIMAL).
 			 */
 			VkImageTiling _tiling;
-			/*
+			/**
 			 * @brief The usage flags for the image (e.g.,
 			 * VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT).
 			 */
 			VkImageUsageFlags _usage;
-			/*
+			/**
 			 * @brief The memory property flags for the image (e.g.,
 			 * VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT).
 			 */
 			VkMemoryPropertyFlags _properties;
-			/*
+			/**
 			 * @brief A reference to the VkImage object that will be created.
 			 */
 			VkImage &_image;
-			/*
+			/**
 			 * @brief A reference to the VkDeviceMemory object that will be
 			 * allocated for the image.
 			 */
@@ -236,25 +236,25 @@ namespace evan
 		 * which is already a member of the class).
 		 */
 		struct CreateBufferProperties {
-			/*
+			/**
 			 * @brief The size of the buffer in bytes.
 			 */
 			VkDeviceSize _size;
-			/*
+			/**
 			 * @brief The usage flags for the buffer (e.g.,
 			 * VK_BUFFER_USAGE_VERTEX_BUFFER_BIT).
 			 */
 			VkBufferUsageFlags _usage;
-			/*
+			/**
 			 * @brief The memory property flags for the buffer (e.g.,
 			 * VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT).
 			 */
 			VkMemoryPropertyFlags _properties;
-			/*
+			/**
 			 * @brief A reference to the VkBuffer object that will be created.
 			 */
 			VkBuffer &_buffer;
-			/*
+			/**
 			 * @brief A reference to the VkDeviceMemory object that will be
 			 * allocated for the buffer.
 			 */

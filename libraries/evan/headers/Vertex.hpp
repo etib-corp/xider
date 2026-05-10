@@ -21,12 +21,23 @@ namespace evan
 	 *
 	 */
 	struct Vertex {
-		glm::vec3 pos;	  // Position of the vertex
+		/**
+		 * @brief Position of the vertex in 3D space.
+		 */
+		glm::vec3 pos;
+
+		/**
+		 * @brief Color of the vertex.
+		 */
 		glm::vec3
 			color;	  // Color of the vertex    (TODO: change to vec4 for alpha)
-		glm::vec2 texCoord;	   // Texture coordinates of the vertex
 
-		/*
+		/**
+		 * @brief Texture coordinates of the vertex.
+		 */
+		glm::vec2 texCoord;
+
+		/**
 		 * @brief Get the binding description for the vertex.
 		 *
 		 * This function returns the binding description for the vertex,
@@ -46,7 +57,7 @@ namespace evan
 			return bindingDescription;
 		}
 
-		/*
+		/**
 		 * @brief Get the attribute descriptions for the vertex.
 		 *
 		 * This function returns an array of attribute descriptions for the
@@ -81,7 +92,7 @@ namespace evan
 			return attributeDescriptions;
 		}
 
-		/*
+		/**
 		 * @brief Equality operator for the Vertex structure.
 		 *
 		 * This operator compares two Vertex objects for equality based on
