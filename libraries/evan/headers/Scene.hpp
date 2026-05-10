@@ -85,6 +85,18 @@ namespace evan
 		 * mesh, and updates the _meshes vector accordingly. It also creates
 		 * Material instances for any new unique material IDs found in the new
 		 * mesh data and updates the _materials map accordingly.
+		 *
+		 * @param deviceContext A reference to the DeviceContext, which provides
+		 * access to Vulkan resources needed for creating GPU meshes.
+		 * @param renderer A reference to the Renderer, which may be used for
+		 * rendering the meshes and materials in the scene.
+		 * @param texturePaths A vector of strings representing the file paths
+		 * to the textures used in the scene. These textures may be associated
+		 * with the materials used by the meshes.
+		 * @param meshData A map where the key is a string representing the mesh
+		 * name, and the value is a vector of Mesh objects representing the mesh
+		 * data for that mesh name. Each Mesh object contains information about
+		 * the vertices, indices, and material ID associated with that mesh.
 		 */
 		void updateScene(const DeviceContext &deviceContext,
 						 const Renderer &renderer,
