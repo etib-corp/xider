@@ -173,9 +173,6 @@ namespace evan
 		 * for other components of the rendering system that may need to create
 		 * or manage descriptor sets based on this layout.
 		 *
-		 * @param device The Vulkan device used to access the descriptor set
-		 * layout.
-		 *
 		 * @return The Vulkan descriptor set layout associated with the
 		 * Renderer.
 		 */
