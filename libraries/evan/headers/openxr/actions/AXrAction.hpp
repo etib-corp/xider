@@ -84,13 +84,21 @@ namespace evan
 			}
 		}
 
-		/** @brief Retrieves the XrAction handle associated with this AXrAction.
+		/**
+		 * @brief Polls the OpenXR runtime and produces events for this action.
 		 *
-		 * This method returns the XrAction handle that represents the OpenXR
-		 * action managed by this class. The handle can be used in OpenXR
-		 * API calls to interact with the action, such as binding it to input
-		 * devices or querying its state.
-		 * @return XrAction The handle of the OpenXR action.
+		 * Query the OpenXR runtime for the current state of this action and
+		 * translate any relevant state changes into a list of runtime events.
+		 * Implementations should create and return a vector of unique
+		 * pointers to `utility::event::Event` that represent meaningful input
+		 * occurrences (e.g. button pressed/released, axis movement, pose
+		 * updates) detected since the last poll.
+		 *
+		 * @param deviceBackend Reference to the `XrDeviceBackend` used to
+		 * communicate with the OpenXR session and query action state.
+		 * @return std::vector<std::unique_ptr<utility::event::Event>> A vector
+		 * of allocated events describing input changes; may be empty if no
+		 * changes were detected.
 		 */
 		virtual std::vector<std::unique_ptr<utility::event::Event>>
 			getEvent(XrDeviceBackend &deviceBackend) = 0;
