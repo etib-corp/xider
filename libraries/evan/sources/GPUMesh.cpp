@@ -8,7 +8,7 @@
 #include "GPUMesh.hpp"
 
 evan::GPUMesh::GPUMesh(std::shared_ptr<DeviceContext> deviceContext,
-					   std::vector<Vertex> vertices,
+					   std::vector<GPUVertex> vertices,
 					   std::vector<uint32_t> indices, uint32_t materialID)
 {
 	auto deviceBackend = deviceContext->getDeviceBackend();

@@ -11,7 +11,7 @@
 
 #include "DeviceContext.hpp"
 
-#include "Vertex.hpp"
+#include "GPUVertex.hpp"
 
 namespace evan
 {
@@ -28,7 +28,7 @@ namespace evan
 	 *
 	 * @note The GPUMesh class relies on the DeviceContext for Vulkan device
 	 * management and assumes that the vertex data is provided in a specific
-	 * format defined by the Vertex structure. It also assumes that the material
+	 * format defined by the GPUVertex structure. It also assumes that the material
 	 * ID is used to reference material properties for rendering.
 	 */
 	class GPUMesh
@@ -41,7 +41,7 @@ namespace evan
 		 *
 		 * This constructor initializes the GPUMesh by creating vertex and index
 		 * buffers on the GPU using the provided device context. It takes in a
-		 * vector of Vertex structures representing the vertex data, a vector of
+		 * vector of GPUVertex structures representing the vertex data, a vector of
 		 * uint32_t representing the index data, and a uint32_t representing the
 		 * material ID associated with the mesh. The constructor is responsible
 		 * for allocating GPU resources and uploading the vertex and index data
@@ -49,7 +49,7 @@ namespace evan
 		 *
 		 * @param deviceContext A reference to the DeviceContext instance used
 		 * for Vulkan device management and resource creation.
-		 * @param vertices A vector of Vertex structures containing the vertex
+		 * @param vertices A vector of GPUVertex structures containing the vertex
 		 * data for the mesh.
 		 * @param indices A vector of uint32_t containing the index data for the
 		 * mesh.
@@ -58,13 +58,13 @@ namespace evan
 		 * rendering.
 		 *
 		 * @note The constructor assumes that the vertex data is provided in a
-		 * specific format defined by the Vertex structure and that the material
+		 * specific format defined by the GPUVertex structure and that the material
 		 * ID is used for rendering purposes. It also assumes that the
 		 * DeviceContext is properly initialized and can be used to create GPU
 		 * resources.
 		 */
 		GPUMesh(std::shared_ptr<DeviceContext> deviceContext,
-				std::vector<Vertex> vertices, std::vector<uint32_t> indices,
+				std::vector<GPUVertex> vertices, std::vector<uint32_t> indices,
 				uint32_t materialID);
 
 		~GPUMesh();
@@ -155,7 +155,7 @@ namespace evan
 		 *
 		 * This method is responsible for creating the Vulkan vertex buffer and
 		 * allocating memory for it on the GPU. It takes in a reference to the
-		 * DeviceContext for Vulkan device management and a vector of Vertex
+		 * DeviceContext for Vulkan device management and a vector of GPUVertex
 		 * structures containing the vertex data to be uploaded to the GPU. The
 		 * method handles the creation of the vertex buffer, allocation of
 		 * memory, and uploading of vertex data to ensure that the vertex buffer
@@ -163,13 +163,13 @@ namespace evan
 		 *
 		 * @param deviceContext A reference to the DeviceContext instance used
 		 * for Vulkan device management and resource creation.
-		 * @param vertices A vector of Vertex structures containing the vertex
+		 * @param vertices A vector of GPUVertex structures containing the vertex
 		 * data to be uploaded to the GPU for the vertex buffer.
 		 *
 		 * @note The method assumes that the DeviceContext is properly
 		 * initialized and can be used to create GPU resources. It also assumes
 		 * that the vertex data is provided in a specific format defined by the
-		 * Vertex structure and that the Vulkan device associated with the
+		 * GPUVertex structure and that the Vulkan device associated with the
 		 * DeviceContext can be used for resource management.
 		 */
 		void createIndexBuffer(std::shared_ptr<DeviceContext> deviceContext,
