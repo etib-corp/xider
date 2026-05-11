@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <utility/graphic/shader.hpp>
+
 #include "EvanPlatform.hpp"
 
 namespace evan
@@ -33,8 +35,7 @@ namespace evan
 		 * fragment shader.
 		 * @param device The Vulkan device used to create the shader modules.
 		 */
-		GPUShader(const std::vector<uint32_t> &vertexCode,
-			   const std::vector<uint32_t> &fragmentCode, VkDevice device);
+		GPUShader(VkDevice device, const utility::graphic::Shader &shader);
 
 		~GPUShader();
 
