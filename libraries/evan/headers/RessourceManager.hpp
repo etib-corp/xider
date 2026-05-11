@@ -16,6 +16,7 @@
 
 #include "GPUMaterial.hpp"
 #include "GPUTexture.hpp"
+#include "GPUShader.hpp"
 
 namespace evan {
     /**
@@ -75,6 +76,15 @@ namespace evan {
          */
         std::shared_ptr<GPUTexture> getTexture(uint32_t id) const;
 
+        /**
+         * @brief Retrieves a shared pointer to the GPUShader associated with the given shader ID.
+         *
+         * @param id The unique identifier for the shader resource.
+         *
+         * @return A shared pointer to the corresponding GPUShader if found, or nullptr if not found.
+         */
+        std::shared_ptr<GPUShader> getShader(uint32_t id) const;
+
         protected:
         /**
          * @brief Internal method to retrieve the next unique ID for a resource.
@@ -114,6 +124,12 @@ namespace evan {
          * retrieval based on their unique IDs.
          */
         std::unordered_map<uint32_t, std::shared_ptr<GPUTexture>> _textures;
+
+        /**
+         * @brief Internal map to store GPU shaders for efficient
+         * retrieval based on their unique IDs.
+         */
+        std::unordered_map<uint32_t, std::shared_ptr<GPUShader>> _shaders;
 
     };
 }
