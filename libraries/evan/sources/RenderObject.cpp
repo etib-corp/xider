@@ -11,7 +11,16 @@ evan::RenderObject::RenderObject(std::shared_ptr<DeviceContext> deviceContext, c
     : _pipelineLayer(pipelineLayer)
 {
     for (const auto &[id, mesh] : rawObjects) {
-        _meshes.emplace_back(deviceContext, mesh.getVertices(), mesh.getIndices(), id);
+        std::vector<GPUVertex> gpuVertices;
+
+        for (const auto &vertex : mesh.getVertices()) {
+            GPUVertex gpuVertex = GPUVertex::createFromVertexD(vertex);
+            gpuVertices.push_back(gpuVertex);
+        }
+
+        GPUMesh gpuMesh(deviceContext, gpuVertices, mesh.getIndices(), id);
+
+        _meshes.emplace_back(gpuMesh);
     }
 }
 
