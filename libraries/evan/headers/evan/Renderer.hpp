@@ -12,13 +12,17 @@
 #include "evan/ASwapchainContext.hpp"
 
 #include "evan/Frame.hpp"
-#include "evan/Shader.hpp"
-#include "evan/Vertex.hpp"
+
+#include "evan/RessourceManager.hpp"
+
+#include "evan/GPUShader.hpp"
+#include "evan/GPUVertex.hpp"
 
 #include "evan/Scene.hpp"
 
 #include <fstream>
 #include <algorithm>
+#include <map>
 
 namespace evan
 {
@@ -196,31 +200,9 @@ namespace evan
 		VkDescriptorSetLayout getDescriptorSetLayout() const;
 
 		protected:
-		/**
-		 * @brief Vulkan graphics pipeline used for rendering operations.
-		 *
-		 * This member variable holds the Vulkan graphics pipeline that is used
-		 * by the Renderer to perform rendering operations. The graphics
-		 * pipeline defines the stages of the rendering process, including
-		 * vertex input, vertex shader, fragment shader, and output merger
-		 * stages. It is a crucial resource for configuring how rendering
-		 * commands are processed and how resources are bound to the pipeline
-		 * during drawing operations.
-		 */
-		VkPipeline _pipeline;
+		std::map<uint32_t, VkPipeline> _pipelines;
 
-		/**
-		 * @brief Vulkan pipeline layout used for rendering operations.
-		 *
-		 * This member variable holds the Vulkan pipeline layout that is used by
-		 * the Renderer to define the interface between shader stages and the
-		 * resources bound to the graphics pipeline. The pipeline layout
-		 * specifies the descriptor set layouts and push constant ranges that
-		 * are used during rendering operations. It is essential for configuring
-		 * how resources are accessed by shaders and how they are organized in
-		 * the graphics pipeline.
-		 */
-		VkPipelineLayout _pipelineLayout;
+		std::map<uint32_t, VkPipelineLayout> _pipelineLayouts;
 
 		/**
 		 * @brief A collection of frames used for rendering.
@@ -344,8 +326,9 @@ namespace evan
 		 * configured graphics pipeline for rendering scenes with the specified
 		 * render pass and MSAA settings.
 		 */
-		void createGraphicsPipeline(VkDevice device, VkRenderPass renderPass,
-									VkSampleCountFlagBits msaaSamples);
+		void createGraphicsPipelines(VkDevice device, VkRenderPass renderPass,
+									VkSampleCountFlagBits msaaSamples,
+									const RessourceManager &ressourceManager);
 
 		/**
 		 * @brief Creates the Vulkan descriptor pool for allocating descriptor
