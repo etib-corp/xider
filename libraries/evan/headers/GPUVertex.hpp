@@ -2,25 +2,27 @@
 ** ETIB PROJECT, 2025
 ** evan
 ** File description:
-** Vertex
+** GPUVertex
 */
 
-#ifndef VERTEX_HPP_
-#define VERTEX_HPP_
+#ifndef GPUVERTEX_HPP_
+#define GPUVERTEX_HPP_
 
 #include "EvanPlatform.hpp"
+
+#include <utility/graphic/vertex.hpp>
 
 namespace evan
 {
 	/**
-	 * @brief Vertex structure.
+	 * @brief GPUVertex structure.
 	 *
 	 * This structure represents a vertex in the 3D space. It contains the
 	 * position, color, and texture coordinates of the vertex. It is used to
 	 * define the vertex data for rendering.
 	 *
 	 */
-	struct Vertex {
+	struct GPUVertex {
 		glm::vec3 pos;	  // Position of the vertex
 		glm::vec3
 			color;	  // Color of the vertex    (TODO: change to vec4 for alpha)
@@ -40,7 +42,7 @@ namespace evan
 		{
 			VkVertexInputBindingDescription bindingDescription {};
 			bindingDescription.binding	 = 0;
-			bindingDescription.stride	 = sizeof(Vertex);
+			bindingDescription.stride	 = sizeof(GPUVertex);
 			bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
 			return bindingDescription;
@@ -66,37 +68,53 @@ namespace evan
 			attributeDescriptions[0].binding  = 0;
 			attributeDescriptions[0].location = 0;
 			attributeDescriptions[0].format	  = VK_FORMAT_R32G32B32_SFLOAT;
-			attributeDescriptions[0].offset	  = offsetof(Vertex, pos);
+			attributeDescriptions[0].offset	  = offsetof(GPUVertex, pos);
 
 			attributeDescriptions[1].binding  = 0;
 			attributeDescriptions[1].location = 1;
 			attributeDescriptions[1].format	  = VK_FORMAT_R32G32B32_SFLOAT;
-			attributeDescriptions[1].offset	  = offsetof(Vertex, color);
+			attributeDescriptions[1].offset	  = offsetof(GPUVertex, color);
 
 			attributeDescriptions[2].binding  = 0;
 			attributeDescriptions[2].location = 2;
 			attributeDescriptions[2].format	  = VK_FORMAT_R32G32_SFLOAT;
-			attributeDescriptions[2].offset	  = offsetof(Vertex, texCoord);
+			attributeDescriptions[2].offset	  = offsetof(GPUVertex, texCoord);
 
 			return attributeDescriptions;
 		}
 
 		/*
-		 * @brief Equality operator for the Vertex structure.
+		 * @brief Equality operator for the GPUVertex structure.
 		 *
-		 * This operator compares two Vertex objects for equality based on
+		 * This operator compares two GPUVertex objects for equality based on
 		 * their position, color, and texture coordinates.
 		 *
-		 * @param other The other Vertex object to compare with.
-		 * @return true if the two Vertex objects are equal, false otherwise.
+		 * @param other The other GPUVertex object to compare with.
+		 * @return true if the two GPUVertex objects are equal, false otherwise.
 		 *
 		 */
-		bool operator==(const Vertex &other) const
+		bool operator==(const GPUVertex &other) const
 		{
 			return pos == other.pos && color == other.color
 				&& texCoord == other.texCoord;
 		}
+
+		static GPUVertex createFromVertexD(const utility::graphic::VertexD &vertex)
+		{
+			auto color32Bit = vertex.getColor();
+			auto red 	= color32Bit.getRed() / 255.0f;
+			auto green = color32Bit.getGreen() / 255.0f;
+			auto blue 	= color32Bit.getBlue() / 255.0f;
+
+			return GPUVertex {
+				glm::vec3(vertex.getPosition().x, vertex.getPosition().y,
+						  vertex.getPosition().z),
+				glm::vec3(red, green, blue),
+				glm::vec2(vertex.getTextureCoordinates().x,
+						  vertex.getTextureCoordinates().y)
+			};
+		}
 	};
 }	 // namespace evan
 
-#endif /* !VERTEX_HPP_ */
+#endif /* !GPUVERTEX_HPP_ */
