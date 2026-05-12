@@ -37,6 +37,17 @@ namespace utility
 		return _shaders;
 	}
 
+	uint32_t RessourceProvider::getShaderID(const std::string &shaderName) const
+	{
+		auto it = _elementsIDs.find(shaderName);
+
+		if (it != _elementsIDs.end()) {
+			return it->second;
+		}
+
+		return 0;  // Return 0 if the shader name is not found
+	}
+
 	////////////////////
 	// Public Methods //
 	////////////////////

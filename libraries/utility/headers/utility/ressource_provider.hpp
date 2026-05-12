@@ -79,6 +79,21 @@ namespace utility
 		[[nodiscard]] std::map<uint32_t, std::shared_ptr<graphic::Shader>> getShaders() const;
 
 		/**
+		 * @brief Retrieves the unique shader ID associated with a given shader name.
+		 *
+		 * This method looks up the shader name in an internal map and returns the
+		 * corresponding shader ID if found. If the shader name is not found, it
+		 * returns 0, indicating that the shader does not exist in the resource
+		 * provider.
+		 *
+		 * @param shaderName The name of the shader for which to retrieve the ID.
+		 *
+		 * @return The unique shader ID associated with the given shader name, or
+		 * 0 if the shader name is not found.
+		 */
+		[[nodiscard]] uint32_t getShaderID(const std::string &shaderName) const;
+
+		/**
 		 * @brief Loads a font resource from a specified file path.
 		 *
 		 * @param path The file path to the font resource to be loaded.
