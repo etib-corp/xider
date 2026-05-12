@@ -10,12 +10,14 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 evan::Renderer::Renderer(DeviceContext &deviceContext, VkRenderPass renderPass,
-						 VkSampleCountFlagBits msaaSamples)
+						 VkSampleCountFlagBits msaaSamples, std::shared_ptr<RessourceManager> ressourceManager)
+	: _ressourceManager(ressourceManager)
 {
+	_ressourceManager->sync();
 	this->_currentFrameIndex = 0;
 
 	this->createDescriptorSetLayout(deviceContext.getDeviceBackend()->_device);
-	this->createGraphicsPipeline(deviceContext.getDeviceBackend()->_device,
+	this->createGraphicsPipelines(deviceContext.getDeviceBackend()->_device,
 								 renderPass, msaaSamples);
 	this->createDescriptorPool(
 		deviceContext.getDeviceBackend()->_device,
@@ -196,10 +198,9 @@ void evan::Renderer::createDescriptorSetLayout(VkDevice device)
 
 void evan::Renderer::createGraphicsPipelines(VkDevice device,
 											VkRenderPass renderPass,
-											VkSampleCountFlagBits msaaSamples,
-											const RessourceManager &ressourceManager)
+											VkSampleCountFlagBits msaaSamples)
 {
-	for (const auto &[id, shader]: ressourceManager.getShaders()) {
+	for (const auto &[id, shader]: _ressourceManager->getShaders()) {
 		VkPipelineShaderStageCreateInfo vertShaderStageInfo {};
 		vertShaderStageInfo.sType =
 			VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -383,6 +384,8 @@ void evan::Renderer::recordCommandBuffer(VkRenderPass renderPass,
 										 VkExtent2D swapChainExtent,
 										 const Scene &scene)
 {
+	_ressourceManager->sync();
+
 	auto commandBuffer = _frames[_currentFrameIndex]._commandBuffer;
 
 	VkCommandBufferBeginInfo beginInfo {};
@@ -411,9 +414,6 @@ void evan::Renderer::recordCommandBuffer(VkRenderPass renderPass,
 	vkCmdBeginRenderPass(commandBuffer, &renderPassInfo,
 						 VK_SUBPASS_CONTENTS_INLINE);
 
-	vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
-					  _pipeline);
-
 	VkViewport viewport {};
 	viewport.x		  = 0.0f;
 	viewport.y		  = 0.0f;
@@ -431,6 +431,22 @@ void evan::Renderer::recordCommandBuffer(VkRenderPass renderPass,
 	std::map<uint32_t, bool> materialBound;
 
 	for (const auto &mesh: scene.getMeshes()) {
+		auto materialID = mesh.getMaterialID();
+		auto material = _ressourceManager->getMaterial(materialID);
+
+		if (!material) {
+			std::cerr << "Warning: Material with ID " << materialID
+					  << " not found in RessourceManager. Skipping mesh with "
+						 "material ID "
+					  << materialID << ".\n";
+			continue;
+		}
+
+		auto correspondingPipelineID = material->getShaderID();
+
+		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
+					_pipelines[correspondingPipelineID]);
+
 		VkDeviceSize offsets[] = { 0 };
 		VkBuffer vertexBuffer  = mesh.getVertexBuffer();
 
@@ -442,7 +458,7 @@ void evan::Renderer::recordCommandBuffer(VkRenderPass renderPass,
 		if (!materialBound[mesh.getMaterialID()]) {
 			materialBound[mesh.getMaterialID()] = true;
 			vkCmdBindDescriptorSets(
-				commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, _pipelineLayout,
+				commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, _pipelineLayouts[correspondingPipelineID],
 				0, 1,
 				&scene.getMaterials()
 					 .at(mesh.getMaterialID())

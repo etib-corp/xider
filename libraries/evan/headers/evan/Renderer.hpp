@@ -69,7 +69,7 @@ namespace evan
 		 * the Renderer.
 		 */
 		Renderer(DeviceContext &deviceContext, VkRenderPass renderPass,
-				 VkSampleCountFlagBits msaaSamples);
+				 VkSampleCountFlagBits msaaSamples, std::shared_ptr<RessourceManager> ressourceManager);
 
 		~Renderer();
 
@@ -327,8 +327,7 @@ namespace evan
 		 * render pass and MSAA settings.
 		 */
 		void createGraphicsPipelines(VkDevice device, VkRenderPass renderPass,
-									VkSampleCountFlagBits msaaSamples,
-									const RessourceManager &ressourceManager);
+									VkSampleCountFlagBits msaaSamples);
 
 		/**
 		 * @brief Creates the Vulkan descriptor pool for allocating descriptor
@@ -345,5 +344,7 @@ namespace evan
 		 * allocating descriptor sets during rendering operations.
 		 */
 		void createDescriptorPool(VkDevice device, uint32_t materialCount);
+
+		std::shared_ptr<RessourceManager> _ressourceManager;
 	};
 }	 // namespace evan
