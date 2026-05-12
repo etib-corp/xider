@@ -67,7 +67,7 @@ namespace evan
 		 * - Setting up descriptor sets for shader access to the material's
 		 * texture data.
 		 */
-		GPUMaterial(std::shared_ptr<DeviceContext> deviceContext, const Renderer &renderer, const utility::graphic::Material &material);
+		GPUMaterial(std::shared_ptr<DeviceContext> deviceContext, const Renderer &renderer, const utility::graphic::Material &material, uint32_t shaderID);
 
 		~GPUMaterial();
 
@@ -108,6 +108,20 @@ namespace evan
 		 * resources during rendering.
 		 */
 		std::vector<VkDescriptorSet> getDescriptorSets() const;
+
+		/**
+		 * @brief Retrieves the unique shader ID associated with this material.
+		 *
+		 * This method returns the unique ID of the shader that is associated with
+		 * this material. The shader ID is used to identify which shader program
+		 * should be used when rendering objects that utilize this material, allowing for
+		 * proper rendering of the material's visual properties based on the shader's
+		 * functionality and characteristics.
+		 *
+		 * @return uint32_t The unique shader ID associated with this material, used to
+		 * identify the shader program for rendering objects that use this material.
+		 */
+		uint32_t getShaderID() const;
 
 		protected:
 		/**
@@ -150,7 +164,15 @@ namespace evan
 								  VkDescriptorPool descriptorPool,
 								  const std::vector<VkBuffer> &uniformBuffers);
 
+		/**
+		 * Textures associated with the material, categorized by their intended use in the rendering pipeline.
+		 */
 		std::vector<GPUTexture> _textures;
+
+		/**
+		 * The unique ID associated with the shader used by this material.
+		 */
+		uint32_t _shaderID;
 
 		/**
 		 * Vector of Vulkan descriptor sets associated with the material.

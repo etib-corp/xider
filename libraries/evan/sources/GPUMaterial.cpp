@@ -13,7 +13,9 @@
 
 evan::GPUMaterial::GPUMaterial(std::shared_ptr<DeviceContext> deviceContext,
 							   const Renderer &renderer,
-							   const utility::graphic::Material &material)
+							   const utility::graphic::Material &material,
+							   uint32_t shaderID)
+	: _shaderID(shaderID)
 {
 	auto deviceBackend = deviceContext->getDeviceBackend();
 
@@ -43,6 +45,11 @@ void evan::GPUMaterial::destroy(VkDevice device)
 std::vector<VkDescriptorSet> evan::GPUMaterial::getDescriptorSets() const
 {
 	return _descriptorSets;
+}
+
+uint32_t evan::GPUMaterial::getShaderID() const
+{
+	return _shaderID;
 }
 
 ///////////////////////
@@ -113,6 +120,10 @@ void evan::GPUMaterial::createDescriptorSets(
 							   descriptorWrites.data(), 0, nullptr);
 	}
 }
+
+/////////////////////
+// Private Methods //
+/////////////////////
 
 uint32_t evan::GPUMaterial::getBinding(GPUTexture::TextureType type)
 {
