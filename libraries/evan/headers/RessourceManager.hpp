@@ -11,8 +11,8 @@
 #include <unordered_map>
 
 #include <utility/ressource_provider.hpp>
-#include <utility/graphic/Material.hpp>
-#include <utility/graphic/Texture.hpp>
+#include <utility/graphic/material.hpp>
+#include <utility/graphic/texture.hpp>
 
 #include "GPUMaterial.hpp"
 #include "GPUTexture.hpp"
@@ -84,6 +84,13 @@ namespace evan {
          * @return A shared pointer to the corresponding GPUShader if found, or nullptr if not found.
          */
         std::shared_ptr<GPUShader> getShader(uint32_t id) const;
+
+        /**
+         * @brief Retrieves a map of all GPUShaders managed by the RessourceManager.
+         *
+         * @return An unordered map where the key is the unique shader ID and the value is a shared pointer to the corresponding GPUShader.
+         */
+        std::unordered_map<uint32_t, std::shared_ptr<GPUShader>> getShaders() const;
 
         protected:
         /**
