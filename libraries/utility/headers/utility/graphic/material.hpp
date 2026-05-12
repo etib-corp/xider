@@ -103,6 +103,16 @@ namespace utility::graphic
 		 */
 		const std::vector<std::shared_ptr<Texture>> &getTextures() const;
 
+		/**
+		 * @brief Retrieves the shader name associated with this material.
+		 *
+		 * This method returns the name of the shader that is associated with this
+		 * material. The shader name is used to identify which shader program should
+		 * be used when rendering objects that use this material, allowing for proper
+		 * rendering of the material's visual properties.
+		 */
+		const std::string &getShaderName() const;
+
 		protected:
 		/**
 		 * @brief The name of the shader associated with this material.

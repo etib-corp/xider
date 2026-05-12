@@ -47,4 +47,9 @@ namespace utility::graphic
 		}
 		return textures;
 	}
+
+	const std::string &Material::getShaderName() const
+	{
+		return _shaderName;
+	}
 }	 // namespace utility::graphic
