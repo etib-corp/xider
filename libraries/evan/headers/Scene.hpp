@@ -63,7 +63,7 @@ namespace evan
 		 */
 		void destroy(VkDevice device);
 
-		void addObject(uint32_t objectID, RenderObject object);
+		void addObject(uint32_t objectID, std::shared_ptr<RenderObject> renderObject);
 
 		bool removeObject(uint32_t objectID);
 
@@ -105,7 +105,7 @@ namespace evan
 		 * It also assumes that the caller will not modify the returned map, as
 		 * it is a constant reference to the internal state of the Scene.
 		 */
-		const std::map<uint32_t, GPUMaterial> &getMaterials() const;
+		const std::map<uint32_t, std::shared_ptr<evan::GPUMaterial>> &getMaterials() const;
 
 		protected:
 		/**
@@ -117,7 +117,7 @@ namespace evan
 		 * associated with that object ID. This map is used to store and manage
 		 * the renderable objects in the Scene for rendering and other operations.
 		 */
-		std::map<uint32_t, RenderObject> _objects;
+		std::map<uint32_t, std::shared_ptr<RenderObject>> _objects;
 
 		/**
 		 * @brief A map of material IDs to GPUMaterial objects representing the
@@ -133,6 +133,6 @@ namespace evan
 		 * should be properly managed to ensure that GPU resources are cleaned
 		 * up when the Scene is destroyed.
 		 */
-		std::map<uint32_t, GPUMaterial> _materials;
+		std::map<uint32_t, std::shared_ptr<GPUMaterial>> _materials;
 	};
 }	 // namespace evan
