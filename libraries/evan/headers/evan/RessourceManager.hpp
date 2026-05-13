@@ -38,12 +38,14 @@ namespace evan {
          * @note The constructor initializes the resource manager and synchronizes the GPU resources
          * with the loaded materials and textures from the resource provider.
          */
-        RessourceManager(std::unique_ptr<utility::RessourceProvider> ressourceProvider, std::shared_ptr<DeviceContext> deviceContext, std::shared_ptr<Renderer> renderer);
+        RessourceManager(std::unique_ptr<utility::RessourceProvider> ressourceProvider, std::shared_ptr<DeviceContext> deviceContext);
 
         /**
          * @brief Destructs the RessourceManager instance and cleans up GPU resources.
          */
         ~RessourceManager();
+
+        void init(std::shared_ptr<Renderer> renderer);
 
         /**
          * @brief Synchronizes the GPU resources with the materials and textures loaded from the resource provider.

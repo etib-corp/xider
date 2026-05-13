@@ -7,10 +7,14 @@
 
 #include "RessourceManager.hpp"
 
-evan::RessourceManager::RessourceManager(std::unique_ptr<utility::RessourceProvider> ressourceProvider, std::shared_ptr<DeviceContext> deviceContext, std::shared_ptr<Renderer> renderer)
-    : _ressourceProvider(std::move(ressourceProvider)), _deviceContext(deviceContext), _renderer(renderer)
+evan::RessourceManager::RessourceManager(std::unique_ptr<utility::RessourceProvider> ressourceProvider, std::shared_ptr<DeviceContext> deviceContext)
+    : _ressourceProvider(std::move(ressourceProvider)), _deviceContext(deviceContext)
 {
-    sync();
+    std::map<uint32_t, std::shared_ptr<utility::graphic::Shader>> shaders = _ressourceProvider->getShaders();
+
+    for (const auto &[id, shader]: shaders) {
+        _shaders[id] = std::make_shared<GPUShader>(_deviceContext->getDeviceBackend()->_device, *shader);
+    }
 }
 
 evan::RessourceManager::~RessourceManager()
@@ -20,6 +24,12 @@ evan::RessourceManager::~RessourceManager()
 ////////////////////
 // Public Methods //
 ////////////////////
+
+void evan::RessourceManager::init(std::shared_ptr<Renderer> renderer)
+{
+    _renderer = renderer;
+    sync();
+}
 
 void evan::RessourceManager::sync(bool refresh)
 {
