@@ -57,7 +57,10 @@ void evan::RessourceManager::sync(bool refresh)
 
     for (const auto &[id, texture]: textures) {
         if (refresh || _textures.find(id) == _textures.end()) {
-            _textures[id] = std::make_shared<GPUTexture>(_deviceContext, *_renderer, *texture);
+            // It only creates a Albedo texture for now,
+            // but it will be extended in the future to support
+            // other types of textures (normal, roughness, etc.) based on the material properties.
+            _textures[id] = std::make_shared<GPUTexture>(*_deviceContext, *texture);
         }
     }
 }
