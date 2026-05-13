@@ -104,8 +104,10 @@ namespace guillaume::systems
 		const uint32_t glyphCode =
 			_glyphCode.count(glyphName) > 0 ? _glyphCode[glyphName] : '?';
 		utility::graphic::Text glyphText(
-			_renderer.getRessourceManager(), _renderer.getAssetManager(),
-			codePointToUtf8(glyphCode), boundComponent.getHeight(),
+			_renderer.getRessourceProvider(),
+			_renderer.getSystemIO(),
+			codePointToUtf8(glyphCode),
+			boundComponent.getHeight(),
 			_defaultFontPath);
 		glyphText.setColor(colorComponent.getColor());
 

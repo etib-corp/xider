@@ -58,7 +58,7 @@ namespace guillaume::systems
 			getComponent<components::Color>(entityIdentifier);
 
 		utility::graphic::Text text(
-			_renderer.getRessourceManager(), _renderer.getAssetManager(),
+			_renderer.getRessourceProvider(), _renderer.getSystemIO(),
 			textComponent.getContent(), textComponent.getFontSize(),
 			_defaultFontPath);
 		text.setColor(colorComponent.getColor());
