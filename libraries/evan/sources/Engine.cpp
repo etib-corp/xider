@@ -84,7 +84,7 @@ void evan::Engine::drawText(std::shared_ptr<utility::graphic::Text> text)
 		rawObjects.emplace(material_id, *mesh);
 	}
 
-	RenderObject textObject = RenderObject(_deviceContext, rawObjects, "text");
+	std::shared_ptr<RenderObject> textObject = std::make_shared<RenderObject>(_deviceContext, rawObjects, "text");
 
 	_scenes[_currentScene].addObject(_nextObjectID++, textObject);
 }
