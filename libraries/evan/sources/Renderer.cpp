@@ -462,7 +462,7 @@ void evan::Renderer::recordCommandBuffer(VkRenderPass renderPass,
 				0, 1,
 				&scene.getMaterials()
 					 .at(mesh.getMaterialID())
-					 .getDescriptorSets()[_currentFrameIndex],
+					 ->getDescriptorSets()[_currentFrameIndex],
 				0, nullptr);
 		}
 
