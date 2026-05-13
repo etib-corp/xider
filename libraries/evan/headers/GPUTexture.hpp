@@ -11,7 +11,7 @@
 
 #include "EvanPlatform.hpp"
 
-#include "ADeviceBackend.hpp"
+#include "DeviceContext.hpp"
 
 namespace evan
 {
@@ -77,10 +77,8 @@ namespace evan
                 uint32_t _mipLevels;
             };
 
-            GPUTexture(const ADeviceBackend &deviceBackend,
+            GPUTexture(const DeviceContext &deviceContext,
                 const utility::graphic::Texture &texture,
-                VkCommandPool commandPool,
-                VkQueue graphicsQueue,
                 TextureType type = TextureType::Albedo
             );
 

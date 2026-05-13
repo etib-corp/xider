@@ -7,16 +7,18 @@
 
 #include "GPUTexture.hpp"
 
-evan::GPUTexture::GPUTexture(const ADeviceBackend &deviceBackend,
+evan::GPUTexture::GPUTexture(const DeviceContext &deviceContext,
                 const utility::graphic::Texture &texture,
-                VkCommandPool commandPool,
-                VkQueue graphicsQueue,
                 TextureType type
             ) : type(type)
 {
-    this->createImage(deviceBackend, texture, commandPool, graphicsQueue);
-    this->createImageView(deviceBackend);
-    this->createSampler(deviceBackend, VkSamplerCreateInfo{});
+	auto deviceBackend = deviceContext.getDeviceBackend();
+	auto commandPool = deviceContext.getCommandPool();
+	auto graphicsQueue = deviceContext.getGraphicsQueue();
+
+    this->createImage(*deviceBackend, texture, commandPool, graphicsQueue);
+    this->createImageView(*deviceBackend);
+    this->createSampler(*deviceBackend, VkSamplerCreateInfo{});
 }
 
 evan::GPUTexture::~GPUTexture()
