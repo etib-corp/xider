@@ -24,7 +24,7 @@ void evan::Engine::initializeAssetManager(void *platformAssetManager)
 #endif
 }
 
-evan::Engine::Engine(const std::shared_ptr<IPlatform> &platform)
+evan::Engine::Engine(std::unique_ptr<utility::RessourceProvider> ressourceProvider, const std::shared_ptr<IPlatform> &platform)
 	: _platform(platform)
 {
 	if (!g_systemIO) {
@@ -49,9 +49,13 @@ evan::Engine::Engine(const std::shared_ptr<IPlatform> &platform)
 	_swapchainContext = platform->createSwapchainContext(*_deviceContext);
 
 	auto deviceBackend = _deviceContext->getDeviceBackend();
+
+	_ressourceManager  = std::make_shared<RessourceManager>(std::move(ressourceProvider), _deviceContext);
 	_renderer		   = std::make_shared<Renderer>(*_deviceContext,
 													_swapchainContext->getRenderPass(),
-													_deviceContext->getMsaaSamples());
+													_deviceContext->getMsaaSamples(),
+													_ressourceManager);
+	_ressourceManager->init(_renderer);
 	_currentScene	   = 0;
 
 	for (int frameIndex = 0; frameIndex < MAX_FRAMES_IN_FLIGHT; frameIndex++) {

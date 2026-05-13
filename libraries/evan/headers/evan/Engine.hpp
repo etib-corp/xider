@@ -27,6 +27,7 @@
 
 #include "Scene.hpp"
 #include "RenderObject.hpp"
+#include "RessourceManager.hpp"
 
 #include <string>
 #include <memory>
@@ -91,7 +92,7 @@ namespace evan
 		 * core structure and functionality of the engine, with plans for
 		 * further improvements and optimizations in the future.
 		 */
-		Engine(const std::shared_ptr<IPlatform> &platform);
+		Engine(std::unique_ptr<utility::RessourceProvider> ressourceProvider, const std::shared_ptr<IPlatform> &platform);
 
 		~Engine();
 
@@ -393,6 +394,8 @@ namespace evan
 		 * portable across different operating systems and platforms.
 		 */
 		std::shared_ptr<IPlatform> _platform;
+
+		std::shared_ptr<RessourceManager> _ressourceManager;
 
 		private:
 		size_t _nextObjectID = 1;
