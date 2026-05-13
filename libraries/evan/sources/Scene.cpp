@@ -20,17 +20,17 @@ evan::Scene::~Scene()
 void evan::Scene::destroy(VkDevice device)
 {
 	for (auto &[_, object]: _objects) {
-		object.destroy(device);
+		object->destroy(device);
 	}
 
 	for (auto &[_, material]: _materials) {
-		material.destroy(device);
+		material->destroy(device);
 	}
 }
 
-void evan::Scene::addObject(uint32_t objectID, RenderObject object)
+void evan::Scene::addObject(uint32_t objectID, std::shared_ptr<RenderObject> renderObject)
 {
-	_objects[objectID] = std::move(object);
+	_objects[objectID] = renderObject;
 }
 
 bool evan::Scene::removeObject(uint32_t objectID)
@@ -48,14 +48,14 @@ const std::vector<evan::GPUMesh> &evan::Scene::getMeshes() const
 	meshes.clear();
 
 	for (const auto &[_, object]: _objects) {
-		const std::vector<GPUMesh> &objectMeshes = object.getMeshes();
+		const std::vector<GPUMesh> &objectMeshes = object->getMeshes();
 		meshes.insert(meshes.end(), objectMeshes.begin(), objectMeshes.end());
 	}
 
 	return meshes;
 }
 
-const std::map<uint32_t, evan::GPUMaterial> &evan::Scene::getMaterials() const
+const std::map<uint32_t, std::shared_ptr<evan::GPUMaterial>> &evan::Scene::getMaterials() const
 {
 	return _materials;
 }
