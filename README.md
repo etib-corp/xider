@@ -25,9 +25,9 @@ This project focuses on four key strategic objectives to ensure successful devel
 
 For more detailed information on each part of the project, please refer to the following documentation files:
 
-- [Building Guide](docs/BUILDING.md)
-- [Project Architecture](docs/PROJECT_ARCHITECTURE.md)
-- [Beta Test Plan](docs/BETA_TEST_PLAN.md)
+- [Building Guide](BUILDING)
+- [Project Architecture](PROJECT_ARCHITECTURE)
+- [Beta Test Plan](BETA_TEST_PLAN)
 
 ## Contributing
 
