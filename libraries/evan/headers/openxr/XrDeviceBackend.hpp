@@ -53,38 +53,82 @@ namespace evan
 		~XrDeviceBackend() override;
 
 		/**
-		 * @brief Retrieves the system ID for the OpenXR device.
+		 * @brief Prepares the current frame for rendering in an OpenXR session.
 		 *
-		 * This method queries the OpenXR runtime to obtain the system ID for
-		 * the XR device that the application will target. The system ID is
-		 * essential for creating sessions and managing the XR experience. The
-		 * retrieved system ID is stored in the member variable _systemId for
-		 * later use in session creation and rendering.
+		 * This method performs frame synchronization and view localization for OpenXR rendering.
+		 * It waits for the next frame, begins frame processing, and retrieves the current view
+		 * configurations. If the runtime indicates rendering should be skipped, the frame is
+		 * properly concluded without processing.
+		 *
+		 * @param[in,out] swapchainContext Reference to the swapchain context that will be
+		 *                                   populated with view information for rendering.
+		 *
+		 * @return true if frame preprocessing completed successfully and rendering should proceed,
+		 *         false if the session is not running, if any OpenXR calls fail, or if the
+		 *         runtime indicates rendering should be skipped for this frame.
+		 *
+		 * @details
+		 * The method performs the following operations:
+		 * - Verifies the XR session is running
+		 * - Waits for the next frame from the runtime
+		 * - Begins frame processing
+		 * - Stores the predicted display time for rendering
+		 * - Checks if rendering is required for this frame
+		 * - If rendering is skipped, ends the frame with empty layer data
+		 * - Locates and stores the current view poses and positions
+		 *
+		 * @note The swapchainContext must be castable to evan::XrSwapchainContext.
+		 * @note On early return (false), the frame may still be submitted to the runtime
+		 *       with empty content if shouldRender is false.
+		 *
+		 * @see xrWaitFrame, xrBeginFrame, xrEndFrame, xrLocateViews
 		 */
 		bool preprocessFrame(ASwapchainContext &swapchainContext) override;
 
 		/**
-		 * @brief Processes a frame for the OpenXR session.
+		 * @brief Processes a frame by releasing the OpenXR swapchain image.
 		 *
-		 * This method handles the processing of a single frame in the OpenXR
-		 * session, including acquiring the next available swapchain image,
-		 * submitting rendering commands, and presenting the rendered frame to
-		 * the XR device. It takes a VkPresentInfoKHR structure containing
-		 * presentation information and an ASwapchainImage reference for
-		 * managing the swapchain image during presentation.
+		 * This function releases the swapchain image associated with the given presentation
+		 * information back to the OpenXR runtime for reuse.
+		 *
+		 * @param presentInfo The Vulkan present information for the frame (currently unused).
+		 * @param swapchainImage Reference to the swapchain image to be released. Must be
+		 *                       castable to evan::XrSwapchainImage.
+		 *
+		 * @return true if the swapchain image was successfully released, false otherwise.
+		 *
+		 * @retval true The OpenXR swapchain image was released successfully.
+		 * @retval false The xrReleaseSwapchainImage call failed. Error details are logged
+		 *               to stderr.
+		 *
+		 * @see XrSwapchainImageReleaseInfo
+		 * @see xrReleaseSwapchainImage
 		 */
 		bool processFrame(VkPresentInfoKHR presentInfo,
 						  ASwapchainImage &swapchainImage) override;
 
 		/**
-		 * @brief Post-processes a frame after presentation in the OpenXR
-		 * session.
+		 * @brief Postprocesses a frame and submits it to the OpenXR compositor.
 		 *
-		 * This method performs any necessary post-processing after a frame has
-		 * been presented to the XR device. It may involve updating the
-		 * predicted display time for the next frame, handling any
-		 * synchronization or cleanup tasks, and preparing for the next
-		 * rendering cycle in the XR session.
+		 * This method updates the projection layer views for the given swapchain context,
+		 * constructs a composition layer with the updated views, and submits the frame
+		 * to the OpenXR runtime via xrEndFrame().
+		 *
+		 * @param swapchainContext Reference to the swapchain context to postprocess.
+		 *                         Must be a valid evan::XrSwapchainContext instance.
+		 *
+		 * @return true if the frame was successfully submitted to the OpenXR runtime,
+		 *         false if xrEndFrame() failed or returned XR_SUCCESS was not achieved.
+		 *
+		 * @details
+		 * - Updates projection layer views in the swapchain context
+		 * - Constructs an XrCompositionLayerProjection with the updated views
+		 * - Sets the frame end info with predicted display time and opaque blend mode
+		 * - Submits the frame to the OpenXR session
+		 * - Logs errors to stderr if frame submission fails
+		 *
+		 * @note The swapchain context is cast to evan::XrSwapchainContext during processing.
+		 *       Ensure the provided context is of the correct derived type.
 		 */
 		bool postprocessFrame(ASwapchainContext &swapchainContext) override;
 
@@ -246,8 +290,15 @@ namespace evan
 		 */
 		XrTime _predictedDisplayTime = 0;
 
+		/**
+		 * The count of view configurations available for the XR system, which
+		 * indicates how many different ways the application can render content
+		 * based on the capabilities of the XR device. This count is used to
+		 * manage rendering for multiple views, such as for stereo rendering in
+		 * VR applications.
+		 */
 		const static size_t _handCount =
-			2;	  // Assuming two hands (left and right)
+			2;
 
 		/**
 		 * Subaction paths for hand input actions, used to differentiate

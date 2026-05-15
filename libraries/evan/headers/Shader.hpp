@@ -82,6 +82,9 @@ namespace evan
 		 */
 		std::vector<uint32_t> _fragmentCode;
 
+		/**
+		 * Vulkan device used to create the shader modules
+		 */
 		VkDevice _logicalDevice;
 	};
 }	 // namespace evan

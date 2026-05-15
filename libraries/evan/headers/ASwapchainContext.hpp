@@ -47,19 +47,19 @@ namespace evan
 		 * @struct SwapChainSupportDetails
 		 */
 		struct SwapChainSupportDetails {
-			/*
+			/**
 			 * @brief Vulkan surface capabilities, such as the minimum and
 			 * maximum image count, extent, and supported transforms.
 			 */
 			VkSurfaceCapabilitiesKHR capabilities;
 
-			/*
+			/**
 			 * @brief A list of supported surface formats (color space and pixel
 			 * format).
 			 */
 			std::vector<VkSurfaceFormatKHR> formats;
 
-			/*
+			/**
 			 * @brief A list of supported presentation modes (e.g., FIFO,
 			 * Mailbox, etc.).
 			 */

@@ -2,7 +2,7 @@
 ** ETIB PROJECT, 2026
 ** evan
 ** File description:
-** AndroidXrPlaftform
+** AndroidXrPlatform
 */
 
 #include "openxr/platform/AndroidXrPlatform.hpp"

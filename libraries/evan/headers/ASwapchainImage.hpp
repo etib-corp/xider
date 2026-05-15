@@ -234,6 +234,14 @@ namespace evan
 		 * for rendering operations, as they serve as the targets for rendering
 		 * output. The function takes the logical device, physical device, and
 		 * the number of samples for multisampling.
+		 *
+		 * @param deviceBackend A reference to the ADeviceBackend instance, which
+		 * provides access to the Vulkan device and other resources needed for
+		 * creating the color resources.
+		 * @param msaaSamples The number of samples for multisampling (MSAA) to
+		 * be used in the color resources. This parameter is essential for
+		 * configuring the color resources to support multisampling if required
+		 * by the rendering system.
 		 */
 		void createColorResources(const ADeviceBackend &deviceBackend,
 								  VkSampleCountFlagBits msaaSamples);
@@ -250,6 +258,12 @@ namespace evan
 		 * function takes a DeviceContext as a parameter, which provides access
 		 * to the Vulkan device and other resources needed for creating the
 		 * depth resources.
+		 *
+		 * @param deviceContext A reference to the DeviceContext instance, which
+		 * provides access to the Vulkan device and other resources needed for
+		 * creating the depth resources. The DeviceContext should be properly
+		 * initialized and should support the necessary features for depth
+		 * buffering to ensure that the depth resources can be created successfully.
 		 */
 		void createDepthResources(const DeviceContext &deviceContext);
 

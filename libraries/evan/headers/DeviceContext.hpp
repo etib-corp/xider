@@ -138,7 +138,7 @@ namespace evan
 		 */
 		std::shared_ptr<ADeviceBackend> _deviceBackend;
 
-		/*
+		/**
 		 * Vulkan debug messenger for validation layers.
 		 * This member variable holds the handle to the Vulkan debug messenger,
 		 * which is used to receive debug messages from the Vulkan validation

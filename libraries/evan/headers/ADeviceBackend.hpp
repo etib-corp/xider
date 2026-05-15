@@ -55,30 +55,30 @@ namespace evan
 		 * which is already a member of the class).
 		 */
 		struct CopyBufferProperties {
-			/*
+			/**
 			 * @brief The Vulkan logical device used for command buffer
 			 * operations.
 			 */
 			VkDevice _logicalDevice;
-			/*
+			/**
 			 * @brief The Vulkan command pool used to allocate command buffers
 			 * for the copy operation.
 			 */
 			VkCommandPool _commandPool;
-			/*
+			/**
 			 * @brief The Vulkan graphics queue used to submit the command
 			 * buffer for execution.
 			 */
 			VkQueue _graphicsQueue;
-			/*
+			/**
 			 * @brief The Vulkan buffer from which data will be copied.
 			 */
 			VkBuffer _srcBuffer;
-			/*
+			/**
 			 * @brief The Vulkan buffer to which data will be copied.
 			 */
 			VkBuffer _dstBuffer;
-			/*
+			/**
 			 * @brief The size of the data to copy in bytes.
 			 */
 			VkDeviceSize _size;
@@ -91,34 +91,32 @@ namespace evan
 		 * This structure encapsulates all necessary Vulkan objects and
 		 * parameters needed to perform a buffer-to-image copy operation.
 		 *
-		 * @note TODO: Remove useless properties (such as the logical device
-		 * which is already a member of the class).
 		 */
 		struct CopyBufferToImageProperties {
-			/*
+			/**
 			 * @brief The Vulkan command pool used to allocate command buffers
 			 * for the copy operation.
 			 */
 			VkCommandPool _commandPool;
-			/*
+			/**
 			 * @brief The Vulkan graphics queue used to submit the command
 			 * buffer for execution.
 			 */
 			VkQueue _graphicsQueue;
-			/*
+			/**
 			 * @brief The Vulkan buffer containing the image data to be copied.
 			 */
 			VkBuffer _buffer;
-			/*
+			/**
 			 * @brief The Vulkan image to which the data will be copied.
 			 */
 			VkImage _image;
-			/*
-			 * @brief The layout of the image before the copy operation.
+			/**
+			 * @brief The width of the image in pixels.
 			 */
 			uint32_t _width;
-			/*
-			 * @brief The layout of the image before the copy operation.
+			/**
+			 * @brief The height of the image in pixels.
 			 */
 			uint32_t _height;
 		};
@@ -133,37 +131,35 @@ namespace evan
 		 * pool, queue, image, format, old and new layouts, and the number of
 		 * mipmap levels.
 		 *
-		 * @note TODO: Remove useless properties (such as the logical device
-		 * which is already a member of the class).
 		 */
 		struct TransitionImageLayoutProperties {
-			/*
+			/**
 			 * @brief The Vulkan command pool used to allocate command buffers
 			 * for the layout transition.
 			 */
 			VkCommandPool _commandPool;
-			/*
+			/**
 			 * @brief The Vulkan graphics queue used to submit the command
 			 * buffer for execution.
 			 */
 			VkQueue _graphicsQueue;
-			/*
+			/**
 			 * @brief The Vulkan image whose layout is to be transitioned.
 			 */
 			VkImage _image;
-			/*
+			/**
 			 * @brief The format of the image being transitioned.
 			 */
 			VkFormat _format;
-			/*
+			/**
 			 * @brief The old layout of the image before the transition.
 			 */
 			VkImageLayout _oldLayout;
-			/*
+			/**
 			 * @brief The new layout of the image after the transition.
 			 */
 			VkImageLayout _newLayout;
-			/*
+			/**
 			 * @brief The number of mipmap levels in the image.
 			 */
 			uint32_t _mipLevels;
@@ -179,51 +175,49 @@ namespace evan
 		 * includes device handles, image dimensions, format, usage flags, and
 		 * references to the resulting image and memory objects.
 		 *
-		 * @note TODO: Remove useless properties (such as the logical device
-		 * which is already a member of the class).
 		 */
 		struct CreateImageProperties {
-			/*
+			/**
 			 * @brief The width of the image in pixels.
 			 */
 			uint32_t _width;
-			/*
+			/**
 			 * @brief The height of the image in pixels.
 			 */
 			uint32_t _height;
-			/*
+			/**
 			 * @brief The number of mipmap levels for the image.
 			 */
 			uint32_t _mipLevels;
-			/*
+			/**
 			 * @brief The number of samples for multisample anti-aliasing
 			 * (MSAA).
 			 */
 			VkSampleCountFlagBits _numSamples;
-			/*
+			/**
 			 * @brief The format of the image (e.g., VK_FORMAT_R8G8B8A8_SRGB).
 			 */
 			VkFormat _format;
-			/*
+			/**
 			 * @brief The tiling arrangement of the image (e.g.,
 			 * VK_IMAGE_TILING_OPTIMAL).
 			 */
 			VkImageTiling _tiling;
-			/*
+			/**
 			 * @brief The usage flags for the image (e.g.,
 			 * VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT).
 			 */
 			VkImageUsageFlags _usage;
-			/*
+			/**
 			 * @brief The memory property flags for the image (e.g.,
 			 * VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT).
 			 */
 			VkMemoryPropertyFlags _properties;
-			/*
+			/**
 			 * @brief A reference to the VkImage object that will be created.
 			 */
 			VkImage &_image;
-			/*
+			/**
 			 * @brief A reference to the VkDeviceMemory object that will be
 			 * allocated for the image.
 			 */
@@ -242,25 +236,25 @@ namespace evan
 		 * which is already a member of the class).
 		 */
 		struct CreateBufferProperties {
-			/*
+			/**
 			 * @brief The size of the buffer in bytes.
 			 */
 			VkDeviceSize _size;
-			/*
+			/**
 			 * @brief The usage flags for the buffer (e.g.,
 			 * VK_BUFFER_USAGE_VERTEX_BUFFER_BIT).
 			 */
 			VkBufferUsageFlags _usage;
-			/*
+			/**
 			 * @brief The memory property flags for the buffer (e.g.,
 			 * VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT).
 			 */
 			VkMemoryPropertyFlags _properties;
-			/*
+			/**
 			 * @brief A reference to the VkBuffer object that will be created.
 			 */
 			VkBuffer &_buffer;
-			/*
+			/**
 			 * @brief A reference to the VkDeviceMemory object that will be
 			 * allocated for the buffer.
 			 */
@@ -314,6 +308,9 @@ namespace evan
 		 * graphics and presentation queue families, if they are found. If the
 		 * required queue families are not found, the corresponding optional
 		 * values in the QueueFamilyIndices structure will be empty.
+		 *
+		 * @return evan::QueueFamilyIndices A structure containing the indices of
+		 * the graphics and presentation queue families for the Vulkan physical device.
 		 */
 		virtual evan::QueueFamilyIndices findQueueFamilies() = 0;
 
@@ -381,8 +378,9 @@ namespace evan
 		 * buffer and allocate the necessary memory for it, ensuring that it is
 		 * ready for use in Vulkan operations.
 		 *
-		 * @param properties A structure containing all necessary parameters for
-		 * buffer creation and memory allocation.
+		 * @param properties A structure containing all necessary parameters for buffer
+		 * creation and memory allocation, including device handles, buffer size, usage flags,
+		 * memory properties, and references to the resulting buffer and memory objects.
 		 *
 		 * @throws std::runtime_error If buffer creation or memory allocation
 		 * fails, an exception will be thrown with details about the failure.
@@ -398,8 +396,9 @@ namespace evan
 		 * for the layout transition and performs the operation on the specified
 		 * image.
 		 *
-		 * @param properties A structure containing all necessary parameters for
-		 * the image layout transition.
+		 * @param properties A structure containing all necessary parameters for the image layout
+		 * transition, including device, command pool, queue, image, format, old and new layouts,
+		 * and the number of mipmap levels.
 		 *
 		 * @throws std::runtime_error If the layout transition fails, an
 		 * exception will be thrown with details about the failure.
@@ -463,7 +462,9 @@ namespace evan
 		 * it, ensuring that it is ready for use in Vulkan operations.
 		 *
 		 * @param properties A structure containing all necessary parameters for
-		 * image creation and memory allocation.
+		 * image creation and memory allocation, including device handles, image
+		 * dimensions, format, usage flags, and references to the resulting image
+		 * and memory objects.
 		 *
 		 * @throws std::runtime_error If image creation or memory allocation
 		 * fails, an exception will be thrown with details about the failure.
@@ -482,7 +483,9 @@ namespace evan
 		 * the image.
 		 *
 		 * @param properties A structure containing all necessary parameters for
-		 * copying data from a buffer to an image.
+		 * copying data from a buffer to an image, including device handles,
+		 * command pool, graphics queue, source buffer, destination image,
+		 * and image dimensions.
 		 *
 		 * @throws std::runtime_error If the copy operation fails, an exception
 		 * will be thrown with details about the failure.
@@ -502,9 +505,11 @@ namespace evan
 		 * correctly from the source buffer to the destination buffer.
 		 *
 		 * @param properties A structure containing all necessary parameters for
-		 * copying data from one buffer to another.
+		 * copying data from a buffer to another buffer, including device handles,
+		 * command pool, graphics queue, source buffer, destination buffer,
+		 * and the size of the data to copy.
 		 *
-		 * @throws std::runtime_error If the copy operation fails, an exception
+ 		 * @throws std::runtime_error If the copy operation fails, an exception
 		 * will be thrown with details about the failure.
 		 */
 		void copyBuffer(const CopyBufferProperties &properties) const;
@@ -522,8 +527,6 @@ namespace evan
 		 * @param aspectFlags Specifies which aspect(s) of the image are
 		 * included in the view (e.g., VK_IMAGE_ASPECT_COLOR_BIT for color
 		 * images).
-		 * @param logicalDevice The Vulkan logical device used to create the
-		 * image view.
 		 *
 		 * @return A VkImageView handle representing the created image view.
 		 *

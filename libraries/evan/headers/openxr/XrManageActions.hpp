@@ -80,17 +80,36 @@ namespace evan
 		std::vector<std::unique_ptr<utility::event::Event>>
 			pollActions(XrDeviceBackend &deviceBackend);
 
-		XrActionSet _actionSet;	   // The main action set for the application
+		/**
+		 * @brief The primary OpenXR action set for the application.
+		 *
+		 * Contains and groups all OpenXR actions managed by `XrManageActions`.
+		 */
+		XrActionSet _actionSet;
 
-		std::unique_ptr<XrHandsMotionActions>
-			_handsMotionActions;	// Action manager for hand tracking actions
+		/**
+		 * @brief Action manager for hand tracking actions.
+		 *
+		 * Manages hand motion actions (pose/aim/grip), related action spaces,
+		 * and updates used for hand tracking input.
+		 */
+		std::unique_ptr<XrHandsMotionActions> _handsMotionActions;
 
-		std::unique_ptr<XrManageButtonsActions>
-			_manageButtonsActions;	  // Action manager for button actions
+		/**
+		 * @brief Action manager for button actions.
+		 *
+		 * Handles digital/button input actions (press/release) from controllers
+		 * or other input devices.
+		 */
+		std::unique_ptr<XrManageButtonsActions> _manageButtonsActions;
 
-		std::unique_ptr<XrManageThumbStickActions>
-			_manageThumbStickActions;	 // Action manager for thumb stick
-										 // actions
+		/**
+		 * @brief Action manager for thumb stick analog inputs.
+		 *
+		 * Handles thumb stick axes, analog motion and related input events.
+		 */
+		std::unique_ptr<XrManageThumbStickActions> _manageThumbStickActions;
+
 		private:
 		/**
 		 * @brief Creates the main action set for the application.

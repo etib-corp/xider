@@ -75,6 +75,10 @@ namespace evan
 		 * @note This function should be called regularly in the main
 		 * application loop to ensure that events are processed in a timely
 		 * manner.
+		 *
+		 * @return A vector of unique pointers to Event objects representing the
+		 * events that were polled from the OpenXR platform. Each Event object
+		 * contains information about the type of event, such as input events.
 		 */
 		virtual std::vector<std::unique_ptr<utility::event::Event>> pollEvents(ADeviceBackend &deviceBackend) override;
 

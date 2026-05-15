@@ -1,5 +1,5 @@
 /*
-** EPITECH PROJECT, 2026
+** ETIB PROJECT, 2026
 ** evan
 ** File description:
 ** InteractionProfile
@@ -7,11 +7,9 @@
 
 #include "openxr/InteractionProfile.hpp"
 
-#include <iostream>
-
-evan::InteractionProfile::InteractionProfile()
-{
-}
+////////////////////
+// Public Methods //
+////////////////////
 
 std::string evan::InteractionProfile::getRuntimeName(XrInstance instance)
 {

@@ -53,24 +53,24 @@ namespace evan
 		 * image.
 		 */
 		struct CreateXrSwapchainImageProperties {
-			/*
+			/**
 			 * @brief The OpenXR swapchain handle associated with the swapchain
 			 * images.
 			 */
 			XrSwapchain swapchain;
-			/*
+			/**
 			 * @brief The swapchain creation info structure containing
 			 * parameters for creating the swapchain images, such as format,
 			 * dimensions, sample count, and usage flags.
 			 */
 			XrSwapchainCreateInfo createInfo;
-			/*
+			/**
 			 * @brief The Vulkan render pass used for rendering operations with
 			 * the swapchain images. It defines the rendering pipeline and how
 			 * the images will be used during rendering.
 			 */
 			VkRenderPass renderPass;
-			/*
+			/**
 			 * @brief A reference to the device context, which provides access
 			 * to Vulkan device resources and operations needed for managing the
 			 * swapchain images, such as creating image views, allocating

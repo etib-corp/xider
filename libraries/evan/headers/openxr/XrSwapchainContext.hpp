@@ -67,23 +67,18 @@ namespace evan
 		XrSwapchainContext(const DeviceContext &deviceContext);
 
 		/**
-		 * @brief Destroys the XrSwapchainContext and releases associated
-		 * resources.
+		 * @brief Destroys all swapchain images and clears the swapchain image collection.
 		 *
-		 * This destructor is responsible for cleaning up any resources
-		 * associated with the XrSwapchainContext, such as Vulkan resources,
-		 * projection layer views, and any other resources that were allocated
-		 * during the lifetime of the context. Implement this destructor to
-		 * ensure that all resources are properly released when the
-		 * XrSwapchainContext is no longer needed, preventing memory leaks and
-		 * ensuring efficient resource management in the application.
+		 * This function iterates through all swapchain images stored in the context,
+		 * destroys each image using the provided Vulkan device, and then clears the
+		 * swapchain image collection.
 		 *
-		 * @note The destructor should handle the cleanup of all resources
-		 * associated with the XrSwapchainContext, including Vulkan resources,
-		 * projection layer views, and any other resources that were allocated
-		 * during the lifetime of the context. Ensure that all resources are
-		 * properly released to prevent memory leaks and ensure efficient
-		 * resource management in the application.
+		 * @param device The Vulkan device handle used to destroy the swapchain images.
+		 *
+		 * @note This function should be called during cleanup to ensure proper resource
+		 *       deallocation of all swapchain images.
+		 *
+		 * @see evan::XrSwapchainContext
 		 */
 		void destroy(VkDevice device) override;
 
@@ -118,41 +113,41 @@ namespace evan
 							 VkFence inFlightFence,
 							 uint32_t &imageIndex) override;
 
+
 		/**
-		 * @brief Waits for an image from the swapchain to become available for
-		 * rendering.
+		 * @brief Waits for a swapchain image to become available.
 		 *
-		 * This method is responsible for waiting until an image from the
-		 * swapchain is available for rendering. It takes the index of the
-		 * swapchain image to wait for and ensures that the application does not
-		 * proceed with rendering operations until the specified image is ready.
-		 * Implement this method to properly synchronize rendering operations
-		 * with the availability of swapchain images in an OpenXR application.
+		 * Blocks until the swapchain image at the specified index is ready for rendering.
+		 * Uses an infinite timeout duration to wait indefinitely for the image to be available.
 		 *
 		 * @param index The index of the swapchain image to wait for.
 		 *
-		 * @return void This method does not return a value, but it should
-		 * ensure that the application waits until the specified image from the
-		 * swapchain is available for rendering before proceeding with any
-		 * rendering operations.
+		 * @note If the wait operation fails, an error message is printed to stderr.
+		 *       The function does not throw exceptions on failure.
+		 *
+		 * @see xrWaitSwapchainImage
 		 */
 		void waitForImage(uint32_t index) override;
 
 		/**
-		 * @brief Updates the projection layer views based on the current view
-		 * configurations.
+		 * @brief Updates the projection layer views based on current swapchain images and view data.
 		 *
-		 * This method is responsible for updating the projection layer views
-		 * based on the current view configurations, which may change due to
-		 * user interactions or changes in the VR environment. It should ensure
-		 * that the projection layer views are properly updated to reflect any
-		 * changes in the view configurations, allowing for accurate rendering
-		 * of the scene in an OpenXR application.
+		 * This function synchronizes the projection layer views with the available swapchain images
+		 * and view information. It resizes the projection layer views container to match the smaller
+		 * of the two collections (views or swapchain images) and populates each view with:
+		 * - Composition layer type information
+		 * - View pose and field of view from the corresponding view
+		 * - Swapchain reference and image rectangle dimensions from the corresponding swapchain image
 		 *
-		 * @return void This method does not return a value, but it should
-		 * ensure that the projection layer views are updated based on the
-		 * current view configurations, allowing for accurate rendering of the
-		 * scene in an OpenXR application.
+		 * Each projection layer view is initialized with zero extent and offset (0, 0), and the
+		 * image rectangle extent is set to the swapchain image dimensions. Dynamic cast is used
+		 * to safely retrieve XrSwapchainImage instances; if a cast fails, that index is skipped.
+		 *
+		 * @note This function should be called whenever the swapchain images or view data changes
+		 * to ensure the projection layer views remain synchronized.
+		 *
+		 * @see XrSwapchainImage
+		 * @see XR_TYPE_COMPOSITION_LAYER_PROJECTION_VIEW
 		 */
 		void updateProjectionLayerViews();
 

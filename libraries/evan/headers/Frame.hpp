@@ -43,8 +43,25 @@ namespace evan
 		 *
 		 */
 		struct UniformBufferObject {
-			glm::mat4 model;	// Model matrix
-			glm::mat4 view;		// View matrix
+			/**
+			 * @brief Model matrix representing the transformation of the object in the
+			 * scene. It is used to position, rotate, and scale the object in the world
+			 * space.
+			 */
+			glm::mat4 model;
+
+			/**
+			 * @brief View matrix representing the camera's position and orientation in
+			 * the scene. It is used to transform world coordinates into camera space for
+			 * rendering.
+			 */
+			glm::mat4 view;
+
+			/**
+			 * @brief Projection matrix representing the perspective or orthographic
+			 * projection used for rendering. It is used to transform camera space
+			 * coordinates into clip space for rendering.
+			 */
 			glm::mat4 proj;		// Projection matrix
 		};
 
@@ -93,6 +110,8 @@ namespace evan
 		 * This function returns the command buffer that is used for recording
 		 * rendering commands for this frame. It can be used to begin command
 		 * buffer recording and submit commands to the graphics queue.
+		 *
+		 * @return The Vulkan command buffer for this frame.
 		 */
 		VkBuffer getUniformBuffer() const;
 
@@ -130,6 +149,9 @@ namespace evan
 		 *
 		 * This function allocates a command buffer from the specified
 		 * command pool and initializes it for recording rendering commands.
+		 *
+		 * @param device The Vulkan logical device used to create the command buffer.
+		 * @param commandPool The Vulkan command pool from which to allocate the
 		 */
 		void createCommandBuffer(VkDevice device, VkCommandPool commandPool);
 
@@ -139,6 +161,8 @@ namespace evan
 		 * This function creates the Vulkan synchronization objects (fences and
 		 * semaphores) needed for rendering this frame, such as the in-flight
 		 * fence, image available semaphore, and render finished semaphore.
+		 *
+		 * @param device The Vulkan logical device used to create the synchronization objects.
 		 */
 		void createSyncObjects(VkDevice device);
 
@@ -149,6 +173,10 @@ namespace evan
 		 * for the uniform buffer object (UBO) used in this frame.
 		 * It sets up the buffer to be used for passing data to the vertex
 		 * shader during rendering.
+		 *
+		 * @param deviceBackend A reference to the device backend that provides
+		 * access to Vulkan resources and functions needed to create the buffer
+		 * and allocate memory for the uniform buffer.
 		 */
 		void createUniformBuffer(const ADeviceBackend &deviceBackend);
 

@@ -68,6 +68,12 @@ namespace evan
 		 * configurations. This constructor is useful for quickly getting
 		 * started with the engine without needing to specify custom parameters.
 		 *
+		 * @param platform A shared pointer to an IPlatform object, which provides
+		 * an abstraction layer for platform-specific operations. The IPlatform
+		 * interface defines methods for window management, input handling, and
+		 * other platform-dependent functionality, allowing the engine to be
+		 * portable across different operating systems and platforms.
+		 *
 		 * @note The Engine class is designed to be flexible and extensible,
 		 * allowing for future enhancements and additions to the engine's
 		 * capabilities. The current implementation focuses on establishing the
@@ -155,6 +161,10 @@ namespace evan
 		 * scenes within the engine, enabling them to switch between different
 		 * scenes as needed.
 		 *
+		 * @param sceneIndex Scene identifier.
+		 * @param texturePaths Texture file paths used by the scene.
+		 * @param meshData Mesh data grouped by mesh name.
+		 *
 		 * @note The Engine class is designed to be flexible and extensible,
 		 * allowing for future enhancements and additions to the engine's
 		 * capabilities. The current implementation focuses on establishing the
@@ -192,6 +202,20 @@ namespace evan
 						 std::vector<std::string> texturePaths,
 						 std::map<std::string, std::vector<Mesh>> meshData);
 
+		/**
+		 * @brief Initializes the asset manager for the engine.
+		 *
+		 * Sets up the global asset manager instance based on the target platform.
+		 * On Android, creates an AndroidAssetManager with the provided platform asset manager.
+		 * On other platforms, creates a DefaultAssetManager.
+		 *
+		 * @param platformAssetManager Platform-specific asset manager pointer.
+		 *                             On Android, this should be a pointer to AAssetManager.
+		 *                             On other platforms, this parameter is ignored and can be nullptr.
+		 *
+		 * @note This function should be called during engine initialization before any asset loading operations.
+		 * @note The global asset manager is stored in g_assetManager as a unique_ptr.
+		 */
 		static void initializeAssetManager(void *platformAssetManager);
 
 		protected:

@@ -69,6 +69,10 @@ namespace evan
 		 * Note: The implementation of this method may involve using GLFW's
 		 * event polling functions to handle events specific to the Desktop
 		 * platform.
+		 *
+		 * @return A vector of unique pointers to Event objects representing the
+		 * events that were polled from the Desktop platform. Each Event object
+		 * contains information about the type of event, such as input events.
 		 */
 		virtual std::vector<std::unique_ptr<utility::event::Event>> pollEvents(ADeviceBackend &deviceBackend) override;
 

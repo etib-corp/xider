@@ -44,34 +44,34 @@ namespace evan
 		 *
 		 */
 		struct GenerateMipmapsProperties {
-			/*
+			/**
 			 * @brief The Vulkan command pool used to allocate command buffers
 			 * for mipmap generation.
 			 */
 			VkCommandPool _commandPool;
-			/*
+			/**
 			 * @brief The Vulkan graphics queue used to submit the command
 			 * buffer for execution.
 			 */
 			VkQueue _graphicsQueue;
-			/*
+			/**
 			 * @brief The Vulkan image for which mipmaps are to be generated.
 			 */
 			VkImage _image;
-			/*
+			/**
 			 * @brief The format of the image for which mipmaps are to be
 			 * generated.
 			 */
 			VkFormat _imageFormat;
-			/*
+			/**
 			 * @brief The width of the image in pixels.
 			 */
 			uint32_t _texWidth;
-			/*
+			/**
 			 * @brief The height of the image in pixels.
 			 */
 			uint32_t _texHeight;
-			/*
+			/**
 			 * @brief The number of mipmap levels to generate.
 			 */
 			uint32_t _mipLevels;
