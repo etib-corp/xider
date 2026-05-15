@@ -179,9 +179,8 @@ namespace utility::graphic
 		}
 
 		/**
-		 * @brief Rotate pose orientation by a given orientation.
-		 * @param rotation Orientation to apply as rotation.
-		 * @return Reference to this pose for chaining.
+		 * @brief Get a ray representing the forward direction of the pose.
+		 * @return Ray pointing in the forward direction from the pose position.
 		 */
 		Ray<PoseComponentType> toForwardRay() const noexcept
 		{
@@ -238,4 +237,4 @@ namespace utility::graphic
 	 */
 	using PoseD = Pose<double>;
 
-} // namespace utility::graphic
+}	 // namespace utility::graphic

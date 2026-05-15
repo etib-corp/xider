@@ -35,26 +35,107 @@ namespace guillaume::components
 	class HandThumbRestInteraction: public ecs::Component
 	{
 		public:
-		using ThumbRestHandler = std::function<void(void)>;
+		using ThumbRestHandler =
+			std::function<void(void)>;	  ///< Type alias for the thumb rest
+										  ///< event handler function.
 
 		private:
-		ThumbRestHandler _onThumbRestHandler;
-		bool _isTouched { false };
-		bool _isProximity { false };
+		ThumbRestHandler
+			_onThumbRestHandler;	///< Handler function to be called when a
+									///< thumb rest interaction occurs.
+		bool _isTouched {
+			false
+		};	  ///< Indicates whether the hand is currently touching the thumb
+			  ///< rest interaction area, which can be used to trigger
+			  ///< touch-related events or visual feedback when the
+			  ///< hand is in contact with the interaction area.
+		bool _isProximity {
+			false
+		};	  ///< Indicates whether the hand is currently in proximity to the
+			  ///< thumb rest interaction area, which can be used to trigger
+			  ///< proximity-related events or visual feedback when the hand is
+			  ///< near the interaction area.
 
 		public:
+		/**
+		 * @brief Constructs a HandThumbRestInteraction component.
+		 */
 		HandThumbRestInteraction(void);
+
+		/**
+		 * @brief Destructor for the HandThumbRestInteraction component.
+		 */
 		~HandThumbRestInteraction(void) = default;
 
-		HandThumbRestInteraction &setOnThumbRestHandler(
-			const ThumbRestHandler &handler);
+		/**
+		 * @brief Sets the handler function to be called when a thumb rest
+		 * interaction occurs.
+		 *
+		 * @param handler The function to be called when a thumb rest
+		 * interaction occurs. This can be used to trigger specific actions or
+		 * events in response to the thumb rest interaction.
+		 *
+		 * @return A reference to the HandThumbRestInteraction instance,
+		 * allowing for method chaining.
+		 */
+		HandThumbRestInteraction &
+			setOnThumbRestHandler(const ThumbRestHandler &handler);
+
+		/**
+		 * @brief Retrieves the current handler function for thumb rest
+		 * interactions.
+		 * @return The current thumb rest handler function, which will be called
+		 * when a thumb rest interaction occurs.
+		 */
 		ThumbRestHandler getOnThumbRestHandler(void) const;
 
+		/**
+		 * @brief Sets whether the hand is currently touching the thumb rest
+		 * interaction area.
+		 *
+		 * @param touched A boolean value indicating whether the hand is
+		 * currently touching the thumb rest interaction area. This can be used
+		 * to trigger touch-related events or visual feedback when the hand is
+		 * in contact with the interaction area.
+		 *
+		 * @return A reference to the HandThumbRestInteraction instance,
+		 * allowing for method chaining.
+		 */
 		HandThumbRestInteraction &setTouched(bool touched);
+
+		/**
+		 * @brief Retrieves whether the hand is currently touching the thumb
+		 * rest interaction area.
+		 * @return A boolean value indicating whether the hand is currently
+		 * touching the thumb rest interaction area, which can be used to
+		 * trigger touch-related events or visual feedback when the hand is in
+		 * contact with the interaction area.
+		 */
 		bool isTouched(void) const;
 
+		/**
+		 * @brief Sets whether the hand is currently in proximity to the thumb
+		 * rest interaction area.
+		 *
+		 * @param proximity A boolean value indicating whether the hand is
+		 * currently in proximity to the thumb rest interaction area. This can
+		 * be used to trigger proximity-related events or visual feedback when
+		 * the hand is near the interaction area.
+		 *
+		 * @return A reference to the HandThumbRestInteraction instance,
+		 * allowing for method chaining.
+		 */
 		HandThumbRestInteraction &setProximity(bool proximity);
+
+		/**
+		 * @brief Retrieves whether the hand is currently in proximity to the
+		 * thumb rest interaction area.
+		 * @return A boolean value indicating whether the hand is currently in
+		 * proximity to the thumb rest interaction area, which can be used to
+		 * trigger proximity-related events or visual feedback when the hand is
+		 * near the interaction area.
+		 */
 		bool isProximity(void) const;
 	};
 
-} 	// namespace guillaume::components
+}	 // namespace guillaume::components

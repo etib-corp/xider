@@ -90,6 +90,7 @@ namespace guillaume::components
 
 		/**
 		 * @brief Get the handlers for mouse button press events.
+		 * @param button The mouse button to get the handler for.
 		 * @return A map of mouse buttons to their corresponding press
 		 * handlers.
 		 */
@@ -108,9 +109,9 @@ namespace guillaume::components
 			const ButtonReleaseHandler &handler);
 
 		/**
-		 * @brief Get the handlers for mouse button release events.
-		 * @return A map of mouse buttons to their corresponding release
-		 * handlers.
+		 * @brief Get the handler for a button release event.
+		 * @param button The mouse button to get the handler for.
+		 * @return The function to call when the specified button is released.
 		 */
 		const ButtonReleaseHandler &getOnButtonReleaseHandler(
 			const utility::event::MouseButtonEvent::Button &button) const;

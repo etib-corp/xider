@@ -54,13 +54,11 @@ namespace guillaume::ecs
 	 * @tparam TravelerType The type of EntityTreeTraveler to use for this
 	 * phase.
 	 */
-	template<Phase Value, typename TravelerType> class SystemPhase
+	template<Phase Value, InheritFromEntityTreeTraveler TravelerType> class SystemPhase
 	{
 		public:
-		static constexpr Phase phase = Value;
-
-		static_assert(std::is_base_of_v<EntityTreeTraveler, TravelerType>,
-					  "TravelerType must inherit from EntityTreeTraveler");
+		static constexpr Phase phase =
+			Value;	  ///< The system update phase associated with this class
 
 		private:
 		TravelerType

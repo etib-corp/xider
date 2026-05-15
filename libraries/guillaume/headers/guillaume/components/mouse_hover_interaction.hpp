@@ -98,8 +98,25 @@ namespace guillaume::components
 		 * @return True if the mouse is hovering, false otherwise.
 		 */
 		bool isHovered(void) const;
+
+		/**
+		 * @brief Set whether the mouse is currently hovering over the entity.
+		 * @param isHovered True if the mouse is hovering, false otherwise.
+		 * @return Reference to this MouseHoverInteraction for method chaining.
+		 */
 		MouseHoverInteraction &setHovered(bool isHovered);
+
+		/**
+		 * @brief Get the accessibility margin for hover detection.
+		 * @return The accessibility margin as a SizeUI object.
+		 */
 		utility::graphic::SizeUI getAccessibilityMargin(void) const;
+
+		/**
+		 * @brief Set the accessibility margin for hover detection.
+		 * @param margin The new accessibility margin as a SizeUI object.
+		 * @return Reference to this MouseHoverInteraction for method chaining.
+		 */
 		MouseHoverInteraction &
 			setAccessibilityMargin(const utility::graphic::SizeUI &margin);
 	};
