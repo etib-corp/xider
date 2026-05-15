@@ -16,10 +16,10 @@ This project focuses on four key strategic objectives to ensure successful devel
 
 | **Focus Area** | **Description** |
 | --- | --- |
-| **[Technological Watch](docs/objectives/TECHNOLOGICAL_WATCH.md)** | Actively explore, test, and integrate emerging technologies with a critical approach. |
-| **[Technical Architecture](docs/objectives/TECHNICAL_ARCHITECTURE.md)** | Structure, document, and ensure the reliability of the project's architecture. |
-| **[Community Contributions](docs/objectives/COMMUNITY_CONTRIBUTIONS.md)** | Open the project to the community and encourage external contributions. |
-| **[Performance and Optimization](docs/objectives/PERFORMANCE_OPTIMIZATION.md)** | Measure, test, and optimize technical performance. |
+| **[Technological Watch](objectives/TECHNOLOGICAL_WATCH)** | Actively explore, test, and integrate emerging technologies with a critical approach. |
+| **[Technical Architecture](objectives/TECHNICAL_ARCHITECTURE)** | Structure, document, and ensure the reliability of the project's architecture. |
+| **[Community Contributions](objectives/COMMUNITY_CONTRIBUTIONS)** | Open the project to the community and encourage external contributions. |
+| **[Performance and Optimization](objectives/PERFORMANCE_OPTIMIZATION)** | Measure, test, and optimize technical performance. |
 
 ## Documentation
 
