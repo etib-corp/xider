@@ -35,12 +35,16 @@ namespace guillaume::ecs
 		public:
 		/**
 		 * @brief Traverse hierarchy in top-down level order.
+		 * @param entityRegistry Root entity registry to traverse.
+		 * @return Ordered mutable entity pointers.
 		 */
 		std::vector<Entity *>
 			travel(EntityRegistry &entityRegistry) const override;
 
 		/**
 		 * @brief Traverse hierarchy in top-down level order.
+		 * @param entityRegistry Root entity registry to traverse.
+		 * @return Ordered const entity pointers.
 		 */
 		std::vector<const Entity *>
 			travel(const EntityRegistry &entityRegistry) const override;

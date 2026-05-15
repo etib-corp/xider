@@ -17,13 +17,26 @@ namespace evan
 
 	class XrDeviceBackend;
 
+	/**
+	 * @class XrButtonAction
+	 *
+	 * @brief The XrButtonAction class represents an individual button action in
+	 * an OpenXR application.
+	 *
+	 * This class encapsulates the functionality required to define and manage a
+	 * specific button action, such as the A, B, X, Y, Menu, or System buttons.
+	 * It provides an interface for retrieving the current state of the button
+	 * action and generating corresponding events based on user input.
+	 */
 	class XrButtonAction: public AXrAction
 	{
 		public:
 		/**
-		 * @brief Constructs an XrButtonAction instance for a specific button type.
+		 * @brief Constructs an XrButtonAction instance for a specific button
+		 * type.
 		 *
-		 * @param buttonType The type of button this action represents (e.g., A, B, X, Y, Menu, System).
+		 * @param buttonType The type of button this action represents (e.g., A,
+		 * B, X, Y, Menu, System).
 		 */
 		XrButtonAction(utility::event::HandButtonEvent::Button buttonType =
 						   utility::event::HandButtonEvent::Button::Unknown);

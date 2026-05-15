@@ -44,11 +44,23 @@ namespace guillaume::systems
 		public event::EventManager<utility::event::HandSqueezeEvent>
 	{
 		public:
+		/**
+		 * @brief Construct a new HandSqueeze system.
+		 * @param eventBus Reference to the event bus for subscribing to events.
+		 */
 		HandSqueeze(event::EventBus &eventBus);
+
+		/**
+		 * @brief Destructor for the HandSqueeze system.
+		 */
 		~HandSqueeze(void);
 
+		/**
+		 * @brief Update the system for a given entity identifier.
+		 * @param entityIdentifier The identifier of the entity to update.
+		 */
 		virtual void
 			update(const ecs::Entity::Identifier &entityIdentifier) override;
 	};
 
-} 	// namespace guillaume::systems
+}	 // namespace guillaume::systems

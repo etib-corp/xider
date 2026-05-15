@@ -309,8 +309,9 @@ namespace evan
 		 * required queue families are not found, the corresponding optional
 		 * values in the QueueFamilyIndices structure will be empty.
 		 *
-		 * @return evan::QueueFamilyIndices A structure containing the indices of
-		 * the graphics and presentation queue families for the Vulkan physical device.
+		 * @return evan::QueueFamilyIndices A structure containing the indices
+		 * of the graphics and presentation queue families for the Vulkan
+		 * physical device.
 		 */
 		virtual evan::QueueFamilyIndices findQueueFamilies() = 0;
 
@@ -378,9 +379,10 @@ namespace evan
 		 * buffer and allocate the necessary memory for it, ensuring that it is
 		 * ready for use in Vulkan operations.
 		 *
-		 * @param properties A structure containing all necessary parameters for buffer
-		 * creation and memory allocation, including device handles, buffer size, usage flags,
-		 * memory properties, and references to the resulting buffer and memory objects.
+		 * @param properties A structure containing all necessary parameters for
+		 * buffer creation and memory allocation, including device handles,
+		 * buffer size, usage flags, memory properties, and references to the
+		 * resulting buffer and memory objects.
 		 *
 		 * @throws std::runtime_error If buffer creation or memory allocation
 		 * fails, an exception will be thrown with details about the failure.
@@ -396,9 +398,9 @@ namespace evan
 		 * for the layout transition and performs the operation on the specified
 		 * image.
 		 *
-		 * @param properties A structure containing all necessary parameters for the image layout
-		 * transition, including device, command pool, queue, image, format, old and new layouts,
-		 * and the number of mipmap levels.
+		 * @param properties A structure containing all necessary parameters for
+		 * the image layout transition, including device, command pool, queue,
+		 * image, format, old and new layouts, and the number of mipmap levels.
 		 *
 		 * @throws std::runtime_error If the layout transition fails, an
 		 * exception will be thrown with details about the failure.
@@ -463,8 +465,8 @@ namespace evan
 		 *
 		 * @param properties A structure containing all necessary parameters for
 		 * image creation and memory allocation, including device handles, image
-		 * dimensions, format, usage flags, and references to the resulting image
-		 * and memory objects.
+		 * dimensions, format, usage flags, and references to the resulting
+		 * image and memory objects.
 		 *
 		 * @throws std::runtime_error If image creation or memory allocation
 		 * fails, an exception will be thrown with details about the failure.
@@ -505,11 +507,11 @@ namespace evan
 		 * correctly from the source buffer to the destination buffer.
 		 *
 		 * @param properties A structure containing all necessary parameters for
-		 * copying data from a buffer to another buffer, including device handles,
-		 * command pool, graphics queue, source buffer, destination buffer,
-		 * and the size of the data to copy.
+		 * copying data from a buffer to another buffer, including device
+		 * handles, command pool, graphics queue, source buffer, destination
+		 * buffer, and the size of the data to copy.
 		 *
- 		 * @throws std::runtime_error If the copy operation fails, an exception
+		 * @throws std::runtime_error If the copy operation fails, an exception
 		 * will be thrown with details about the failure.
 		 */
 		void copyBuffer(const CopyBufferProperties &properties) const;
@@ -527,6 +529,8 @@ namespace evan
 		 * @param aspectFlags Specifies which aspect(s) of the image are
 		 * included in the view (e.g., VK_IMAGE_ASPECT_COLOR_BIT for color
 		 * images).
+		 * @param mipLevels The number of mipmap levels in the image, which
+		 * determines the range of mip levels included in the image view.
 		 *
 		 * @return A VkImageView handle representing the created image view.
 		 *
@@ -626,6 +630,9 @@ namespace evan
 
 		/**
 		 * @brief Retrieves the available Vulkan layers on the system.
+		 *
+		 * @return std::vector<VkLayerProperties> A vector containing the
+		 * properties of the available Vulkan layers.
 		 *
 		 * This function queries the Vulkan API to enumerate the available
 		 * instance layers and returns a vector of VkLayerProperties structures

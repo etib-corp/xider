@@ -19,6 +19,6 @@ GLM, tinyobjloader, stb, and freetype.
 
 ## Documentation
 
-- [Architecture](docs/ARCHITECTURE.MD)
-- [How Utility Works](docs/HOW_GUILLAUME_WORKS.MD)
-- [Technical Choices](docs/TECHNICAL_CHOICES.MD)
+- [Architecture](docs/ARCHITECTURE.md)
+- [How Utility Works](docs/HOW_GUILLAUME_WORKS.md)
+- [Technical Choices](docs/TECHNICAL_CHOICES.md)

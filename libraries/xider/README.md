@@ -17,5 +17,5 @@ It links against Utility, Evan, and Guillaume.
 
 ## Documentation
 
-- [Architecture](docs/ARCHITECTURE.MD)
-- [How XIDER Works](docs/HOW_XIDER_WORKS.MD)
+- [Architecture](docs/ARCHITECTURE.md)
+- [How XIDER Works](docs/HOW_XIDER_WORKS.md)
