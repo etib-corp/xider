@@ -59,11 +59,11 @@ namespace guillaume
 			utility::math::Vector2F;	///< 2D vector representing viewport
 										///< width and height in pixels.
 
-		private:
+		protected:
 		utility::graphic::ViewF _view;	  ///< View state
-		utility::RessourceProvider
+		std::unique_ptr<utility::RessourceProvider>
 			_ressourceProvider;	  ///< Shared text/resource manager
-		utility::DefaultSystemIO _systemIO;	   ///< Shared asset manager
+		std::shared_ptr<utility::DefaultSystemIO> _systemIO;	   ///< Shared asset manager
 
 		public:
 		/**
@@ -72,6 +72,8 @@ namespace guillaume
 		Renderer(void)
 			: Loggable()
 		{
+			_ressourceProvider = std::make_unique<utility::RessourceProvider>();
+			_systemIO = std::make_shared<utility::DefaultSystemIO>();
 		}
 
 		/**
@@ -148,16 +150,16 @@ namespace guillaume
 		 * @brief Get the shared utility resource manager.
 		 * @return Reference to the renderer resource manager.
 		 */
-		utility::RessourceProvider &getRessourceProvider(void)
+		std::unique_ptr<utility::RessourceProvider> getRessourceProvider(void)
 		{
-			return _ressourceProvider;
+			return std::move(_ressourceProvider);
 		}
 
 		/**
 		 * @brief Get the shared utility asset manager.
 		 * @return Reference to the renderer asset manager.
 		 */
-		utility::DefaultSystemIO &getSystemIO(void)
+		std::shared_ptr<utility::DefaultSystemIO> getSystemIO(void)
 		{
 			return _systemIO;
 		}

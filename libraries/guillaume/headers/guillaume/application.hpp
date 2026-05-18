@@ -91,6 +91,8 @@ namespace guillaume
 		event::EventBus _eventBus;	  ///< Event bus dispatching to systems
 		ecs::SystemRegistry _systemRegistry;	///< Shared system registry
 
+		bool _rendererSet = false;	  ///< Flag to track if renderer has been set
+
 		/**
 		 * @brief Register core systems used by the application.
 		 */
@@ -117,11 +119,12 @@ namespace guillaume
 		 * @brief Default constructor
 		 */
 		Application(void)
-			: _renderer()
+			: _renderer(nullptr)
 			, _eventHandler()
 			, _sceneManager(nullptr)
 			, _eventBus()
 			, _systemRegistry()
+			, _rendererSet(false)
 		{
 			registerCoreSystems();
 			_eventHandler.setEventCallback(
@@ -137,6 +140,12 @@ namespace guillaume
 		 */
 		virtual ~Application(void)
 		{
+		}
+
+		void setRenderer(RendererType renderer)
+		{
+			_renderer = std::move(renderer);
+			_rendererSet = true;
 		}
 
 		/**
@@ -210,6 +219,11 @@ namespace guillaume
 		 */
 		void clear(void)
 		{
+			if (_rendererSet == false) {
+				this->getLogger().warning(
+					"Attempted to clear renderer, but no renderer is set");
+				return;
+			}
 			_renderer.clear();
 		}
 
@@ -218,6 +232,11 @@ namespace guillaume
 		 */
 		void present(void)
 		{
+			if (_rendererSet == false) {
+				this->getLogger().warning(
+					"Attempted to present renderer, but no renderer is set");
+				return;
+			}
 			_renderer.present();
 		}
 
@@ -260,6 +279,11 @@ namespace guillaume
 					if (!_eventHandler.gotNewEvents()) {
 						continue;
 					}
+					if (_rendererSet == false) {
+						this->getLogger().error(
+							"Cannot run application: no renderer is set");
+						return EXIT_FAILURE;
+					}
 					_renderer.clear();
 					routine();
 					_renderer.present();
@@ -287,6 +311,11 @@ namespace guillaume
 					_eventHandler.pollEvents();
 					if (!_eventHandler.gotNewEvents()) {
 						continue;
+					}
+					if (_rendererSet == false) {
+						this->getLogger().error(
+							"Cannot run application: no renderer is set");
+						return EXIT_FAILURE;
 					}
 					_renderer.clear();
 					routine();
