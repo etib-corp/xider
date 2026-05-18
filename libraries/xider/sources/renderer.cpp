@@ -24,25 +24,17 @@
 
 namespace xider
 {
-	Renderer::Renderer(void)
+	Renderer::Renderer(const std::shared_ptr<evan::IPlatform> &platform)
 		: guillaume::Renderer()
 		, _engine(nullptr)
 	{
-	}
-
-	Renderer::Renderer(std::shared_ptr<evan::Engine> engine)
-		: guillaume::Renderer()
-		, _engine(engine)
-	{
+		_ressourceProvider = std::make_unique<utility::RessourceProvider>();
+		_systemIO = std::make_shared<utility::DefaultSystemIO>();
+		_engine = std::make_shared<evan::Engine>(std::move(_ressourceProvider), platform);
 	}
 
 	Renderer::~Renderer(void)
 	{
-	}
-
-	void Renderer::setEngine(std::shared_ptr<evan::Engine> engine)
-	{
-		_engine = engine;
 	}
 
 	std::shared_ptr<evan::Engine> Renderer::getEngine(void) const

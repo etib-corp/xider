@@ -24,7 +24,10 @@
 
 #include <memory>
 
+#include <IPlatform.hpp>
+
 #include <guillaume/renderer.hpp>
+
 #include <evan/Engine.hpp>
 
 namespace xider
@@ -49,21 +52,9 @@ namespace xider
 		 * Initialize with a null engine; must call setEngine() before
 		 * rendering.
 		 */
-		Renderer(void);
-
-		/**
-		 * @brief Constructs a Renderer with an Evan engine instance.
-		 * @param engine The Evan graphics engine to use for rendering.
-		 */
-		Renderer(std::shared_ptr<evan::Engine> engine);
+		Renderer(const std::shared_ptr<evan::IPlatform> &platform);
 
 		~Renderer(void) override;
-
-		/**
-		 * @brief Sets the Evan engine for this renderer.
-		 * @param engine The Evan graphics engine to use for rendering.
-		 */
-		void setEngine(std::shared_ptr<evan::Engine> engine);
 
 		/**
 		 * @brief Gets the current Evan engine instance.
