@@ -30,15 +30,6 @@ namespace xider
 		, _engine(engine)
 	{
 		getLogger().info("XIDER application initialized with Evan engine");
-		// Configure the renderer with the Evan engine
-		// The renderer is created by the Application template and is accessible
-		// through the getRenderer() method provided by Guillaume's Application
-		// class. We need to cast and set the engine on it.
-		Renderer *renderer_ptr = dynamic_cast<Renderer *>(&getRenderer());
-		if (renderer_ptr && _engine) {
-			renderer_ptr->setEngine(_engine);
-			getLogger().info("Renderer configured with Evan engine");
-		}
 	}
 
 	XIDER::~XIDER(void)
