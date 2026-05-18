@@ -28,14 +28,18 @@
 
 #include <evan/glfw/platform/MacOsDesktopPlatform.hpp>
 
+#include <utility/ressource_provider.hpp>
+
 int main(void)
 {
 	// Create Mac OS Desktop platform for graphics
 	auto macOsDesktopPlatform =
 		std::make_shared<evan::MacOsDesktopPlatform>("XIDER", 1280, 720);
 
+	auto ressourceProvider = std::make_unique<utility::RessourceProvider>();
+
 	// Create Evan graphics engine with Mac OS Desktop platform
-	auto evanEngine = std::make_shared<evan::Engine>(macOsDesktopPlatform);
+	auto evanEngine = std::make_shared<evan::Engine>(std::move(ressourceProvider), macOsDesktopPlatform);
 
 	// Initialize XIDER application with Evan engine
 	xider::XIDER app(evanEngine);
