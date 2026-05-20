@@ -66,7 +66,6 @@
 
 namespace guillaume
 {
-
 	/**
 	 * @brief Application base class.
 	 *
@@ -86,12 +85,14 @@ namespace guillaume
 	 * @see event::EventHandler
 	 * @see Renderer
 	 */
-	template<InheritFromRenderer RendererType,
+	template<class PlatformType,
+			 InheritFromRenderer RendererType,
 			 event::InheritFromEventHandler EventHandlerType,
 			 InheritFromScene... SceneTypes>
 	class Application:
 		protected utility::logging::Loggable<
-			Application<RendererType, EventHandlerType, SceneTypes...>,
+			Application<PlatformType, RendererType, EventHandlerType,
+				SceneTypes...>,
 			utility::logging::StandardLogger>
 	{
 		private:
