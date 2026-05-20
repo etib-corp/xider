@@ -46,18 +46,18 @@ namespace xider
 	 * event handling across all platforms.
 	 */
 	class XIDER:
-		public guillaume::Application<Renderer, EventHandler, scenes::Main,
+		public guillaume::Application<std::shared_ptr<evan::IPlatform>, Renderer, EventHandler, scenes::Main,
 									  scenes::Settings>
 	{
 		public:
 		/**
 		 * @brief Constructs a XIDER application with an Evan graphics engine.
-		 * @param engine The Evan graphics engine to use for rendering.
+		 * @param platform The Evan platform to use for rendering.
 		 *
 		 * This constructor initializes the XIDER application and configures the
-		 * renderer to use the provided Evan engine for all graphics operations.
+		 * renderer to use the provided Evan platform for all graphics operations.
 		 */
-		XIDER(std::shared_ptr<evan::Engine> engine);
+		XIDER(std::shared_ptr<evan::IPlatform> platform);
 
 		/**
 		 * @brief Default destructor.
