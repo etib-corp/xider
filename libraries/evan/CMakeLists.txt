@@ -24,7 +24,7 @@ option(BUILD_FOR_GLFW "Build with GLFW support" OFF)
 # 03. Global properties
 
 # Paths
-set(HEADERS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/headers")
+set(HEADERS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/headers/evan")
 set(SOURCES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/sources")
 
 # Dependencies
