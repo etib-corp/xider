@@ -30,7 +30,7 @@ function(add_doxygen_docs_for_library LIB_NAME LIB_ROOT)
 
     set(DOXYGEN_USE_MDFILE_AS_MAINPAGE "${LIB_ROOT}/README.md")
     # Only parse source and markdown files; treat images as assets via IMAGE_PATH
-    set(DOXYGEN_FILE_PATTERNS *.cpp *.hpp *.md *.markdown)
+    set(DOXYGEN_FILE_PATTERNS *.cpp *.hpp *.md *.markdown *.MARKDOWN)
     
     # Configure image paths for assets. Only include existing directories
     set(IMAGE_PATH_CANDIDATES "${LIB_ROOT}/assets" "${LIB_ROOT}/docs/assets" "${CMAKE_SOURCE_DIR}/assets" "${CMAKE_SOURCE_DIR}/docs/assets")
@@ -93,6 +93,13 @@ function(add_doxygen_docs_for_library LIB_NAME LIB_ROOT)
         "${LIB_ROOT}/examples/*.md"
         "${LIB_ROOT}/examples/**/*.md"
     )
+
+    # Shared repository documentation is referenced from library READMEs.
+    # Include it in every library doc target so Doxygen can resolve those links.
+    file(GLOB_RECURSE SHARED_DOCS_FILES
+        "${CMAKE_SOURCE_DIR}/docs/*.md"
+        "${CMAKE_SOURCE_DIR}/docs/**/*.md"
+    )
     
     # Collect asset files (images, diagrams)
     file(GLOB_RECURSE ASSET_FILES
@@ -138,6 +145,7 @@ function(add_doxygen_docs_for_library LIB_NAME LIB_ROOT)
         ${HEADER_FILES}
         ${DOCS_FILES}
         ${EXAMPLE_DOCS_FILES}
+        ${SHARED_DOCS_FILES}
         ${OPTIONAL_DOCS}
         ALL
         USE_STAMP_FILE

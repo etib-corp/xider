@@ -22,6 +22,6 @@ and one platform when configuring the project.
 
 ## Documentation
 
-- [How Evan Works](docs/HOW_EVAN_WORKS.MD)
-- [Architecture](docs/ARCHITECTURE.MD)
-- [Technical Choices](docs/TECHNICAL_CHOICES.MD)
+- [How Evan Works](docs/HOW_EVAN_WORKS.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Technical Choices](docs/TECHNICAL_CHOICES.md)

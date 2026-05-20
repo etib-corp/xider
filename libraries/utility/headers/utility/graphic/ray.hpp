@@ -361,9 +361,16 @@ namespace utility::graphic
 			return (rightCoord >= -halfWidth && rightCoord <= halfWidth
 					&& upCoord >= -halfHeight && upCoord <= halfHeight);
 		}
-
-		using RayF = Ray<float>;
-		using RayD = Ray<double>;
 	};
 
-} // namespace utility::graphic
+	/**
+	 * @brief Type alias for single-precision ray component.
+	 */
+	using RayF = Ray<float>;
+
+	/**
+	 * @brief Type alias for double-precision ray component.
+	 */
+	using RayD = Ray<double>;
+
+}	 // namespace utility::graphic

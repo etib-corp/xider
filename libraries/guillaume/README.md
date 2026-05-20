@@ -19,8 +19,8 @@ and SQLite3.
 
 ## Documentation
 
-- [Architecture](docs/ARCHITECTURE.MD)
-- [How Guillaume Works](docs/HOW_GUILLAUME_WORKS.MD)
-- [Technical Choices](docs/TECHNICAL_CHOICES.MD)
-- [Code Conventions](docs/CODE_CONVENTIONS.MD)
-- [Commit Conventions](docs/COMMIT_CONVENTIONS.MD)
+- [Architecture](docs/ARCHITECTURE.md)
+- [How Guillaume Works](docs/HOW_GUILLAUME_WORKS.md)
+- [Technical Choices](docs/TECHNICAL_CHOICES.md)
+- [Code Conventions](../../docs/CODE_CONVENTIONS.md)
+- [Commit Conventions](../../docs/COMMIT_CONVENTIONS.md)

@@ -255,6 +255,7 @@ namespace utility::graphic
 		 * @param pose View world-space position and orientation.
 		 * @param verticalFovDegrees Vertical field-of-view in degrees.
 		 * @param aspectRatio Aspect ratio (width/height).
+		 * @param viewportSize Viewport size in pixels (width, height).
 		 * @throws std::invalid_argument if perspective values or quaternion are
 		 * invalid.
 		 */
@@ -502,6 +503,12 @@ namespace utility::graphic
 										  math::normalize(rayDirection));
 		}
 
+		/**
+		 * @brief Create a world-space ray from viewport pixel coordinates.
+		 * @param point Viewport coordinate in pixels (origin at top-left).
+		 * @return Ray originating at view position toward projected direction.
+		 * @throws std::out_of_range if point is outside of viewport bounds.
+		 */
 		Ray<ViewComponentType>
 			viewPointToRay(const math::Vector2UI &point) const
 		{
