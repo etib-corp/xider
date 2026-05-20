@@ -92,7 +92,7 @@ namespace evan
 		 * core structure and functionality of the engine, with plans for
 		 * further improvements and optimizations in the future.
 		 */
-		Engine(std::unique_ptr<utility::RessourceProvider> ressourceProvider, const std::shared_ptr<IPlatform> &platform);
+		Engine(std::unique_ptr<utility::RessourceProvider> ressourceProvider, std::shared_ptr<IPlatform> platform);
 
 		~Engine();
 

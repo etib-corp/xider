@@ -24,7 +24,7 @@ void evan::Engine::initializeAssetManager(void *platformAssetManager)
 #endif
 }
 
-evan::Engine::Engine(std::unique_ptr<utility::RessourceProvider> ressourceProvider, const std::shared_ptr<IPlatform> &platform)
+evan::Engine::Engine(std::unique_ptr<utility::RessourceProvider> ressourceProvider, std::shared_ptr<IPlatform> platform)
 	: _platform(platform)
 {
 	if (!g_systemIO) {

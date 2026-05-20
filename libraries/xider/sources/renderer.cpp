@@ -24,7 +24,7 @@
 
 namespace xider
 {
-	Renderer::Renderer(const std::shared_ptr<evan::IPlatform> &platform)
+	Renderer::Renderer(std::shared_ptr<evan::IPlatform> platform)
 		: guillaume::Renderer()
 		, _engine(nullptr)
 	{

@@ -52,7 +52,7 @@ namespace xider
 		 * Initialize with a null engine; must call setEngine() before
 		 * rendering.
 		 */
-		Renderer(const std::shared_ptr<evan::IPlatform> &platform);
+		Renderer(std::shared_ptr<evan::IPlatform> platform);
 
 		~Renderer(void) override;
 
