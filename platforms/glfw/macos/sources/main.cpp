@@ -38,11 +38,8 @@ int main(void)
 
 	auto ressourceProvider = std::make_unique<utility::RessourceProvider>();
 
-	// Create Evan graphics engine with Mac OS Desktop platform
-	auto evanEngine = std::make_shared<evan::Engine>(std::move(ressourceProvider), macOsDesktopPlatform);
-
 	// Initialize XIDER application with Evan engine
-	xider::XIDER app(evanEngine);
+	xider::XIDER app(macOsDesktopPlatform);
 
 	return app.run();
 }
