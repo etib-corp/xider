@@ -38,10 +38,10 @@ std::vector<std::string>
 										 glfwExtensions + glfwExtensionCount);
 
 	extensions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
+
 	if (enableValidationLayers == true) {
 		extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 	}
-	extensions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
 	return std::vector<std::string>(extensions.begin(), extensions.end());
 }
 
