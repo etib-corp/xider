@@ -5,9 +5,9 @@
 ** DesktopSwapchainImage
 */
 
-#include "glfw/DesktopSwapchainImage.hpp"
+#include "evan/glfw/DesktopSwapchainImage.hpp"
 
-#include "DeviceContext.hpp"
+#include "evan/DeviceContext.hpp"
 
 evan::DesktopSwapchainImage::DesktopSwapchainImage(
 	const DeviceContext &deviceContext, GLFWwindow *window,

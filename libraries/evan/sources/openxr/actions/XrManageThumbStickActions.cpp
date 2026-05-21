@@ -5,8 +5,8 @@
 ** XrManageThumbStickActions
 */
 
-#include "openxr/actions/XrManageThumbStickActions.hpp"
-#include "openxr/XrDeviceBackend.hpp"
+#include "evan/openxr/actions/XrManageThumbStickActions.hpp"
+#include "evan/openxr/XrDeviceBackend.hpp"
 
 evan::XrHandThumbStickAction::XrHandThumbStickAction(
 	utility::event::HandEvent::HandType handType)

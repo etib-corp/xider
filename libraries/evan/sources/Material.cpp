@@ -5,11 +5,11 @@
 ** Material
 */
 
-#include "Material.hpp"
+#include "evan/Material.hpp"
 
 #include <stb_image.h>
 
-#include "Renderer.hpp"
+#include "evan/Renderer.hpp"
 
 evan::Material::Material(const DeviceContext &deviceContext,
 						 const Renderer &renderer,

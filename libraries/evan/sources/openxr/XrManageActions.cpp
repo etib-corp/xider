@@ -5,8 +5,8 @@
 ** XrManageActions
 */
 
-#include "openxr/XrManageActions.hpp"
-#include "openxr/XrDeviceBackend.hpp"
+#include "evan/openxr/XrManageActions.hpp"
+#include "evan/openxr/XrDeviceBackend.hpp"
 
 evan::XrManageActions::XrManageActions(XrDeviceBackend &deviceBackend)
 {

@@ -5,9 +5,9 @@
 ** DesktopSwapchainContext
 */
 
-#include "glfw/DesktopSwapchainContext.hpp"
+#include "evan/glfw/DesktopSwapchainContext.hpp"
 
-#include "DeviceContext.hpp"
+#include "evan/DeviceContext.hpp"
 
 evan::DesktopSwapchainContext::DesktopSwapchainContext(
 	const DeviceContext &deviceContext, GLFWwindow *window)

@@ -5,9 +5,9 @@
 ** ASwapchainImage
 */
 
-#include "ASwapchainImage.hpp"
+#include "evan/ASwapchainImage.hpp"
 
-#include "DeviceContext.hpp"
+#include "evan/DeviceContext.hpp"
 
 evan::ASwapchainImage::~ASwapchainImage()
 {

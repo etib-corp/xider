@@ -5,8 +5,8 @@
 ** AndroidXrPlatform
 */
 
-#include "openxr/platform/AndroidXrPlatform.hpp"
-#include "openxr/XrDeviceBackend.hpp"
+#include "evan/openxr/platform/AndroidXrPlatform.hpp"
+#include "evan/openxr/XrDeviceBackend.hpp"
 
 evan::AndroidXrPlatform::AndroidXrPlatform(
 	const AndroidPlatformData &platformData)

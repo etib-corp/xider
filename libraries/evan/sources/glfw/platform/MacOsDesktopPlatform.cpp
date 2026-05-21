@@ -5,7 +5,7 @@
 ** MacOsDesktopPlatform
 */
 
-#include "glfw/platform/MacOsDesktopPlatform.hpp"
+#include "evan/glfw/platform/MacOsDesktopPlatform.hpp"
 
 evan::MacOsDesktopPlatform::MacOsDesktopPlatform(const std::string &name,
 												 const uint32_t width,

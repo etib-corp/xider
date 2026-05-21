@@ -5,9 +5,9 @@
 ** Scene
 */
 
-#include "Scene.hpp"
+#include "evan/Scene.hpp"
 
-#include "Renderer.hpp"
+#include "evan/Renderer.hpp"
 
 evan::Scene::Scene(const DeviceContext &deviceContext, const Renderer &renderer,
 				   std::vector<std::string> texturePaths,
