@@ -90,14 +90,14 @@ jobs:
           upload-sarif: "false"
 
       - name: Upload SARIF to Code Scanning
-        if: ${{ always() && hashFiles('artifacts/coretrace-stack-analysis-action.sarif') != '' }}
+        if: ${{ matrix.runner == 'ubuntu-latest' && hashFiles('artifacts/coretrace-stack-analysis-action.sarif') != '' }}
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: artifacts/coretrace-stack-analysis-action.sarif
           category: coretrace-consumer-action-tag
 
       - name: Upload analysis artifacts
-        if: always()
+        if: matrix.runner == 'ubuntu-latest'
         uses: actions/upload-artifact@v4
         with:
           name: coretrace-results-action-tag
@@ -105,7 +105,7 @@ jobs:
           retention-days: 14
 
       - name: Print summary
-        if: always()
+        if: matrix.runner == 'ubuntu-latest'
         run: |
           python3 - <<'PY'
           import json
