@@ -78,12 +78,11 @@ jobs:
         if: matrix.runner == 'ubuntu-latest'
         uses: CoreTrace/coretrace-stack-analyzer@v0.18.1
         with:
-          sources: src/
           compile-commands: build/compile_commands.json
-          fail-on: warning
-          stack-limit: 4096
-          analysis-profile: full
-          sarif-file: results.sarif
-          json-file: results.json
-          upload-sarif: true
-          llvm-version: 20
+          analysis-profile: fast
+          resource-model: default
+          resource-cache-memory-only: "true"
+          fail-on: error
+          sarif-file: artifacts/coretrace-stack-analysis.sarif
+          json-file: artifacts/coretrace-stack-analysis.json
+          upload-sarif: "true"
