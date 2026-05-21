@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include "EvanPlatform.hpp"
+#include "evan/EvanPlatform.hpp"
 
-#include "ADeviceBackend.hpp"
-#include "DeviceContext.hpp"
+#include "evan/ADeviceBackend.hpp"
+#include "evan/DeviceContext.hpp"
 
 namespace evan
 {

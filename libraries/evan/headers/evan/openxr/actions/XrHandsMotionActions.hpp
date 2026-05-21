@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "EvanPlatform.hpp"
+#include "evan/EvanPlatform.hpp"
 
-#include "openxr/InteractionProfile.hpp"
+#include "evan/openxr/InteractionProfile.hpp"
 
 #include <utility/event/hand_motion_event.hpp>
 

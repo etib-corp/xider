@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include "openxr/IXrPlatform.hpp"
-#include "openxr/XrManageActions.hpp"
+#include "evan/openxr/IXrPlatform.hpp"
+#include "evan/openxr/XrManageActions.hpp"
 
-#include "ADeviceBackend.hpp"
+#include "evan/ADeviceBackend.hpp"
 
 #include <cstring>
 #include <iostream>

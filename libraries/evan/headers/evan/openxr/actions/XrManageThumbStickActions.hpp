@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include "EvanPlatform.hpp"
+#include "evan/EvanPlatform.hpp"
 
-#include "openxr/actions/AXrAction.hpp"
-#include "openxr/InteractionProfile.hpp"
+#include "evan/openxr/actions/AXrAction.hpp"
+#include "evan/openxr/InteractionProfile.hpp"
 
 #include <utility/event/hand_thumb_stick_event.hpp>
 

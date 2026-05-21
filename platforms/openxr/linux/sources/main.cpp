@@ -24,9 +24,9 @@
 
 #include <xider/xider.hpp>
 
-#include <Engine.hpp>
+#include <evan/Engine.hpp>
 
-#include <openxr/platform/LinuxXrPlatform.hpp>
+#include <evan/openxr/platform/LinuxXrPlatform.hpp>
 
 int main(void)
 {

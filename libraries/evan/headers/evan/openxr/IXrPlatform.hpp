@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "IPlatform.hpp"
-#include "DeviceContext.hpp"
-#include "openxr/XrSwapchainContext.hpp"
+#include "evan/IPlatform.hpp"
+#include "evan/DeviceContext.hpp"
+#include "evan/openxr/XrSwapchainContext.hpp"
 
 #include <iostream>
 

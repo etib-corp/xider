@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "EvanPlatform.hpp"
+#include "evan/EvanPlatform.hpp"
 
-#include "ADeviceBackend.hpp"
+#include "evan/ADeviceBackend.hpp"
 
 namespace evan
 {

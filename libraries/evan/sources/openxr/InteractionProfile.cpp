@@ -5,7 +5,7 @@
 ** InteractionProfile
 */
 
-#include "openxr/InteractionProfile.hpp"
+#include "evan/openxr/InteractionProfile.hpp"
 
 ////////////////////
 // Public Methods //

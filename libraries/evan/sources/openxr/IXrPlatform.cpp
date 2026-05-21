@@ -5,8 +5,8 @@
 ** XrPlatform
 */
 
-#include "openxr/IXrPlatform.hpp"
-#include "openxr/XrDeviceBackend.hpp"
+#include "evan/openxr/IXrPlatform.hpp"
+#include "evan/openxr/XrDeviceBackend.hpp"
 
 ////////////////////
 // Public Methods //

@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include "EvanPlatform.hpp"
+#include "evan/EvanPlatform.hpp"
 
-#include "QueueFamilyIndices.hpp"
-#include "Version.hpp"
+#include "evan/QueueFamilyIndices.hpp"
+#include "evan/Version.hpp"
 
 namespace evan
 {

@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "EvanPlatform.hpp"
+#include "evan/EvanPlatform.hpp"
 
-#include "Vertex.hpp"
+#include "evan/Vertex.hpp"
 
 #include <string>
 

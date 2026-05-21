@@ -5,7 +5,7 @@
 ** Version
 */
 
-#include "Version.hpp"
+#include "evan/Version.hpp"
 
 evan::Version::Version(unsigned int major, unsigned int minor,
 					   unsigned int patch)

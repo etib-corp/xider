@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include "EvanPlatform.hpp"
-#include "ADeviceBackend.hpp"
+#include "evan/EvanPlatform.hpp"
+#include "evan/ADeviceBackend.hpp"
 
-#include "IPlatform.hpp"
+#include "evan/IPlatform.hpp"
 
 #include <iostream>
 #include <memory>

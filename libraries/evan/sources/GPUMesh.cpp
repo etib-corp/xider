@@ -5,7 +5,7 @@
 ** GPUMesh
 */
 
-#include "GPUMesh.hpp"
+#include "evan/GPUMesh.hpp"
 
 evan::GPUMesh::GPUMesh(const DeviceContext &deviceContext,
 					   std::vector<Vertex> vertices,

@@ -24,9 +24,9 @@
 
 #include <xider/xider.hpp>
 
-#include <Engine.hpp>
+#include <evan/Engine.hpp>
 
-#include <glfw/platform/WindowsPlatform.hpp>
+#include <evan/glfw/platform/WindowsPlatform.hpp>
 
 int main(void)
 {

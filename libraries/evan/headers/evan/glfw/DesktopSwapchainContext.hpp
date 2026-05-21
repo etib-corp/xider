@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "ASwapchainContext.hpp"
+#include "evan/ASwapchainContext.hpp"
 
-#include "glfw/DesktopSwapchainImage.hpp"
+#include "evan/glfw/DesktopSwapchainImage.hpp"
 
 #include <memory>
 

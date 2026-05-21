@@ -5,9 +5,9 @@
 ** XrHandsMotionActions
 */
 
-#include "openxr/actions/XrHandsMotionActions.hpp"
+#include "evan/openxr/actions/XrHandsMotionActions.hpp"
 
-#include "openxr/XrDeviceBackend.hpp"
+#include "evan/openxr/XrDeviceBackend.hpp"
 
 evan::XrHandsMotionActions::XrHandsMotionActions(XrActionSet actionSet,
 												 XrDeviceBackend &deviceBackend)

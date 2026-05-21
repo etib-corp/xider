@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "ASwapchainImage.hpp"
+#include "evan/ASwapchainImage.hpp"
 
-#include "glfw/DesktopBackend.hpp"
+#include "evan/glfw/DesktopBackend.hpp"
 
 namespace evan
 {

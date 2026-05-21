@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "openxr/actions/XrHandsMotionActions.hpp"
-#include "openxr/actions/XrManageButtonsActions.hpp"
-#include "openxr/actions/XrManageThumbStickActions.hpp"
+#include "evan/openxr/actions/XrHandsMotionActions.hpp"
+#include "evan/openxr/actions/XrManageButtonsActions.hpp"
+#include "evan/openxr/actions/XrManageThumbStickActions.hpp"
 
 #include <memory>
 

@@ -7,11 +7,11 @@
 
 #pragma once
 
-#include "EvanPlatform.hpp"
+#include "evan/EvanPlatform.hpp"
 
-#include "Mesh.hpp"
-#include "GPUMesh.hpp"
-#include "Material.hpp"
+#include "evan/Mesh.hpp"
+#include "evan/GPUMesh.hpp"
+#include "evan/Material.hpp"
 
 #include <map>
 
