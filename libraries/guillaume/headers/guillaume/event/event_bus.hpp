@@ -92,10 +92,10 @@ namespace guillaume::event
 		 * @param listener Listener to notify for matching events.
 		 */
 		template<utility::event::InheritFromEvent EventType>
-		void subscribe(const Listener &listener)
-		{
-			_typedListeners[typeid(EventType)].push_back(listener);
-		}
+		void subscribe(const Listener &listener);
 	};
 
 }	 // namespace guillaume::event
+
+// Include the EventBus template implementation
+#include "guillaume/event/event_bus.tpp"

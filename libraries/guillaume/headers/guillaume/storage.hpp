@@ -62,10 +62,7 @@ namespace guillaume
 		 * @param key Storage key.
 		 * @param value String view value to store.
 		 */
-		void setItem(const std::string &key, std::string_view value)
-		{
-			setItem(key, std::string(value));
-		}
+		void setItem(const std::string &key, std::string_view value);
 
 		/**
 		 * @brief Store a C-string value for a key.
@@ -73,10 +70,7 @@ namespace guillaume
 		 * @param key Storage key.
 		 * @param value C-string value to store.
 		 */
-		void setItem(const std::string &key, const char *value)
-		{
-			setItem(key, value ? std::string(value) : std::string());
-		}
+		void setItem(const std::string &key, const char *value);
 
 		/**
 		 * @brief Store a boolean value for a key.
@@ -87,10 +81,7 @@ namespace guillaume
 		 */
 		template<typename ValueType>
 			requires(std::is_same_v<std::remove_cvref_t<ValueType>, bool>)
-		void setItem(const std::string &key, ValueType value)
-		{
-			setItem(key, value ? std::string("true") : std::string("false"));
-		}
+		void setItem(const std::string &key, ValueType value);
 
 		/**
 		 * @brief Store a numeric value for a key.
@@ -102,10 +93,7 @@ namespace guillaume
 		template<typename ValueType>
 			requires(std::is_arithmetic_v<ValueType>
 					 && !std::is_same_v<ValueType, bool>)
-		void setItem(const std::string &key, ValueType value)
-		{
-			setItem(key, std::to_string(value));
-		}
+		void setItem(const std::string &key, ValueType value);
 
 		/**
 		 * @brief Retrieve a value for a key.
@@ -121,53 +109,7 @@ namespace guillaume
 		 * @return Converted value when found and valid, std::nullopt otherwise.
 		 */
 		template<typename ValueType>
-		std::optional<ValueType> getItemAs(const std::string &key)
-		{
-			const auto value = getItem(key);
-			if (!value.has_value()) {
-				return std::nullopt;
-			}
-
-			if constexpr (std::is_same_v<ValueType, std::string>) {
-				return value;
-			} else if constexpr (std::is_same_v<ValueType, bool>) {
-				if (*value == "true" || *value == "1") {
-					return true;
-				}
-				if (*value == "false" || *value == "0") {
-					return false;
-				}
-				return std::nullopt;
-			} else if constexpr (std::is_integral_v<ValueType>) {
-				ValueType parsed {};
-				const char *begin = value->data();
-				const char *end	  = begin + value->size();
-				const auto result = std::from_chars(begin, end, parsed);
-				if (result.ec != std::errc() || result.ptr != end) {
-					return std::nullopt;
-				}
-				return parsed;
-			} else if constexpr (std::is_floating_point_v<ValueType>) {
-				char *endPointer = nullptr;
-				errno			 = 0;
-				const long double parsed =
-					std::strtold(value->c_str(), &endPointer);
-
-				if (errno == ERANGE
-					|| endPointer != value->c_str() + value->size()) {
-					return std::nullopt;
-				}
-
-				return static_cast<ValueType>(parsed);
-			} else {
-				static_assert(std::is_same_v<ValueType, std::string>
-								  || std::is_same_v<ValueType, bool>
-								  || std::is_integral_v<ValueType>
-								  || std::is_floating_point_v<ValueType>,
-							  "Storage::getItemAs only supports string, bool, "
-							  "integral and floating-point types.");
-			}
-		}
+		std::optional<ValueType> getItemAs(const std::string &key);
 
 		/**
 		 * @brief Remove a key and its value.
@@ -182,3 +124,6 @@ namespace guillaume
 	};
 
 }	 // namespace guillaume
+
+/// Include the Storage template implementation
+#include "guillaume/storage.tpp"

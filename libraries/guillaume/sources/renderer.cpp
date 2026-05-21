@@ -24,4 +24,40 @@
 
 namespace guillaume
 {
+	Renderer::Renderer(void)
+		: Loggable()
+	{
+	}
+
+	void Renderer::setView(const utility::graphic::ViewF &view)
+	{
+		_view = view;
+	}
+
+	/**
+	 * @brief Get the full view model.
+	 * @return The view instance.
+	 */
+	utility::graphic::ViewF Renderer::getView(void) const
+	{
+		return _view;
+	}
+
+	/**
+	 * @brief Get the shared utility resource manager.
+	 * @return Reference to the renderer resource manager.
+	 */
+	utility::RessourceManager &Renderer::getRessourceManager(void)
+	{
+		return _ressourceManager;
+	}
+
+	/**
+	 * @brief Get the shared utility asset manager.
+	 * @return Reference to the renderer asset manager.
+	 */
+	utility::DefaultAssetManager &Renderer::getAssetManager(void)
+	{
+		return _assetManager;
+	}
 }	 // namespace guillaume

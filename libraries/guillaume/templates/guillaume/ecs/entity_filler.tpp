@@ -20,26 +20,45 @@
  SOFTWARE.
  */
 
-#include "guillaume/ecs/component_registry.hpp"
+#pragma once
+
+#include "guillaume/ecs/entity_filler.hpp"
 
 namespace guillaume::ecs
 {
-    bool ComponentRegistry::hasChanged(const Entity::Identifier &entityIdentifier) const
-    {
-        for (const auto &[typeIndex, storage]: _storages) {
-            (void)typeIndex;
-            if (storage->hasChanged(entityIdentifier)) {
-                return true;
-            }
-        }
-        return false;
-    }
+	template<InheritFromComponent... ComponentTypes> ComponentRegistry &
+		EntityFiller<ComponentTypes...>::getComponentRegistry(void)
+	{
+		return _componentRegistry;
+	}
 
-    void ComponentRegistry::resetChangedFlags(void)
-    {
-        for (auto &[typeIndex, storage]: _storages) {
-            (void)typeIndex;
-            storage->resetChangedFlags();
-        }
-    }
+	template<InheritFromComponent... ComponentTypes>
+	EntityFiller<ComponentTypes...>::EntityFiller(
+		ComponentRegistry &componentRegistry)
+		: Entity()
+		, _componentRegistry(componentRegistry)
+	{
+		setSignature<ComponentTypes...>();
+		_componentRegistry
+			.template registerComponentsForEntity<ComponentTypes...>(
+				getIdentifier());
+	}
+
+	template<InheritFromComponent... ComponentTypes> ComponentRegistry &
+		ParentEntityFiller<ComponentTypes...>::getComponentRegistry(void)
+	{
+		return _componentRegistry;
+	}
+
+	template<InheritFromComponent... ComponentTypes>
+	ParentEntityFiller<ComponentTypes...>::ParentEntityFiller(
+		ComponentRegistry &componentRegistry)
+		: ParentEntity()
+		, _componentRegistry(componentRegistry)
+	{
+		setSignature<ComponentTypes...>();
+		_componentRegistry
+			.template registerComponentsForEntity<ComponentTypes...>(
+				getIdentifier());
+	}
 }	 // namespace guillaume::ecs

@@ -66,21 +66,13 @@ namespace guillaume::ecs
 		 * @param entityIdentifier The identifier of the entity.
 		 */
 		EntityComponentNotFoundException(
-			const Entity::Identifier &entityIdentifier)
-			: _entityIdentifier(entityIdentifier)
-		{
-			_message = "Component of type " + _componentTypeName
-				+ " not found for entity " + std::to_string(_entityIdentifier);
-		}
+			const Entity::Identifier &entityIdentifier);
 
 		/**
 		 * @brief Get the exception message.
 		 * @return The exception message.
 		 */
-		const char *what(void) const noexcept override
-		{
-			return _message.c_str();
-		}
+		const char *what(void) const noexcept override;
 	};
 
 	/**
@@ -104,20 +96,7 @@ namespace guillaume::ecs
 		 * @return Reference to the storage.
 		 */
 		template<InheritFromComponent ComponentType>
-		ComponentStorage<ComponentType> &getOrCreateStorage(void)
-		{
-			const std::type_index typeIndex(typeid(ComponentType));
-			auto iterator = _storages.find(typeIndex);
-			if (iterator == _storages.end()) {
-				auto storage =
-					std::make_unique<ComponentStorage<ComponentType>>();
-				auto [insertedIterator, inserted] =
-					_storages.emplace(typeIndex, std::move(storage));
-				iterator = insertedIterator;
-			}
-			return static_cast<ComponentStorage<ComponentType> &>(
-				*iterator->second);
-		}
+		ComponentStorage<ComponentType> &getOrCreateStorage(void);
 
 		/**
 		 * @brief Register a component for an entity.
@@ -126,15 +105,7 @@ namespace guillaume::ecs
 		 * component will be associated.
 		 */
 		template<InheritFromComponent ComponentType>
-		void registerComponent(const Entity::Identifier &entityIdentifier)
-		{
-			auto &storage = getOrCreateStorage<ComponentType>();
-			storage.emplace(entityIdentifier);
-			getLogger().debug("Registered component of type "
-							  + utility::demangle<ComponentType>()
-							  + " for entity "
-							  + std::to_string(entityIdentifier));
-		}
+		void registerComponent(const Entity::Identifier &entityIdentifier);
 
 		protected:
 		/**
@@ -142,10 +113,7 @@ namespace guillaume::ecs
 		 * @tparam ComponentType The type of the component to register.
 		 */
 		template<InheritFromComponent ComponentType>
-		void registerNewComponentType(void)
-		{
-			getOrCreateStorage<ComponentType>();
-		}
+		void registerNewComponentType(void);
 
 		public:
 		/**
@@ -166,10 +134,7 @@ namespace guillaume::ecs
 		 */
 		template<InheritFromComponent... NeededComponentTypes>
 		void registerComponentsForEntity(
-			const Entity::Identifier &entityIdentifier)
-		{
-			(registerComponent<NeededComponentTypes>(entityIdentifier), ...);
-		}
+			const Entity::Identifier &entityIdentifier);
 
 		/**
 		 * @brief Add or replace a component for an entity.
@@ -181,12 +146,7 @@ namespace guillaume::ecs
 		 */
 		template<InheritFromComponent ComponentType, typename... Args>
 		ComponentType &addComponent(const Entity::Identifier &entityIdentifier,
-									Args &&...args)
-		{
-			auto &storage = getOrCreateStorage<ComponentType>();
-			return storage.emplace(entityIdentifier,
-								   std::forward<Args>(args)...);
-		}
+									Args &&...args);
 
 		/**
 		 * @brief Check whether an entity has a component.
@@ -195,15 +155,7 @@ namespace guillaume::ecs
 		 * @return True if the component is present.
 		 */
 		template<InheritFromComponent ComponentType>
-		bool hasComponent(const Entity::Identifier &entityIdentifier) const
-		{
-			const std::type_index typeIndex(typeid(ComponentType));
-			auto iterator = _storages.find(typeIndex);
-			if (iterator == _storages.end()) {
-				return false;
-			}
-			return iterator->second->has(entityIdentifier);
-		}
+		bool hasComponent(const Entity::Identifier &entityIdentifier) const;
 
 		/**
 		 * @brief Remove a component from an entity.
@@ -211,38 +163,19 @@ namespace guillaume::ecs
 		 * @param entityIdentifier The entity identifier.
 		 */
 		template<InheritFromComponent ComponentType>
-		void removeComponent(const Entity::Identifier &entityIdentifier)
-		{
-			auto &storage = getOrCreateStorage<ComponentType>();
-			storage.remove(entityIdentifier);
-		}
+		void removeComponent(const Entity::Identifier &entityIdentifier);
 
 		/**
 		 * @brief Check whether any component stored for an entity has changed.
 		 * @param entityIdentifier The entity identifier.
 		 * @return True if at least one stored component is marked as changed.
 		 */
-		bool hasChanged(const Entity::Identifier &entityIdentifier) const
-		{
-			for (const auto &[typeIndex, storage]: _storages) {
-				(void)typeIndex;
-				if (storage->hasChanged(entityIdentifier)) {
-					return true;
-				}
-			}
-			return false;
-		}
+		bool hasChanged(const Entity::Identifier &entityIdentifier) const;
 
 		/**
 		 * @brief Clear the changed flags for all stored components.
 		 */
-		void resetChangedFlags(void)
-		{
-			for (auto &[typeIndex, storage]: _storages) {
-				(void)typeIndex;
-				storage->resetChangedFlags();
-			}
-		}
+		void resetChangedFlags(void);
 
 		/**
 		 * @brief Get a component for an entity.
@@ -254,16 +187,7 @@ namespace guillaume::ecs
 		 * does not have the component.
 		 */
 		template<InheritFromComponent ComponentType>
-		ComponentType &getComponent(const Entity::Identifier &entityIdentifier)
-		{
-			auto &storage  = getOrCreateStorage<ComponentType>();
-			auto component = storage.find(entityIdentifier);
-			if (!component) {
-				throw EntityComponentNotFoundException<ComponentType>(
-					entityIdentifier);
-			}
-			return *component;
-		}
+		ComponentType &getComponent(const Entity::Identifier &entityIdentifier);
 
 		/**
 		 * @brief Get a component for an entity (const).
@@ -275,24 +199,7 @@ namespace guillaume::ecs
 		 * does not have the component.
 		 */
 		template<InheritFromComponent ComponentType> const ComponentType &
-			getComponent(const Entity::Identifier &entityIdentifier) const
-		{
-			const std::type_index typeIndex(typeid(ComponentType));
-			auto iterator = _storages.find(typeIndex);
-			if (iterator == _storages.end()) {
-				throw EntityComponentNotFoundException<ComponentType>(
-					entityIdentifier);
-			}
-			const auto *storage =
-				static_cast<const ComponentStorage<ComponentType> *>(
-					iterator->second.get());
-			const auto *component = storage->find(entityIdentifier);
-			if (!component) {
-				throw EntityComponentNotFoundException<ComponentType>(
-					entityIdentifier);
-			}
-			return *component;
-		}
+			getComponent(const Entity::Identifier &entityIdentifier) const;
 	};
 
 	/**
@@ -304,3 +211,6 @@ namespace guillaume::ecs
 		std::is_base_of_v<ComponentRegistry, Type>;
 
 }	 // namespace guillaume::ecs
+
+// Iclude the implementation of the ComponentRegistry template class.
+#include "guillaume/ecs/component_registry.tpp"

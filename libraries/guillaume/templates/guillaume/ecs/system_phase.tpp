@@ -20,25 +20,22 @@
  SOFTWARE.
  */
 
-#include "guillaume/component_registry.hpp"
+#pragma once
 
-namespace guillaume
+#include "guillaume/ecs/system_phase.hpp"
+
+namespace guillaume::ecs
 {
-    ComponentRegistry::ComponentRegistry(void)
-			: ecs::ComponentRegistryFiller<
-				  components::Bound, components::Focus,
-				  components::MouseHoverInteraction,
-				  components::MouseButtonInteraction,
-				  components::HandHoverInteraction,
-				  components::HandButtonInteraction,
-				  components::HandPinchInteraction,
-				  components::HandPokeInteraction,
-				  components::HandSqueezeInteraction,
-				  components::HandThumbRestInteraction,
-				  components::HandThumbStickInteraction,
-				  components::HandTriggerInteraction, components::Text,
-				  components::Transform, components::Color,
-				  components::Borders>()
-		{
-		}
-}	 // namespace guillaume
+	template<Phase Value, InheritFromEntityTreeTraveler TravelerType>
+	constexpr Phase SystemPhase<Value, TravelerType>::getPhase(void) const
+	{
+		return phase;
+	}
+
+	template<Phase Value, InheritFromEntityTreeTraveler TravelerType>
+	const EntityTreeTraveler &
+		SystemPhase<Value, TravelerType>::getTraveler(void) const
+	{
+		return _traveler;
+	}
+}	 // namespace guillaume::ecs

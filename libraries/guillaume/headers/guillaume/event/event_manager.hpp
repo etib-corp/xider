@@ -74,7 +74,6 @@ namespace guillaume::event
 	template<utility::event::InheritFromEvent EventType> class EventManager
 	{
 		private:
-
 		EventBus &_eventBus;	///< Reference to the event bus for managing
 								///< event subscriptions and dispatching
 
@@ -104,12 +103,7 @@ namespace guillaume::event
 		 * }
 		 * @endcode
 		 */
-		void consumeNextEvent(void)
-		{
-			if (_subscriber->hasPendingEvents()) {
-				_lastEvent = _subscriber->getNextEvent();
-			}
-		}
+		void consumeNextEvent(void);
 
 		/**
 		 * @brief Retrieve the most recent event of a given type, if available.
@@ -134,13 +128,7 @@ namespace guillaume::event
 		 * }
 		 * @endcode
 		 */
-		std::unique_ptr<EventType> getLastEvent(void)
-		{
-			if (!_lastEvent) {
-				return nullptr;
-			}
-			return std::move(_lastEvent);
-		}
+		std::unique_ptr<EventType> getLastEvent(void);
 
 		public:
 		/**
@@ -163,12 +151,7 @@ namespace guillaume::event
 		 * };
 		 * @endcode
 		 */
-		EventManager(EventBus &eventBus)
-			: _eventBus(eventBus)
-			, _subscriber(
-				  std::make_unique<EventSubscriber<EventType>>(_eventBus))
-		{
-		}
+		EventManager(EventBus &eventBus);
 
 		/**
 		 * @brief Virtual destructor for proper cleanup of derived classes.
@@ -176,3 +159,6 @@ namespace guillaume::event
 		virtual ~EventManager(void) = default;
 	};
 }	 // namespace guillaume::event
+
+// Include the implementation of the EventManager template class
+#include "guillaume/event/event_manager.tpp"

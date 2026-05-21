@@ -44,11 +44,7 @@ namespace guillaume::ecs
 		 * @param phase The update phase during which this system should be
 		 * executed.
 		 */
-		SystemFiller(Phase phase)
-			: System(phase)
-		{
-			setSignature<ComponentTypes...>();
-		}
+		SystemFiller(Phase phase);
 
 		/**
 		 * @brief Default destructor for the SystemFiller class.
@@ -57,3 +53,6 @@ namespace guillaume::ecs
 	};
 
 }	 // namespace guillaume::ecs
+
+// Include the implementation of the SystemFiller template class
+#include "guillaume/ecs/system_filler.tpp"

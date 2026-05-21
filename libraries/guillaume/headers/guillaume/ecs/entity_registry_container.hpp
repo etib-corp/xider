@@ -46,20 +46,14 @@ namespace guillaume::ecs
 		 * @return Mutable reference to the direct child entities storage.
 		 */
 		std::vector<std::unique_ptr<Entity>> &
-			accessDirectEntities(void) override
-		{
-			return _entities;
-		}
+			accessDirectEntities(void) override;
 
 		/**
 		 * @brief Access direct child entities owned by this registry.
 		 * @return Const reference to the direct child entities storage.
 		 */
 		const std::vector<std::unique_ptr<Entity>> &
-			accessDirectEntities(void) const override
-		{
-			return _entities;
-		}
+			accessDirectEntities(void) const override;
 	};
 
 }	 // namespace guillaume::ecs

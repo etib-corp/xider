@@ -51,19 +51,7 @@ namespace guillaume::ecs
 		 * already exists.
 		 */
 		template<InheritFromEntityDirector DirectorType>
-		DirectorType &addDirector(void)
-		{
-			std::type_index typeIndex(typeid(DirectorType));
-			if (_directors.find(typeIndex) != _directors.end()) {
-				throw std::runtime_error(
-					"Director for this entity type already exists");
-			}
-
-			auto director		  = std::make_unique<DirectorType>();
-			auto *directorRef	  = director.get();
-			_directors[typeIndex] = std::move(director);
-			return *directorRef;
-		}
+		DirectorType &addDirector(void);
 
 		/**
 		 * @brief Construct a new EntityDirectorManager object.
@@ -84,16 +72,10 @@ namespace guillaume::ecs
 		 * entity type.
 		 */
 		template<InheritFromEntityDirector DirectorType>
-		DirectorType &getDirector(void)
-		{
-			std::type_index typeIndex(typeid(DirectorType));
-			auto it = _directors.find(typeIndex);
-			if (it == _directors.end()) {
-				throw std::runtime_error(
-					"No director found for this entity type");
-			}
-			return *static_cast<DirectorType *>(it->second.get());
-		}
+		DirectorType &getDirector(void);
 	};
 
 }	 // namespace guillaume::ecs
+
+// Include the implementation of the EntityDirectorManager template class
+#include "guillaume/ecs/entity_director_manager.tpp"

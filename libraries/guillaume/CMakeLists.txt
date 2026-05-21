@@ -36,11 +36,13 @@ endif()
 
 # Set the files directories
 set(HEADERS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/headers")
+set(TEMPLATES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/templates")
 set(SOURCES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/sources")
 
 # Add the headers directories
 include_directories(
     ${HEADERS_DIR}
+    ${TEMPLATES_DIR}
 )
 
 # Add the source files
@@ -62,6 +64,12 @@ target_link_libraries(${PROJECT_NAME}
 target_include_directories(${PROJECT_NAME}
     PUBLIC
         $<BUILD_INTERFACE:${HEADERS_DIR}>
+        $<INSTALL_INTERFACE:include>
+)
+
+target_include_directories(${PROJECT_NAME}
+    PUBLIC
+        $<BUILD_INTERFACE:${TEMPLATES_DIR}>
         $<INSTALL_INTERFACE:include>
 )
 

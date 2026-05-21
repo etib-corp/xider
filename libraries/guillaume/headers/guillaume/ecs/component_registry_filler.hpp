@@ -40,11 +40,7 @@ namespace guillaume::ecs
 		/**
 		 * @brief Default constructor.
 		 */
-		ComponentRegistryFiller(void)
-			: ComponentRegistry()
-		{
-			(registerNewComponentType<ComponentTypes>(), ...);
-		}
+		ComponentRegistryFiller(void);
 
 		/**
 		 * @brief Default destructor for the Component Registry Filler class.
@@ -53,3 +49,6 @@ namespace guillaume::ecs
 	};
 
 }	 // namespace guillaume::ecs
+
+// Include the implementation of the ComponentRegistryFiller template class
+#include "guillaume/ecs/component_registry_filler.tpp"

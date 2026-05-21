@@ -20,25 +20,37 @@
  SOFTWARE.
  */
 
-#include "guillaume/component_registry.hpp"
+#pragma once
 
-namespace guillaume
+#include "guillaume/ecs/entity_builder_manager.hpp"
+
+namespace guillaume::ecs
 {
-    ComponentRegistry::ComponentRegistry(void)
-			: ecs::ComponentRegistryFiller<
-				  components::Bound, components::Focus,
-				  components::MouseHoverInteraction,
-				  components::MouseButtonInteraction,
-				  components::HandHoverInteraction,
-				  components::HandButtonInteraction,
-				  components::HandPinchInteraction,
-				  components::HandPokeInteraction,
-				  components::HandSqueezeInteraction,
-				  components::HandThumbRestInteraction,
-				  components::HandThumbStickInteraction,
-				  components::HandTriggerInteraction, components::Text,
-				  components::Transform, components::Color,
-				  components::Borders>()
-		{
+	template<InheritFromEntityBuilder BuilderType> BuilderType &
+		EntityBuilderManager::addBuilder(ComponentRegistry &componentRegistry,
+										 EntityRegistry &entityRegistry)
+	{
+		std::type_index typeIndex(typeid(BuilderType));
+		if (_builders.find(typeIndex) != _builders.end()) {
+			throw std::runtime_error(
+				"Builder for this entity type already exists");
 		}
-}	 // namespace guillaume
+
+		auto builder =
+			std::make_unique<BuilderType>(componentRegistry, entityRegistry);
+		auto *builderRef	 = builder.get();
+		_builders[typeIndex] = std::move(builder);
+		return *builderRef;
+	}
+
+	template<InheritFromEntityBuilder BuilderType>
+	BuilderType &EntityBuilderManager::getBuilder(void)
+	{
+		std::type_index typeIndex(typeid(BuilderType));
+		auto it = _builders.find(typeIndex);
+		if (it == _builders.end()) {
+			throw std::runtime_error("No builder found for this entity type");
+		}
+		return *static_cast<BuilderType *>(it->second.get());
+	}
+}	 // namespace guillaume::ecs

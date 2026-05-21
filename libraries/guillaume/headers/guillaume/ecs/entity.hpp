@@ -64,12 +64,7 @@ namespace guillaume::ecs
 		 * @return The generated signature.
 		 */
 		template<InheritFromComponent... ComponentTypes>
-		static Signature getSignatureFromTypes(void)
-		{
-			Signature signature;
-			(signature.set(ComponentTypeId::get<ComponentTypes>()), ...);
-			return signature;
-		}
+		static Signature getSignatureFromTypes(void);
 
 		private:
 		const Identifier _identifier;	 ///< Unique identifier
@@ -82,10 +77,8 @@ namespace guillaume::ecs
 		 * @tparam ComponentTypes The component types that define the entity's
 		 * signature.
 		 */
-		template<InheritFromComponent... ComponentTypes> void setSignature(void)
-		{
-			_signature = getSignatureFromTypes<ComponentTypes...>();
-		}
+		template<InheritFromComponent... ComponentTypes>
+		void setSignature(void);
 
 		public:
 		/**
@@ -134,3 +127,6 @@ namespace guillaume::ecs
 	concept InheritFromEntity = std::is_base_of_v<Entity, Type>;
 
 }	 // namespace guillaume::ecs
+
+// Include the implementation of the Entity template methods
+#include "guillaume/ecs/entity.tpp"

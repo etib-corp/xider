@@ -83,6 +83,11 @@ namespace guillaume
 		_harmonized = harmonized;
 	}
 
+	constexpr std::size_t Scheme::toIndex(SchemeColorRole role)
+	{
+		return static_cast<std::size_t>(role);
+	}
+
 	Scheme::Scheme(
 		const std::array<ExtendedColor,
 						 static_cast<std::size_t>(SchemeColorRole::Count)>

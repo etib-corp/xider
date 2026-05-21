@@ -38,11 +38,7 @@ namespace guillaume::components
 		/**
 		 * @brief Default constructor for the Bound component.
 		 */
-		Bound(void)
-			: ecs::Component()
-			, utility::graphic::SizeUI()
-		{
-		}
+		Bound(void);
 
 		/**
 		 * @brief Default destructor for the Bound component.
