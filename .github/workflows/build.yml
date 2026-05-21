@@ -2,9 +2,9 @@ name: Build CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 env:
   LUNARG_VULKAN_SDK_VERSION: 1.4.304.1
@@ -76,81 +76,14 @@ jobs:
 
       - name: Run code analysis
         if: matrix.runner == 'ubuntu-latest'
-        id: coretrace
-        uses: CoreTrace/coretrace-stack-analyzer@v0.14.0
+        uses: CoreTrace/coretrace-stack-analyzer@v0.18.1
         with:
+          sources: src/
           compile-commands: build/compile_commands.json
-          analysis-profile: fast
-          resource-model: default
-          resource-cache-memory-only: "true"
-          fail-on: error
-          warnings-only: "false"
-          json-file: artifacts/coretrace-stack-analysis-action.json
-          sarif-file: artifacts/coretrace-stack-analysis-action.sarif
-          upload-sarif: "false"
-
-      - name: Upload SARIF to Code Scanning
-        if: ${{ matrix.runner == 'ubuntu-latest' && hashFiles('artifacts/coretrace-stack-analysis-action.sarif') != '' }}
-        uses: github/codeql-action/upload-sarif@v4
-        with:
-          sarif_file: artifacts/coretrace-stack-analysis-action.sarif
-          category: coretrace-consumer-action-tag
-
-      - name: Upload analysis artifacts
-        if: matrix.runner == 'ubuntu-latest'
-        uses: actions/upload-artifact@v4
-        with:
-          name: coretrace-results-action-tag
-          path: artifacts/
-          retention-days: 14
-
-      - name: Print summary
-        if: matrix.runner == 'ubuntu-latest'
-        run: |
-          python3 - <<'PY'
-          import json
-          import os
-          from pathlib import Path
-
-          summary_path = os.environ['GITHUB_STEP_SUMMARY']
-          json_path = Path('artifacts/coretrace-stack-analysis-action.json')
-
-          errors = warnings = infos = 0
-          notes = []
-
-          if json_path.is_file():
-            try:
-              data = json.loads(json_path.read_text(encoding='utf-8'))
-              diags = data.get('diagnostics', []) if isinstance(data, dict) else []
-            except Exception as exc:
-              diags = []
-              notes.append(f'Failed to parse JSON report: {exc}')
-
-            def sev(d):
-              s = str(d.get('severity', d.get('level', d.get('details', {}).get('severity', '')))).upper()
-              if s in {'2', 'ERROR'}:
-                return 'ERROR'
-              if s in {'1', 'WARNING', 'WARN'}:
-                return 'WARNING'
-              return 'INFO'
-
-            errors = sum(1 for d in diags if sev(d) == 'ERROR')
-            warnings = sum(1 for d in diags if sev(d) == 'WARNING')
-            infos = sum(1 for d in diags if sev(d) == 'INFO')
-          else:
-            notes.append('JSON report not found (analysis step may have failed early).')
-
-          print(f'errors={errors}')
-          print(f'warnings={warnings}')
-          print(f'infos={infos}')
-
-          with open(summary_path, 'a', encoding='utf-8') as f:
-            f.write('## CoreTrace Analysis Summary (Action Tag)\n\n')
-            f.write('| Errors | Warnings | Info |\n')
-            f.write('|--------|----------|------|\n')
-            f.write(f'| {errors} | {warnings} | {infos} |\n\n')
-            if notes:
-              f.write('### Notes\n')
-              for note in notes:
-                f.write(f'- {note}\n')
-          PY
+          fail-on: warning
+          stack-limit: 4096
+          analysis-profile: full
+          sarif-file: results.sarif
+          json-file: results.json
+          upload-sarif: true
+          llvm-version: 20
