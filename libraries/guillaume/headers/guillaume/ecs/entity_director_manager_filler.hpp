@@ -37,11 +37,7 @@ namespace guillaume::ecs
 		/**
 		 * @brief Default constructor.
 		 */
-		EntityDirectorManagerFiller(void)
-			: EntityDirectorManager()
-		{
-			(addDirector<DirectorTypes>(), ...);
-		}
+		EntityDirectorManagerFiller(void);
 
 		/**
 		 * @brief Default destructor for the Entity Director Manager Filler
@@ -51,3 +47,6 @@ namespace guillaume::ecs
 	};
 
 }	 // namespace guillaume::ecs
+
+// Include the implementation of the EntityDirectorManagerFiller template class
+#include "guillaume/ecs/entity_director_manager_filler.tpp"

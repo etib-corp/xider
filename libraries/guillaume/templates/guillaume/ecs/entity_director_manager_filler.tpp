@@ -20,25 +20,22 @@
  SOFTWARE.
  */
 
-#include "guillaume/component_registry.hpp"
+#pragma once
 
-namespace guillaume
+#include "guillaume/ecs/entity_director_manager_filler.hpp"
+
+namespace guillaume::ecs
 {
-    ComponentRegistry::ComponentRegistry(void)
-			: ecs::ComponentRegistryFiller<
-				  components::Bound, components::Focus,
-				  components::MouseHoverInteraction,
-				  components::MouseButtonInteraction,
-				  components::HandHoverInteraction,
-				  components::HandButtonInteraction,
-				  components::HandPinchInteraction,
-				  components::HandPokeInteraction,
-				  components::HandSqueezeInteraction,
-				  components::HandThumbRestInteraction,
-				  components::HandThumbStickInteraction,
-				  components::HandTriggerInteraction, components::Text,
-				  components::Transform, components::Color,
-				  components::Borders>()
-		{
-		}
-}	 // namespace guillaume
+
+	template<InheritFromEntityDirector... DirectorTypes>
+	EntityDirectorManagerFiller<DirectorTypes...>::EntityDirectorManagerFiller(
+		void)
+		: EntityDirectorManager()
+	{
+		(addDirector<DirectorTypes>(), ...);
+	}
+
+}	 // namespace guillaume::ecs
+
+// Include the implementation of the EntityDirectorManagerFiller template class
+#include "guillaume/ecs/entity_director_manager_filler.tpp"

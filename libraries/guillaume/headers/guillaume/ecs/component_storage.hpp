@@ -104,15 +104,7 @@ namespace guillaume::ecs
 		 * @note If a component already exists for the entity, it is replaced.
 		 */
 		template<typename... Args> ComponentType &
-			emplace(const Entity::Identifier &entityIdentifier, Args &&...args)
-		{
-			auto [iterator, inserted] = _components.emplace(
-				entityIdentifier, ComponentType(std::forward<Args>(args)...));
-			if (!inserted) {
-				iterator->second = ComponentType(std::forward<Args>(args)...);
-			}
-			return iterator->second;
-		}
+			emplace(const Entity::Identifier &entityIdentifier, Args &&...args);
 
 		/**
 		 * @brief Find a component for an entity.
@@ -120,14 +112,7 @@ namespace guillaume::ecs
 		 * @return Pointer to the component or nullptr.
 		 * @retval nullptr No component exists for the entity.
 		 */
-		ComponentType *find(const Entity::Identifier &entityIdentifier)
-		{
-			auto iterator = _components.find(entityIdentifier);
-			if (iterator == _components.end()) {
-				return nullptr;
-			}
-			return &iterator->second;
-		}
+		ComponentType *find(const Entity::Identifier &entityIdentifier);
 
 		/**
 		 * @brief Find a component for an entity (const).
@@ -136,49 +121,28 @@ namespace guillaume::ecs
 		 * @retval nullptr No component exists for the entity.
 		 */
 		const ComponentType *
-			find(const Entity::Identifier &entityIdentifier) const
-		{
-			auto iterator = _components.find(entityIdentifier);
-			if (iterator == _components.end()) {
-				return nullptr;
-			}
-			return &iterator->second;
-		}
+			find(const Entity::Identifier &entityIdentifier) const;
 
 		/**
 		 * @brief Remove a component for an entity.
 		 * @param entityIdentifier The entity identifier.
 		 */
-		void remove(const Entity::Identifier &entityIdentifier) override
-		{
-			_components.erase(entityIdentifier);
-		}
+		void remove(const Entity::Identifier &entityIdentifier) override;
 
 		/**
 		 * @brief Check if a component exists for an entity.
 		 * @param entityIdentifier The entity identifier.
 		 * @return True if a component exists.
 		 */
-		bool has(const Entity::Identifier &entityIdentifier) const override
-		{
-			return _components.find(entityIdentifier) != _components.end();
-		}
+		bool has(const Entity::Identifier &entityIdentifier) const override;
 
 		bool hasChanged(
-			const Entity::Identifier &entityIdentifier) const override
-		{
-			auto iterator = _components.find(entityIdentifier);
-			return iterator != _components.end()
-				&& iterator->second.hasChanged();
-		}
+			const Entity::Identifier &entityIdentifier) const override;
 
-		void resetChangedFlags(void) override
-		{
-			for (auto &[entityIdentifier, component]: _components) {
-				(void)entityIdentifier;
-				component.setHasChanged(false);
-			}
-		}
+		void resetChangedFlags(void) override;
 	};
 
 }	 // namespace guillaume::ecs
+
+// Include the implementation of the ComponentStorage template class.
+#include "guillaume/ecs/component_storage.tpp"

@@ -20,25 +20,20 @@
  SOFTWARE.
  */
 
-#include "guillaume/component_registry.hpp"
+#include "guillaume/ecs/parent_entity.hpp"
 
-namespace guillaume
+namespace guillaume::ecs
 {
-    ComponentRegistry::ComponentRegistry(void)
-			: ecs::ComponentRegistryFiller<
-				  components::Bound, components::Focus,
-				  components::MouseHoverInteraction,
-				  components::MouseButtonInteraction,
-				  components::HandHoverInteraction,
-				  components::HandButtonInteraction,
-				  components::HandPinchInteraction,
-				  components::HandPokeInteraction,
-				  components::HandSqueezeInteraction,
-				  components::HandThumbRestInteraction,
-				  components::HandThumbStickInteraction,
-				  components::HandTriggerInteraction, components::Text,
-				  components::Transform, components::Color,
-				  components::Borders>()
-		{
-		}
-}	 // namespace guillaume
+	std::vector<std::unique_ptr<Entity>> &
+		ParentEntity::accessDirectEntities(void)
+	{
+		return _children;
+	}
+
+	const std::vector<std::unique_ptr<Entity>> &
+		ParentEntity::accessDirectEntities(void) const
+	{
+		return _children;
+	}
+
+}	 // namespace guillaume::ecs

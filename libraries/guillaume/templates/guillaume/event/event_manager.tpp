@@ -20,25 +20,33 @@
  SOFTWARE.
  */
 
-#include "guillaume/component_registry.hpp"
+#pragma once
 
-namespace guillaume
+#include "guillaume/event/event_manager.hpp"
+
+namespace guillaume::event
 {
-    ComponentRegistry::ComponentRegistry(void)
-			: ecs::ComponentRegistryFiller<
-				  components::Bound, components::Focus,
-				  components::MouseHoverInteraction,
-				  components::MouseButtonInteraction,
-				  components::HandHoverInteraction,
-				  components::HandButtonInteraction,
-				  components::HandPinchInteraction,
-				  components::HandPokeInteraction,
-				  components::HandSqueezeInteraction,
-				  components::HandThumbRestInteraction,
-				  components::HandThumbStickInteraction,
-				  components::HandTriggerInteraction, components::Text,
-				  components::Transform, components::Color,
-				  components::Borders>()
-		{
+	template<utility::event::InheritFromEvent EventType>
+	void EventManager<EventType>::consumeNextEvent(void)
+	{
+		if (_subscriber->hasPendingEvents()) {
+			_lastEvent = _subscriber->getNextEvent();
 		}
-}	 // namespace guillaume
+	}
+
+	template<utility::event::InheritFromEvent EventType>
+	std::unique_ptr<EventType> EventManager<EventType>::getLastEvent(void)
+	{
+		if (!_lastEvent) {
+			return nullptr;
+		}
+		return std::move(_lastEvent);
+	}
+
+	template<utility::event::InheritFromEvent EventType>
+	EventManager<EventType>::EventManager(EventBus &eventBus)
+		: _eventBus(eventBus)
+		, _subscriber(std::make_unique<EventSubscriber<EventType>>(_eventBus))
+	{
+	}
+}	 // namespace guillaume::event

@@ -24,4 +24,15 @@
 
 namespace guillaume::ecs
 {
+	std::vector<std::unique_ptr<Entity>> &
+		EntityRegistryContainer::accessDirectEntities(void)
+	{
+		return _entities;
+	}
+
+	const std::vector<std::unique_ptr<Entity>> &
+		EntityRegistryContainer::accessDirectEntities(void) const
+	{
+		return _entities;
+	}
 }	 // namespace guillaume::ecs

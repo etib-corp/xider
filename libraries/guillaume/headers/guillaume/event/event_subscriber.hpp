@@ -51,14 +51,7 @@ namespace guillaume::event
 		 * bus.
 		 * @param eventBus The event bus to subscribe to.
 		 */
-		EventSubscriber(EventBus &eventBus)
-		{
-			eventBus.subscribe<EventType>(
-				[this](std::unique_ptr<utility::event::Event> event) {
-					this->_eventQueue.push(std::unique_ptr<EventType>(
-						static_cast<EventType *>(event.release())));
-				});
-		}
+		EventSubscriber(EventBus &eventBus);
 
 		/**
 		 * @brief Destructor for the EventSubscriber base class.
@@ -69,25 +62,17 @@ namespace guillaume::event
 		 * @brief Check if there are pending events.
 		 * @return True if there are pending events, false otherwise.
 		 */
-		bool hasPendingEvents(void) const
-		{
-			return !_eventQueue.empty();
-		}
+		bool hasPendingEvents(void) const;
 
 		/**
 		 * @brief Get the next event from the queue.
 		 * @return The next event.
 		 * @retval nullptr If the queue is empty.
 		 */
-		std::unique_ptr<EventType> getNextEvent(void)
-		{
-			if (_eventQueue.empty()) {
-				return nullptr;
-			}
-			std::unique_ptr<EventType> event = std::move(_eventQueue.front());
-			_eventQueue.pop();
-			return event;
-		}
+		std::unique_ptr<EventType> getNextEvent(void);
 	};
 
 }	 // namespace guillaume::event
+
+// Include the implementation of the EventSubscriber template class
+#include "guillaume/event/event_subscriber.tpp"

@@ -40,11 +40,7 @@ namespace guillaume::ecs
 		 * @param entityRegistry The entity registry to pass to builders.
 		 */
 		EntityBuilderManagerFiller(ComponentRegistry &componentRegistry,
-								   EntityRegistry &entityRegistry)
-			: EntityBuilderManager()
-		{
-			(addBuilder<BuilderTypes>(componentRegistry, entityRegistry), ...);
-		}
+								   EntityRegistry &entityRegistry);
 
 		/**
 		 * @brief Default destructor for the Entity Builder Manager Filler
@@ -54,3 +50,6 @@ namespace guillaume::ecs
 	};
 
 }	 // namespace guillaume::ecs
+
+// Include the implementation of the EntityBuilderManagerFiller template class
+#include "guillaume/ecs/entity_builder_manager_filler.tpp"

@@ -104,207 +104,88 @@ namespace guillaume
 		ecs::SystemPhaseList _systemPhases;		///< Ordered list of phases and
 												///< traversal strategies
 
-		template<typename PhaseType> void runPhase(PhaseType &phaseDefinition)
-		{
-			const ecs::Phase phase = phaseDefinition.getPhase();
-			const ecs::EntityTreeTraveler &traveler =
-				phaseDefinition.getTraveler();
-
-			this->getLogger().debug("Running systems for phase: "
-									+ std::to_string(static_cast<int>(phase)));
-			for (const auto &system: _systemRegistry.getSystemsByPhase(phase)) {
-				system->routine(_sceneManager->getActiveComponentRegistry(),
-								_sceneManager->getActiveEntityRegistry(),
-								traveler);
-			}
-			this->getLogger().debug("Finished systems for phase: "
-									+ std::to_string(static_cast<int>(phase)));
-		}
+		template<typename PhaseType> void runPhase(PhaseType &phaseDefinition);
 
 		/**
 		 * @brief Register core systems used by the application.
 		 */
-		void registerCoreSystems(void)
-		{
-			_systemRegistry.registerNewSystem(
-				std::make_unique<systems::MeasureText>(_renderer));
-			_systemRegistry.registerNewSystem(
-				std::make_unique<systems::MouseMotion>(_eventBus, _renderer));
-			_systemRegistry.registerNewSystem(
-				std::make_unique<systems::MouseButton>(_eventBus, _renderer));
-			_systemRegistry.registerNewSystem(
-				std::make_unique<systems::HandMotion>(_eventBus));
-			_systemRegistry.registerNewSystem(
-				std::make_unique<systems::HandButton>(_eventBus));
-			_systemRegistry.registerNewSystem(
-				std::make_unique<systems::HandPinch>(_eventBus));
-			_systemRegistry.registerNewSystem(
-				std::make_unique<systems::HandPoke>(_eventBus));
-			_systemRegistry.registerNewSystem(
-				std::make_unique<systems::HandSqueeze>(_eventBus));
-			_systemRegistry.registerNewSystem(
-				std::make_unique<systems::HandThumbRest>(_eventBus));
-			_systemRegistry.registerNewSystem(
-				std::make_unique<systems::HandThumbStick>(_eventBus));
-			_systemRegistry.registerNewSystem(
-				std::make_unique<systems::HandTrigger>(_eventBus));
-			_systemRegistry.registerNewSystem(
-				std::make_unique<systems::TextRender>(_renderer));
-			_systemRegistry.registerNewSystem(
-				std::make_unique<systems::GlyphRender>(_renderer));
-			_systemRegistry.registerNewSystem(
-				std::make_unique<systems::KeyboardControl>(_eventBus));
-			_systemRegistry.registerNewSystem(
-				std::make_unique<systems::TextInput>(_eventBus));
-			_systemRegistry.registerNewSystem(
-				std::make_unique<systems::RectangleRender>(_renderer));
-		}
+		void registerCoreSystems(void);
 
 		public:
 		/**
 		 * @brief Default constructor
 		 */
-		Application(void)
-			: _renderer()
-			, _eventHandler()
-			, _sceneManager(nullptr)
-			, _eventBus()
-			, _systemRegistry()
-			, _systemPhases()
-		{
-			registerCoreSystems();
-			_eventHandler.setEventCallback(
-				[this](std::unique_ptr<utility::event::Event> &event) {
-					this->_eventBus.publish(std::move(event));
-				});
-			_sceneManager =
-				std::make_unique<SceneManagerFiller<SceneTypes...>>();
-		}
-
+		Application(void);
 		/**
 		 * @brief Default destructor
 		 */
-		virtual ~Application(void)
-		{
-		}
+		virtual ~Application(void);
 
 		/**
 		 * @brief Get a reference to the renderer.
 		 * @return Reference to the application renderer.
 		 */
-		RendererType &getRenderer(void)
-		{
-			return _renderer;
-		}
+		RendererType &getRenderer(void);
 
 		/**
 		 * @brief Get a const reference to the renderer.
 		 * @return Const reference to the application renderer.
 		 */
-		const RendererType &getRenderer(void) const
-		{
-			return _renderer;
-		}
+		const RendererType &getRenderer(void) const;
 
 		/**
 		 * @brief Get a reference to the event handler.
 		 * @return Reference to the application event handler.
 		 */
-		EventHandlerType &getEventHandler(void)
-		{
-			return _eventHandler;
-		}
+		EventHandlerType &getEventHandler(void);
 
 		/**
 		 * @brief Get a const reference to the event handler.
 		 * @return Const reference to the application event handler.
 		 */
-		const EventHandlerType &getEventHandler(void) const
-		{
-			return _eventHandler;
-		}
+		const EventHandlerType &getEventHandler(void) const;
 
 		/**
 		 * @brief Run one system update pass for the active scene.
 		 */
-		void routine(void)
-		{
-			std::apply(
-				[this](auto &...phaseDefinition) {
-					(this->runPhase(phaseDefinition), ...);
-				},
-				_systemPhases);
-		}
+		void routine(void);
 
 		/**
 		 * @brief Poll events from the event handler.
 		 */
-		void pollEvents(void)
-		{
-			_eventHandler.pollEvents();
-		}
+		void pollEvents(void);
 
 		/**
 		 * @brief Clear the renderer.
 		 */
-		void clear(void)
-		{
-			_renderer.clear();
-		}
+		void clear(void);
 
 		/**
 		 * @brief Present the rendered frame.
 		 */
-		void present(void)
-		{
-			_renderer.present();
-		}
+		void present(void);
 
 		/**
 		 * @brief Check if the event handler has new events.
 		 * @return True if new events were received, false otherwise.
 		 */
-		bool gotNewEvents(void) const
-		{
-			return _eventHandler.gotNewEvents();
-		}
+		bool gotNewEvents(void) const;
 
 		/**
 		 * @brief Check if the application should quit (using event handler).
 		 * @return True if the application should quit, false otherwise.
 		 */
-		bool shouldQuit(void) const
-		{
-			return _eventHandler.shouldQuit();
-		}
+		bool shouldQuit(void) const;
 
 		/**
 		 * @brief Run the application main loop using the event handler's
 		 * shouldQuit.
 		 * @return Exit code.
 		 */
-		int run(void)
-		{
-			this->getLogger().info("Entering main loop");
-			while (!_eventHandler.shouldQuit()) {
-				try {
-					_eventHandler.pollEvents();
-					if (!_eventHandler.gotNewEvents()) {
-						continue;
-					}
-					_renderer.clear();
-					routine();
-					_renderer.present();
-					this->getLogger().debug("Processed a frame");
-				} catch (const std::exception &exception) {
-					this->getLogger().error(std::string("Application error: ")
-											+ exception.what());
-					return EXIT_FAILURE;
-				}
-			}
-			this->getLogger().info("Exiting main loop");
-			return EXIT_SUCCESS;
-		}
+		int run(void);
 	};
 
 }	 // namespace guillaume
+
+// Include the implementation of the Application template class
+#include "guillaume/application.tpp"

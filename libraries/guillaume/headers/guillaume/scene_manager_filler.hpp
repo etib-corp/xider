@@ -38,17 +38,15 @@ namespace guillaume
 		/**
 		 * @brief Default constructor for the SceneManagerFiller class.
 		 */
-		SceneManagerFiller(void)
-		{
-			(addScene<SceneTypes>(), ...);
-		}
+		SceneManagerFiller(void);
 
 		/**
 		 * @brief Default destructor for the SceneManagerFiller class.
 		 */
-		~SceneManagerFiller(void)
-		{
-		}
+		~SceneManagerFiller(void);
 	};
 
 }	 // namespace guillaume
+
+// Include the implementation of the SceneManagerFiller template class
+#include "guillaume/scene_manager_filler.tpp"

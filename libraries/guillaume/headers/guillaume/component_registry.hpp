@@ -66,23 +66,7 @@ namespace guillaume
 		/**
 		 * @brief Default constructor.
 		 */
-		ComponentRegistry(void)
-			: ecs::ComponentRegistryFiller<
-				  components::Bound, components::Focus,
-				  components::MouseHoverInteraction,
-				  components::MouseButtonInteraction,
-				  components::HandHoverInteraction,
-				  components::HandButtonInteraction,
-				  components::HandPinchInteraction,
-				  components::HandPokeInteraction,
-				  components::HandSqueezeInteraction,
-				  components::HandThumbRestInteraction,
-				  components::HandThumbStickInteraction,
-				  components::HandTriggerInteraction, components::Text,
-				  components::Transform, components::Color,
-				  components::Borders>()
-		{
-		}
+		ComponentRegistry(void);
 
 		/**
 		 * @brief Default destructor.

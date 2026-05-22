@@ -65,22 +65,13 @@ namespace guillaume::ecs
 		 * @brief Get the exception message.
 		 * @return The exception message.
 		 */
-		const char *what(void) const noexcept override
-		{
-			if (_message.empty()) {
-				_message = "System of type " + _systemName + " not found";
-			}
-			return _message.c_str();
-		}
+		const char *what(void) const noexcept override;
 
 		/**
 		 * @brief Get the type index of the missing system.
 		 * @return The type index of the missing system.
 		 */
-		std::type_index getSystemTypeIndex(void) const
-		{
-			return _systemIndex;
-		}
+		std::type_index getSystemTypeIndex(void) const;
 	};
 
 	/**

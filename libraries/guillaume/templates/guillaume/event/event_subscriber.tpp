@@ -20,25 +20,36 @@
  SOFTWARE.
  */
 
-#include "guillaume/component_registry.hpp"
+#pragma once
 
-namespace guillaume
+#include "guillaume/event/event_subscriber.hpp"
+
+namespace guillaume::event
 {
-    ComponentRegistry::ComponentRegistry(void)
-			: ecs::ComponentRegistryFiller<
-				  components::Bound, components::Focus,
-				  components::MouseHoverInteraction,
-				  components::MouseButtonInteraction,
-				  components::HandHoverInteraction,
-				  components::HandButtonInteraction,
-				  components::HandPinchInteraction,
-				  components::HandPokeInteraction,
-				  components::HandSqueezeInteraction,
-				  components::HandThumbRestInteraction,
-				  components::HandThumbStickInteraction,
-				  components::HandTriggerInteraction, components::Text,
-				  components::Transform, components::Color,
-				  components::Borders>()
-		{
+	template<utility::event::InheritFromEvent EventType>
+	EventSubscriber<EventType>::EventSubscriber(EventBus &eventBus)
+	{
+		eventBus.subscribe<EventType>(
+			[this](std::unique_ptr<utility::event::Event> event) {
+				this->_eventQueue.push(std::unique_ptr<EventType>(
+					static_cast<EventType *>(event.release())));
+			});
+	}
+
+	template<utility::event::InheritFromEvent EventType>
+	bool EventSubscriber<EventType>::hasPendingEvents(void) const
+	{
+		return !_eventQueue.empty();
+	}
+
+	template<utility::event::InheritFromEvent EventType>
+	std::unique_ptr<EventType> EventSubscriber<EventType>::getNextEvent(void)
+	{
+		if (_eventQueue.empty()) {
+			return nullptr;
 		}
-}	 // namespace guillaume
+		std::unique_ptr<EventType> event = std::move(_eventQueue.front());
+		_eventQueue.pop();
+		return event;
+	}
+}	 // namespace guillaume::event

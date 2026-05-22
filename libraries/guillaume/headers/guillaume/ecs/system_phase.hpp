@@ -54,7 +54,8 @@ namespace guillaume::ecs
 	 * @tparam TravelerType The type of EntityTreeTraveler to use for this
 	 * phase.
 	 */
-	template<Phase Value, InheritFromEntityTreeTraveler TravelerType> class SystemPhase
+	template<Phase Value, InheritFromEntityTreeTraveler TravelerType>
+	class SystemPhase
 	{
 		public:
 		static constexpr Phase phase =
@@ -79,19 +80,13 @@ namespace guillaume::ecs
 		 * @brief Get the phase value associated with this system phase.
 		 * @return The system phase value.
 		 */
-		constexpr Phase getPhase(void) const
-		{
-			return phase;
-		}
+		constexpr Phase getPhase(void) const;
 
 		/**
 		 * @brief Get a const reference to the associated traveler.
 		 * @return Const traveler reference.
 		 */
-		const EntityTreeTraveler &getTraveler(void) const
-		{
-			return _traveler;
-		}
+		const EntityTreeTraveler &getTraveler(void) const;
 	};
 
 	/**
@@ -121,3 +116,6 @@ namespace guillaume::ecs
 		std::tuple<EventPhase, MeasurePhase, LayoutPhase, RenderPhase>;
 
 }	 // namespace guillaume::ecs
+
+// Include the implementation of the SystemPhase template class
+#include "guillaume/ecs/system_phase.tpp"

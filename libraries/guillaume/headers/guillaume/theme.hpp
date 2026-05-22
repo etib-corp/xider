@@ -209,10 +209,7 @@ namespace guillaume
 				   static_cast<std::size_t>(SchemeColorRole::Count)>
 			_colors;
 
-		static constexpr std::size_t toIndex(SchemeColorRole role)
-		{
-			return static_cast<std::size_t>(role);
-		}
+		static constexpr std::size_t toIndex(SchemeColorRole role);
 
 		public:
 		/**

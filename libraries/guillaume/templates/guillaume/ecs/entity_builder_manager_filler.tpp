@@ -20,25 +20,19 @@
  SOFTWARE.
  */
 
-#include "guillaume/component_registry.hpp"
+#pragma once
 
-namespace guillaume
+#include "guillaume/ecs/entity_builder_manager_filler.hpp"
+
+namespace guillaume::ecs
 {
-    ComponentRegistry::ComponentRegistry(void)
-			: ecs::ComponentRegistryFiller<
-				  components::Bound, components::Focus,
-				  components::MouseHoverInteraction,
-				  components::MouseButtonInteraction,
-				  components::HandHoverInteraction,
-				  components::HandButtonInteraction,
-				  components::HandPinchInteraction,
-				  components::HandPokeInteraction,
-				  components::HandSqueezeInteraction,
-				  components::HandThumbRestInteraction,
-				  components::HandThumbStickInteraction,
-				  components::HandTriggerInteraction, components::Text,
-				  components::Transform, components::Color,
-				  components::Borders>()
-		{
-		}
-}	 // namespace guillaume
+
+	template<InheritFromEntityBuilder... BuilderTypes>
+	EntityBuilderManagerFiller<BuilderTypes...>::EntityBuilderManagerFiller(
+		ComponentRegistry &componentRegistry, EntityRegistry &entityRegistry)
+		: EntityBuilderManager()
+	{
+		(addBuilder<BuilderTypes>(componentRegistry, entityRegistry), ...);
+	}
+
+}	 // namespace guillaume::ecs

@@ -69,10 +69,7 @@ namespace guillaume
 		/**
 		 * @brief Default constructor
 		 */
-		Renderer(void)
-			: Loggable()
-		{
-		}
+		Renderer(void);
 
 		/**
 		 * @brief Default destructor
@@ -130,37 +127,25 @@ namespace guillaume
 		 * @param view The new view instance.
 		 * @note Synchronizes cached orientation and last mouse ray.
 		 */
-		void setView(const utility::graphic::ViewF &view)
-		{
-			_view = view;
-		}
+		void setView(const utility::graphic::ViewF &view);
 
 		/**
 		 * @brief Get the full view model.
 		 * @return The view instance.
 		 */
-		utility::graphic::ViewF getView(void) const
-		{
-			return _view;
-		}
+		utility::graphic::ViewF getView(void) const;
 
 		/**
 		 * @brief Get the shared utility resource manager.
 		 * @return Reference to the renderer resource manager.
 		 */
-		utility::RessourceManager &getRessourceManager(void)
-		{
-			return _ressourceManager;
-		}
+		utility::RessourceManager &getRessourceManager(void);
 
 		/**
 		 * @brief Get the shared utility asset manager.
 		 * @return Reference to the renderer asset manager.
 		 */
-		utility::DefaultAssetManager &getAssetManager(void)
-		{
-			return _assetManager;
-		}
+		utility::DefaultAssetManager &getAssetManager(void);
 	};
 
 	/**

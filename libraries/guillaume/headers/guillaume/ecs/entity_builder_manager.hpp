@@ -58,20 +58,7 @@ namespace guillaume::ecs
 		 */
 		template<InheritFromEntityBuilder BuilderType>
 		BuilderType &addBuilder(ComponentRegistry &componentRegistry,
-								EntityRegistry &entityRegistry)
-		{
-			std::type_index typeIndex(typeid(BuilderType));
-			if (_builders.find(typeIndex) != _builders.end()) {
-				throw std::runtime_error(
-					"Builder for this entity type already exists");
-			}
-
-			auto builder	 = std::make_unique<BuilderType>(componentRegistry,
-															 entityRegistry);
-			auto *builderRef = builder.get();
-			_builders[typeIndex] = std::move(builder);
-			return *builderRef;
-		}
+								EntityRegistry &entityRegistry);
 
 		public:
 		/**
@@ -93,16 +80,10 @@ namespace guillaume::ecs
 		 * entity type
 		 */
 		template<InheritFromEntityBuilder BuilderType>
-		BuilderType &getBuilder(void)
-		{
-			std::type_index typeIndex(typeid(BuilderType));
-			auto it = _builders.find(typeIndex);
-			if (it == _builders.end()) {
-				throw std::runtime_error(
-					"No builder found for this entity type");
-			}
-			return *static_cast<BuilderType *>(it->second.get());
-		}
+		BuilderType &getBuilder(void);
 	};
 
 }	 // namespace guillaume::ecs
+
+// Include the implementation of the EntityBuilderManager template class
+#include "guillaume/ecs/entity_builder_manager.tpp"

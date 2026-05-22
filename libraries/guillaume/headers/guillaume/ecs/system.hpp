@@ -68,11 +68,7 @@ namespace guillaume::ecs
 		 * @tparam ComponentTypes The component types that define the system's
 		 * signature.
 		 */
-		template<InheritFromComponent... ComponentTypes> void setSignature(void)
-		{
-			_signature.reset();
-			(_signature.set(ComponentTypeId::get<ComponentTypes>()), ...);
-		}
+		template<InheritFromComponent... ComponentTypes> void setSignature(void);
 
 		/**
 		 * @brief Get the active component registry for the current update
@@ -95,14 +91,7 @@ namespace guillaume::ecs
 		 * @return True if the component exists, false otherwise.
 		 */
 		template<InheritFromComponent ComponentType>
-		bool hasComponent(const ecs::Entity::Identifier &entityIdentifier) const
-		{
-			if (_activeComponentRegistry == nullptr) {
-				return false;
-			}
-			return _activeComponentRegistry->hasComponent<ComponentType>(
-				entityIdentifier);
-		}
+		bool hasComponent(const ecs::Entity::Identifier &entityIdentifier) const;
 
 		/**
 		 * @brief Get a mutable component from the active component registry.
@@ -111,15 +100,7 @@ namespace guillaume::ecs
 		 * @return Mutable reference to the requested component.
 		 */
 		template<InheritFromComponent ComponentType> ComponentType &
-			getComponent(const ecs::Entity::Identifier &entityIdentifier)
-		{
-			if (_activeComponentRegistry == nullptr) {
-				throw std::runtime_error(
-					"No active component registry bound to system");
-			}
-			return _activeComponentRegistry->getComponent<ComponentType>(
-				entityIdentifier);
-		}
+			getComponent(const ecs::Entity::Identifier &entityIdentifier);
 
 		/**
 		 * @brief Get a const component from the active component registry.
@@ -128,15 +109,7 @@ namespace guillaume::ecs
 		 * @return Const reference to the requested component.
 		 */
 		template<InheritFromComponent ComponentType> const ComponentType &
-			getComponent(const ecs::Entity::Identifier &entityIdentifier) const
-		{
-			if (_activeComponentRegistry == nullptr) {
-				throw std::runtime_error(
-					"No active component registry bound to system");
-			}
-			return _activeComponentRegistry->getComponent<ComponentType>(
-				entityIdentifier);
-		}
+			getComponent(const ecs::Entity::Identifier &entityIdentifier) const;
 
 		/**
 		 * @brief Ensure a component exists for an entity and log if missing.
@@ -145,17 +118,7 @@ namespace guillaume::ecs
 		 * @return True if present, false otherwise.
 		 */
 		template<InheritFromComponent ComponentType>
-		bool requireComponent(const ecs::Entity::Identifier &entityIdentifier)
-		{
-			if (hasComponent<ComponentType>(entityIdentifier)) {
-				return true;
-			}
-
-			getLogger().warning(
-				"Entity " + std::to_string(entityIdentifier) + " does not have "
-				+ utility::demangle<ComponentType>() + " component");
-			return false;
-		}
+		bool requireComponent(const ecs::Entity::Identifier &entityIdentifier);
 
 		public:
 		/**
@@ -213,3 +176,6 @@ namespace guillaume::ecs
 	concept InheritFromSystem = std::is_base_of_v<System, Type>;
 
 }	 // namespace guillaume::ecs
+
+// Include the System template implementation
+#include "guillaume/ecs/system.tpp"

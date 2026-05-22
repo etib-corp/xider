@@ -72,14 +72,7 @@ namespace guillaume
 		 * @brief Add a scene to the scene manager.
 		 * @tparam SceneType The type of the scene to be added.
 		 */
-		template<InheritFromScene SceneType> void addScene(void)
-		{
-			std::type_index typeIndex(typeid(SceneType));
-			_scenes[typeIndex] =
-				std::make_unique<SceneType>(_localStorage, _sessionStorage);
-			getLogger().info("Registered scene type: "
-							 + std::string(typeid(SceneType).name()));
-		}
+		template<InheritFromScene SceneType> void addScene(void);
 
 		public:
 		/**
@@ -98,19 +91,7 @@ namespace guillaume
 		 * @throws std::runtime_error if the specified scene type is not found
 		 * in the scene manager.
 		 */
-		template<InheritFromScene SceneType> void switchToScene(void)
-		{
-			std::type_index typeIndex(typeid(SceneType));
-			if (_scenes.find(typeIndex) == _scenes.end()) {
-				getLogger().error("Scene switch failed. Scene type is not "
-								  "registered: "
-								  + std::string(typeid(SceneType).name()));
-				throw std::runtime_error("Scene not found in scene manager");
-			}
-			_activeSceneType = typeIndex;
-			getLogger().info("Switched active scene to type: "
-							 + std::string(typeid(SceneType).name()));
-		}
+		template<InheritFromScene SceneType> void switchToScene(void);
 
 		/**
 		 * @brief Get the active entity registry.
@@ -125,3 +106,6 @@ namespace guillaume
 		ecs::ComponentRegistry &getActiveComponentRegistry(void);
 	};
 }	 // namespace guillaume
+
+// Include the SceneManager template implementation
+#include "guillaume/scene_manager.tpp"

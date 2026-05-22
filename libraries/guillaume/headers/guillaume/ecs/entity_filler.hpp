@@ -68,10 +68,7 @@ namespace guillaume::ecs
 		 * @brief Get the Component Registry.
 		 * @return Reference to the component registry.
 		 */
-		ComponentRegistry &getComponentRegistry(void)
-		{
-			return _componentRegistry;
-		}
+		ComponentRegistry &getComponentRegistry(void);
 
 		public:
 		/**
@@ -79,15 +76,7 @@ namespace guillaume::ecs
 		 * @param componentRegistry The component registry to register
 		 * components to.
 		 */
-		EntityFiller(ComponentRegistry &componentRegistry)
-			: Entity()
-			, _componentRegistry(componentRegistry)
-		{
-			setSignature<ComponentTypes...>();
-			_componentRegistry
-				.template registerComponentsForEntity<ComponentTypes...>(
-					getIdentifier());
-		}
+		EntityFiller(ComponentRegistry &componentRegistry);
 
 		/**
 		 * @brief Default destructor for the Entity Filler class.
@@ -111,10 +100,7 @@ namespace guillaume::ecs
 		 * @brief Get the Component Registry.
 		 * @return Reference to the component registry.
 		 */
-		ComponentRegistry &getComponentRegistry(void)
-		{
-			return _componentRegistry;
-		}
+		ComponentRegistry &getComponentRegistry(void);
 
 		public:
 		/**
@@ -122,15 +108,7 @@ namespace guillaume::ecs
 		 * @param componentRegistry The component registry to register
 		 * components to.
 		 */
-		ParentEntityFiller(ComponentRegistry &componentRegistry)
-			: ParentEntity()
-			, _componentRegistry(componentRegistry)
-		{
-			setSignature<ComponentTypes...>();
-			_componentRegistry
-				.template registerComponentsForEntity<ComponentTypes...>(
-					getIdentifier());
-		}
+		ParentEntityFiller(ComponentRegistry &componentRegistry);
 
 		/**
 		 * @brief Default destructor for the Parent Entity Filler class.
@@ -139,3 +117,7 @@ namespace guillaume::ecs
 	};
 
 }	 // namespace guillaume::ecs
+
+// Include the implementation of the EntityFiller and ParentEntityFiller
+// template classes
+#include "guillaume/ecs/entity_filler.tpp"

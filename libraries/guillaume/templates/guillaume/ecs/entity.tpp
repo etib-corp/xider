@@ -20,25 +20,23 @@
  SOFTWARE.
  */
 
-#include "guillaume/component_registry.hpp"
+#pragma once
 
-namespace guillaume
+#include "guillaume/ecs/entity.hpp"
+
+namespace guillaume::ecs
 {
-    ComponentRegistry::ComponentRegistry(void)
-			: ecs::ComponentRegistryFiller<
-				  components::Bound, components::Focus,
-				  components::MouseHoverInteraction,
-				  components::MouseButtonInteraction,
-				  components::HandHoverInteraction,
-				  components::HandButtonInteraction,
-				  components::HandPinchInteraction,
-				  components::HandPokeInteraction,
-				  components::HandSqueezeInteraction,
-				  components::HandThumbRestInteraction,
-				  components::HandThumbStickInteraction,
-				  components::HandTriggerInteraction, components::Text,
-				  components::Transform, components::Color,
-				  components::Borders>()
-		{
-		}
-}	 // namespace guillaume
+	template<InheritFromComponent... ComponentTypes>
+	Entity::Signature Entity::getSignatureFromTypes(void)
+	{
+		Entity::Signature signature;
+		(signature.set(ComponentTypeId::get<ComponentTypes>()), ...);
+		return signature;
+	}
+
+	template<InheritFromComponent... ComponentTypes>
+	void Entity::setSignature(void)
+	{
+		_signature = getSignatureFromTypes<ComponentTypes...>();
+	}
+}	 // namespace guillaume::ecs
