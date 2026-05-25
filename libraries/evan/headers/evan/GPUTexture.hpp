@@ -15,6 +15,14 @@
 
 namespace evan
 {
+    /**
+     * @brief GPUTexture class.
+     *
+     * This class represents a texture that can be used in the GPU for rendering. It encapsulates the Vulkan image, image view, and sampler associated with the texture, as well as the type of texture (e.g., albedo, normal, roughness) for categorization in the rendering pipeline.
+     * The GPUTexture class provides functionality for creating and managing Vulkan resources related to textures, including image creation, memory allocation, image view setup, sampler creation, and mipmap generation. It also includes a method for destroying the Vulkan resources when they are no longer needed.
+     *
+     * @note The GPUTexture class is designed to work with the Vulkan API and is intended to be used in conjunction with a device backend that provides access to the Vulkan device and related resources. It is important to ensure that the GPUTexture is properly managed and destroyed to prevent resource leaks in the Vulkan application.
+     */
     class GPUTexture {
         public:
             /**
