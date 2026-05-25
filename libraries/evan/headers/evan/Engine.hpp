@@ -80,6 +80,7 @@ namespace evan
 		 * configurations. This constructor is useful for quickly getting
 		 * started with the engine without needing to specify custom parameters.
 		 *
+		 * @param ressourceProvider A unique pointer to a RessourceProvider object, which is responsible for managing the loading and synchronization of GPU resources such as materials and textures. The RessourceProvider interacts with the utility::RessourceProvider to load resources from disk or other sources, and creates corresponding GPU resources using the DeviceContext. It provides methods for synchronizing resources, retrieving specific materials or textures by ID, and managing the lifecycle of GPU resources to ensure efficient memory usage and performance in the rendering process.
 		 * @param platform A shared pointer to an IPlatform object, which provides
 		 * an abstraction layer for platform-specific operations. The IPlatform
 		 * interface defines methods for window management, input handling, and
@@ -373,9 +374,16 @@ namespace evan
 		 */
 		std::shared_ptr<IPlatform> _platform;
 
+		/**
+		 * A shared pointer to a RessourceManager object, which manages the loading
+		 * and synchronization of GPU resources such as materials and textures. The RessourceManager interacts with the utility::RessourceProvider to load resources from disk or other sources, and creates corresponding GPU resources using the DeviceContext. It provides methods for synchronizing resources, retrieving specific materials or textures by ID, and managing the lifecycle of GPU resources to ensure efficient memory usage and performance in the rendering process.
+		 */
 		std::shared_ptr<RessourceManager> _ressourceManager;
 
 		private:
+		/**
+		 * A counter to generate unique object IDs for scenes, render objects, or other entities managed by the engine. This counter is incremented each time a new object is created, ensuring that each object receives a unique identifier that can be used for tracking and management purposes within the engine. The _nextObjectID can be used to assign IDs to new scenes, render objects, or any other entities that require unique identification within the engine's data structures.
+		 */
 		size_t _nextObjectID = 1;
 	};
 }	 // namespace evan
