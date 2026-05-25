@@ -118,6 +118,14 @@ namespace guillaume
 	template<InheritFromRenderer RendererType,
 			 event::InheritFromEventHandler EventHandlerType,
 			 InheritFromScene... SceneTypes>
+	void Application<RendererType, EventHandlerType, SceneTypes...>::setRenderer(RendererType renderer)
+	{
+		_renderer = std::move(renderer);
+	}
+
+	template<InheritFromRenderer RendererType,
+			 event::InheritFromEventHandler EventHandlerType,
+			 InheritFromScene... SceneTypes>
 	RendererType &
 		Application<RendererType, EventHandlerType, SceneTypes...>::getRenderer(
 			void)

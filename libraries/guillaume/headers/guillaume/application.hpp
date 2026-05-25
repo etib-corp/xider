@@ -122,10 +122,11 @@ namespace guillaume
 		 */
 		virtual ~Application(void);
 
-		void setRenderer(RendererType renderer)
-		{
-			_renderer = std::move(renderer);
-		}
+		/**
+		 * @brief Set the renderer for the application.
+		 * @param renderer The renderer to use.
+		 */
+		void setRenderer(RendererType renderer);
 
 		/**
 		 * @brief Get a reference to the renderer.
