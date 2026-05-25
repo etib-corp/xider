@@ -58,6 +58,7 @@ namespace evan
 		 * @param material A reference to the utility::graphic::Material instance,
 		 * which contains information about the material's shader and textures,
 		 * used to initialize the Vulkan resources for this material.
+		 * @param shaderID The unique ID of the shader associated with this material, used to identify which shader program should be used when rendering objects that utilize this material.
 		 *
 		 * @note The constructor performs several Vulkan operations, including:
 		 * - Creating a Vulkan image from the specified texture file.
