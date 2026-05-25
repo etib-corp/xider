@@ -75,10 +75,17 @@ namespace utility::graphic
 		 */
 		const graphic::Color32Bit &getColor(void) const;
 
+        /**
+         * @brief Get the meshes associated with this renderable object.
+         *
+         * This method returns a vector of shared pointers to Mesh objects that are associated with this renderable object. Each Mesh represents a part of the geometry that can be rendered, and the shared pointers allow for efficient memory management and sharing of mesh data across multiple renderable objects if needed. The returned vector can be used by the rendering system to access the mesh data for rendering this object in the scene.
+         *
+         * @return A vector of shared pointers to Mesh objects associated with this renderable object.
+         */
         [[nodiscard]] std::vector<std::shared_ptr<Mesh>> getMeshes() const;
 
         protected:
-		std::vector<std::shared_ptr<Mesh>> _meshes;
+		std::vector<std::shared_ptr<Mesh>> _meshes; ///< Meshes associated with this renderable object
         Color32Bit _color;	   ///< Text RGBA color
 		PoseF _pose;	///< World pose (position and orientation) of the text
 
