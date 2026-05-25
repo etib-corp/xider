@@ -34,11 +34,8 @@ int main(void)
 	auto windowsDesktopPlatform =
 		std::make_shared<evan::WindowsDesktopPlatform>("XIDER", 1280, 720);
 
-	// Create Evan graphics engine with Windows Desktop platform
-	auto evanEngine = std::make_shared<evan::Engine>(windowsDesktopPlatform);
-
 	// Initialize XIDER application with Evan engine
-	xider::XIDER app(evanEngine);
+	xider::XIDER app(windowsDesktopPlatform);
 
 	return app.run();
 }
