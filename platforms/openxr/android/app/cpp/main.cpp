@@ -163,8 +163,6 @@ void android_main(struct android_app *android_app)
 	android_app->onAppCmd = AppHandleCmd;
 	evan::Engine::initializeAssetManager(android_app->activity->assetManager);
 
-	g_assetManager->add(std::string("./texture1.png"));
-
 	// Initialize XR platform data
 	evan::AndroidXrPlatform::AndroidPlatformData platformData {
 		.applicationVM		 = android_app->activity->vm,
