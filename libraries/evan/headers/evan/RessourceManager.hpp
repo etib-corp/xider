@@ -33,7 +33,6 @@ namespace evan {
          *
          * @param ressourceProvider A unique pointer to a utility::RessourceProvider instance used to load materials and textures.
          * @param deviceContext A shared pointer to a DeviceContext instance used to create GPU resources.
-         * @param renderer A shared pointer to a Renderer instance that may be used for resource initialization.
          *
          * @note The constructor initializes the resource manager and synchronizes the GPU resources
          * with the loaded materials and textures from the resource provider.
@@ -45,6 +44,13 @@ namespace evan {
          */
         ~RessourceManager();
 
+        /**
+         * @brief Initializes the RessourceManager by synchronizing GPU resources with the materials and textures loaded from the resource provider.
+         *
+         * This method should be called after constructing the RessourceManager to ensure that all GPU resources are properly initialized and synchronized with the loaded materials and textures. It may also be called to refresh the GPU resources if there are changes in the loaded materials or textures.
+         *
+         * @param renderer A shared pointer to the Renderer instance that may be used for resource initialization and management during the synchronization process. This allows the RessourceManager to interact with the Renderer as needed to ensure that GPU resources are properly set up for rendering operations.
+         */
         void init(std::shared_ptr<Renderer> renderer);
 
         /**
