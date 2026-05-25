@@ -187,25 +187,6 @@ void android_main(struct android_app *android_app)
 		"./texture1.png",
 	};
 
-	std::map<std::string, std::vector<evan::Mesh>> meshData = {
-		{ "./texture1.png",
-		  { evan::Mesh { std::vector<evan::Vertex> {
-							 evan::Vertex { { -0.5f, -0.5f, -2.0f },
-											{ 0.0f, 0.0f, 0.0f },
-											{ 0.0f, 0.0f } },
-							 evan::Vertex { { 0.5f, -0.5f, -2.0f },
-											{ 1.0f, 1.0f, 0.0f },
-											{ 1.0f, 0.0f } },
-							 evan::Vertex { { 0.5f, 0.5f, -2.0f },
-											{ 1.0f, 1.0f, 0.0f },
-											{ 1.0f, 1.0f } },
-							 evan::Vertex { { -0.5f, 0.5f, -2.0f },
-											{ 0.0f, 1.0f, 0.0f },
-											{ 0.0f, 1.0f } },
-						 },
-						 std::vector<unsigned int> { 0, 1, 2, 2, 3, 0 } } } },
-	};
-
 	while (!android_app->destroyRequested) {
 		// Process Android events
 		for (;;) {
