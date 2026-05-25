@@ -29,11 +29,8 @@ namespace evan
 		 * @brief Constructs a GPUShader object with the given vertex and fragment
 		 * shader code.
 		 *
-		 * @param vertexCode A vector containing the SPIR-V code for the vertex
-		 * shader.
-		 * @param fragmentCode A vector containing the SPIR-V code for the
-		 * fragment shader.
 		 * @param device The Vulkan device used to create the shader modules.
+		 * @param shader A reference to the utility::graphic::Shader object containing the shader data.
 		 */
 		GPUShader(VkDevice device, const utility::graphic::Shader &shader);
 
