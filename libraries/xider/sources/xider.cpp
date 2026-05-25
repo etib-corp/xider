@@ -35,9 +35,8 @@ namespace xider
 		// class. We need to cast and set the engine on it.
 		Renderer *renderer_ptr = dynamic_cast<Renderer *>(&getRenderer());
 		renderer_ptr->setPlatform(platform);
+		_engine = renderer_ptr->getEngine();
 		if (renderer_ptr && _engine) {
-			renderer_ptr->setEngine(_engine);
-
 			getLogger().info("Renderer configured with Evan engine");
 		}
 		EventHandler *eventHandler_ptr = dynamic_cast<EventHandler *>(&getEventHandler());

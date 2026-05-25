@@ -99,7 +99,6 @@ namespace guillaume
 		, _systemRegistry()
 		, _systemPhases()
 	{
-		std::cout << "Renderer must be initialized here" << std::endl;
 		registerCoreSystems();
 		_eventHandler.setEventCallback(
 			[this](std::unique_ptr<utility::event::Event> &event) {
@@ -227,7 +226,6 @@ namespace guillaume
 				_renderer.clear();
 				routine();
 				_renderer.present();
-				this->getLogger().debug("Processed a frame");
 			} catch (const std::exception &exception) {
 				this->getLogger().error(std::string("Application error: ")
 										+ exception.what());
