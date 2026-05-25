@@ -26,7 +26,6 @@ namespace xider
 {
 	Renderer::Renderer(std::shared_ptr<evan::IPlatform> platform)
 		: guillaume::Renderer()
-		, _engine(nullptr)
 	{
 		_ressourceProvider = std::make_unique<utility::RessourceProvider>();
 		_systemIO = std::make_shared<utility::DefaultSystemIO>();
@@ -73,8 +72,7 @@ namespace xider
 	void Renderer::drawText(const utility::graphic::Text &text,
 							const utility::graphic::PoseF &pose)
 	{
-		(void)text;	   // Suppress unused parameter warning
-		(void)pose;	   // Suppress unused parameter warning
+		_engine->drawText(std::make_shared<utility::graphic::Text>(text));
 	}
 
 }	 // namespace xider

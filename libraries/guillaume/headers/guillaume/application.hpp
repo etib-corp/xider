@@ -85,7 +85,7 @@ namespace guillaume
 	 * @see event::EventHandler
 	 * @see Renderer
 	 */
-	template<class PlatformType,
+	template<typename PlatformType,
 			 InheritFromRenderer RendererType,
 			 event::InheritFromEventHandler EventHandlerType,
 			 InheritFromScene... SceneTypes>
@@ -107,8 +107,6 @@ namespace guillaume
 
 		template<typename PhaseType> void runPhase(PhaseType &phaseDefinition);
 
-		bool _rendererSet = false;	  ///< Flag to track if renderer has been set
-
 		/**
 		 * @brief Register core systems used by the application.
 		 */
@@ -128,7 +126,6 @@ namespace guillaume
 		void setRenderer(RendererType renderer)
 		{
 			_renderer = std::move(renderer);
-			_rendererSet = true;
 		}
 
 		/**
