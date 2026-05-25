@@ -177,11 +177,8 @@ void android_main(struct android_app *android_app)
 		new evan::AndroidXrPlatform(platformData));
 	android_app->userData = &xrPlatform->_appState;
 
-	// Create Evan graphics engine with XR platform
-	auto evanEngine = std::make_shared<evan::Engine>(xrPlatform);
-
 	// Initialize XIDER application with Evan engine
-	xider::XIDER app(evanEngine);
+	xider::XIDER app(xrPlatform);
 
 	std::cout << "XIDER Application initialized successfully" << std::endl;
 	std::cout << "Entering main application loop..." << std::endl;
@@ -209,8 +206,6 @@ void android_main(struct android_app *android_app)
 						 std::vector<unsigned int> { 0, 1, 2, 2, 3, 0 } } } },
 	};
 
-	evanEngine->addScene(0, texturePaths, meshData);
-
 	while (!android_app->destroyRequested) {
 		// Process Android events
 		for (;;) {
@@ -230,9 +225,6 @@ void android_main(struct android_app *android_app)
 				source->process(android_app, source);
 			}
 		}
-
-		// TODO: Poll the events from the Evan engine and handle them in the XIDER application
-		evanEngine->pollEvents();
 
 		// Application lifecycle
 		app.pollEvents();
