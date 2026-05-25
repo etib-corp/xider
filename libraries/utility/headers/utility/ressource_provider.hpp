@@ -216,9 +216,8 @@ namespace utility
 		/**
 		 * @brief Loads a model resource from a specified file path and model type.
 		 *
-		 * @param path The file path to the model resource to be loaded.
+		 * @param modelAsset A shared pointer to the File object containing the model data to be loaded.
 		 * @param type The type of the model (e.g., OBJ, FBX, GLTF) to be loaded.
-		 * @param systemInterface A reference to the SystemIO instance
 		 *
 		 * @return A shared pointer to the loaded Model object.
 		 */
@@ -272,6 +271,11 @@ namespace utility
 		 * The resulting name can be used as a key in the internal map to store and retrieve shader resources efficiently.
 		 * The method ensures that shaders with the same vertex and fragment paths will have the same name,
 		 * allowing for proper caching and reuse of shader resources.
+		 *
+		 * @param vertexPath The file path to the vertex shader resource.
+		 * @param fragmentPath The file path to the fragment shader resource.
+		 *
+		 * @return A string representing the unique shader name constructed from the vertex and fragment shader file paths.
 		 */
 		const std::string &buildShaderPath(const std::string &vertexPath, const std::string &fragmentPath) const;
 
@@ -281,6 +285,10 @@ namespace utility
 		 * This method increments the internal `nextID` counter and returns the next unique ID for a resource.
 		 * It is used internally to assign unique IDs to loaded resources such as fonts, materials,
 		 * textures, and models. The returned ID can be used as a key in the internal maps to store and retrieve resources efficiently.
+		 *
+		 * @note Do not modify the internal `nextID` variable directly. Use this method to ensure that unique IDs are generated correctly and consistently for all resources.
+		 *
+		 * @return A uint32_t representing the next unique ID for a resource. Each call to this method will return a different ID, ensuring that all resources have unique identifiers.
 		 */
 		uint32_t getNextID();
 
