@@ -110,6 +110,8 @@ namespace utility::graphic
 		 * material. The shader name is used to identify which shader program should
 		 * be used when rendering objects that use this material, allowing for proper
 		 * rendering of the material's visual properties.
+		 *
+		 * @return A const reference to a string representing the shader name associated with this material.
 		 */
 		const std::string &getShaderName() const;
 
