@@ -491,6 +491,5 @@ void evan::DesktopBackend::setupCallbackEvent(const IPlatform &platform)
 			event->setPosition(utility::event::MouseMotionEvent::MousePosition{
 			    static_cast<unsigned int>(xpos), static_cast<unsigned int>(ypos)});
 		self->_mouseMotionEvents.push_back(std::move(event));
-		std::cout << "Mouse moved to: (" << xpos << ", " << ypos << ")" << std::endl;
 	});
 }
