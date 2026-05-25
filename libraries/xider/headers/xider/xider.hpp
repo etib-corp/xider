@@ -46,7 +46,7 @@ namespace xider
 	 * event handling across all platforms.
 	 */
 	class XIDER:
-		public guillaume::Application<std::shared_ptr<evan::IPlatform>, Renderer, EventHandler, scenes::Main,
+		public guillaume::Application<Renderer, EventHandler, scenes::Main,
 									  scenes::Settings>
 	{
 		public:

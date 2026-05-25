@@ -5,7 +5,7 @@
 ** GPUTexture
 */
 
-#include "GPUTexture.hpp"
+#include "evan/GPUTexture.hpp"
 
 evan::GPUTexture::GPUTexture(const DeviceContext &deviceContext,
                 const utility::graphic::Texture &texture,

@@ -139,19 +139,13 @@ namespace guillaume
 		 * @brief Get the shared utility resource manager.
 		 * @return Reference to the renderer resource manager.
 		 */
-		std::unique_ptr<utility::RessourceProvider> getRessourceProvider(void)
-		{
-			return std::move(_ressourceProvider);
-		}
+		std::unique_ptr<utility::RessourceProvider> getRessourceProvider(void);
 
 		/**
 		 * @brief Get the shared utility asset manager.
 		 * @return Reference to the renderer asset manager.
 		 */
-		std::shared_ptr<utility::DefaultSystemIO> getSystemIO(void)
-		{
-			return _systemIO;
-		}
+		std::shared_ptr<utility::DefaultSystemIO> getSystemIO(void);
 	};
 
 	/**

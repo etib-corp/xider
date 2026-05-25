@@ -85,13 +85,12 @@ namespace guillaume
 	 * @see event::EventHandler
 	 * @see Renderer
 	 */
-	template<typename PlatformType,
-			 InheritFromRenderer RendererType,
+	template<InheritFromRenderer RendererType,
 			 event::InheritFromEventHandler EventHandlerType,
 			 InheritFromScene... SceneTypes>
 	class Application:
 		protected utility::logging::Loggable<
-			Application<PlatformType, RendererType, EventHandlerType,
+			Application<RendererType, EventHandlerType,
 				SceneTypes...>,
 			utility::logging::StandardLogger>
 	{

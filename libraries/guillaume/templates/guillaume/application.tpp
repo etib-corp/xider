@@ -99,6 +99,7 @@ namespace guillaume
 		, _systemRegistry()
 		, _systemPhases()
 	{
+		std::cout << "Renderer must be initialized here" << std::endl;
 		registerCoreSystems();
 		_eventHandler.setEventCallback(
 			[this](std::unique_ptr<utility::event::Event> &event) {

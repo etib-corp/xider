@@ -157,26 +157,6 @@ namespace evan
 		void drawObject(std::shared_ptr<utility::graphic::Renderable> object, const std::string &renderMethod);
 
 		/**
-		 * @brief Adds a new scene to the engine. This method allows users to
-		 * add a new scene to the engine by providing the necessary data, such
-		 * as texture paths and mesh data. The method takes in a vector of
-		 * texture paths, which are used to load the textures for the scene, and
-		 * a map of mesh data, which contains the information about the meshes
-		 * to be rendered in the scene. The method creates a new Scene object
-		 * using the provided data and adds it to the vector of scenes managed
-		 * by the engine. This allows users to easily create and manage multiple
-		 * scenes within the engine, enabling them to switch between different
-		 * scenes as needed.
-		 *
-		 * @note The Engine class is designed to be flexible and extensible,
-		 * allowing for future enhancements and additions to the engine's
-		 * capabilities. The current implementation focuses on establishing the
-		 * core structure and functionality of the engine, with plans for
-		 * further improvements and optimizations in the future.
-		 */
-		void addScene(size_t sceneIndex);
-
-		/**
 		 * @brief Updates the state of the engine. This method is responsible
 		 * for handling logic updates, input processing, and other non-rendering
 		 * related tasks. It is typically called once per frame, allowing the
@@ -254,8 +234,6 @@ namespace evan
 		 * scenes as needed.
 		 *
 		 * @param sceneIndex Scene identifier.
-		 * @param texturePaths Texture file paths used by the scene.
-		 * @param meshData Mesh data grouped by mesh name.
 		 *
 		 * @note The Engine class is designed to be flexible and extensible,
 		 * allowing for future enhancements and additions to the engine's
@@ -285,13 +263,13 @@ namespace evan
 		 * to the textures used in the scene. These textures may be associated
 		 * with the materials used by the meshes.
 		 * @param meshData A map where the key is a string representing the mesh
-		 * name, and the value is a vector of Mesh objects representing the mesh
-		 * data for that mesh name. Each Mesh object contains information about
+		 * name, and the value is a vector of GPUMesh objects representing the mesh
+		 * data for that mesh name. Each GPUMesh object contains information about
 		 * the vertices, indices, and material ID associated with that mesh.
 		 */
 		void updateScene(size_t sceneIndex,
 						 std::vector<std::string> texturePaths,
-						 std::map<std::string, std::vector<Mesh>> meshData);
+						 std::map<std::string, std::vector<GPUMesh>> meshData);
 
 		/**
 		 * @brief Initializes the asset manager for the engine.

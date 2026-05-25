@@ -5,7 +5,7 @@
 ** RessourceManager
 */
 
-#include "RessourceManager.hpp"
+#include "evan/RessourceManager.hpp"
 
 evan::RessourceManager::RessourceManager(std::unique_ptr<utility::RessourceProvider> ressourceProvider, std::shared_ptr<DeviceContext> deviceContext)
     : _ressourceProvider(std::move(ressourceProvider)), _deviceContext(deviceContext)

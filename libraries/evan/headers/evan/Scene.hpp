@@ -11,7 +11,6 @@
 
 #include "evan/EvanPlatform.hpp"
 
-#include "evan/Mesh.hpp"
 #include "evan/GPUMesh.hpp"
 #include "evan/GPUMaterial.hpp"
 

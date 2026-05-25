@@ -5,7 +5,7 @@
 ** GPUGPUMaterial
 */
 
-#include "evan/Material.hpp"
+#include "evan/GPUMaterial.hpp"
 
 #include <stb_image.h>
 
