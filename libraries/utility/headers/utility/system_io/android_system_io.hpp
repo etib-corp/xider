@@ -34,10 +34,10 @@ namespace utility
 
 	/**
 	 * @class AndroidSystemIO
-	 * @brief The AndroidSystemIO class is an implementation of FileSystem
+	 * @brief The AndroidSystemIO class is an implementation of SystemIO
 	 * that uses the Android NDK's AAssetManager to load assets from the APK.
 	 */
-	class AndroidSystemIO: public FileSystem
+	class AndroidSystemIO: public SystemIO
 	{
 		private:
 		AAssetManager
