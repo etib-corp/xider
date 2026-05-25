@@ -50,39 +50,28 @@ namespace evan
              * This structure encapsulates all necessary Vulkan objects and image
              * properties needed to perform mipmap generation operations.
              *
+             * @param _commandPool The Vulkan command pool used to allocate command buffers for mipmap generation.
+             * @param _graphicsQueue The Vulkan graphics queue used to submit command buffers for execution during mipmap generation.
+             * @param _image The Vulkan image for which mipmaps are to be generated.
+             * @param _imageFormat The format of the Vulkan image for which mipmaps are to be generated.
+             * @param _texWidth The width of the Vulkan image in pixels.
+             * @param _texHeight The height of the Vulkan image in pixels.
+             * @param _mipLevels The number of mipmap levels to generate for the Vulkan image.
              */
             struct GenerateMipmapsProperties {
-                /*
-                * @brief The Vulkan command pool used to allocate command buffers
-                * for mipmap generation.
-                */
-                VkCommandPool _commandPool;
-                /*
-                * @brief The Vulkan graphics queue used to submit the command
-                * buffer for execution.
-                */
-                VkQueue _graphicsQueue;
-                /*
-                * @brief The Vulkan image for which mipmaps are to be generated.
-                */
-                VkImage _image;
-                /*
-                * @brief The format of the image for which mipmaps are to be
-                * generated.
-                */
-                VkFormat _imageFormat;
-                /*
-                * @brief The width of the image in pixels.
-                */
-                uint32_t _texWidth;
-                /*
-                * @brief The height of the image in pixels.
-                */
-                uint32_t _texHeight;
-                /*
-                * @brief The number of mipmap levels to generate.
-                */
-                uint32_t _mipLevels;
+                VkCommandPool _commandPool;     ///< The Vulkan command pool used to allocate command buffers for mipmap generation.
+
+                VkQueue _graphicsQueue;         ///< The Vulkan graphics queue used to submit command buffers for execution during mipmap generation.
+
+                VkImage _image;                 ///< The Vulkan image for which mipmaps are to be generated.
+
+                VkFormat _imageFormat;          ///< The format of the Vulkan image for which mipmaps are to be generated.
+
+                uint32_t _texWidth;             ///< The width of the Vulkan image in pixels.
+
+                uint32_t _texHeight;            ///< The height of the Vulkan image in pixels.
+
+                uint32_t _mipLevels;            ///< The number of mipmap levels to generate for the Vulkan image.
             };
 
             /**
