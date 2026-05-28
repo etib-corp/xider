@@ -76,7 +76,7 @@ jobs:
 
       - name: Run code analysis
         if: matrix.runner == 'ubuntu-latest'
-        uses: CoreTrace/coretrace-stack-analyzer@v0.18.1
+        uses: CoreTrace/coretrace-stack-analyzer@v0
         with:
           compile-commands: build/compile_commands.json
           analysis-profile: fast
