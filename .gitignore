@@ -3,3 +3,4 @@
 *.db
 *.log
 *.bin
+/.vscode/c_cpp_properties.json

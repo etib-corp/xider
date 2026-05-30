@@ -30,8 +30,8 @@
 #include <utility/logging/loggable.hpp>
 #include <utility/logging/standard_logger.hpp>
 
-#include <utility/asset_manager/default_asset_manager.hpp>
-#include <utility/ressource_manager.hpp>
+#include <utility/system_io/default_system_io.hpp>
+#include <utility/ressource_provider.hpp>
 
 #include <utility/graphic/view.hpp>
 #include <utility/graphic/ray.hpp>
@@ -59,11 +59,11 @@ namespace guillaume
 			utility::math::Vector2F;	///< 2D vector representing viewport
 										///< width and height in pixels.
 
-		private:
+		protected:
 		utility::graphic::ViewF _view;	  ///< View state
-		utility::RessourceManager
-			_ressourceManager;	  ///< Shared text/resource manager
-		utility::DefaultAssetManager _assetManager;	   ///< Shared asset manager
+		std::unique_ptr<utility::RessourceProvider>
+			_ressourceProvider;	  ///< Shared text/resource manager
+		std::shared_ptr<utility::DefaultSystemIO> _systemIO;	   ///< Shared asset manager
 
 		public:
 		/**
@@ -139,13 +139,13 @@ namespace guillaume
 		 * @brief Get the shared utility resource manager.
 		 * @return Reference to the renderer resource manager.
 		 */
-		utility::RessourceManager &getRessourceManager(void);
+		std::unique_ptr<utility::RessourceProvider> getRessourceProvider(void);
 
 		/**
 		 * @brief Get the shared utility asset manager.
 		 * @return Reference to the renderer asset manager.
 		 */
-		utility::DefaultAssetManager &getAssetManager(void);
+		std::shared_ptr<utility::DefaultSystemIO> getSystemIO(void);
 	};
 
 	/**

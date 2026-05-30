@@ -118,6 +118,14 @@ namespace guillaume
 	template<InheritFromRenderer RendererType,
 			 event::InheritFromEventHandler EventHandlerType,
 			 InheritFromScene... SceneTypes>
+	void Application<RendererType, EventHandlerType, SceneTypes...>::setRenderer(RendererType renderer)
+	{
+		_renderer = std::move(renderer);
+	}
+
+	template<InheritFromRenderer RendererType,
+			 event::InheritFromEventHandler EventHandlerType,
+			 InheritFromScene... SceneTypes>
 	RendererType &
 		Application<RendererType, EventHandlerType, SceneTypes...>::getRenderer(
 			void)
@@ -226,7 +234,6 @@ namespace guillaume
 				_renderer.clear();
 				routine();
 				_renderer.present();
-				this->getLogger().debug("Processed a frame");
 			} catch (const std::exception &exception) {
 				this->getLogger().error(std::string("Application error: ")
 										+ exception.what());

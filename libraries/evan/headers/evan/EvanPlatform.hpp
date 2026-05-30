@@ -22,8 +22,8 @@
 
 #pragma once
 
-#include <utility/asset_manager/android_asset_manager.hpp>
-#include <utility/asset_manager/default_asset_manager.hpp>
+#include <utility/system_io/android_system_io.hpp>
+#include <utility/system_io/default_system_io.hpp>
 
 // GLM configuration
 #include <glm/glm.hpp>
@@ -103,9 +103,3 @@ typedef VkBool32 debugCallback_t(VkDebugUtilsMessageSeverityFlagBitsEXT,
 								 VkDebugUtilsMessageTypeFlagsEXT,
 								 const VkDebugUtilsMessengerCallbackDataEXT *,
 								 void *);
-
-#ifdef __ANDROID__
-extern std::unique_ptr<utility::AndroidAssetManager> g_assetManager;
-#else
-extern std::unique_ptr<utility::AssetManager> g_assetManager;
-#endif

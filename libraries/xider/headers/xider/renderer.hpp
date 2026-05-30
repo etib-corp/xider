@@ -1,5 +1,5 @@
 /*
- Copyright (c) 2026 ETIB Corporation
+Copyright (c) 2026 ETIB Corporation
 
  Permission is hereby granted, free of charge, to any person obtaining a copy of
  this software and associated documentation files (the "Software"), to deal in
@@ -25,6 +25,8 @@
 #include <memory>
 
 #include <guillaume/renderer.hpp>
+
+#include <evan/IPlatform.hpp>
 #include <evan/Engine.hpp>
 
 namespace xider
@@ -43,6 +45,7 @@ namespace xider
 		private:
 		private:
 		std::shared_ptr<evan::Engine> _engine;	  ///< Evan graphics engine
+		std::shared_ptr<evan::IPlatform> _platform; ///< Evan platform interface
 		public:
 		/**
 		 * @brief Default constructor for template compatibility.
@@ -51,25 +54,25 @@ namespace xider
 		 */
 		Renderer(void);
 
-		/**
-		 * @brief Constructs a Renderer with an Evan engine instance.
-		 * @param engine The Evan graphics engine to use for rendering.
-		 */
-		Renderer(std::shared_ptr<evan::Engine> engine);
-
 		~Renderer(void) override;
-
-		/**
-		 * @brief Sets the Evan engine for this renderer.
-		 * @param engine The Evan graphics engine to use for rendering.
-		 */
-		void setEngine(std::shared_ptr<evan::Engine> engine);
 
 		/**
 		 * @brief Gets the current Evan engine instance.
 		 * @return A shared pointer to the Evan graphics engine.
 		 */
-		std::shared_ptr<evan::Engine> getEngine(void) const;
+		std::shared_ptr<evan::Engine> getEngine(void);
+
+		/**
+		 * @brief Sets the Evan engine instance to be used for rendering.
+		 * @param engine A shared pointer to the Evan graphics engine.
+		 */
+		void setEngine(std::shared_ptr<evan::Engine> engine);
+
+		/**
+		 * @brief Sets the Evan platform interface.
+		 * @param platform A shared pointer to the Evan platform interface.
+		 */
+		void setPlatform(std::shared_ptr<evan::IPlatform> platform);
 
 		/**
 		 * @brief Clears the current render target.

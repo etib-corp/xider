@@ -7,18 +7,18 @@
 
 #include <utility/graphic/material.hpp>
 
-#include <utility/ressource_manager.hpp>
+#include <utility/ressource_provider.hpp>
 
 namespace utility::graphic
 {
-	Material::Material(RessourceManager &ressourceManager,
+	Material::Material(RessourceProvider &ressourceProvider,
 					   const std::string &shaderName,
-					   const std::vector<FileAsset> &textureAssets)
+					   const std::vector<File> &textureAssets)
 		: _shaderName(shaderName)
 	{
 		for (const auto &textureAsset: textureAssets) {
-			auto texture = ressourceManager.loadTextureFromAsset(
-				std::make_shared<FileAsset>(textureAsset));
+			auto texture = ressourceProvider.loadTextureFromAsset(
+				std::make_shared<File>(textureAsset));
 
 			if (!texture) {
 				throw std::runtime_error("Failed to load texture asset: "
@@ -46,5 +46,10 @@ namespace utility::graphic
 			textures.push_back(texture);
 		}
 		return textures;
+	}
+
+	const std::string &Material::getShaderName() const
+	{
+		return _shaderName;
 	}
 }	 // namespace utility::graphic

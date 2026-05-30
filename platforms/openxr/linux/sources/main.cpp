@@ -30,15 +30,12 @@
 
 int main(void)
 {
-	// Create Linux Xr platform for graphics (OpenXR on desktop uses windowed
-	// display)
+	// Create Linux Xr platform for graphics
 	auto linuxXrPlatform = std::make_shared<evan::LinuxXrPlatform>();
 
-	// Create Evan graphics engine with Linux Xr platform
-	auto evanEngine = std::make_shared<evan::Engine>(linuxXrPlatform);
 
 	// Initialize XIDER application with Evan engine
-	xider::XIDER app(evanEngine);
+	xider::XIDER app(linuxXrPlatform);
 
 	return app.run();
 }

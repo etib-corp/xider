@@ -52,12 +52,12 @@ namespace xider
 		public:
 		/**
 		 * @brief Constructs a XIDER application with an Evan graphics engine.
-		 * @param engine The Evan graphics engine to use for rendering.
+		 * @param platform The Evan platform to use for rendering.
 		 *
 		 * This constructor initializes the XIDER application and configures the
-		 * renderer to use the provided Evan engine for all graphics operations.
+		 * renderer to use the provided Evan platform for all graphics operations.
 		 */
-		XIDER(std::shared_ptr<evan::Engine> engine);
+		XIDER(std::shared_ptr<evan::IPlatform> platform);
 
 		/**
 		 * @brief Default destructor.
@@ -66,6 +66,7 @@ namespace xider
 
 		/**
 		 * @brief Gets the Evan graphics engine instance.
+		 *
 		 * @return A shared pointer to the Evan graphics engine.
 		 */
 		std::shared_ptr<evan::Engine> getEngine(void) const;

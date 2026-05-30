@@ -12,13 +12,17 @@
 #include "evan/ASwapchainContext.hpp"
 
 #include "evan/Frame.hpp"
-#include "evan/Shader.hpp"
-#include "evan/Vertex.hpp"
+
+#include "evan/RessourceManager.hpp"
+
+#include "evan/GPUShader.hpp"
+#include "evan/GPUVertex.hpp"
 
 #include "evan/Scene.hpp"
 
 #include <fstream>
 #include <algorithm>
+#include <map>
 
 namespace evan
 {
@@ -57,6 +61,7 @@ namespace evan
 		 * of the rendering operations.
 		 * @param msaaSamples The MSAA sample count to be used for multisample
 		 * anti aliasing operations in the graphics pipeline.
+		 * @param ressourceManager A shared pointer to the RessourceManager, which is responsible for managing materials, textures, and other resources used in rendering. The Renderer interacts with the RessourceManager to access the necessary resources for rendering scenes, such as materials and textures associated with render objects.
 		 *
 		 * @note The constructor may throw exceptions if resource creation
 		 * fails, such as if the graphics pipeline or descriptor pool cannot be
@@ -65,7 +70,7 @@ namespace evan
 		 * the Renderer.
 		 */
 		Renderer(DeviceContext &deviceContext, VkRenderPass renderPass,
-				 VkSampleCountFlagBits msaaSamples);
+				 VkSampleCountFlagBits msaaSamples, std::shared_ptr<RessourceManager> ressourceManager);
 
 		~Renderer();
 
@@ -196,31 +201,9 @@ namespace evan
 		VkDescriptorSetLayout getDescriptorSetLayout() const;
 
 		protected:
-		/**
-		 * @brief Vulkan graphics pipeline used for rendering operations.
-		 *
-		 * This member variable holds the Vulkan graphics pipeline that is used
-		 * by the Renderer to perform rendering operations. The graphics
-		 * pipeline defines the stages of the rendering process, including
-		 * vertex input, vertex shader, fragment shader, and output merger
-		 * stages. It is a crucial resource for configuring how rendering
-		 * commands are processed and how resources are bound to the pipeline
-		 * during drawing operations.
-		 */
-		VkPipeline _pipeline;
+		std::map<uint32_t, VkPipeline> _pipelines;					///< A map of pipeline layer identifiers to Vulkan pipeline objects. This map is used to manage different graphics pipelines for rendering operations based on the pipeline layer associated with render objects. Each entry in the map corresponds to a specific pipeline layer and its associated Vulkan pipeline, which can be used for rendering objects that belong to that layer.
 
-		/**
-		 * @brief Vulkan pipeline layout used for rendering operations.
-		 *
-		 * This member variable holds the Vulkan pipeline layout that is used by
-		 * the Renderer to define the interface between shader stages and the
-		 * resources bound to the graphics pipeline. The pipeline layout
-		 * specifies the descriptor set layouts and push constant ranges that
-		 * are used during rendering operations. It is essential for configuring
-		 * how resources are accessed by shaders and how they are organized in
-		 * the graphics pipeline.
-		 */
-		VkPipelineLayout _pipelineLayout;
+		std::map<uint32_t, VkPipelineLayout> _pipelineLayouts;		///< A map of pipeline layer identifiers to Vulkan pipeline layout objects. This map is used to manage different pipeline layouts for rendering operations based on the pipeline layer associated with render objects. Each entry in the map corresponds to a specific pipeline layer and its associated Vulkan pipeline layout, which defines the interface between shader stages and the resources bound to the graphics pipeline for rendering objects that belong to that layer.
 
 		/**
 		 * @brief A collection of frames used for rendering.
@@ -344,7 +327,7 @@ namespace evan
 		 * configured graphics pipeline for rendering scenes with the specified
 		 * render pass and MSAA settings.
 		 */
-		void createGraphicsPipeline(VkDevice device, VkRenderPass renderPass,
+		void createGraphicsPipelines(VkDevice device, VkRenderPass renderPass,
 									VkSampleCountFlagBits msaaSamples);
 
 		/**
@@ -362,5 +345,7 @@ namespace evan
 		 * allocating descriptor sets during rendering operations.
 		 */
 		void createDescriptorPool(VkDevice device, uint32_t materialCount);
+
+		std::shared_ptr<RessourceManager> _ressourceManager;		///< A shared pointer to the RessourceManager, which is responsible for managing materials, textures, and other resources used in rendering. The Renderer interacts with the RessourceManager to access the necessary resources for rendering scenes, such as materials and textures associated with render objects. This member variable allows the Renderer to efficiently manage and utilize resources during the rendering process.
 	};
 }	 // namespace evan

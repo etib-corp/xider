@@ -2,44 +2,42 @@
 ** ETIB PROJECT, 2025
 ** evan
 ** File description:
-** Shader
+** GPUShader
 */
 
 #pragma once
+
+#include <utility/graphic/shader.hpp>
 
 #include "evan/EvanPlatform.hpp"
 
 namespace evan
 {
 	/**
-	 * @class Shader
-	 * @brief The Shader class represents a shader used in rendering.
+	 * @class GPUShader
+	 * @brief The GPUShader class represents a shader used in rendering.
 	 *
-	 * The Shader class encapsulates the vertex and fragment shader modules, as
+	 * The GPUShader class encapsulates the vertex and fragment shader modules, as
 	 * well as the SPIR-V code for both shaders. It provides methods to retrieve
 	 * the shader modules and to destroy the shader modules when they are no
 	 * longer needed.
 	 */
-	class Shader
+	class GPUShader
 	{
 		public:
 		/**
-		 * @brief Constructs a Shader object with the given vertex and fragment
+		 * @brief Constructs a GPUShader object with the given vertex and fragment
 		 * shader code.
 		 *
-		 * @param vertexCode A vector containing the SPIR-V code for the vertex
-		 * shader.
-		 * @param fragmentCode A vector containing the SPIR-V code for the
-		 * fragment shader.
 		 * @param device The Vulkan device used to create the shader modules.
+		 * @param shader A reference to the utility::graphic::Shader object containing the shader data.
 		 */
-		Shader(const std::vector<uint32_t> &vertexCode,
-			   const std::vector<uint32_t> &fragmentCode, VkDevice device);
+		GPUShader(VkDevice device, const utility::graphic::Shader &shader);
 
-		~Shader();
+		~GPUShader();
 
 		/**
-		 * @brief Destroys the shader modules associated with this Shader
+		 * @brief Destroys the shader modules associated with this GPUShader
 		 * object.
 		 *
 		 * @note This method should be called when the shader modules are no
@@ -83,7 +81,7 @@ namespace evan
 		std::vector<uint32_t> _fragmentCode;
 
 		/**
-		 * Vulkan device used to create the shader modules
+		 * Vulkan logical device used to create and manage shader modules
 		 */
 		VkDevice _logicalDevice;
 	};

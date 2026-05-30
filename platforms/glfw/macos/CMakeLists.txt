@@ -28,3 +28,10 @@ add_executable(${MACOS_DESKTOP_TARGET} ${MACOS_DESKTOP_SOURCES})
 
 # Link with xider library
 target_link_libraries(${MACOS_DESKTOP_TARGET} PRIVATE xider)
+
+add_custom_command(TARGET ${MACOS_DESKTOP_TARGET} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_CURRENT_BINARY_DIR}/xider/evan/shaders"
+        "${CMAKE_CURRENT_BINARY_DIR}/shaders"
+    COMMENT "Copying engine shaders to target directory"
+)

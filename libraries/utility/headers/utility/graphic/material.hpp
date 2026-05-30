@@ -11,13 +11,13 @@
 #include <map>
 #include <vector>
 
-#include <utility/asset_manager/file_asset.hpp>
+#include <utility/system_io/file.hpp>
 
 #include <utility/graphic/texture.hpp>
 
 namespace utility
 {
-	class RessourceManager;
+	class RessourceProvider;
 }
 
 namespace utility::graphic
@@ -33,7 +33,7 @@ namespace utility::graphic
 	 * them for use in rendering operations.
 	 *
 	 * The constructor of the Material class takes a shader name and a vector of
-	 * FileAsset objects representing the textures to be loaded. The textures
+	 * File objects representing the textures to be loaded. The textures
 	 * are loaded using the stb_image library, and the pixel data is stored in
 	 * Texture objects for later use.
 	 */
@@ -54,22 +54,22 @@ namespace utility::graphic
 		 * and texture assets.
 		 *
 		 * This constructor initializes the Material with a shader name and
-		 * loads the textures from the provided FileAsset objects. The textures
+		 * loads the textures from the provided File objects. The textures
 		 * are loaded using the stb_image library, and the pixel data is stored
 		 * in Texture objects for later use in rendering operations.
 		 *
-		 * @param ressourceManager A reference to the RessourceManager instance.
+		 * @param ressourceProvider A reference to the RessourceProvider instance.
 		 * @param shaderName The name of the shader associated with this
 		 * material.
-		 * @param textureAssets A vector of FileAsset objects representing the
+		 * @param textureAssets A vector of File objects representing the
 		 * textures to be loaded for this material.
 		 *
 		 * @throws std::runtime_error if any of the textures fail to load from
-		 * the provided FileAsset objects.
+		 * the provided File objects.
 		 */
-		Material(RessourceManager &ressourceManager,
+		Material(RessourceProvider &ressourceProvider,
 				 const std::string &shaderName,
-				 const std::vector<FileAsset> &textureAssets);
+				 const std::vector<File> &textureAssets);
 
 		/**
 		 * @brief Destructs the Material object, releasing any allocated
@@ -95,13 +95,25 @@ namespace utility::graphic
 		 *
 		 * This method returns a vector of pointers to Texture objects that are
 		 * associated with this material. The textures are loaded from the
-		 * FileAsset objects provided during construction and can be used for
+		 * File objects provided during construction and can be used for
 		 * rendering operations that require these textures.
 		 *
 		 * @return A const reference to a vector of pointers to Texture objects
 		 * associated with this material.
 		 */
 		const std::vector<std::shared_ptr<Texture>> &getTextures() const;
+
+		/**
+		 * @brief Retrieves the shader name associated with this material.
+		 *
+		 * This method returns the name of the shader that is associated with this
+		 * material. The shader name is used to identify which shader program should
+		 * be used when rendering objects that use this material, allowing for proper
+		 * rendering of the material's visual properties.
+		 *
+		 * @return A const reference to a string representing the shader name associated with this material.
+		 */
+		const std::string &getShaderName() const;
 
 		protected:
 		/**

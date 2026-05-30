@@ -66,7 +66,6 @@
 
 namespace guillaume
 {
-
 	/**
 	 * @brief Application base class.
 	 *
@@ -91,7 +90,8 @@ namespace guillaume
 			 InheritFromScene... SceneTypes>
 	class Application:
 		protected utility::logging::Loggable<
-			Application<RendererType, EventHandlerType, SceneTypes...>,
+			Application<RendererType, EventHandlerType,
+				SceneTypes...>,
 			utility::logging::StandardLogger>
 	{
 		private:
@@ -116,10 +116,17 @@ namespace guillaume
 		 * @brief Default constructor
 		 */
 		Application(void);
+
 		/**
 		 * @brief Default destructor
 		 */
 		virtual ~Application(void);
+
+		/**
+		 * @brief Set the renderer for the application.
+		 * @param renderer The renderer to use.
+		 */
+		void setRenderer(RendererType renderer);
 
 		/**
 		 * @brief Get a reference to the renderer.

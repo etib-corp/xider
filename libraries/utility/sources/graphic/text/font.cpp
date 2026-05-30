@@ -10,7 +10,7 @@
 namespace utility::graphic
 {
 
-	Font::Font(const std::vector<FileAsset> &fontAssets)
+	Font::Font(const std::vector<File> &fontAssets)
 	{
 		// Initialize FreeType library
 		if (FT_Init_FreeType(&_ftLibrary)) {

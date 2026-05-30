@@ -48,10 +48,10 @@ namespace xider::scenes
 			getDirectorManager()
 				.getDirector<guillaume::entities::Button::Director>();
 
-		// buttonDirector.makeIconTextButton(
-		// 	buttonBuilder, "settings", "Settings", [this]() {
-		// 		this->getLogger().info("Button icon text clicked!");
-		// 	});
+		buttonDirector.makeIconTextButton(
+			buttonBuilder, "settings", "Settings", [this]() {
+				this->getLogger().info("Button icon text clicked!");
+			});
 	}
 
 	Main::~Main(void)

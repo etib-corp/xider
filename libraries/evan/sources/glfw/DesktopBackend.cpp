@@ -102,9 +102,7 @@ std::vector<int64_t> evan::DesktopBackend::enumerateSwapchainFormats(
 
 	std::vector<int64_t> swapchainFormats64(swapchainFormatCount);
 	for (size_t i = 0; i < swapchainFormatCount; i++) {
-		swapchainFormats64[i] =
-			(static_cast<int64_t>(swapchainFormats[i].format) << 32) |
-			static_cast<int64_t>(swapchainFormats[i].colorSpace);
+		swapchainFormats64[i] = static_cast<int64_t>(swapchainFormats[i].format);
 	}
 	return swapchainFormats64;
 }
@@ -272,6 +270,10 @@ void evan::DesktopBackend::createInstance(const evan::IPlatform &platform,
 void evan::DesktopBackend::createLogicalDevice()
 {
 	std::vector<const char *> desktopExtensions = deviceExtensions;
+
+#ifdef __APPLE__
+	desktopExtensions.push_back("VK_KHR_portability_subset");
+#endif
 
 	QueueFamilyIndices indices = this->findQueueFamilies();
 
@@ -489,6 +491,5 @@ void evan::DesktopBackend::setupCallbackEvent(const IPlatform &platform)
 			event->setPosition(utility::event::MouseMotionEvent::MousePosition{
 			    static_cast<unsigned int>(xpos), static_cast<unsigned int>(ypos)});
 		self->_mouseMotionEvents.push_back(std::move(event));
-		std::cout << "Mouse moved to: (" << xpos << ", " << ypos << ")" << std::endl;
 	});
 }

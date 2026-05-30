@@ -20,21 +20,21 @@
  SOFTWARE.
  */
 
-#include "utility/asset_manager/file_asset.hpp"
+#include "utility/system_io/file.hpp"
 
 #include <algorithm>
 #include <limits>
 
-utility::FileAsset::FileAsset(const std::string &path,
+utility::File::File(const std::string &path,
 							  const std::string &content)
 	: _content(content)
 	, _path(path)
 {
 }
 
-utility::FileAsset::~FileAsset() = default;
+utility::File::~File() = default;
 
-size_t utility::FileAsset::write(const void *ptr, size_t size, size_t nmemb)
+size_t utility::File::write(const void *ptr, size_t size, size_t nmemb)
 {
 	if (ptr == nullptr || size == 0 || nmemb == 0) {
 		return 0;
@@ -60,7 +60,7 @@ size_t utility::FileAsset::write(const void *ptr, size_t size, size_t nmemb)
 	return (_content.size() - lenBefore) / size;
 }
 
-size_t utility::FileAsset::read(void *ptr, size_t size, size_t count)
+size_t utility::File::read(void *ptr, size_t size, size_t count)
 {
 	if (ptr == nullptr || size == 0 || count == 0 || _pos >= _content.size()) {
 		return 0;
@@ -77,7 +77,7 @@ size_t utility::FileAsset::read(void *ptr, size_t size, size_t count)
 	return toRead / size;
 }
 
-size_t utility::FileAsset::read(std::string &str, size_t size, size_t count)
+size_t utility::File::read(std::string &str, size_t size, size_t count)
 {
 	if (size == 0 || count == 0 || _pos >= _content.size()) {
 		str.clear();
@@ -96,18 +96,18 @@ size_t utility::FileAsset::read(std::string &str, size_t size, size_t count)
 	return toRead / size;
 }
 
-int utility::FileAsset::seek(long offset, Seek whence)
+int utility::File::seek(long offset, Seek whence)
 {
 	long newPos = 0;
 
 	switch (whence) {
-		case FileAsset::Seek::SET:
+		case File::Seek::SET:
 			newPos = offset;
 			break;
-		case FileAsset::Seek::CUR:
+		case File::Seek::CUR:
 			newPos = static_cast<long>(_pos) + offset;
 			break;
-		case FileAsset::Seek::END:
+		case File::Seek::END:
 			newPos = static_cast<long>(_content.size()) + offset;
 			break;
 		default:
@@ -122,18 +122,18 @@ int utility::FileAsset::seek(long offset, Seek whence)
 	return 0;
 }
 
-size_t utility::FileAsset::tell() const
+size_t utility::File::tell() const
 {
 	return _pos;
 }
 
-void utility::FileAsset::clear()
+void utility::File::clear()
 {
 	_content.clear();
 	_pos = 0;
 }
 
-size_t utility::FileAsset::remove(size_t count)
+size_t utility::File::remove(size_t count)
 {
 	if (count == 0 || _pos >= _content.size()) {
 		return 0;

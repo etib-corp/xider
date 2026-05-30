@@ -24,10 +24,9 @@
 
 namespace xider
 {
-	XIDER::XIDER(std::shared_ptr<evan::Engine> engine)
+	XIDER::XIDER(std::shared_ptr<evan::IPlatform> platform)
 		: guillaume::Application<Renderer, EventHandler, scenes::Main,
 								 scenes::Settings>()
-		, _engine(engine)
 	{
 		getLogger().info("XIDER application initialized with Evan engine");
 		// Configure the renderer with the Evan engine
@@ -35,9 +34,9 @@ namespace xider
 		// through the getRenderer() method provided by Guillaume's Application
 		// class. We need to cast and set the engine on it.
 		Renderer *renderer_ptr = dynamic_cast<Renderer *>(&getRenderer());
+		renderer_ptr->setPlatform(platform);
+		_engine = renderer_ptr->getEngine();
 		if (renderer_ptr && _engine) {
-			renderer_ptr->setEngine(_engine);
-
 			getLogger().info("Renderer configured with Evan engine");
 		}
 		EventHandler *eventHandler_ptr = dynamic_cast<EventHandler *>(&getEventHandler());

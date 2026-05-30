@@ -24,22 +24,22 @@
 
 namespace utility::graphic
 {
-	Text::Text(RessourceManager &ressourceManager, AssetManager &assetManager,
+	Text::Text(std::shared_ptr<RessourceProvider> ressourceProvider, std::shared_ptr<SystemIO> systemInterface,
 			   const std::string &content, uint32_t fontSize,
 			   const std::string &font)
 	{
 		_content  = content;
 		_fontSize = fontSize;
-		_font	  = ressourceManager.loadFont(font, assetManager);
+		_font	  = ressourceProvider->loadFont(font, *systemInterface);
 		_fontPath = font;
-		_mesh	  = std::make_shared<Mesh>(std::vector<VertexD> {},
-										   std::vector<uint32_t> {});
+		_meshes	  = {std::make_shared<Mesh>(std::vector<VertexD> {},
+										   std::vector<uint32_t> {})};
 		updateMesh();
 	}
 
 	std::shared_ptr<Mesh> Text::getMesh() const
 	{
-		return _mesh;
+		return _meshes.front();
 	}
 
 	const std::string &Text::getFontFamily(void) const
@@ -75,36 +75,14 @@ namespace utility::graphic
 		return *this;
 	}
 
-	Text &Text::setPose(const PoseF &pose)
-	{
-		_pose = pose;
-		return *this;
-	}
-
-	const PoseF &Text::getPose(void) const
-	{
-		return _pose;
-	}
-
-	Text &Text::setColor(const graphic::Color32Bit &color)
-	{
-		_color = color;
-		return *this;
-	}
-
-	const Color32Bit &Text::getColor(void) const
-	{
-		return _color;
-	}
-
 	///////////////////////
 	// Protected Methods //
 	///////////////////////
 
 	void Text::updateMesh(void)
 	{
-		_mesh = std::make_shared<Mesh>(std::vector<VertexD> {},
-									   std::vector<uint32_t> {});
+		_meshes.front() = std::make_shared<Mesh>(std::vector<VertexD> {},
+												std::vector<uint32_t> {});
 
 		float x	 = 0;
 		double y = 0;
@@ -138,18 +116,18 @@ namespace utility::graphic
 				math::Vector3D({ 0.0, 0.0, 1.0 }),
 				math::Vector2D({ g.uvMax[VEC_X], g.uvMax[VEC_Y] }), _color);
 
-			_mesh->addVertex(v0);
-			_mesh->addVertex(v1);
-			_mesh->addVertex(v2);
-			_mesh->addVertex(v3);
+			_meshes.front()->addVertex(v0);
+			_meshes.front()->addVertex(v1);
+			_meshes.front()->addVertex(v2);
+			_meshes.front()->addVertex(v3);
 
-			_mesh->addIndex(indexOffset + 0);
-			_mesh->addIndex(indexOffset + 1);
-			_mesh->addIndex(indexOffset + 2);
+			_meshes.front()->addIndex(indexOffset + 0);
+			_meshes.front()->addIndex(indexOffset + 1);
+			_meshes.front()->addIndex(indexOffset + 2);
 
-			_mesh->addIndex(indexOffset + 0);
-			_mesh->addIndex(indexOffset + 2);
-			_mesh->addIndex(indexOffset + 3);
+			_meshes.front()->addIndex(indexOffset + 0);
+			_meshes.front()->addIndex(indexOffset + 2);
+			_meshes.front()->addIndex(indexOffset + 3);
 
 			indexOffset += 4;
 

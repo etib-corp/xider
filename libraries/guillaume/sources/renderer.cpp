@@ -43,21 +43,15 @@ namespace guillaume
 		return _view;
 	}
 
-	/**
-	 * @brief Get the shared utility resource manager.
-	 * @return Reference to the renderer resource manager.
-	 */
-	utility::RessourceManager &Renderer::getRessourceManager(void)
+	std::unique_ptr<utility::RessourceProvider> Renderer::getRessourceProvider(void)
 	{
-		return _ressourceManager;
+		return std::move(_ressourceProvider);
 	}
 
-	/**
-	 * @brief Get the shared utility asset manager.
-	 * @return Reference to the renderer asset manager.
-	 */
-	utility::DefaultAssetManager &Renderer::getAssetManager(void)
+	std::shared_ptr<utility::DefaultSystemIO> Renderer::getSystemIO(void)
 	{
-		return _assetManager;
+		return _systemIO;
 	}
+
+
 }	 // namespace guillaume
