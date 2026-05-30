@@ -36,13 +36,13 @@ namespace guillaume
 			std::filesystem::create_directories(parentPath);
 		}
 
-		if (sqlite3_open(_storageFilePath.string().c_str(), &_database)
+		if (sqlite3_open_v2(_storageFilePath.string().c_str(), &_database, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, nullptr)
 			!= SQLITE_OK) {
 			if (_database) {
 				sqlite3_close(_database);
 				_database = nullptr;
 			}
-			return;
+			throw std::runtime_error("Failed to open local storage database: " + _storageFilePath.string() + " - reason: " + sqlite3_errmsg(_database));
 		}
 
 		initializeSchema();
@@ -66,7 +66,7 @@ namespace guillaume
 	{
 		std::lock_guard<std::mutex> lock(_mutex);
 		if (!_database) {
-			return;
+			throw std::runtime_error("Failed to set item in local storage: " + _storageFilePath.string() + " - reason: " + sqlite3_errmsg(_database));
 		}
 
 		static constexpr const char *statement =
@@ -76,7 +76,7 @@ namespace guillaume
 		sqlite3_stmt *query = nullptr;
 		if (sqlite3_prepare_v2(_database, statement, -1, &query, nullptr)
 			!= SQLITE_OK) {
-			return;
+			throw std::runtime_error("Failed to prepare statement: " + std::string(sqlite3_errmsg(_database)));
 		}
 
 		sqlite3_bind_text(query, 1, key.c_str(), -1, SQLITE_TRANSIENT);
@@ -88,8 +88,8 @@ namespace guillaume
 	std::optional<std::string> LocalStorage::getItem(const std::string &key)
 	{
 		std::lock_guard<std::mutex> lock(_mutex);
-		if (!_database) {
-			return std::nullopt;
+		 if (!_database) {
+			throw std::runtime_error("Failed to get item from local storage: " + _storageFilePath.string() + " - reason: " + sqlite3_errmsg(_database));
 		}
 
 		static constexpr const char *statement =
@@ -98,7 +98,7 @@ namespace guillaume
 		sqlite3_stmt *query = nullptr;
 		if (sqlite3_prepare_v2(_database, statement, -1, &query, nullptr)
 			!= SQLITE_OK) {
-			return std::nullopt;
+			throw std::runtime_error("Failed to prepare statement: " + std::string(sqlite3_errmsg(_database)));
 		}
 
 		sqlite3_bind_text(query, 1, key.c_str(), -1, SQLITE_TRANSIENT);
@@ -119,7 +119,7 @@ namespace guillaume
 	{
 		std::lock_guard<std::mutex> lock(_mutex);
 		if (!_database) {
-			return;
+			throw std::runtime_error("Failed to remove item from local storage: " + _storageFilePath.string() + " - reason: " + sqlite3_errmsg(_database));
 		}
 
 		static constexpr const char *statement =
@@ -128,7 +128,7 @@ namespace guillaume
 		sqlite3_stmt *query = nullptr;
 		if (sqlite3_prepare_v2(_database, statement, -1, &query, nullptr)
 			!= SQLITE_OK) {
-			return;
+			throw std::runtime_error("Failed to prepare statement: " + std::string(sqlite3_errmsg(_database)));
 		}
 
 		sqlite3_bind_text(query, 1, key.c_str(), -1, SQLITE_TRANSIENT);
@@ -140,33 +140,41 @@ namespace guillaume
 	{
 		std::lock_guard<std::mutex> lock(_mutex);
 		if (!_database) {
-			return;
+			throw std::runtime_error("Failed to clear local storage: " + _storageFilePath.string() + " - reason: " + sqlite3_errmsg(_database));
 		}
 
-		executeStatement("DELETE FROM local_storage;");
+		if (!executeStatement("DELETE FROM local_storage;")) {
+			throw std::runtime_error("Failed to clear local storage: " + _storageFilePath.string());
+		}
 	}
 
 	void LocalStorage::initializeSchema(void)
 	{
-		executeStatement("CREATE TABLE IF NOT EXISTS local_storage ("
+		if (!executeStatement("CREATE TABLE IF NOT EXISTS local_storage ("
 						 "key TEXT PRIMARY KEY, "
 						 "value TEXT NOT NULL"
-						 ");");
+						 ");")) {
+			throw std::runtime_error("Failed to initialize local storage schema: " + _storageFilePath.string());
+		}
 	}
 
 	bool LocalStorage::executeStatement(const std::string &sql) const
 	{
-		if (!_database) {
-			return false;
-		}
-
 		char *errorMessage = nullptr;
 		const int code = sqlite3_exec(_database, sql.c_str(), nullptr, nullptr,
 									  &errorMessage);
-		if (errorMessage) {
-			sqlite3_free(errorMessage);
+		if (code != SQLITE_OK) {
+			std::string msg = "Failed to execute statement: ";
+			msg += sql;
+			if (errorMessage) {
+				msg += " - reason: ";
+				msg += errorMessage;
+				sqlite3_free(errorMessage);
+			}
+			throw std::runtime_error(msg);
 		}
-		return code == SQLITE_OK;
+
+		return true;
 	}
 
 }	 // namespace guillaume
