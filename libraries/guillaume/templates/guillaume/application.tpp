@@ -105,6 +105,7 @@ namespace guillaume
 				this->_eventBus.publish(std::move(event));
 			});
 		_sceneManager = std::make_unique<SceneManagerFiller<SceneTypes...>>();
+		_ressourceProvider = std::make_shared<utility::RessourceProvider>();
 	}
 
 	template<InheritFromRenderer RendererType,

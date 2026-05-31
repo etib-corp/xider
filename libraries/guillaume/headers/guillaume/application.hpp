@@ -32,6 +32,7 @@
 
 #include <utility/logging/loggable.hpp>
 #include <utility/logging/standard_logger.hpp>
+#include <utility/ressource_provider.hpp>
 
 #include <utility/demangle.hpp>
 
@@ -103,6 +104,11 @@ namespace guillaume
 		ecs::SystemRegistry _systemRegistry;	///< Shared system registry
 		ecs::SystemPhaseList _systemPhases;		///< Ordered list of phases and
 												///< traversal strategies
+
+		protected:
+		std::shared_ptr<utility::RessourceProvider> _ressourceProvider;	///< Shared
+																	 ///< ressource
+																	 ///< provider
 
 		template<typename PhaseType> void runPhase(PhaseType &phaseDefinition);
 
