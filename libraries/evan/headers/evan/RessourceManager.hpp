@@ -31,13 +31,13 @@ namespace evan {
         /**
          * @brief Constructs a RessourceManager instance with the given resource provider, device context, and renderer.
          *
-         * @param ressourceProvider A unique pointer to a utility::RessourceProvider instance used to load materials and textures.
+         * @param ressourceProvider A shared pointer to a utility::RessourceProvider instance used to load materials and textures.
          * @param deviceContext A shared pointer to a DeviceContext instance used to create GPU resources.
          *
          * @note The constructor initializes the resource manager and synchronizes the GPU resources
          * with the loaded materials and textures from the resource provider.
          */
-        RessourceManager(std::unique_ptr<utility::RessourceProvider> ressourceProvider, std::shared_ptr<DeviceContext> deviceContext);
+        RessourceManager(std::shared_ptr<utility::RessourceProvider> ressourceProvider, std::shared_ptr<DeviceContext> deviceContext);
 
         /**
          * @brief Destructs the RessourceManager instance and cleans up GPU resources.
@@ -107,7 +107,7 @@ namespace evan {
          * This method can be used to generate unique IDs for GPU resources based on
          * the materials and textures loaded from the resource provider.
          */
-        std::unique_ptr<utility::RessourceProvider> _ressourceProvider;
+        std::shared_ptr<utility::RessourceProvider> _ressourceProvider;
 
         /**
          * @brief Shared pointer to the DeviceContext used for creating GPU resources.

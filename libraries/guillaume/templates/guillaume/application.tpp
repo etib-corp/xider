@@ -92,7 +92,8 @@ namespace guillaume
 			 InheritFromScene... SceneTypes>
 	Application<RendererType, EventHandlerType, SceneTypes...>::Application(
 		void)
-		: _renderer()
+		: _ressourceProvider(std::make_shared<utility::RessourceProvider>())
+		, _renderer(_ressourceProvider)
 		, _eventHandler()
 		, _sceneManager(nullptr)
 		, _eventBus()
@@ -105,7 +106,6 @@ namespace guillaume
 				this->_eventBus.publish(std::move(event));
 			});
 		_sceneManager = std::make_unique<SceneManagerFiller<SceneTypes...>>();
-		_ressourceProvider = std::make_shared<utility::RessourceProvider>();
 	}
 
 	template<InheritFromRenderer RendererType,
@@ -121,7 +121,8 @@ namespace guillaume
 			 InheritFromScene... SceneTypes>
 	void Application<RendererType, EventHandlerType, SceneTypes...>::setRenderer(RendererType renderer)
 	{
-		_renderer = std::move(renderer);
+		std::destroy_at(std::addressof(_renderer));
+		std::construct_at(std::addressof(_renderer), std::move(renderer));
 	}
 
 	template<InheritFromRenderer RendererType,

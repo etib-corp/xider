@@ -61,7 +61,7 @@ namespace guillaume
 
 		protected:
 		utility::graphic::ViewF _view;	  ///< View state
-		std::unique_ptr<utility::RessourceProvider>
+		std::shared_ptr<utility::RessourceProvider>
 			_ressourceProvider;	  ///< Shared text/resource manager
 		std::shared_ptr<utility::DefaultSystemIO> _systemIO;	   ///< Shared asset manager
 
@@ -69,7 +69,7 @@ namespace guillaume
 		/**
 		 * @brief Default constructor
 		 */
-		Renderer(void);
+		Renderer(std::shared_ptr<utility::RessourceProvider> ressourceProvider);
 
 		/**
 		 * @brief Default destructor
@@ -139,7 +139,7 @@ namespace guillaume
 		 * @brief Get the shared utility resource manager.
 		 * @return Reference to the renderer resource manager.
 		 */
-		std::unique_ptr<utility::RessourceProvider> getRessourceProvider(void);
+		std::shared_ptr<utility::RessourceProvider> getRessourceProvider(void);
 
 		/**
 		 * @brief Get the shared utility asset manager.

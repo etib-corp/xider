@@ -7,8 +7,8 @@
 
 #include "evan/RessourceManager.hpp"
 
-evan::RessourceManager::RessourceManager(std::unique_ptr<utility::RessourceProvider> ressourceProvider, std::shared_ptr<DeviceContext> deviceContext)
-    : _ressourceProvider(std::move(ressourceProvider)), _deviceContext(deviceContext)
+evan::RessourceManager::RessourceManager(std::shared_ptr<utility::RessourceProvider> ressourceProvider, std::shared_ptr<DeviceContext> deviceContext)
+    : _ressourceProvider(ressourceProvider), _deviceContext(deviceContext)
 {
     std::map<uint32_t, std::shared_ptr<utility::graphic::Shader>> shaders = _ressourceProvider->getShaders();
 
