@@ -52,7 +52,7 @@ namespace xider
 		 * Initialize with a null engine; must call setEngine() before
 		 * rendering.
 		 */
-		Renderer(void);
+		Renderer(std::shared_ptr<utility::RessourceProvider> ressourceProvider);
 
 		~Renderer(void) override;
 

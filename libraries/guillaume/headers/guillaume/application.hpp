@@ -95,6 +95,11 @@ namespace guillaume
 				SceneTypes...>,
 			utility::logging::StandardLogger>
 	{
+		protected:
+		std::shared_ptr<utility::RessourceProvider> _ressourceProvider;	///< Shared
+																													 ///< ressource
+																													 ///< provider
+
 		private:
 		RendererType _renderer;			   ///< Main application renderer
 		EventHandlerType _eventHandler;	   ///< Application event handler
@@ -104,11 +109,6 @@ namespace guillaume
 		ecs::SystemRegistry _systemRegistry;	///< Shared system registry
 		ecs::SystemPhaseList _systemPhases;		///< Ordered list of phases and
 												///< traversal strategies
-
-		protected:
-		std::shared_ptr<utility::RessourceProvider> _ressourceProvider;	///< Shared
-																	 ///< ressource
-																	 ///< provider
 
 		template<typename PhaseType> void runPhase(PhaseType &phaseDefinition);
 

@@ -24,8 +24,9 @@
 
 namespace guillaume
 {
-	Renderer::Renderer(void)
+	Renderer::Renderer(std::shared_ptr<utility::RessourceProvider> ressourceProvider)
 		: Loggable()
+		, _ressourceProvider(ressourceProvider)
 	{
 	}
 
@@ -43,9 +44,9 @@ namespace guillaume
 		return _view;
 	}
 
-	std::unique_ptr<utility::RessourceProvider> Renderer::getRessourceProvider(void)
+	std::shared_ptr<utility::RessourceProvider> Renderer::getRessourceProvider(void)
 	{
-		return std::move(_ressourceProvider);
+		return _ressourceProvider;
 	}
 
 	std::shared_ptr<utility::DefaultSystemIO> Renderer::getSystemIO(void)

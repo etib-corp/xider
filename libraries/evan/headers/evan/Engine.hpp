@@ -80,7 +80,7 @@ namespace evan
 		 * configurations. This constructor is useful for quickly getting
 		 * started with the engine without needing to specify custom parameters.
 		 *
-		 * @param ressourceProvider A unique pointer to a RessourceProvider object, which is responsible for managing the loading and synchronization of GPU resources such as materials and textures. The RessourceProvider interacts with the utility::RessourceProvider to load resources from disk or other sources, and creates corresponding GPU resources using the DeviceContext. It provides methods for synchronizing resources, retrieving specific materials or textures by ID, and managing the lifecycle of GPU resources to ensure efficient memory usage and performance in the rendering process.
+		 * @param ressourceProvider A shared pointer to a RessourceProvider object, which is responsible for managing the loading and synchronization of GPU resources such as materials and textures. The RessourceProvider interacts with the utility::RessourceProvider to load resources from disk or other sources, and creates corresponding GPU resources using the DeviceContext. It provides methods for synchronizing resources, retrieving specific materials or textures by ID, and managing the lifecycle of GPU resources to ensure efficient memory usage and performance in the rendering process.
 		 * @param platform A shared pointer to an IPlatform object, which provides
 		 * an abstraction layer for platform-specific operations. The IPlatform
 		 * interface defines methods for window management, input handling, and
@@ -93,7 +93,7 @@ namespace evan
 		 * core structure and functionality of the engine, with plans for
 		 * further improvements and optimizations in the future.
 		 */
-		Engine(std::unique_ptr<utility::RessourceProvider> ressourceProvider, std::shared_ptr<IPlatform> platform);
+		Engine(std::shared_ptr<utility::RessourceProvider> ressourceProvider, std::shared_ptr<IPlatform> platform);
 
 		~Engine();
 

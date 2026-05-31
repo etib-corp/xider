@@ -24,7 +24,7 @@ void evan::Engine::initializeAssetManager(void *platformAssetManager)
 #endif
 }
 
-evan::Engine::Engine(std::unique_ptr<utility::RessourceProvider> ressourceProvider, std::shared_ptr<IPlatform> platform)
+evan::Engine::Engine(std::shared_ptr<utility::RessourceProvider> ressourceProvider, std::shared_ptr<IPlatform> platform)
 	: _platform(platform)
 {
 	if (!g_systemIO) {
@@ -43,7 +43,7 @@ evan::Engine::Engine(std::unique_ptr<utility::RessourceProvider> ressourceProvid
 
 	auto deviceBackend = _deviceContext->getDeviceBackend();
 
-	_ressourceManager  = std::make_shared<RessourceManager>(std::move(ressourceProvider), _deviceContext);
+	_ressourceManager  = std::make_shared<RessourceManager>(ressourceProvider, _deviceContext);
 	_renderer		   = std::make_shared<Renderer>(*_deviceContext,
 													_swapchainContext->getRenderPass(),
 													_deviceContext->getMsaaSamples(),
