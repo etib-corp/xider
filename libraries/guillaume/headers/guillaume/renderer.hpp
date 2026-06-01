@@ -68,6 +68,8 @@ namespace guillaume
 		public:
 		/**
 		 * @brief Default constructor
+		 *
+		 * @param ressourceProvider A shared pointer to a RessourceProvider object, which is responsible for managing the loading and synchronization of GPU resources such as materials and textures. The RessourceProvider interacts with the utility::RessourceProvider to load resources from disk or other sources, and creates corresponding GPU resources using the DeviceContext. It provides methods for synchronizing resources, retrieving specific materials or textures by ID, and managing the lifecycle of GPU resources to ensure efficient memory usage and performance in the rendering process.
 		 */
 		Renderer(std::shared_ptr<utility::RessourceProvider> ressourceProvider);
 
