@@ -32,6 +32,7 @@
 
 #include <utility/logging/loggable.hpp>
 #include <utility/logging/standard_logger.hpp>
+#include <utility/ressource_provider.hpp>
 
 #include <utility/demangle.hpp>
 
@@ -94,6 +95,11 @@ namespace guillaume
 				SceneTypes...>,
 			utility::logging::StandardLogger>
 	{
+		protected:
+		std::shared_ptr<utility::RessourceProvider> _ressourceProvider;	///< Shared
+																													 ///< ressource
+																													 ///< provider
+
 		private:
 		RendererType _renderer;			   ///< Main application renderer
 		EventHandlerType _eventHandler;	   ///< Application event handler
