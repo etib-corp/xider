@@ -87,47 +87,53 @@ namespace utility
 		}
 
 		auto font = std::make_shared<graphic::Font>(std::vector { *fontAsset });
+		auto fontID = getNextID();
+		auto materialKey = fontAsset->path() + "_material";
+
+		_fonts[fontID] = font;
+		_elementsIDs[fontAsset->path()] = fontID;
+
+		auto textMaterial = std::make_shared<graphic::TextMaterial>();
+		auto materialID = getNextID();
+
+		_materials[materialID] = textMaterial;
+		_elementsIDs[materialKey] = materialID;
 
 		font->onNewTextureCreated =
-			[this, fontAsset](std::string name,
+			[this, materialKey](std::string name,
 							   std::shared_ptr<graphic::Texture> atlas) {
 				auto textureID = getNextID();
 
 				_textures[textureID] = atlas;
 				_elementsIDs[name] = textureID;
 
-				auto familyIt = _elementsIDs.find(fontAsset->path());
+				auto materialKeyIt = _elementsIDs.find(materialKey);
 
-				if (familyIt != _elementsIDs.end()) {
-					auto materialIt = _materials.find(familyIt->second);
-
-					if (materialIt != _materials.end()) {
-						auto textMaterial =
-							std::dynamic_pointer_cast<graphic::TextMaterial>(
-								materialIt->second);
-
-						if (textMaterial) {
-							textMaterial->addAtlas(name, atlas);
-						} else {
-							throw std::runtime_error(
-								"Miss configured material for font: " + name
-								+ " is not a TextMaterial");
-						}
-					}
-				} else {
-					auto textMaterial =
-						std::make_shared<graphic::TextMaterial>();
-
-					textMaterial->addAtlas(name, atlas);
-
-					_materials[familyIt->second] = textMaterial;
+				if (materialKeyIt == _elementsIDs.end()) {
+					throw std::runtime_error(
+						"Missing text material entry for font atlas: " + name);
 				}
+
+				auto materialIt = _materials.find(materialKeyIt->second);
+
+				if (materialIt == _materials.end()) {
+					throw std::runtime_error(
+						"Missing text material for font atlas: " + name);
+				}
+
+				auto atlasMaterial = std::dynamic_pointer_cast<graphic::TextMaterial>(
+					materialIt->second);
+
+				if (!atlasMaterial) {
+					throw std::runtime_error(
+						"Misconfigured material for font: " + name
+						+ " is not a TextMaterial");
+				}
+
+				atlasMaterial->addAtlas(name, atlas);
 			};
 
-		auto id = getNextID();
-
-		_fonts[id] = font;
-		return _fonts[id];
+		return font;
 	}
 
 	std::shared_ptr<graphic::Font> RessourceProvider::loadFontFamilyFromAssets(
@@ -165,47 +171,53 @@ namespace utility
 		}
 
 		auto font = std::make_shared<graphic::Font>(assets);
+		auto fontID = getNextID();
+		auto materialKey = familyName + "_material";
+
+		_fonts[fontID] = font;
+		_elementsIDs[familyName] = fontID;
+
+		auto textMaterial = std::make_shared<graphic::TextMaterial>();
+		auto materialID = getNextID();
+
+		_materials[materialID] = textMaterial;
+		_elementsIDs[materialKey] = materialID;
 
 		font->onNewTextureCreated =
-			[this, familyName](std::string name,
+			[this, materialKey](std::string name,
 							   std::shared_ptr<graphic::Texture> atlas) {
 				auto textureID = getNextID();
 
 				_textures[textureID] = atlas;
 				_elementsIDs[name] = textureID;
 
-				auto familyIt = _elementsIDs.find(familyName);
+				auto materialKeyIt = _elementsIDs.find(materialKey);
 
-				if (familyIt != _elementsIDs.end()) {
-					auto materialIt = _materials.find(familyIt->second);
-
-					if (materialIt != _materials.end()) {
-						auto textMaterial =
-							std::dynamic_pointer_cast<graphic::TextMaterial>(
-								materialIt->second);
-
-						if (textMaterial) {
-							textMaterial->addAtlas(name, atlas);
-						} else {
-							throw std::runtime_error(
-								"Miss configured material for font: " + name
-								+ " is not a TextMaterial");
-						}
-					}
-				} else {
-					auto textMaterial =
-						std::make_shared<graphic::TextMaterial>();
-
-					textMaterial->addAtlas(name, atlas);
-
-					_materials[familyIt->second] = textMaterial;
+				if (materialKeyIt == _elementsIDs.end()) {
+					throw std::runtime_error(
+						"Missing text material entry for font atlas: " + name);
 				}
+
+				auto materialIt = _materials.find(materialKeyIt->second);
+
+				if (materialIt == _materials.end()) {
+					throw std::runtime_error(
+						"Missing text material for font atlas: " + name);
+				}
+
+				auto atlasMaterial = std::dynamic_pointer_cast<graphic::TextMaterial>(
+					materialIt->second);
+
+				if (!atlasMaterial) {
+					throw std::runtime_error(
+						"Misconfigured material for font: " + name
+						+ " is not a TextMaterial");
+				}
+
+				atlasMaterial->addAtlas(name, atlas);
 			};
 
-		auto id = getNextID();
-
-		_fonts[id] = font;
-		return _fonts[id];
+		return font;
 	}
 
 	std::shared_ptr<graphic::Material>
