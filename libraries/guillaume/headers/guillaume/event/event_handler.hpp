@@ -58,9 +58,14 @@ namespace guillaume::event
 											 utility::logging::StandardLogger>
 	{
 		public:
+		/**
+		 * @brief Type alias for an event handler callback function.
+		 *
+		 * Takes a unique pointer to an Event and performs an action.
+		 */
 		using Handler =
 			std::function<void(std::unique_ptr<utility::event::Event>
-								   &)>;	   ///< Event handler type
+								   &)>;
 
 		private:
 		Handler _callback;	   ///< Event callback function

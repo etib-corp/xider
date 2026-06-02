@@ -45,9 +45,18 @@
 #include <streambuf>
 #include <string>
 
-class AndroidLogBuffer: public std::streambuf
+/**
+ * @brief Custom std::streambuf that redirects C++ stream output to Android logcat.
+ *
+ * Binds standard output and error streams to __android_log_write so logs appear in
+ * logcat.
+ */
+class AndroidLogBuffer : public std::streambuf
 {
 	public:
+	/**
+	 * @brief Android log priority levels.
+	 */
 	enum AndroidLogPriority {
 		ANDROID_LOG_VERBOSE = 2,
 		ANDROID_LOG_DEBUG	= 3,
@@ -56,6 +65,11 @@ class AndroidLogBuffer: public std::streambuf
 		ANDROID_LOG_ERROR	= 6,
 	};
 
+	/**
+	 * @brief Construct an AndroidLogBuffer with a given log priority and tag.
+	 * @param priority Log priority (e.g. ANDROID_LOG_INFO).
+	 * @param tag      Logcat tag string.
+	 */
 	AndroidLogBuffer(AndroidLogPriority priority, const char *tag)
 		: priority_(priority)
 		, tag_(tag)
@@ -64,6 +78,11 @@ class AndroidLogBuffer: public std::streambuf
 	}
 
 	protected:
+	/**
+	 * @brief Called when the buffer overflows with a single character.
+	 * @param c Character to process (or EOF).
+	 * @return The processed character, or EOF on error.
+	 */
 	virtual int_type overflow(int_type c) override
 	{
 		if (c != traits_type::eof()) {
@@ -81,6 +100,10 @@ class AndroidLogBuffer: public std::streambuf
 		return c;
 	}
 
+	/**
+	 * @brief Flush any buffered output to Android logcat.
+	 * @return 0 on success.
+	 */
 	virtual int sync() override
 	{
 		if (pos_ > 0) {
