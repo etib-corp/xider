@@ -48,7 +48,8 @@
 /**
  * @brief Custom std::streambuf that redirects C++ stream output to Android logcat.
  *
- * Binds std::cout/std::cerr to __android_log_write so logs appear in logcat.
+ * Binds standard output and error streams to __android_log_write so logs appear in
+ * logcat.
  */
 class AndroidLogBuffer : public std::streambuf
 {
