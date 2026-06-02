@@ -42,10 +42,16 @@ namespace guillaume::ecs
 	class Entity
 	{
 		public:
+		/**
+		 * @brief Type alias for entity identifiers.
+		 */
 		using Identifier =
-			std::size_t;	///< Type alias for entity identifiers
+			std::size_t;
+		/**
+		 * @brief Type alias for entity signatures (64-bit component bitmask).
+		 */
 		using Signature =
-			std::bitset<64>;	///< Type alias for entity signatures
+			std::bitset<64>;
 
 		constexpr static Identifier InvalidIdentifier =
 			0;	  ///< Invalid identifier

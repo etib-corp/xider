@@ -108,28 +108,8 @@ else()
     message(STATUS "Configuring for documentation-only build; skipping platform/backend subdirectories.")
 endif()
 
-# If requested, include docs helper and add library docs subdirectories
+# If requested, include docs helper and add unified documentation
 if(BUILD_ALL_DOCS OR BUILD_DOCS_ONLY)
-    include(${CMAKE_SOURCE_DIR}/cmake/Docs.cmake OPTIONAL)
-    set(DOC_TARGETS)
-    
-    # Add top-level project documentation
-    if(EXISTS "${CMAKE_SOURCE_DIR}/docs/CMakeLists.txt")
-        add_subdirectory("docs")
-        list(APPEND DOC_TARGETS "xider_project_docs")
-    endif()
-    
-    # Add per-library documentation
-    file(GLOB LIBS RELATIVE ${CMAKE_SOURCE_DIR}/libraries ${CMAKE_SOURCE_DIR}/libraries/*)
-    foreach(lib IN LISTS LIBS)
-        if(EXISTS "${CMAKE_SOURCE_DIR}/libraries/${lib}/docs/CMakeLists.txt")
-            add_subdirectory("libraries/${lib}/docs")
-            list(APPEND DOC_TARGETS "${lib}_docs")
-        endif()
-    endforeach()
-
-    if(DOC_TARGETS)
-        add_custom_target(docs_all DEPENDS ${DOC_TARGETS})
-        message(STATUS "Documentation targets: ${DOC_TARGETS}")
-    endif()
+    include(${CMAKE_SOURCE_DIR}/cmake/Docs.cmake)
+    add_subdirectory(docs)
 endif()
