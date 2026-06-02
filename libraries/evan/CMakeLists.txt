@@ -95,16 +95,6 @@ target_link_libraries(${PROJECT_NAME}
         utility
 )
 
-# Copy shaders directory to target dir after build
-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/shaders")
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-            "${CMAKE_CURRENT_SOURCE_DIR}/shaders"
-            "$<TARGET_FILE_DIR:${PROJECT_NAME}>/shaders"
-        COMMENT "Copying shaders to target directory"
-    )
-endif()
-
 # 08. Backend-specific configuration
 
 # OpenXR flags
