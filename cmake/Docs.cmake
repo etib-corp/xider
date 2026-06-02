@@ -86,6 +86,7 @@ function(add_project_docs)
     set(DOXYGEN_CALL_GRAPH           YES)
     set(DOXYGEN_CALLER_GRAPH         YES)
     set(DOXYGEN_DOT_MULTI_TARGETS    YES)
+    set(DOXYGEN_DOT_GRAPH_MAX_NODES 300)
     set(DOXYGEN_USE_MATHJAX          YES)
 
     # -- Gather source files ----------------------------------------------------
