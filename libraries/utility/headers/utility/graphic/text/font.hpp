@@ -185,5 +185,13 @@ namespace utility::graphic
 		 */
 		std::map<uint32_t, std::pair<std::string, std::shared_ptr<FontSized>>>
 			_sizes;
+
+		/**
+		 * @brief In-memory buffers backing FreeType faces.
+		 *
+		 * FT_New_Memory_Face does not copy the provided bytes, so these buffers
+		 * must remain alive for as long as the corresponding FT_Face exists.
+		 */
+		std::map<std::string, std::string> _faceBuffers;
 	};
 }	 // namespace utility::graphic

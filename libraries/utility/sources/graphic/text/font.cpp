@@ -18,11 +18,14 @@ namespace utility::graphic
 		}
 
 		for (const auto &fontAsset: fontAssets) {
+			_faceBuffers[fontAsset.path()] = fontAsset.content();
+			const auto &buffer = _faceBuffers.at(fontAsset.path());
+
 			FT_Face face;
 			if (FT_New_Memory_Face(_ftLibrary,
 								   reinterpret_cast<const FT_Byte *>(
-									   fontAsset.content().c_str()),
-								   fontAsset.content().size(), 0, &face)) {
+									   buffer.data()),
+								   static_cast<FT_Long>(buffer.size()), 0, &face)) {
 				throw std::runtime_error(
 					"Could not load font " + fontAsset.path() + ": "
 					+ FT_Error_String(FT_Err_Cannot_Open_Resource));
