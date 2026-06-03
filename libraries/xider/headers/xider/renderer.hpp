@@ -100,6 +100,12 @@ namespace xider
 		 * @return ViewportSize containing width and height.
 		 */
 		ViewportSize getViewportSize(void) const override;
+
+		/**
+		 * @brief Add a scene to the renderer.
+		 * @param sceneIndex The index of the scene to add.
+		 */
+		void addScene(size_t sceneIndex) override;
 	};
 
 }	 // namespace xider

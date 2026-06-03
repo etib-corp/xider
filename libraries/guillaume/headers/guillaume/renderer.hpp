@@ -136,6 +136,12 @@ namespace guillaume
 		 * @return The view instance.
 		 */
 		utility::graphic::ViewF getView(void) const;
+
+		/**
+		 * @brief Add a scene to the renderer.
+		 * @param sceneIndex The index of the scene to add.
+		 */
+		virtual void addScene(size_t sceneIndex) = 0;
 	};
 
 	/**

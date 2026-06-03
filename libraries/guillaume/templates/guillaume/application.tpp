@@ -111,6 +111,10 @@ namespace guillaume
 		std::unique_ptr<Renderer> renderer)
 	{
 		_renderer = std::move(renderer);
+		std::vector<std::type_index> sceneTypes = _sceneManager->getRegisteredSceneTypes();
+		for (const auto &sceneType : sceneTypes) {
+			_renderer->addScene(sceneType.hash_code());
+		}
 	}
 
 	template<InheritFromScene... SceneTypes>

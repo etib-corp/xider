@@ -67,4 +67,8 @@ namespace xider
 		_engine->drawText(std::make_shared<utility::graphic::Text>(text));
 	}
 
+	void Renderer::addScene(size_t sceneIndex)
+	{
+		_engine->addScene(sceneIndex);
+	}
 }	 // namespace xider
