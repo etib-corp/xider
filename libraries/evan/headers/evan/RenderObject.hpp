@@ -9,6 +9,9 @@
 
 #include <utility/graphic/mesh.hpp>
 
+#include <utility/logging/loggable.hpp>
+#include <utility/logging/standard_logger.hpp>
+
 #include <map>
 
 #include "DeviceContext.hpp"
@@ -21,7 +24,9 @@ namespace evan
 	 * core renderer and on-top built objects
 	 * (such as texts, basic shapes and 3d objects)
 	 */
-	class RenderObject
+	class RenderObject: protected utility::logging::Loggable<
+			RenderObject,
+			utility::logging::StandardLogger>
 	{
 		public:
 		/**
