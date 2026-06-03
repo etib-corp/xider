@@ -42,13 +42,9 @@
 #include "guillaume/metadata.hpp"
 #include "guillaume/renderer.hpp"
 #include "guillaume/event_handler.hpp"
-#include "guillaume/scene.hpp"
-#include "guillaume/scene_manager.hpp"
 #include "guillaume/scene_manager_filler.hpp"
 
 #include "guillaume/event/event_bus.hpp"
-
-#include "guillaume/systems/glyph_render.hpp"
 #include "guillaume/systems/hand_button.hpp"
 #include "guillaume/systems/hand_motion.hpp"
 #include "guillaume/systems/hand_pinch.hpp"
@@ -64,6 +60,7 @@
 #include "guillaume/systems/rectangle_render.hpp"
 #include "guillaume/systems/text_input.hpp"
 #include "guillaume/systems/text_render.hpp"
+#include "guillaume/systems/glyph_render.hpp"
 
 namespace guillaume
 {
