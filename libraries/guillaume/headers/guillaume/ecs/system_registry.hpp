@@ -89,7 +89,7 @@ namespace guillaume::ecs
 		public:
 		private:
 		std::array<std::vector<std::unique_ptr<System>>, Phase::Count>
-			_systems;	 ///< Map of registered systems
+			_systems;	 ///< Array of registered systems
 
 		public:
 		/**
