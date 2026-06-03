@@ -22,6 +22,10 @@
 
 #pragma once
 
+#include <fstream>
+
+#include <utility/ressource_provider.hpp>
+
 #include "guillaume/ecs/system_filler.hpp"
 
 #include "guillaume/components/glyph.hpp"
@@ -30,8 +34,6 @@
 #include "guillaume/components/bound.hpp"
 
 #include "guillaume/renderer.hpp"
-
-#include <fstream>
 
 namespace guillaume::systems
 {
@@ -46,7 +48,9 @@ namespace guillaume::systems
 								 components::Glyph, components::Color>
 	{
 		private:
-		Renderer &_renderer;			 ///< Renderer instance
+		std::shared_ptr<utility::RessourceProvider> _ressourceProvider;
+		std::shared_ptr<utility::SystemIO> _systemIO;
+		std::unique_ptr<Renderer> &_renderer;	///< Renderer instance
 		std::string _defaultFontPath;	 ///< Default font for glyph rendering
 		std::map<std::string, uint32_t> _glyphCode;
 
@@ -55,7 +59,9 @@ namespace guillaume::systems
 		 * @brief Construct a glyph rendering system.
 		 * @param renderer The renderer used to draw glyph.
 		 */
-		GlyphRender(Renderer &renderer);
+		GlyphRender(
+			std::shared_ptr<utility::RessourceProvider> ressourceProvider,
+			std::shared_ptr<utility::SystemIO> systemIO, std::unique_ptr<Renderer> &renderer);
 
 		/**
 		 * @brief Default destructor.

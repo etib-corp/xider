@@ -24,48 +24,13 @@
 
 namespace xider
 {
-	Renderer::Renderer(std::shared_ptr<utility::RessourceProvider> ressourceProvider)
-		: guillaume::Renderer(ressourceProvider)
+	Renderer::Renderer(std::shared_ptr<evan::Engine> engine)
+		: _engine(engine), guillaume::Renderer()
 	{
-		_ressourceProvider = ressourceProvider;
-		_systemIO = std::make_shared<utility::DefaultSystemIO>();
 	}
 
 	Renderer::~Renderer(void)
 	{
-	}
-
-	std::shared_ptr<evan::Engine> Renderer::getEngine(void)
-	{
-		if (!_engine) {
-			if (!_platform) {
-				getLogger().error(
-					"Cannot initialize Evan engine: platform interface not set");
-				return nullptr;
-			}
-			_engine = std::make_shared<evan::Engine>(_ressourceProvider, _platform);
-			getLogger().info("Evan engine initialized");
-		}
-		return _engine;
-	}
-
-	void Renderer::setEngine(std::shared_ptr<evan::Engine> engine)
-	{
-		_engine = engine;
-	}
-
-	void Renderer::setPlatform(std::shared_ptr<evan::IPlatform> platform)
-	{
-		_platform = platform;
-		if (_engine) {
-			getLogger().info(
-				"Updating Evan engine with new platform interface");
-			_engine.reset(new evan::Engine(_ressourceProvider, _platform));
-		} else {
-			getLogger().info(
-				"Platform interface set; Evan engine will be initialized on demand");
-			_engine = std::make_shared<evan::Engine>(_ressourceProvider, _platform);
-		}
 	}
 
 	void Renderer::clear(void)

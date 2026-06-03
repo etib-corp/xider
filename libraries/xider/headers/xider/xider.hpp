@@ -27,9 +27,6 @@
 #include <guillaume/application.hpp>
 #include <evan/Engine.hpp>
 
-#include "xider/renderer.hpp"
-#include "xider/event_handler.hpp"
-
 #include "scenes/main.hpp"
 #include "scenes/settings.hpp"
 
@@ -45,9 +42,7 @@ namespace xider
 	 * a unified interface for application lifecycle management, rendering, and
 	 * event handling across all platforms.
 	 */
-	class XIDER:
-		public guillaume::Application<Renderer, EventHandler, scenes::Main,
-									  scenes::Settings>
+	class XIDER: public guillaume::Application<scenes::Main, scenes::Settings>
 	{
 		public:
 		/**
@@ -55,7 +50,8 @@ namespace xider
 		 * @param platform The Evan platform to use for rendering.
 		 *
 		 * This constructor initializes the XIDER application and configures the
-		 * renderer to use the provided Evan platform for all graphics operations.
+		 * renderer to use the provided Evan platform for all graphics
+		 * operations.
 		 */
 		XIDER(std::shared_ptr<evan::IPlatform> platform);
 

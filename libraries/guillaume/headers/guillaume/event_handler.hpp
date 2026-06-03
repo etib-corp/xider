@@ -30,7 +30,7 @@
 
 #include <utility/event/event.hpp>
 
-namespace guillaume::event
+namespace guillaume
 {
 
 	/**
@@ -142,4 +142,4 @@ namespace guillaume::event
 	template<typename Type>
 	concept InheritFromEventHandler = std::is_base_of_v<EventHandler, Type>;
 
-}	 // namespace guillaume::event
+}	 // namespace guillaume

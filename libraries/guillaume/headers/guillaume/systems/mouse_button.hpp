@@ -46,7 +46,7 @@ namespace guillaume::systems
 		public event::EventManager<utility::event::MouseButtonEvent>
 	{
 		private:
-		Renderer &_renderer;	///< Reference to the renderer for potential
+		std::unique_ptr<Renderer> &_renderer;	///< Reference to the renderer for potential
 								///< visual feedback on button interactions
 
 		public:
@@ -56,7 +56,7 @@ namespace guillaume::systems
 		 * @param eventBus Reference to the event bus for subscribing to events.
 		 * @param renderer Reference to the renderer for visual feedback.
 		 */
-		MouseButton(event::EventBus &eventBus, Renderer &renderer);
+		MouseButton(event::EventBus &eventBus, std::unique_ptr<Renderer> &renderer);
 
 		/**
 		 * @brief Default destructor for the MouseButton system.

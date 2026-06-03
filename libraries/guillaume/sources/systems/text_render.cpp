@@ -27,9 +27,14 @@
 namespace guillaume::systems
 {
 
-	TextRender::TextRender(Renderer &renderer)
+	TextRender::TextRender(
+		std::shared_ptr<utility::RessourceProvider> ressourceProvider,
+		std::shared_ptr<utility::SystemIO> systemIO,
+		std::unique_ptr<Renderer> &renderer)
 		: ecs::SystemFiller<components::Transform, components::Text,
 							components::Color>(ecs::Phase::Render)
+		, _ressourceProvider(ressourceProvider)
+		, _systemIO(systemIO)
 		, _renderer(renderer)
 		, _defaultFontPath(
 			  "assets/fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf")
@@ -58,12 +63,11 @@ namespace guillaume::systems
 			getComponent<components::Color>(entityIdentifier);
 
 		utility::graphic::Text text(
-			_renderer.getRessourceProvider(), _renderer.getSystemIO(),
-			textComponent.getContent(), textComponent.getFontSize(),
-			_defaultFontPath);
+			_ressourceProvider, _systemIO, textComponent.getContent(),
+			textComponent.getFontSize(), _defaultFontPath);
 		text.setColor(colorComponent.getColor());
 
-		_renderer.drawText(text, transformComponent.getPose());
+		_renderer->drawText(text, transformComponent.getPose());
 	}
 
 }	 // namespace guillaume::systems

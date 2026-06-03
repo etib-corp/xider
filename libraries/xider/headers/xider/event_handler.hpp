@@ -24,7 +24,7 @@
 
 #include <evan/Engine.hpp>
 
-#include <guillaume/event/event_handler.hpp>
+#include <guillaume/event_handler.hpp>
 
 namespace xider
 {
@@ -34,13 +34,14 @@ namespace xider
 	 * Integrates the underlying `guillaume::event::EventHandler` with the
 	 * xider engine so events can be polled and dispatched to game systems.
 	 */
-	class EventHandler: public guillaume::event::EventHandler
+	class EventHandler: public guillaume::EventHandler
 	{
-	public:
+		public:
 		/**
 		 * @brief Construct a new EventHandler
+		 * @param engine Shared pointer to the `evan::Engine` instance.
 		 */
-		EventHandler(void);
+		EventHandler(std::shared_ptr<evan::Engine> engine);
 
 		/**
 		 * @brief Destroy the EventHandler
@@ -52,14 +53,9 @@ namespace xider
 		 */
 		void pollEvents(void) override;
 
-		/**
-		 * @brief Set the engine instance used by the handler.
-		 * @param engine Shared pointer to the `evan::Engine` instance.
-		 */
-		void setEngine(std::shared_ptr<evan::Engine> engine);
-
-	private:
-		std::shared_ptr<evan::Engine> _engine; ///< Reference to the engine instance
+		private:
+		std::shared_ptr<evan::Engine>
+			_engine;	///< Reference to the engine instance
 	};
 
 }	 // namespace xider

@@ -41,12 +41,12 @@
 
 #include "guillaume/metadata.hpp"
 #include "guillaume/renderer.hpp"
+#include "guillaume/event_handler.hpp"
 #include "guillaume/scene.hpp"
 #include "guillaume/scene_manager.hpp"
 #include "guillaume/scene_manager_filler.hpp"
 
 #include "guillaume/event/event_bus.hpp"
-#include "guillaume/event/event_handler.hpp"
 
 #include "guillaume/systems/glyph_render.hpp"
 #include "guillaume/systems/hand_button.hpp"
@@ -70,9 +70,8 @@ namespace guillaume
 	/**
 	 * @brief Application base class.
 	 *
-	 * @tparam RendererType The type of the renderer used by the application.
-	 * @tparam EventHandlerType The type of the event handler used by the
-	 * application.
+	 * @tparam SceneTypes Variadic template parameter pack for scene types used
+	 * in the application. Each scene type must inherit from the Scene class.
 	 *
 	 * @code
 	 * class MyRenderer : public Renderer { ... };
@@ -86,29 +85,28 @@ namespace guillaume
 	 * @see event::EventHandler
 	 * @see Renderer
 	 */
-	template<InheritFromRenderer RendererType,
-			 event::InheritFromEventHandler EventHandlerType,
-			 InheritFromScene... SceneTypes>
-	class Application:
-		protected utility::logging::Loggable<
-			Application<RendererType, EventHandlerType,
-				SceneTypes...>,
-			utility::logging::StandardLogger>
+	template<InheritFromScene... SceneTypes> class Application:
+		protected utility::logging::Loggable<Application<SceneTypes...>,
+											 utility::logging::StandardLogger>
 	{
-		protected:
-		std::shared_ptr<utility::RessourceProvider> _ressourceProvider;	///< Shared
-																													 ///< ressource
-																													 ///< provider
-
 		private:
-		RendererType _renderer;			   ///< Main application renderer
-		EventHandlerType _eventHandler;	   ///< Application event handler
+		std::unique_ptr<Renderer>
+			_renderer;	  ///< Unique pointer to the application renderer
+		std::unique_ptr<EventHandler>
+			_eventHandler;	  ///< Application event handler
 		std::unique_ptr<SceneManager>
 			_sceneManager;			  ///< Manager for application scenes
 		event::EventBus _eventBus;	  ///< Event bus dispatching to systems
 		ecs::SystemRegistry _systemRegistry;	///< Shared system registry
 		ecs::SystemPhaseList _systemPhases;		///< Ordered list of phases and
 												///< traversal strategies
+		std::shared_ptr<utility::RessourceProvider>
+			_ressourceProvider;	   ///< Shared
+								   ///< ressource
+								   ///< provider
+		std::shared_ptr<utility::DefaultSystemIO>
+			_systemIO;	  ///< Shared system IO for file access and other
+						  ///< OS-level interactions
 
 		template<typename PhaseType> void runPhase(PhaseType &phaseDefinition);
 
@@ -116,6 +114,16 @@ namespace guillaume
 		 * @brief Register core systems used by the application.
 		 */
 		void registerCoreSystems(void);
+
+		protected:
+		/**
+		 * @brief Get a shared pointer to the resource provider.
+		 * @return Shared pointer to the resource provider.
+		 */
+		std::shared_ptr<utility::RessourceProvider> getRessourceProvider(void)
+		{
+			return _ressourceProvider;
+		}
 
 		public:
 		/**
@@ -130,33 +138,15 @@ namespace guillaume
 
 		/**
 		 * @brief Set the renderer for the application.
-		 * @param renderer The renderer to use.
+		 * @param renderer The renderer to be used by the application.
 		 */
-		void setRenderer(RendererType renderer);
+		void setRenderer(std::unique_ptr<Renderer> renderer);
 
 		/**
-		 * @brief Get a reference to the renderer.
-		 * @return Reference to the application renderer.
+		 * @brief Set the event handler for the application.
+		 * @param eventHandler The event handler to be used by the application.
 		 */
-		RendererType &getRenderer(void);
-
-		/**
-		 * @brief Get a const reference to the renderer.
-		 * @return Const reference to the application renderer.
-		 */
-		const RendererType &getRenderer(void) const;
-
-		/**
-		 * @brief Get a reference to the event handler.
-		 * @return Reference to the application event handler.
-		 */
-		EventHandlerType &getEventHandler(void);
-
-		/**
-		 * @brief Get a const reference to the event handler.
-		 * @return Const reference to the application event handler.
-		 */
-		const EventHandlerType &getEventHandler(void) const;
+		void setEventHandler(std::unique_ptr<EventHandler> eventHandler);
 
 		/**
 		 * @brief Run one system update pass for the active scene.

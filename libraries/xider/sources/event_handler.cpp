@@ -25,8 +25,9 @@
 namespace xider
 {
 
-	EventHandler::EventHandler(void)
-		: guillaume::event::EventHandler()
+	EventHandler::EventHandler(std::shared_ptr<evan::Engine> engine)
+		: guillaume::EventHandler()
+		, _engine(engine)
 	{
 		getLogger().info("SDL3 Event Handler initialized");
 	}
@@ -40,11 +41,4 @@ namespace xider
 	{
 		_engine->pollEvents();
 	}
-
-	void EventHandler::setEngine(std::shared_ptr<evan::Engine> engine)
-	{
-		getLogger().info("Setting engine for event handler");
-		_engine = engine;
-	}
-
 }	 // namespace xider

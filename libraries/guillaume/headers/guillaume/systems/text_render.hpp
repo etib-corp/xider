@@ -43,7 +43,9 @@ namespace guillaume::systems
 								 components::Color>
 	{
 		private:
-		Renderer &_renderer;			 ///< Renderer instance
+		std::shared_ptr<utility::RessourceProvider> _ressourceProvider;
+		std::shared_ptr<utility::SystemIO> _systemIO;
+		std::unique_ptr<Renderer> &_renderer;	///< Renderer instance
 		std::string _defaultFontPath;	 ///< Default font for text rendering
 
 		public:
@@ -51,7 +53,10 @@ namespace guillaume::systems
 		 * @brief Construct a text rendering system.
 		 * @param renderer The renderer used to draw text.
 		 */
-		TextRender(Renderer &renderer);
+		TextRender(
+			std::shared_ptr<utility::RessourceProvider> ressourceProvider,
+			std::shared_ptr<utility::SystemIO> systemIO,
+			std::unique_ptr<Renderer> &renderer);
 
 		/**
 		 * @brief Default destructor.

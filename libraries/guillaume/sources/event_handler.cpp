@@ -20,9 +20,9 @@
  SOFTWARE.
  */
 
-#include "guillaume/event/event_handler.hpp"
+#include "guillaume/event_handler.hpp"
 
-namespace guillaume::event
+namespace guillaume
 {
 
 	EventHandler::EventHandler(void)
@@ -61,4 +61,4 @@ namespace guillaume::event
 		return _gotNewEvents;
 	}
 
-}	 // namespace guillaume::event
+}	 // namespace guillaume

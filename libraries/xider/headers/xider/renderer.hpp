@@ -43,38 +43,20 @@ namespace xider
 	class Renderer: public guillaume::Renderer
 	{
 		private:
-		private:
 		std::shared_ptr<evan::Engine> _engine;	  ///< Evan graphics engine
-		std::shared_ptr<evan::IPlatform> _platform; ///< Evan platform interface
 		public:
 		/**
 		 * @brief Default constructor for template compatibility.
 		 * Initialize with a null engine; must call setEngine() before
 		 * rendering.
 		 *
-		 * @param ressourceProvider A shared pointer to a RessourceProvider object, which is responsible for managing the loading and synchronization of GPU resources such as materials and textures. The RessourceProvider interacts with the utility::RessourceProvider to load resources from disk or other sources, and creates corresponding GPU resources using the DeviceContext. It provides methods for synchronizing resources, retrieving specific materials or textures by ID, and managing the lifecycle of GPU resources to ensure efficient memory usage and performance in the rendering process.
+		 * @param platform A shared pointer to an Evan platform interface, which
+		 * provides the necessary abstraction for windowing, input, and other
+		 * OS-level interactions required by the Evan engine.
 		 */
-		Renderer(std::shared_ptr<utility::RessourceProvider> ressourceProvider);
+		Renderer(std::shared_ptr<evan::Engine> _engine);
 
 		~Renderer(void) override;
-
-		/**
-		 * @brief Gets the current Evan engine instance.
-		 * @return A shared pointer to the Evan graphics engine.
-		 */
-		std::shared_ptr<evan::Engine> getEngine(void);
-
-		/**
-		 * @brief Sets the Evan engine instance to be used for rendering.
-		 * @param engine A shared pointer to the Evan graphics engine.
-		 */
-		void setEngine(std::shared_ptr<evan::Engine> engine);
-
-		/**
-		 * @brief Sets the Evan platform interface.
-		 * @param platform A shared pointer to the Evan platform interface.
-		 */
-		void setPlatform(std::shared_ptr<evan::IPlatform> platform);
 
 		/**
 		 * @brief Clears the current render target.

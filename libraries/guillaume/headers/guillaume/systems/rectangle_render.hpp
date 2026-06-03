@@ -46,7 +46,7 @@ namespace guillaume::systems
 								 components::Color, components::Borders>
 	{
 		private:
-		Renderer &_renderer;	///< Renderer instance
+		std::unique_ptr<Renderer> &_renderer;	 ///< Renderer instance
 		std::vector<utility::graphic::VertexF>
 			_vertices;	  ///< Reused draw buffer to avoid per-frame
 						  ///< allocations.
@@ -166,7 +166,7 @@ namespace guillaume::systems
 		 * @brief Construct a rectangle rendering system.
 		 * @param renderer The renderer used to draw rectangles.
 		 */
-		RectangleRender(Renderer &renderer);
+		RectangleRender(std::unique_ptr<Renderer> &renderer);
 
 		/**
 		 * @brief Default destructor.
