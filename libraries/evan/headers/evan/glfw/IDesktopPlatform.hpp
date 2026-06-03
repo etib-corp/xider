@@ -47,7 +47,7 @@ namespace evan
 		 * window surface creation and other platform-specific features.
 		 */
 		virtual std::vector<std::string>
-			getRequiredInstanceExtensions() const = 0;
+			getRequiredInstanceExtensions() const override = 0;
 
 		/**
 		 * @brief Check if the Desktop platform should close.

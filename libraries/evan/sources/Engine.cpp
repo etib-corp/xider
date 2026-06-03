@@ -36,7 +36,7 @@ evan::Engine::Engine(std::shared_ptr<utility::RessourceProvider> ressourceProvid
 #endif
 	}
 
-	ressourceProvider->loadShader("shaders/default.vert.spv", "shaders/default.frag.spv", *g_systemIO);
+	ressourceProvider->loadShader("assets/shaders/default.vert.spv", "assets/shaders/default.frag.spv", *g_systemIO);
 
 	_deviceContext	  = std::make_shared<DeviceContext>(*platform);
 	_swapchainContext = platform->createSwapchainContext(*_deviceContext);
