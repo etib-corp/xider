@@ -11,16 +11,22 @@ evan::MacOsDesktopPlatform::MacOsDesktopPlatform(const std::string &name,
 												 const uint32_t width,
 												 const uint32_t height)
 {
+	this->getLogger().info("Initializing MacOsDesktopPlatform with window name: " + name + ", width: " + std::to_string(width) + ", height: " + std::to_string(height));
 	if (!glfwInit()) {
-		throw std::runtime_error("Failed to initialize GLFW");
+		this->getLogger().error("Failed to initialize GLFW");
+		return;
+
 	}
 
+	this->getLogger().info("GLFW initialized successfully");
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
+	this->getLogger().info("Creating GLFW window");
 	_window = glfwCreateWindow(width, height, name.c_str(), nullptr, nullptr);
 	if (!_window) {
-		throw std::runtime_error("Failed to create GLFW window");
+		this->getLogger().error("Failed to create GLFW window");
+		return;
 	}
 }
 
@@ -48,10 +54,14 @@ std::vector<std::string>
 VkSurfaceKHR
 	evan::MacOsDesktopPlatform::createSurface(VkInstance instance) const
 {
+	this->getLogger().info("Creating Vulkan surface for MacOsDesktopPlatform");
+
 	VkSurfaceKHR surface;
 	if (glfwCreateWindowSurface(instance, _window, nullptr, &surface)
 		!= VK_SUCCESS) {
-		throw std::runtime_error("Failed to create window surface!");
+		this->getLogger().error("Failed to create Vulkan surface");
+		return VK_NULL_HANDLE;
 	}
+	this->getLogger().info("Vulkan surface created successfully");
 	return surface;
 }
