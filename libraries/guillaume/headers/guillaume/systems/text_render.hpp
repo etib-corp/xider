@@ -43,14 +43,20 @@ namespace guillaume::systems
 								 components::Color>
 	{
 		private:
-		std::shared_ptr<utility::RessourceProvider> _ressourceProvider;
-		std::shared_ptr<utility::SystemIO> _systemIO;
-		std::unique_ptr<Renderer> &_renderer;	///< Renderer instance
+		std::shared_ptr<utility::RessourceProvider>
+			_ressourceProvider;	   ///< Shared resource provider for loading
+								   ///< fonts and glyphs
+		std::shared_ptr<utility::SystemIO>
+			_systemIO;	  ///< Shared system IO for file operations
+		std::unique_ptr<Renderer> &_renderer;	 ///< Renderer instance
 		std::string _defaultFontPath;	 ///< Default font for text rendering
 
 		public:
 		/**
 		 * @brief Construct a text rendering system.
+		 * @param ressourceProvider Shared resource provider for loading fonts
+		 * and glyphs.
+		 * @param systemIO Shared system IO for file operations.
 		 * @param renderer The renderer used to draw text.
 		 */
 		TextRender(

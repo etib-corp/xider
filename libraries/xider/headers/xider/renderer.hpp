@@ -50,12 +50,14 @@ namespace xider
 		 * Initialize with a null engine; must call setEngine() before
 		 * rendering.
 		 *
-		 * @param platform A shared pointer to an Evan platform interface, which
-		 * provides the necessary abstraction for windowing, input, and other
-		 * OS-level interactions required by the Evan engine.
+		 * @param engine Shared pointer to the Evan engine instance.
 		 */
-		Renderer(std::shared_ptr<evan::Engine> _engine);
+		Renderer(std::shared_ptr<evan::Engine> engine);
 
+		/**
+		 * @brief Destructor for Renderer.
+		 * Cleans up any resources associated with the Evan engine.
+		 */
 		~Renderer(void) override;
 
 		/**

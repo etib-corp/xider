@@ -45,15 +45,22 @@ namespace guillaume::systems
 		public ecs::SystemFiller<components::Text, components::Bound>
 	{
 		private:
-		std::shared_ptr<utility::RessourceProvider> _ressourceProvider;
-		std::shared_ptr<utility::SystemIO> _systemIO;
-		std::unique_ptr<Renderer> &_renderer;	 ///< Renderer instance for text measurement
+		std::shared_ptr<utility::RessourceProvider>
+			_ressourceProvider;	   ///< Shared resource provider for loading
+								   ///< fonts and glyphs
+		std::shared_ptr<utility::SystemIO>
+			_systemIO;	  ///< Shared system IO for file operations
+		std::unique_ptr<Renderer>
+			&_renderer;	   ///< Renderer instance for text measurement
 		std::string
 			_defaultFontPath;	 ///< Default font used for text measurement
 
 		public:
 		/**
 		 * @brief Construct a text measuring system.
+		 * @param ressourceProvider Shared resource provider for loading fonts
+		 * and glyphs.
+		 * @param systemIO Shared system IO for file operations.
 		 * @param renderer The renderer used to measure text.
 		 */
 		MeasureText(

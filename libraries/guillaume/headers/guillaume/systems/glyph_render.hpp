@@ -48,20 +48,27 @@ namespace guillaume::systems
 								 components::Glyph, components::Color>
 	{
 		private:
-		std::shared_ptr<utility::RessourceProvider> _ressourceProvider;
-		std::shared_ptr<utility::SystemIO> _systemIO;
-		std::unique_ptr<Renderer> &_renderer;	///< Renderer instance
+		std::shared_ptr<utility::RessourceProvider>
+			_ressourceProvider;	   //< Shared resource provider for loading
+								   //fonts and glyphs
+		std::shared_ptr<utility::SystemIO>
+			_systemIO;	  ///< Shared system IO for file operations
+		std::unique_ptr<Renderer> &_renderer;	 ///< Renderer instance
 		std::string _defaultFontPath;	 ///< Default font for glyph rendering
 		std::map<std::string, uint32_t> _glyphCode;
 
 		public:
 		/**
 		 * @brief Construct a glyph rendering system.
+		 * @param ressourceProvider Shared resource provider for loading fonts
+		 * and glyphs.
+		 * @param systemIO Shared system IO for file operations.
 		 * @param renderer The renderer used to draw glyph.
 		 */
 		GlyphRender(
 			std::shared_ptr<utility::RessourceProvider> ressourceProvider,
-			std::shared_ptr<utility::SystemIO> systemIO, std::unique_ptr<Renderer> &renderer);
+			std::shared_ptr<utility::SystemIO> systemIO,
+			std::unique_ptr<Renderer> &renderer);
 
 		/**
 		 * @brief Default destructor.
