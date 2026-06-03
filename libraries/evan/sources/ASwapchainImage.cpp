@@ -69,9 +69,14 @@ uint32_t evan::ASwapchainImage::getFramebufferCount() const
 void evan::ASwapchainImage::createImageViews(
 	const ADeviceBackend &deviceBackend)
 {
+	this->getLogger().info("Creating image views for swapchain images with format: " + std::to_string(_format) + " and aspect mask: " + std::to_string(VK_IMAGE_ASPECT_COLOR_BIT) + "...");
+
 	_imageViews.resize(_images.size());
 
+	this->getLogger().info("Number of image views to create: " + std::to_string(_imageViews.size()));
+
 	for (uint32_t i = 0; i < _images.size(); i++) {
+		this->getLogger().info("Creating image view for swapchain image " + std::to_string(i) + " with image handle: " + std::to_string((uintptr_t)_images[i]));
 		_imageViews[i] = deviceBackend.createImageView(
 			_images[i], _format, VK_IMAGE_ASPECT_COLOR_BIT, 1);
 	}
@@ -80,6 +85,8 @@ void evan::ASwapchainImage::createImageViews(
 void evan::ASwapchainImage::createColorResources(
 	const ADeviceBackend &deviceBackend, VkSampleCountFlagBits msaaSamples)
 {
+	this->getLogger().info("Creating color resources for swapchain images with format: " + std::to_string(_format) + " and MSAA samples: " + std::to_string(msaaSamples) + "...");
+
 	VkFormat colorFormat								  = _format;
 	ADeviceBackend::CreateImageProperties imageProperties = {
 		._width		 = _extent.width,
@@ -94,6 +101,15 @@ void evan::ASwapchainImage::createColorResources(
 		._image		  = _colorImage,
 		._imageMemory = _colorMemory
 	};
+
+	this->getLogger().info("Creating color image using:\n color format: " + std::to_string(colorFormat)
+							 + "\n width: " + std::to_string(_extent.width)
+							 + "\n height: " + std::to_string(_extent.height)
+							 + "\n mip levels: " + std::to_string(1)
+							 + "\n num samples: " + std::to_string(msaaSamples)
+							 + "\n tiling: " + std::to_string(VK_IMAGE_TILING_OPTIMAL)
+							 + "\n usage: " + std::to_string(VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT)
+							 + "\n properties: " + std::to_string(VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
 	deviceBackend.createImage(imageProperties);
 	_colorView = deviceBackend.createImageView(_colorImage, colorFormat,
