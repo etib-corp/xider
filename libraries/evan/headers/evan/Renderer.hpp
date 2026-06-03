@@ -20,6 +20,9 @@
 
 #include "evan/Scene.hpp"
 
+#include <utility/logging/loggable.hpp>
+#include <utility/logging/standard_logger.hpp>
+
 #include <fstream>
 #include <algorithm>
 #include <map>
@@ -42,7 +45,9 @@ namespace evan
 	 * encapsulates the rendering logic and resource management for a
 	 * Vulkan-based rendering system.
 	 */
-	class Renderer
+	class Renderer: protected utility::logging::Loggable<
+			Renderer,
+			utility::logging::StandardLogger>
 	{
 		public:
 		/**
