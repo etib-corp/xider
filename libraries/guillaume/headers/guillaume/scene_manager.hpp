@@ -86,6 +86,18 @@ namespace guillaume
 		~SceneManager(void);
 
 		/**
+		 * @brief Check whether at least one scene is registered.
+		 * @return True when one or more scenes are registered.
+		 */
+		bool hasScenes(void) const noexcept;
+
+		/**
+		 * @brief Check whether an active scene has been selected.
+		 * @return True when the active scene points to a registered scene.
+		 */
+		bool hasActiveScene(void) const noexcept;
+
+		/**
 		 * @brief Switch to a different scene.
 		 * @tparam SceneType The type of the scene to switch to.
 		 * @throws std::runtime_error if the specified scene type is not found
