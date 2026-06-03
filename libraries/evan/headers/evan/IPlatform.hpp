@@ -11,6 +11,9 @@
 
 #include <utility/event/event.hpp>
 
+#include <utility/logging/loggable.hpp>
+#include <utility/logging/standard_logger.hpp>
+
 #include <string>
 
 namespace evan
@@ -25,7 +28,9 @@ namespace evan
 	 * Defines a common interface for platform implementations. Derived classes
 	 * must implement platform-specific behavior.
 	 */
-	class IPlatform
+	class IPlatform: protected utility::logging::Loggable<
+			IPlatform,
+			utility::logging::StandardLogger>
 	{
 		public:
 		/**
