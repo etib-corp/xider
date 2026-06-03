@@ -12,6 +12,9 @@
 #include "evan/QueueFamilyIndices.hpp"
 #include "evan/Version.hpp"
 
+#include <utility/logging/loggable.hpp>
+#include <utility/logging/standard_logger.hpp>
+
 namespace evan
 {
 	class DeviceContext;
@@ -32,7 +35,9 @@ namespace evan
 	 * ensure proper functionality of swapchain images within the Evan engine's
 	 * rendering system.
 	 */
-	class ASwapchainImage
+	class ASwapchainImage : protected utility::logging::Loggable<
+			ASwapchainImage,
+			utility::logging::StandardLogger>
 	{
 		public:
 		virtual ~ASwapchainImage();
