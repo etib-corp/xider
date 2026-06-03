@@ -43,7 +43,9 @@ namespace guillaume
 		if (_scenes.empty()) {
 			getLogger().error("Cannot activate scene: no scenes are "
 							  "registered");
-			throw std::runtime_error("No scenes registered in scene manager");
+			throw std::runtime_error(
+				"SceneManager requires at least one registered scene before "
+				"accessing the active scene");
 		}
 
 		if (_activeSceneType == typeid(void)) {
@@ -52,6 +54,16 @@ namespace guillaume
 							 "registered scene");
 		}
 		return _scenes[_activeSceneType];
+	}
+
+	bool SceneManager::hasScenes(void) const noexcept
+	{
+		return !_scenes.empty();
+	}
+
+	bool SceneManager::hasActiveScene(void) const noexcept
+	{
+		return _activeSceneType != typeid(void) && !_scenes.empty();
 	}
 
 	ecs::EntityRegistry &SceneManager::getActiveEntityRegistry(void)

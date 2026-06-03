@@ -30,6 +30,11 @@ namespace guillaume
         std::type_index typeIndex(typeid(SceneType));
         _scenes[typeIndex] =
             std::make_unique<SceneType>(_localStorage, _sessionStorage);
+        if (_activeSceneType == typeid(void)) {
+            _activeSceneType = typeIndex;
+            getLogger().info("No active scene set. Defaulting to first "
+                             "registered scene");
+        }
         getLogger().info("Registered scene type: "
                             + std::string(typeid(SceneType).name()));
     }
