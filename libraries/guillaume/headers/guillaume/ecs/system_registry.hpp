@@ -22,8 +22,8 @@
 
 #pragma once
 
+#include <array>
 #include <exception>
-#include <map>
 #include <memory>
 #include <string>
 #include <type_traits>
@@ -88,8 +88,8 @@ namespace guillaume::ecs
 	{
 		public:
 		private:
-		std::map<ecs::Phase, std::vector<std::unique_ptr<System>>>
-			_systems;	 ///< Map of registered systems
+		std::array<std::vector<std::unique_ptr<System>>, Phase::Count>
+			_systems;	 ///< Array of registered systems
 
 		public:
 		/**

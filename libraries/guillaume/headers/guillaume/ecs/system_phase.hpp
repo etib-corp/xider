@@ -39,12 +39,13 @@ namespace guillaume::ecs
 	 * allowing for organized and efficient processing of entities based on
 	 * their components.
 	 */
-	enum class Phase {
+	enum Phase : size_t {
 		Event,		///< Main update phase for application logic
 		Measure,	///< Measurement phase for calculating layout and text sizes
 		Layout,		///< Layout phase for arranging entities based on
 					///< measurements
-		Render		///< Render phase for drawing entities
+		Render,		///< Render phase for drawing entities
+		Count		///< Sentinel value representing the number of phases
 	};
 
 	/**
