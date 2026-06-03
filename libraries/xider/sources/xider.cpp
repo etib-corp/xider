@@ -44,10 +44,4 @@ namespace xider
 	{
 		getLogger().info("XIDER application destroyed");
 	}
-
-	std::shared_ptr<evan::Engine> XIDER::getEngine(void) const
-	{
-		return _engine;
-	}
-
-}   // namespace xider
+}	 // namespace xider
