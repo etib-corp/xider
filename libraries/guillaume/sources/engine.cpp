@@ -25,19 +25,13 @@
 namespace guillaume
 {
 	Engine::Engine(void)
-		: _shouldQuit(false)
-		, _gotNewEvents(false)
+		: _gotNewEvents(false)
 	{
 	}
 
 	Engine::Handler &Engine::getEventCallback(void)
 	{
 		return _callback;
-	}
-
-	void Engine::setShouldQuit(bool shouldQuit)
-	{
-		_shouldQuit = shouldQuit;
 	}
 
 	void Engine::setGotNewEvents(bool gotNewEvents)
@@ -48,11 +42,6 @@ namespace guillaume
 	void Engine::setEventCallback(const Handler &callback)
 	{
 		_callback = callback;
-	}
-
-	bool Engine::shouldQuit(void) const
-	{
-		return _shouldQuit;
 	}
 
 	bool Engine::gotNewEvents(void) const
@@ -70,4 +59,4 @@ namespace guillaume
 		return _view;
 	}
 
-}   // namespace guillaume
+}	 // namespace guillaume

@@ -82,7 +82,6 @@ namespace guillaume
 
 		private:
 		Handler _callback;	   ///< Event callback function
-		bool _shouldQuit;	   ///< Flag indicating if a quit event was received
 		bool _gotNewEvents;	   ///< Flag indicating if new events were received
 
 		protected:
@@ -93,12 +92,6 @@ namespace guillaume
 		 * @return Reference to the event callback function.
 		 */
 		Handler &getEventCallback(void);
-
-		/**
-		 * @brief Set the should quit flag.
-		 * @param shouldQuit True if a quit event was received, false otherwise.
-		 */
-		void setShouldQuit(bool shouldQuit);
 
 		/**
 		 * @brief Set the got new events flag.
@@ -192,12 +185,6 @@ namespace guillaume
 		 * @param callback Function to call when an event is received.
 		 */
 		void setEventCallback(const Handler &callback);
-
-		/**
-		 * @brief Check if a quit event has been received.
-		 * @return True if a quit event was received, false otherwise.
-		 */
-		bool shouldQuit(void) const;
 
 		/**
 		 * @brief Check if new events were received in the last poll.

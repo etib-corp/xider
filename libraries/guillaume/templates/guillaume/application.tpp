@@ -48,7 +48,7 @@ namespace guillaume
 	{
 		_systemRegistry.registerNewSystem(
 			std::make_unique<systems::MeasureText>(_ressourceProvider,
-											   _systemIO, _engine));
+												   _systemIO, _engine));
 		_systemRegistry.registerNewSystem(
 			std::make_unique<systems::MouseMotion>(_eventBus, _engine));
 		_systemRegistry.registerNewSystem(
@@ -73,7 +73,7 @@ namespace guillaume
 			_ressourceProvider, _systemIO, _engine));
 		_systemRegistry.registerNewSystem(
 			std::make_unique<systems::GlyphRender>(_ressourceProvider,
-											   _systemIO, _engine));
+												   _systemIO, _engine));
 		_systemRegistry.registerNewSystem(
 			std::make_unique<systems::KeyboardControl>(_eventBus));
 		_systemRegistry.registerNewSystem(
@@ -89,6 +89,7 @@ namespace guillaume
 		, _engine(nullptr)
 		, _sceneManager(nullptr)
 		, _eventBus()
+		, _quitEventSubscriber(_eventBus)
 		, _systemRegistry()
 		, _systemPhases()
 	{
@@ -102,16 +103,16 @@ namespace guillaume
 	}
 
 	template<InheritFromScene... SceneTypes>
-	void Application<SceneTypes...>::setEngine(
-		std::unique_ptr<Engine> engine)
+	void Application<SceneTypes...>::setEngine(std::unique_ptr<Engine> engine)
 	{
 		_engine = std::move(engine);
 		_engine->setEventCallback(
 			[this](std::unique_ptr<utility::event::Event> &event) {
 				this->_eventBus.publish(std::move(event));
 			});
-		std::vector<std::type_index> sceneTypes = _sceneManager->getRegisteredSceneTypes();
-		for (const auto &sceneType : sceneTypes) {
+		std::vector<std::type_index> sceneTypes =
+			_sceneManager->getRegisteredSceneTypes();
+		for (const auto &sceneType: sceneTypes) {
 			_engine->addScene(sceneType.hash_code());
 		}
 	}
@@ -151,16 +152,20 @@ namespace guillaume
 	}
 
 	template<InheritFromScene... SceneTypes>
-	bool Application<SceneTypes...>::shouldQuit(void) const
+	bool Application<SceneTypes...>::shouldQuit(void)
 	{
-		return _engine->shouldQuit();
+		if (_quitEventSubscriber.hasPendingEvents()) {
+			_quitEventSubscriber.getNextEvent();
+			return true;
+		}
+		return false;
 	}
 
 	template<InheritFromScene... SceneTypes>
 	int Application<SceneTypes...>::run(void)
 	{
 		this->getLogger().info("Entering main loop");
-		while (!_engine->shouldQuit()) {
+		while (!shouldQuit()) {
 			try {
 				_engine->pollEvents();
 				if (!_engine->gotNewEvents()) {
@@ -171,7 +176,7 @@ namespace guillaume
 				_engine->present();
 			} catch (const std::exception &exception) {
 				this->getLogger().error(std::string("Application error: ")
-									+ exception.what());
+										+ exception.what());
 				return EXIT_FAILURE;
 			}
 		}

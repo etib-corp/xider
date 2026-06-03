@@ -44,14 +44,14 @@ namespace xider
 	class Engine: public guillaume::Engine
 	{
 		private:
-		std::shared_ptr<evan::Engine> _evanEngine;	  ///< Evan graphics engine
+		std::unique_ptr<evan::Engine> _evanEngine;	  ///< Evan graphics engine
 		public:
 		/**
 		 * @brief Construct a new Engine
 		 *
 		 * @param engine Shared pointer to the Evan engine instance.
 		 */
-		Engine(std::shared_ptr<evan::Engine> engine);
+		Engine(std::unique_ptr<evan::Engine> engine);
 
 		/**
 		 * @brief Destructor for Engine.
@@ -59,11 +59,6 @@ namespace xider
 		 */
 		~Engine(void) override;
 
-		/**
-		 * @brief Get the underlying Evan engine.
-		 * @return Shared pointer to the Evan engine.
-		 */
-		std::shared_ptr<evan::Engine> getEvanEngine(void) const;
 
 		/**
 		 * @brief Clears the current render target.

@@ -60,9 +60,6 @@ namespace xider
 		 * @brief Default destructor.
 		 */
 		~XIDER(void);
-
-		private:
-		std::shared_ptr<evan::Engine> _engine;	  ///< Evan graphics engine
 	};
 
 }	 // namespace xider

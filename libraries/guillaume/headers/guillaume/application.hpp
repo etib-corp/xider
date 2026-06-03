@@ -33,6 +33,8 @@
 #include <utility/logging/loggable.hpp>
 #include <utility/logging/standard_logger.hpp>
 
+#include <utility/event/quit_event.hpp>
+
 #include <utility/ressource_provider.hpp>
 
 #include <utility/system_io/default_system_io.hpp>
@@ -47,6 +49,8 @@
 #include "guillaume/scene_manager_filler.hpp"
 
 #include "guillaume/event/event_bus.hpp"
+#include "guillaume/event/event_subscriber.hpp"
+
 #include "guillaume/systems/hand_button.hpp"
 #include "guillaume/systems/hand_motion.hpp"
 #include "guillaume/systems/hand_pinch.hpp"
@@ -92,6 +96,8 @@ namespace guillaume
 		std::unique_ptr<SceneManager>
 			_sceneManager;			  ///< Manager for application scenes
 		event::EventBus _eventBus;	  ///< Event bus dispatching to systems
+		event::EventSubscriber<utility::event::QuitEvent>
+			_quitEventSubscriber;	 ///< Subscriber for quit events
 		ecs::SystemRegistry _systemRegistry;	///< Shared system registry
 		ecs::SystemPhaseList _systemPhases;		///< Ordered list of phases and
 												///< traversal strategies
@@ -167,11 +173,10 @@ namespace guillaume
 		 * @brief Check if the application should quit (using engine).
 		 * @return True if the application should quit, false otherwise.
 		 */
-		bool shouldQuit(void) const;
+		bool shouldQuit(void);
 
 		/**
-		 * @brief Run the application main loop using the event handler's
-		 * shouldQuit.
+		 * @brief Run the application main loop
 		 * @return Exit code.
 		 */
 		int run(void);

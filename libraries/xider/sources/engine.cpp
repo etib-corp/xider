@@ -24,19 +24,14 @@
 
 namespace xider
 {
-	Engine::Engine(std::shared_ptr<evan::Engine> engine)
-		: _evanEngine(engine)
+	Engine::Engine(std::unique_ptr<evan::Engine> engine)
+		: _evanEngine(std::move(engine))
 		, guillaume::Engine()
 	{
 	}
 
 	Engine::~Engine(void)
 	{
-	}
-
-	std::shared_ptr<evan::Engine> Engine::getEvanEngine(void) const
-	{
-		return _evanEngine;
 	}
 
 	void Engine::clear(void)
@@ -80,6 +75,14 @@ namespace xider
 
 	void Engine::pollEvents(void)
 	{
-		_evanEngine->pollEvents();
+		auto events = _evanEngine->pollEvents();
+		auto callback = this->getEventCallback();
+	
+		if (!callback) {
+			return;
+		}
+		for (auto &event: events) {
+			callback(event);
+		}
 	}
 }	 // namespace xider

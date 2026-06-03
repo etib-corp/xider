@@ -20,28 +20,34 @@
  SOFTWARE.
  */
 
-#include "xider/xider.hpp"
+#include "guillaume/event_handler.hpp"
 
-#include "xider/engine.hpp"
-
-namespace xider
+namespace guillaume
 {
-	XIDER::XIDER(std::shared_ptr<evan::IPlatform> platform)
-		: guillaume::Application<scenes::Main, scenes::Settings>()
+
+	EventHandler::EventHandler(void)
+		: _gotNewEvents(false)
 	{
-		getLogger().info("XIDER application initialized with Evan engine");
-
-		std::unique_ptr<evan::Engine> evanEngine =
-			std::make_unique<evan::Engine>(getRessourceProvider(), platform);
-
-		std::unique_ptr<Engine> xiderEngine =
-			std::make_unique<Engine>(std::move(evanEngine));
-
-		setEngine(std::move(xiderEngine));
 	}
 
-	XIDER::~XIDER(void)
+	EventHandler::Handler &EventHandler::getEventCallback(void)
 	{
-		getLogger().info("XIDER application destroyed");
+		return _callback;
 	}
-}	 // namespace xider
+
+	void EventHandler::setGotNewEvents(bool gotNewEvents)
+	{
+		_gotNewEvents = gotNewEvents;
+	}
+
+	void EventHandler::setEventCallback(const Handler &callback)
+	{
+		_callback = callback;
+	}
+
+	bool EventHandler::gotNewEvents(void) const
+	{
+		return _gotNewEvents;
+	}
+
+}	 // namespace guillaume
