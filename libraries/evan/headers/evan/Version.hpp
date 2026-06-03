@@ -9,6 +9,9 @@
 
 #include "evan/EvanPlatform.hpp"
 
+#include <utility/logging/loggable.hpp>
+#include <utility/logging/standard_logger.hpp>
+
 namespace evan
 {
 	/**
@@ -26,7 +29,9 @@ namespace evan
 	 * @var Version::_patch
 	 *      The patch version number.
 	 */
-	class Version
+	class Version: protected utility::logging::Loggable<
+			Version,
+			utility::logging::StandardLogger>
 	{
 		public:
 		/**
