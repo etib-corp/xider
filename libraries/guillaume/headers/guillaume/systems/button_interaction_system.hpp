@@ -46,7 +46,7 @@ namespace guillaume::systems
 	 */
 	template<typename T, typename EventType>
 	concept IsRayProvider = std::is_invocable_r<utility::graphic::RayF, T,
-											const EventType &>::value;
+												const EventType &>::value;
 
 	/**
 	 * @brief Generic system handling button interactions for any input type.
@@ -66,8 +66,14 @@ namespace guillaume::systems
 		public event::EventManager<EventType>
 	{
 		private:
-		RayProvider _rayProvider;
+		RayProvider _rayProvider;	 //< Callable to get a ray from an event
 
+		/**
+		 * @brief Checks if an event represents a pressed state.
+		 * @param event The event to check.
+		 * @return True if the event represents a pressed state, false
+		 * otherwise.
+		 */
 		static bool eventIsPressed(const EventType &event)
 		{
 			if constexpr (requires {
@@ -91,6 +97,11 @@ namespace guillaume::systems
 		}
 
 		public:
+		/**
+		 * @brief Construct the ButtonInteractionSystem and subscribe to events.
+		 * @param eventBus Reference to the event bus for subscribing to events.
+		 * @param rayProvider Callable to extract a RayF from an event.
+		 */
 		ButtonInteractionSystem(event::EventBus &eventBus,
 								RayProvider rayProvider)
 			: ecs::SystemFiller<InteractionComponent, components::Transform,
@@ -100,6 +111,16 @@ namespace guillaume::systems
 		{
 		}
 
+		/**
+		 * @brief Default destructor for the ButtonInteractionSystem.
+		 */
+		~ButtonInteractionSystem(void) = default;
+
+		/**
+		 * @brief Update function called for each entity with the required
+		 * components. Handles button interaction logic based on events.
+		 * @param entityIdentifier The identifier of the entity being updated.
+		 */
 		virtual void
 			update(const ecs::Entity::Identifier &entityIdentifier) override
 		{
