@@ -92,24 +92,26 @@ namespace guillaume
 	/**
 	 * @brief Theme scheme variants (light/dark and contrast levels).
 	 */
-	enum class ThemeSchemeRole {
+	enum ThemeSchemeRole : size_t {
 		Light,
 		LightMediumContrast,
 		LightHighContrast,
 		Dark,
 		DarkMediumContrast,
-		DarkHighContrast
+		DarkHighContrast,
+		ThemeSchemeCount
 	};
 
 	/**
 	 * @brief Theme palette categories used by Material Design.
 	 */
-	enum class ThemePaletteRole {
+	enum ThemePaletteRole : size_t {
 		Primary,
 		Secondary,
 		Tertiary,
 		Neutral,
-		NeutralVariant
+		NeutralVariant,
+		ThemePaletteCount
 	};
 
 	/**
@@ -403,19 +405,10 @@ namespace guillaume
 	class Theme
 	{
 		private:
-		std::string _name;
-		std::string _description;
-		Scheme _lightScheme;
-		Scheme _lightMediumContrastScheme;
-		Scheme _lightHighContrastScheme;
-		Scheme _darkScheme;
-		Scheme _darkMediumContrastScheme;
-		Scheme _darkHighContrastScheme;
-		Palette _primaryPalette;
-		Palette _secondaryPalette;
-		Palette _tertiaryPalette;
-		Palette _neutralPalette;
-		Palette _neutralVariantPalette;
+		std::string _name;										///< Theme name for identification
+		std::string _description;								///< Optional theme description for documentation
+		std::array<Scheme, ThemeSchemeRole::ThemeSchemeCount> _schemes;	///< Schemes indexed by ThemeSchemeRole
+		std::array<Palette, ThemePaletteRole::ThemePaletteCount> _palettes;	///< Palettes indexed by ThemePaletteRole
 
 		public:
 		/**
@@ -460,204 +453,6 @@ namespace guillaume
 		void setDescription(const std::string &description);
 
 		/**
-		 * @brief Get light scheme.
-		 * @return Immutable light scheme reference.
-		 */
-		const Scheme &getLightScheme(void) const;
-
-		/**
-		 * @brief Get light medium contrast scheme.
-		 * @return Immutable scheme reference.
-		 */
-		const Scheme &getLightMediumContrastScheme(void) const;
-
-		/**
-		 * @brief Get light high contrast scheme.
-		 * @return Immutable scheme reference.
-		 */
-		const Scheme &getLightHighContrastScheme(void) const;
-
-		/**
-		 * @brief Get dark scheme.
-		 * @return Immutable dark scheme reference.
-		 */
-		const Scheme &getDarkScheme(void) const;
-
-		/**
-		 * @brief Get dark medium contrast scheme.
-		 * @return Immutable scheme reference.
-		 */
-		const Scheme &getDarkMediumContrastScheme(void) const;
-
-		/**
-		 * @brief Get dark high contrast scheme.
-		 * @return Immutable scheme reference.
-		 */
-		const Scheme &getDarkHighContrastScheme(void) const;
-
-		/**
-		 * @brief Get primary palette.
-		 * @return Immutable palette reference.
-		 */
-		const Palette &getPrimaryPalette(void) const;
-
-		/**
-		 * @brief Get secondary palette.
-		 * @return Immutable palette reference.
-		 */
-		const Palette &getSecondaryPalette(void) const;
-
-		/**
-		 * @brief Get tertiary palette.
-		 * @return Immutable palette reference.
-		 */
-		const Palette &getTertiaryPalette(void) const;
-
-		/**
-		 * @brief Get neutral palette.
-		 * @return Immutable palette reference.
-		 */
-		const Palette &getNeutralPalette(void) const;
-
-		/**
-		 * @brief Get neutral variant palette.
-		 * @return Immutable palette reference.
-		 */
-		const Palette &getNeutralVariantPalette(void) const;
-
-		/**
-		 * @brief Get mutable light scheme.
-		 * @return Mutable scheme reference.
-		 */
-		Scheme &getLightScheme(void);
-
-		/**
-		 * @brief Get mutable light medium contrast scheme.
-		 * @return Mutable scheme reference.
-		 */
-		Scheme &getLightMediumContrastScheme(void);
-
-		/**
-		 * @brief Get mutable light high contrast scheme.
-		 * @return Mutable scheme reference.
-		 */
-		Scheme &getLightHighContrastScheme(void);
-
-		/**
-		 * @brief Get mutable dark scheme.
-		 * @return Mutable scheme reference.
-		 */
-		Scheme &getDarkScheme(void);
-
-		/**
-		 * @brief Get mutable dark medium contrast scheme.
-		 * @return Mutable scheme reference.
-		 */
-		Scheme &getDarkMediumContrastScheme(void);
-
-		/**
-		 * @brief Get mutable dark high contrast scheme.
-		 * @return Mutable scheme reference.
-		 */
-		Scheme &getDarkHighContrastScheme(void);
-
-		/**
-		 * @brief Get mutable primary palette.
-		 * @return Mutable palette reference.
-		 */
-		Palette &getPrimaryPalette(void);
-
-		/**
-		 * @brief Get mutable secondary palette.
-		 * @return Mutable palette reference.
-		 */
-		Palette &getSecondaryPalette(void);
-
-		/**
-		 * @brief Get mutable tertiary palette.
-		 * @return Mutable palette reference.
-		 */
-		Palette &getTertiaryPalette(void);
-
-		/**
-		 * @brief Get mutable neutral palette.
-		 * @return Mutable palette reference.
-		 */
-		Palette &getNeutralPalette(void);
-
-		/**
-		 * @brief Get mutable neutral variant palette.
-		 * @return Mutable palette reference.
-		 */
-		Palette &getNeutralVariantPalette(void);
-
-		/**
-		 * @brief Set light scheme.
-		 * @param scheme New light scheme.
-		 */
-		void setLightScheme(const Scheme &scheme);
-
-		/**
-		 * @brief Set light medium contrast scheme.
-		 * @param scheme New light medium contrast scheme.
-		 */
-		void setLightMediumContrastScheme(const Scheme &scheme);
-
-		/**
-		 * @brief Set light high contrast scheme.
-		 * @param scheme New light high contrast scheme.
-		 */
-		void setLightHighContrastScheme(const Scheme &scheme);
-
-		/**
-		 * @brief Set dark scheme.
-		 * @param scheme New dark scheme.
-		 */
-		void setDarkScheme(const Scheme &scheme);
-
-		/**
-		 * @brief Set dark medium contrast scheme.
-		 * @param scheme New dark medium contrast scheme.
-		 */
-		void setDarkMediumContrastScheme(const Scheme &scheme);
-
-		/**
-		 * @brief Set dark high contrast scheme.
-		 * @param scheme New dark high contrast scheme.
-		 */
-		void setDarkHighContrastScheme(const Scheme &scheme);
-
-		/**
-		 * @brief Set primary palette.
-		 * @param palette New primary palette.
-		 */
-		void setPrimaryPalette(const Palette &palette);
-
-		/**
-		 * @brief Set secondary palette.
-		 * @param palette New secondary palette.
-		 */
-		void setSecondaryPalette(const Palette &palette);
-
-		/**
-		 * @brief Set tertiary palette.
-		 * @param palette New tertiary palette.
-		 */
-		void setTertiaryPalette(const Palette &palette);
-
-		/**
-		 * @brief Set neutral palette.
-		 * @param palette New neutral palette.
-		 */
-		void setNeutralPalette(const Palette &palette);
-
-		/**
-		 * @brief Set neutral variant palette.
-		 * @param palette New neutral variant palette.
-		 */
-		void setNeutralVariantPalette(const Palette &palette);
-
-		/**
 		 * @brief Get an immutable scheme by role.
 		 * @param role Scheme role selector.
 		 * @return Immutable scheme reference.
@@ -684,6 +479,20 @@ namespace guillaume
 		 * @return Mutable palette reference.
 		 */
 		Palette &getPalette(ThemePaletteRole role);
+
+		/**
+		 * @brief Set a scheme for a given role.
+		 * @param role Scheme role selector.
+		 * @param scheme Scheme to set for the role.
+		 */
+		void setScheme(ThemeSchemeRole role, const Scheme &scheme);
+
+		/**
+		 * @brief Set a palette for a given role.
+		 * @param role Palette role selector.
+		 * @param palette Palette to set for the role.
+		 */
+		void setPalette(ThemePaletteRole role, const Palette &palette);
 	};
 
 	extern const Theme defaultTheme;
