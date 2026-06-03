@@ -76,6 +76,15 @@ namespace utility::logging
 			return *_logger;
 		}
 
+		/**
+		 * @brief Get the internal logger.
+		 * @return Reference to the internal Logger instance.
+		 */
+		LoggerType &getLogger(void) const
+		{
+			return *_logger;
+		}
+
 		public:
 		/**
 		 * @brief Virtual destructor for proper cleanup.
