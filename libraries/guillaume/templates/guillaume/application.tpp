@@ -48,11 +48,11 @@ namespace guillaume
 	{
 		_systemRegistry.registerNewSystem(
 			std::make_unique<systems::MeasureText>(_ressourceProvider,
-												   _systemIO, _renderer));
+											   _systemIO, _engine));
 		_systemRegistry.registerNewSystem(
-			std::make_unique<systems::MouseMotion>(_eventBus, _renderer));
+			std::make_unique<systems::MouseMotion>(_eventBus, _engine));
 		_systemRegistry.registerNewSystem(
-			std::make_unique<systems::MouseButton>(_eventBus, _renderer));
+			std::make_unique<systems::MouseButton>(_eventBus, _engine));
 		_systemRegistry.registerNewSystem(
 			std::make_unique<systems::HandMotion>(_eventBus));
 		_systemRegistry.registerNewSystem(
@@ -70,34 +70,29 @@ namespace guillaume
 		_systemRegistry.registerNewSystem(
 			std::make_unique<systems::HandTrigger>(_eventBus));
 		_systemRegistry.registerNewSystem(std::make_unique<systems::TextRender>(
-			_ressourceProvider, _systemIO, _renderer));
+			_ressourceProvider, _systemIO, _engine));
 		_systemRegistry.registerNewSystem(
 			std::make_unique<systems::GlyphRender>(_ressourceProvider,
-												   _systemIO, _renderer));
+											   _systemIO, _engine));
 		_systemRegistry.registerNewSystem(
 			std::make_unique<systems::KeyboardControl>(_eventBus));
 		_systemRegistry.registerNewSystem(
 			std::make_unique<systems::TextInput>(_eventBus));
 		_systemRegistry.registerNewSystem(
-			std::make_unique<systems::RectangleRender>(_renderer));
+			std::make_unique<systems::RectangleRender>(_engine));
 	}
 
 	template<InheritFromScene... SceneTypes>
 	Application<SceneTypes...>::Application(void)
 		: _ressourceProvider(std::make_shared<utility::RessourceProvider>())
 		, _systemIO(std::make_shared<utility::DefaultSystemIO>())
-		, _renderer(nullptr)
-		, _eventHandler(nullptr)
+		, _engine(nullptr)
 		, _sceneManager(nullptr)
 		, _eventBus()
 		, _systemRegistry()
 		, _systemPhases()
 	{
 		registerCoreSystems();
-		_eventHandler->setEventCallback(
-			[this](std::unique_ptr<utility::event::Event> &event) {
-				this->_eventBus.publish(std::move(event));
-			});
 		_sceneManager = std::make_unique<SceneManagerFiller<SceneTypes...>>();
 	}
 
@@ -107,21 +102,18 @@ namespace guillaume
 	}
 
 	template<InheritFromScene... SceneTypes>
-	void Application<SceneTypes...>::setRenderer(
-		std::unique_ptr<Renderer> renderer)
+	void Application<SceneTypes...>::setEngine(
+		std::unique_ptr<Engine> engine)
 	{
-		_renderer = std::move(renderer);
+		_engine = std::move(engine);
+		_engine->setEventCallback(
+			[this](std::unique_ptr<utility::event::Event> &event) {
+				this->_eventBus.publish(std::move(event));
+			});
 		std::vector<std::type_index> sceneTypes = _sceneManager->getRegisteredSceneTypes();
 		for (const auto &sceneType : sceneTypes) {
-			_renderer->addScene(sceneType.hash_code());
+			_engine->addScene(sceneType.hash_code());
 		}
-	}
-
-	template<InheritFromScene... SceneTypes>
-	void Application<SceneTypes...>::setEventHandler(
-		std::unique_ptr<EventHandler> eventHandler)
-	{
-		_eventHandler = std::move(eventHandler);
 	}
 
 	template<InheritFromScene... SceneTypes>
@@ -137,49 +129,49 @@ namespace guillaume
 	template<InheritFromScene... SceneTypes>
 	void Application<SceneTypes...>::pollEvents(void)
 	{
-		_eventHandler->pollEvents();
+		_engine->pollEvents();
 	}
 
 	template<InheritFromScene... SceneTypes>
 	void Application<SceneTypes...>::clear(void)
 	{
-		_renderer->clear();
+		_engine->clear();
 	}
 
 	template<InheritFromScene... SceneTypes>
 	void Application<SceneTypes...>::present(void)
 	{
-		_renderer->present();
+		_engine->present();
 	}
 
 	template<InheritFromScene... SceneTypes>
 	bool Application<SceneTypes...>::gotNewEvents(void) const
 	{
-		return _eventHandler->gotNewEvents();
+		return _engine->gotNewEvents();
 	}
 
 	template<InheritFromScene... SceneTypes>
 	bool Application<SceneTypes...>::shouldQuit(void) const
 	{
-		return _eventHandler->shouldQuit();
+		return _engine->shouldQuit();
 	}
 
 	template<InheritFromScene... SceneTypes>
 	int Application<SceneTypes...>::run(void)
 	{
 		this->getLogger().info("Entering main loop");
-		while (!_eventHandler->shouldQuit()) {
+		while (!_engine->shouldQuit()) {
 			try {
-				_eventHandler->pollEvents();
-				if (!_eventHandler->gotNewEvents()) {
+				_engine->pollEvents();
+				if (!_engine->gotNewEvents()) {
 					continue;
 				}
-				_renderer->clear();
+				_engine->clear();
 				routine();
-				_renderer->present();
+				_engine->present();
 			} catch (const std::exception &exception) {
 				this->getLogger().error(std::string("Application error: ")
-										+ exception.what());
+									+ exception.what());
 				return EXIT_FAILURE;
 			}
 		}

@@ -30,12 +30,12 @@ namespace guillaume::systems
 	TextRender::TextRender(
 		std::shared_ptr<utility::RessourceProvider> ressourceProvider,
 		std::shared_ptr<utility::SystemIO> systemIO,
-		std::unique_ptr<Renderer> &renderer)
+		std::unique_ptr<Engine> &engine)
 		: ecs::SystemFiller<components::Transform, components::Text,
 							components::Color>(ecs::Phase::Render)
 		, _ressourceProvider(ressourceProvider)
 		, _systemIO(systemIO)
-		, _renderer(renderer)
+		, _renderer(engine)
 		, _defaultFontPath(
 			  "assets/fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf")
 	{

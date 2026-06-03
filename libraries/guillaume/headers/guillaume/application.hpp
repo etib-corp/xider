@@ -32,7 +32,10 @@
 
 #include <utility/logging/loggable.hpp>
 #include <utility/logging/standard_logger.hpp>
+
 #include <utility/ressource_provider.hpp>
+
+#include <utility/system_io/default_system_io.hpp>
 
 #include <utility/demangle.hpp>
 
@@ -40,8 +43,7 @@
 #include "guillaume/ecs/system_registry.hpp"
 
 #include "guillaume/metadata.hpp"
-#include "guillaume/renderer.hpp"
-#include "guillaume/event_handler.hpp"
+#include "guillaume/engine.hpp"
 #include "guillaume/scene_manager_filler.hpp"
 
 #include "guillaume/event/event_bus.hpp"
@@ -71,26 +73,22 @@ namespace guillaume
 	 * in the application. Each scene type must inherit from the Scene class.
 	 *
 	 * @code
-	 * class MyRenderer : public Renderer { ... };
-	 * class MyEventHandler : public event::EventHandler { ... };
-	 * Application<MyRenderer, MyEventHandler> app;
+	 * class MyEngine : public Engine { ... };
+	 * Application<MyEngine> app;
 	 * return app.run();
 	 * @endcode
 	 *
 	 * @see ecs::SystemRegistry
 	 * @see event::EventBus
-	 * @see event::EventHandler
-	 * @see Renderer
+	 * @see Engine
 	 */
 	template<InheritFromScene... SceneTypes> class Application:
 		protected utility::logging::Loggable<Application<SceneTypes...>,
 											 utility::logging::StandardLogger>
 	{
 		private:
-		std::unique_ptr<Renderer>
-			_renderer;	  ///< Unique pointer to the application renderer
-		std::unique_ptr<EventHandler>
-			_eventHandler;	  ///< Application event handler
+		std::unique_ptr<Engine>
+			_engine;	///< Unique pointer to the application engine
 		std::unique_ptr<SceneManager>
 			_sceneManager;			  ///< Manager for application scenes
 		event::EventBus _eventBus;	  ///< Event bus dispatching to systems
@@ -134,16 +132,10 @@ namespace guillaume
 		virtual ~Application(void);
 
 		/**
-		 * @brief Set the renderer for the application.
-		 * @param renderer The renderer to be used by the application.
+		 * @brief Set the engine for the application.
+		 * @param engine The engine to be used by the application.
 		 */
-		void setRenderer(std::unique_ptr<Renderer> renderer);
-
-		/**
-		 * @brief Set the event handler for the application.
-		 * @param eventHandler The event handler to be used by the application.
-		 */
-		void setEventHandler(std::unique_ptr<EventHandler> eventHandler);
+		void setEngine(std::unique_ptr<Engine> engine);
 
 		/**
 		 * @brief Run one system update pass for the active scene.
@@ -151,12 +143,12 @@ namespace guillaume
 		void routine(void);
 
 		/**
-		 * @brief Poll events from the event handler.
+		 * @brief Poll events from the engine.
 		 */
 		void pollEvents(void);
 
 		/**
-		 * @brief Clear the renderer.
+		 * @brief Clear the engine rendering target.
 		 */
 		void clear(void);
 
@@ -166,13 +158,13 @@ namespace guillaume
 		void present(void);
 
 		/**
-		 * @brief Check if the event handler has new events.
+		 * @brief Check if the engine has new events.
 		 * @return True if new events were received, false otherwise.
 		 */
 		bool gotNewEvents(void) const;
 
 		/**
-		 * @brief Check if the application should quit (using event handler).
+		 * @brief Check if the application should quit (using engine).
 		 * @return True if the application should quit, false otherwise.
 		 */
 		bool shouldQuit(void) const;

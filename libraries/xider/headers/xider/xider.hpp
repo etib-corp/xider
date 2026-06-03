@@ -27,6 +27,7 @@
 #include <guillaume/application.hpp>
 #include <evan/Engine.hpp>
 
+#include "xider/engine.hpp"
 #include "scenes/main.hpp"
 #include "scenes/settings.hpp"
 

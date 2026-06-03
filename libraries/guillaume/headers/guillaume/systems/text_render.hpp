@@ -28,7 +28,7 @@
 #include "guillaume/components/transform.hpp"
 #include "guillaume/components/color.hpp"
 
-#include "guillaume/renderer.hpp"
+#include "guillaume/engine.hpp"
 
 namespace guillaume::systems
 {
@@ -48,7 +48,7 @@ namespace guillaume::systems
 								   ///< fonts and glyphs
 		std::shared_ptr<utility::SystemIO>
 			_systemIO;	  ///< Shared system IO for file operations
-		std::unique_ptr<Renderer> &_renderer;	 ///< Renderer instance
+		std::unique_ptr<Engine> &_renderer;	 ///< Engine instance
 		std::string _defaultFontPath;	 ///< Default font for text rendering
 
 		public:
@@ -57,12 +57,12 @@ namespace guillaume::systems
 		 * @param ressourceProvider Shared resource provider for loading fonts
 		 * and glyphs.
 		 * @param systemIO Shared system IO for file operations.
-		 * @param renderer The renderer used to draw text.
+		 * @param engine The engine used to draw text.
 		 */
 		TextRender(
 			std::shared_ptr<utility::RessourceProvider> ressourceProvider,
 			std::shared_ptr<utility::SystemIO> systemIO,
-			std::unique_ptr<Renderer> &renderer);
+			std::unique_ptr<Engine> &engine);
 
 		/**
 		 * @brief Default destructor.

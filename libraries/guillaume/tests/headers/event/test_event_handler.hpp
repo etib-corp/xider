@@ -24,7 +24,7 @@
 
 #include <gtest/gtest.h>
 
-#include <guillaume/event/event_handler.hpp>
+#include <guillaume/engine.hpp>
 
 namespace guillaume::event::tests
 {

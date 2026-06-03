@@ -20,42 +20,66 @@
  SOFTWARE.
  */
 
-#pragma once
-
-#include <evan/Engine.hpp>
-
-#include <guillaume/event_handler.hpp>
+#include "xider/engine.hpp"
 
 namespace xider
 {
-	/**
-	 * @brief Event handling adapter for the xider application.
-	 *
-	 * Integrates the underlying `guillaume::event::EventHandler` with the
-	 * xider engine so events can be polled and dispatched to game systems.
-	 */
-	class EventHandler: public guillaume::EventHandler
+	Engine::Engine(std::shared_ptr<evan::Engine> engine)
+		: _evanEngine(engine)
+		, guillaume::Engine()
 	{
-		public:
-		/**
-		 * @brief Construct a new EventHandler
-		 * @param engine Shared pointer to the `evan::Engine` instance.
-		 */
-		EventHandler(std::shared_ptr<evan::Engine> engine);
+	}
 
-		/**
-		 * @brief Destroy the EventHandler
-		 */
-		~EventHandler(void) override;
+	Engine::~Engine(void)
+	{
+	}
 
-		/**
-		 * @brief Poll for OS/input events and dispatch them.
-		 */
-		void pollEvents(void) override;
+	std::shared_ptr<evan::Engine> Engine::getEvanEngine(void) const
+	{
+		return _evanEngine;
+	}
 
-		private:
-		std::shared_ptr<evan::Engine>
-			_engine;	///< Reference to the engine instance
-	};
+	void Engine::clear(void)
+	{
+	}
 
+	void Engine::present(void)
+	{
+		if (_evanEngine) {
+			_evanEngine->render();
+		}
+	}
+
+	void Engine::drawVertices(
+		const std::vector<utility::graphic::VertexF> &vertices)
+	{
+		(void)vertices;
+	}
+
+	utility::math::Vector2F
+		Engine::measureText(const utility::graphic::Text &text)
+	{
+		return { 0.0f, 0.0f };
+	}
+
+	guillaume::Engine::ViewportSize Engine::getViewportSize(void) const
+	{
+		return { 0.0f, 0.0f };
+	}
+
+	void Engine::drawText(const utility::graphic::Text &text,
+						  const utility::graphic::PoseF &pose)
+	{
+		_evanEngine->drawText(std::make_shared<utility::graphic::Text>(text));
+	}
+
+	void Engine::addScene(size_t sceneIndex)
+	{
+		_evanEngine->addScene(sceneIndex);
+	}
+
+	void Engine::pollEvents(void)
+	{
+		_evanEngine->pollEvents();
+	}
 }	 // namespace xider

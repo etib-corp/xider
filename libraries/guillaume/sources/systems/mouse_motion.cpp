@@ -24,12 +24,12 @@
 
 namespace guillaume::systems
 {
-	MouseMotion::MouseMotion(event::EventBus &eventBus, std::unique_ptr<Renderer> &renderer)
+	MouseMotion::MouseMotion(event::EventBus &eventBus, std::unique_ptr<Engine> &engine)
 		: ecs::SystemFiller<components::MouseHoverInteraction,
 							components::Transform, components::Bound>(
 			  ecs::Phase::Event)
 		, event::EventManager<utility::event::MouseMotionEvent>(eventBus)
-		, _renderer(renderer)
+		, _engine(engine)
 	{
 	}
 
@@ -44,7 +44,7 @@ namespace guillaume::systems
 			return;
 
 		const auto &position = mouseMotionEvent->getPosition();
-		auto ray			 = _renderer->getView().viewPointToRay(position);
+		auto ray			 = _engine->getView().viewPointToRay(position);
 
 		auto &transform = getComponent<components::Transform>(entityIdentifier);
 		auto &bound		= getComponent<components::Bound>(entityIdentifier);

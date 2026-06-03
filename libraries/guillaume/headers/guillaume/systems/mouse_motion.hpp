@@ -31,7 +31,7 @@
 #include "guillaume/components/mouse_hover_interaction.hpp"
 #include "guillaume/components/transform.hpp"
 
-#include "guillaume/renderer.hpp"
+#include "guillaume/engine.hpp"
 
 #include <utility/event/mouse_motion_event.hpp>
 
@@ -46,8 +46,8 @@ namespace guillaume::systems
 		public event::EventManager<utility::event::MouseMotionEvent>
 	{
 		private:
-		std::unique_ptr<Renderer>
-			&_renderer;	  ///< Reference to the renderer for potential
+		std::unique_ptr<Engine>
+			&_engine;	  ///< Reference to the engine for potential
 						  ///< visual feedback on motion interactions
 
 		public:
@@ -55,9 +55,9 @@ namespace guillaume::systems
 		 * @brief Construct the MouseMotion system and subscribe to mouse motion
 		 * events.
 		 * @param eventBus Reference to the event bus for subscribing to events.
-		 * @param renderer Reference to the renderer for visual feedback.
+		 * @param engine Reference to the engine for visual feedback.
 		 */
-		MouseMotion(event::EventBus &eventBus, std::unique_ptr<Renderer> &renderer);
+		MouseMotion(event::EventBus &eventBus, std::unique_ptr<Engine> &engine);
 
 		/**
 		 * @brief Default destructor for the MouseMotion system.

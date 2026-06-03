@@ -24,7 +24,7 @@ Copyright (c) 2026 ETIB Corporation
 
 #include <memory>
 
-#include <guillaume/renderer.hpp>
+#include <guillaume/engine.hpp>
 
 #include <evan/IPlatform.hpp>
 #include <evan/Engine.hpp>
@@ -32,33 +32,38 @@ Copyright (c) 2026 ETIB Corporation
 namespace xider
 {
 	/**
-	 * @class Renderer
-	 * @brief XIDER's rendering system backed by the Evan graphics engine.
+	 * @class Engine
+	 * @brief XIDER's engine combining rendering and event handling backed by the
+	 * Evan graphics engine.
 	 *
-	 * This class provides a unified rendering interface that wraps the Evan
-	 * graphics engine, which uses Vulkan for high-performance graphics. It
-	 * integrates with the Guillaume framework to provide a consistent API
-	 * across all XIDER platforms.
+	 * This class provides a unified interface that wraps the Evan graphics
+	 * engine, which uses Vulkan for high-performance graphics, and integrates
+	 * platform event polling. It provides a consistent API across all XIDER
+	 * platforms.
 	 */
-	class Renderer: public guillaume::Renderer
+	class Engine: public guillaume::Engine
 	{
 		private:
-		std::shared_ptr<evan::Engine> _engine;	  ///< Evan graphics engine
+		std::shared_ptr<evan::Engine> _evanEngine;	  ///< Evan graphics engine
 		public:
 		/**
-		 * @brief Default constructor for template compatibility.
-		 * Initialize with a null engine; must call setEngine() before
-		 * rendering.
+		 * @brief Construct a new Engine
 		 *
 		 * @param engine Shared pointer to the Evan engine instance.
 		 */
-		Renderer(std::shared_ptr<evan::Engine> engine);
+		Engine(std::shared_ptr<evan::Engine> engine);
 
 		/**
-		 * @brief Destructor for Renderer.
+		 * @brief Destructor for Engine.
 		 * Cleans up any resources associated with the Evan engine.
 		 */
-		~Renderer(void) override;
+		~Engine(void) override;
+
+		/**
+		 * @brief Get the underlying Evan engine.
+		 * @return Shared pointer to the Evan engine.
+		 */
+		std::shared_ptr<evan::Engine> getEvanEngine(void) const;
 
 		/**
 		 * @brief Clears the current render target.
@@ -106,6 +111,11 @@ namespace xider
 		 * @param sceneIndex The index of the scene to add.
 		 */
 		void addScene(size_t sceneIndex) override;
+
+		/**
+		 * @brief Poll for OS/input events and dispatch them.
+		 */
+		void pollEvents(void) override;
 	};
 
-}	 // namespace xider
+}   // namespace xider

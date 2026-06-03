@@ -24,9 +24,23 @@
 
 #include <functional>
 #include <memory>
+#include <optional>
+#include <string>
+#include <vector>
+#include <typeindex>
 
 #include <utility/logging/loggable.hpp>
 #include <utility/logging/standard_logger.hpp>
+
+#include <utility/ressource_provider.hpp>
+
+#include <utility/graphic/view.hpp>
+#include <utility/graphic/ray.hpp>
+#include <utility/graphic/orientation.hpp>
+#include <utility/graphic/text/text.hpp>
+#include <utility/graphic/vertex.hpp>
+
+#include <utility/math/vector.hpp>
 
 #include <utility/event/event.hpp>
 
@@ -34,38 +48,37 @@ namespace guillaume
 {
 
 	/**
-	 * @brief Interface for event handlers.
+	 * @brief Engine interface combining rendering and event handling.
 	 *
-	 * This class provides an abstract interface for handling events in the
-	 * Guillaume framework. Implementations should poll or process
-	 * platform-specific events and convert them to Guillaume Event objects.
+	 * This class provides an abstract interface for the core engine loop in the
+	 * Guillaume framework. Implementations should provide platform-specific
+	 * rendering and event polling capabilities.
 	 *
 	 * @code
-	 * class MyEventHandler : public event::EventHandler {
-	 *   public:
-	 *     void pollEvents(void) override {
-	 *         // Convert platform events to utility::event::Event and call
-	 * callback.
-	 *         // getEventCallback()(event);
-	 *     }
-	 * };
+	 * class MyEngine : public Engine { ... };
+	 * Application<MyEngine> app;
+	 * return app.run();
 	 * @endcode
 	 *
 	 * @see EventBus
 	 */
-	class EventHandler:
-		protected utility::logging::Loggable<EventHandler,
+	class Engine:
+		protected utility::logging::Loggable<Engine,
 											 utility::logging::StandardLogger>
 	{
 		public:
+		/**
+		 * @brief 2D vector representing viewport width and height in pixels.
+		 */
+		using ViewportSize = utility::math::Vector2F;
+
 		/**
 		 * @brief Type alias for an event handler callback function.
 		 *
 		 * Takes a unique pointer to an Event and performs an action.
 		 */
 		using Handler =
-			std::function<void(std::unique_ptr<utility::event::Event>
-								   &)>;
+			std::function<void(std::unique_ptr<utility::event::Event> &)>;
 
 		private:
 		Handler _callback;	   ///< Event callback function
@@ -73,6 +86,8 @@ namespace guillaume
 		bool _gotNewEvents;	   ///< Flag indicating if new events were received
 
 		protected:
+		utility::graphic::ViewF _view;	  ///< View state
+
 		/**
 		 * @brief Get the current event callback function.
 		 * @return Reference to the event callback function.
@@ -96,12 +111,77 @@ namespace guillaume
 		/**
 		 * @brief Default constructor
 		 */
-		EventHandler(void);
+		Engine(void);
 
 		/**
 		 * @brief Default destructor
 		 */
-		virtual ~EventHandler(void) = default;
+		virtual ~Engine(void) = default;
+
+		public:
+		/**
+		 * @brief Get the current viewport size in pixels.
+		 * @return The viewport size vector (width, height).
+		 */
+		virtual ViewportSize getViewportSize(void) const = 0;
+
+		/**
+		 * @brief Clear the current rendering target with the drawing color.
+		 */
+		virtual void clear(void) = 0;
+
+		/**
+		 * @brief Present the composed back buffer to the screen.
+		 */
+		virtual void present(void) = 0;
+
+		/**
+		 * @brief Draw a set of vertices forming a mesh.
+		 * @param vertices The list of vertices, each containing position and
+		 * any additional attributes (such as texture coordinates, color, etc.)
+		 * required by the concrete renderer implementation. The vertices are
+		 * interpreted using the renderer's default primitive topology
+		 * (typically a triangle list) to form the mesh.
+		 */
+		virtual void drawVertices(
+			const std::vector<utility::graphic::VertexF> &vertices) = 0;
+
+		/**
+		 * @brief Measures the pixel dimensions of a given text string when
+		 * rendered with a specific font.
+		 * @param text The text to measure.
+		 * @return A 2D vector containing the width and height of the rendered
+		 * text in pixels in the form of utility::math::Vector<float, 2>.
+		 */
+		virtual utility::math::Vector2F
+			measureText(const utility::graphic::Text &text) = 0;
+
+		/**
+		 * @brief Measure the size of the given text using the specified font.
+		 * @param text The text to draw.
+		 * @param pose The pose at which to draw the text.
+		 */
+		virtual void drawText(const utility::graphic::Text &text,
+							  const utility::graphic::PoseF &pose) = 0;
+
+		/**
+		 * @brief Set the full view model.
+		 * @param view The new view instance.
+		 * @note Synchronizes cached orientation and last mouse ray.
+		 */
+		void setView(const utility::graphic::ViewF &view);
+
+		/**
+		 * @brief Get the full view model.
+		 * @return The view instance.
+		 */
+		utility::graphic::ViewF getView(void) const;
+
+		/**
+		 * @brief Add a scene to the renderer.
+		 * @param sceneIndex The index of the scene to add.
+		 */
+		virtual void addScene(size_t sceneIndex) = 0;
 
 		/**
 		 * @brief Set the event callback function.
@@ -136,10 +216,10 @@ namespace guillaume
 	};
 
 	/**
-	 * @brief Concept to ensure a type inherits from EventHandler.
+	 * @brief Concept to ensure a type inherits from Engine.
 	 * @tparam Type The type to check.
 	 */
 	template<typename Type>
-	concept InheritFromEventHandler = std::is_base_of_v<EventHandler, Type>;
+	concept InheritFromEngine = std::is_base_of_v<Engine, Type>;
 
 }	 // namespace guillaume

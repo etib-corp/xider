@@ -22,8 +22,7 @@
 
 #include "xider/xider.hpp"
 
-#include "xider/renderer.hpp"
-#include "xider/event_handler.hpp"
+#include "xider/engine.hpp"
 
 namespace xider
 {
@@ -35,13 +34,10 @@ namespace xider
 		std::shared_ptr<evan::Engine> engine =
 			std::make_shared<evan::Engine>(getRessourceProvider(), platform);
 
-		std::unique_ptr<Renderer> renderer = std::make_unique<Renderer>(engine);
+		std::unique_ptr<Engine> xiderEngine = std::make_unique<Engine>(engine);
 
-		std::unique_ptr<EventHandler> eventHandler =
-			std::make_unique<EventHandler>(engine);
-
-		setRenderer(std::move(renderer));
-		setEventHandler(std::move(eventHandler));
+		setEngine(std::move(xiderEngine));
+		_engine = engine;
 	}
 
 	XIDER::~XIDER(void)
@@ -54,4 +50,4 @@ namespace xider
 		return _engine;
 	}
 
-}	 // namespace xider
+}   // namespace xider

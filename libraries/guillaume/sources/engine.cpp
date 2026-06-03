@@ -20,23 +20,54 @@
  SOFTWARE.
  */
 
-#include "guillaume/renderer.hpp"
+#include "guillaume/engine.hpp"
 
 namespace guillaume
 {
-	Renderer::Renderer(void)
-		: Loggable()
+	Engine::Engine(void)
+		: _shouldQuit(false)
+		, _gotNewEvents(false)
 	{
 	}
 
-	void Renderer::setView(const utility::graphic::ViewF &view)
+	Engine::Handler &Engine::getEventCallback(void)
+	{
+		return _callback;
+	}
+
+	void Engine::setShouldQuit(bool shouldQuit)
+	{
+		_shouldQuit = shouldQuit;
+	}
+
+	void Engine::setGotNewEvents(bool gotNewEvents)
+	{
+		_gotNewEvents = gotNewEvents;
+	}
+
+	void Engine::setEventCallback(const Handler &callback)
+	{
+		_callback = callback;
+	}
+
+	bool Engine::shouldQuit(void) const
+	{
+		return _shouldQuit;
+	}
+
+	bool Engine::gotNewEvents(void) const
+	{
+		return _gotNewEvents;
+	}
+
+	void Engine::setView(const utility::graphic::ViewF &view)
 	{
 		_view = view;
 	}
 
-	utility::graphic::ViewF Renderer::getView(void) const
+	utility::graphic::ViewF Engine::getView(void) const
 	{
 		return _view;
 	}
 
-}	 // namespace guillaume
+}   // namespace guillaume

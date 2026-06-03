@@ -200,11 +200,11 @@ namespace guillaume::systems
 		return vertex;
 	}
 
-	RectangleRender::RectangleRender(std::unique_ptr<Renderer> &renderer)
+	RectangleRender::RectangleRender(std::unique_ptr<Engine> &engine)
 		: ecs::SystemFiller<components::Transform, components::Bound,
 							components::Color, components::Borders>(
 			  ecs::Phase::Render)
-		, _renderer(renderer)
+		, _engine(engine)
 	{
 	}
 
@@ -251,7 +251,7 @@ namespace guillaume::systems
 		_vertices.clear();
 		buildTriangleFanVertices(center, roundedVertices, color);
 
-		_renderer->drawVertices(_vertices);
+		_engine->drawVertices(_vertices);
 	}
 
 }	 // namespace guillaume::systems

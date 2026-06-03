@@ -59,13 +59,13 @@ namespace guillaume::systems
 	GlyphRender::GlyphRender(
 		std::shared_ptr<utility::RessourceProvider> ressourceProvider,
 		std::shared_ptr<utility::SystemIO> systemIO,
-		std::unique_ptr<Renderer> &renderer)
+		std::unique_ptr<Engine> &engine)
 		: ecs::SystemFiller<components::Transform, components::Bound,
 							components::Glyph, components::Color>(
 			  ecs::Phase::Render)
 		, _ressourceProvider(ressourceProvider)
 		, _systemIO(systemIO)
-		, _renderer(renderer)
+		, _renderer(engine)
 		, _defaultFontPath(
 			  "assets/fonts/Material_Symbols_Outlined/"
 			  "MaterialSymbolsOutlined-VariableFont_FILL,GRAD,opsz,wght.ttf")

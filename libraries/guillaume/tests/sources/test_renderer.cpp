@@ -20,8 +20,8 @@
  SOFTWARE.
  */
 
-#include "test_renderer->hpp"
+#include "test_renderer.hpp"
 
 namespace guillaume::tests
 {
-}	 // namespace guillaume::tests
+}   // namespace guillaume::tests
