@@ -11,6 +11,9 @@
 #include "evan/ADeviceBackend.hpp"
 #include "evan/ASwapchainImage.hpp"
 
+#include <utility/logging/loggable.hpp>
+#include <utility/logging/standard_logger.hpp>
+
 #include <map>
 #include <memory>
 #include <iostream>
@@ -31,7 +34,9 @@ namespace evan
 	 * swapchain-related operations in the engine.
 	 *
 	 */
-	class ASwapchainContext
+	class ASwapchainContext : protected utility::logging::Loggable<
+			ASwapchainContext,
+			utility::logging::StandardLogger>
 	{
 		public:
 		virtual ~ASwapchainContext() = default;
