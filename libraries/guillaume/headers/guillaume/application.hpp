@@ -91,14 +91,14 @@ namespace guillaume
 			 InheritFromScene... SceneTypes>
 	class Application:
 		protected utility::logging::Loggable<
-			Application<RendererType, EventHandlerType,
-				SceneTypes...>,
+			Application<RendererType, EventHandlerType, SceneTypes...>,
 			utility::logging::StandardLogger>
 	{
 		protected:
-		std::shared_ptr<utility::RessourceProvider> _ressourceProvider;	///< Shared
-																													 ///< ressource
-																													 ///< provider
+		std::shared_ptr<utility::RessourceProvider>
+			_ressourceProvider;	   ///< Shared
+								   ///< ressource
+								   ///< provider
 
 		private:
 		RendererType _renderer;			   ///< Main application renderer
