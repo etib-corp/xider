@@ -24,7 +24,7 @@ Copyright (c) 2026 ETIB Corporation
 
 #include <memory>
 
-#include <guillaume/renderer.hpp>
+#include <guillaume/engine.hpp>
 
 #include <evan/IPlatform.hpp>
 #include <evan/Engine.hpp>
@@ -32,49 +32,33 @@ Copyright (c) 2026 ETIB Corporation
 namespace xider
 {
 	/**
-	 * @class Renderer
-	 * @brief XIDER's rendering system backed by the Evan graphics engine.
+	 * @class Engine
+	 * @brief XIDER's engine combining rendering and event handling backed by the
+	 * Evan graphics engine.
 	 *
-	 * This class provides a unified rendering interface that wraps the Evan
-	 * graphics engine, which uses Vulkan for high-performance graphics. It
-	 * integrates with the Guillaume framework to provide a consistent API
-	 * across all XIDER platforms.
+	 * This class provides a unified interface that wraps the Evan graphics
+	 * engine, which uses Vulkan for high-performance graphics, and integrates
+	 * platform event polling. It provides a consistent API across all XIDER
+	 * platforms.
 	 */
-	class Renderer: public guillaume::Renderer
+	class Engine: public guillaume::Engine
 	{
 		private:
-		private:
-		std::shared_ptr<evan::Engine> _engine;	  ///< Evan graphics engine
-		std::shared_ptr<evan::IPlatform> _platform; ///< Evan platform interface
+		std::unique_ptr<evan::Engine> _evanEngine;	  ///< Evan graphics engine
 		public:
 		/**
-		 * @brief Default constructor for template compatibility.
-		 * Initialize with a null engine; must call setEngine() before
-		 * rendering.
+		 * @brief Construct a new Engine
 		 *
-		 * @param ressourceProvider A shared pointer to a RessourceProvider object, which is responsible for managing the loading and synchronization of GPU resources such as materials and textures. The RessourceProvider interacts with the utility::RessourceProvider to load resources from disk or other sources, and creates corresponding GPU resources using the DeviceContext. It provides methods for synchronizing resources, retrieving specific materials or textures by ID, and managing the lifecycle of GPU resources to ensure efficient memory usage and performance in the rendering process.
+		 * @param engine Shared pointer to the Evan engine instance.
 		 */
-		Renderer(std::shared_ptr<utility::RessourceProvider> ressourceProvider);
-
-		~Renderer(void) override;
+		Engine(std::unique_ptr<evan::Engine> engine);
 
 		/**
-		 * @brief Gets the current Evan engine instance.
-		 * @return A shared pointer to the Evan graphics engine.
+		 * @brief Destructor for Engine.
+		 * Cleans up any resources associated with the Evan engine.
 		 */
-		std::shared_ptr<evan::Engine> getEngine(void);
+		~Engine(void) override;
 
-		/**
-		 * @brief Sets the Evan engine instance to be used for rendering.
-		 * @param engine A shared pointer to the Evan graphics engine.
-		 */
-		void setEngine(std::shared_ptr<evan::Engine> engine);
-
-		/**
-		 * @brief Sets the Evan platform interface.
-		 * @param platform A shared pointer to the Evan platform interface.
-		 */
-		void setPlatform(std::shared_ptr<evan::IPlatform> platform);
 
 		/**
 		 * @brief Clears the current render target.
@@ -116,6 +100,17 @@ namespace xider
 		 * @return ViewportSize containing width and height.
 		 */
 		ViewportSize getViewportSize(void) const override;
+
+		/**
+		 * @brief Add a scene to the renderer.
+		 * @param sceneIndex The index of the scene to add.
+		 */
+		void addScene(size_t sceneIndex) override;
+
+		/**
+		 * @brief Poll for OS/input events and dispatch them.
+		 */
+		void pollEvents(void) override;
 	};
 
-}	 // namespace xider
+}   // namespace xider

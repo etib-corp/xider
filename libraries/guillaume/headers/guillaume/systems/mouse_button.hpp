@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "guillaume/renderer.hpp"
+#include "guillaume/engine.hpp"
 #include "guillaume/systems/button_interaction_system.hpp"
 
 #include "guillaume/components/mouse_button_interaction.hpp"
@@ -42,32 +42,33 @@ namespace guillaume::systems
 			std::function<utility::graphic::RayF(
 				const utility::event::MouseButtonEvent &)>>
 	{
+		private:
+		std::unique_ptr<Engine>
+			&_engine;	   ///< Reference to the engine for potential
+						   ///< visual feedback on button interactions
+
 		public:
 		/**
 		 * @brief Construct the MouseButton system and subscribe to mouse button
 		 * events.
 		 * @param eventBus Reference to the event bus for subscribing to events.
-		 * @param renderer Reference to the renderer for visual feedback.
+		 * @param engine Reference to the engine for visual feedback.
 		 */
-		MouseButton(event::EventBus &eventBus, Renderer &renderer)
-			: ButtonInteractionSystem<
+		MouseButton(event::EventBus &eventBus,
+					std::unique_ptr<Engine> &engine)
+			: _engine(engine)
+			, ButtonInteractionSystem<
 				  utility::event::MouseButtonEvent,
 				  components::MouseButtonInteraction,
 				  std::function<utility::graphic::RayF(
 					  const utility::event::MouseButtonEvent &)>>(
 				  eventBus,
-				  [&renderer
-				  ](const utility::event::MouseButtonEvent &event) {
-					  return renderer.getView().viewPointToRay(
+				  [&engine](const utility::event::MouseButtonEvent &event) {
+					  return engine->getView().viewPointToRay(
 						  event.getPosition());
 				  })
 		{
 		}
-
-		/**
-		 * @brief Default destructor for the MouseButton system.
-		 */
-		~MouseButton(void) = default;
 	};
 
-} // namespace guillaume::systems
+}	 // namespace guillaume::systems

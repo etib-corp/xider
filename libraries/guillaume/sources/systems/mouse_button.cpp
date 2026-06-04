@@ -20,45 +20,8 @@
  SOFTWARE.
  */
 
-#include "guillaume/event/event_handler.hpp"
+#include "guillaume/systems/mouse_button.hpp"
 
-namespace guillaume::event
+namespace guillaume::systems
 {
-
-	EventHandler::EventHandler(void)
-		: _shouldQuit(false)
-		, _gotNewEvents(false)
-	{
-	}
-
-	EventHandler::Handler &EventHandler::getEventCallback(void)
-	{
-		return _callback;
-	}
-
-	void EventHandler::setShouldQuit(bool shouldQuit)
-	{
-		_shouldQuit = shouldQuit;
-	}
-
-	void EventHandler::setGotNewEvents(bool gotNewEvents)
-	{
-		_gotNewEvents = gotNewEvents;
-	}
-
-	void EventHandler::setEventCallback(const Handler &callback)
-	{
-		_callback = callback;
-	}
-
-	bool EventHandler::shouldQuit(void) const
-	{
-		return _shouldQuit;
-	}
-
-	bool EventHandler::gotNewEvents(void) const
-	{
-		return _gotNewEvents;
-	}
-
-}	 // namespace guillaume::event
+}	 // namespace guillaume::systems

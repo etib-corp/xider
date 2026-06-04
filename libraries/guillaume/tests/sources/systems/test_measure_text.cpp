@@ -36,7 +36,7 @@
 
 namespace
 {
-	class RendererStub: public guillaume::Renderer
+	class EngineStub: public guillaume::Engine
 	{
 		public:
 		utility::math::Vector<float, 2> measurement = { 0.0f, 0.0f };
@@ -71,13 +71,28 @@ namespace
 			(void)text;
 			(void)pose;
 		}
+		void addScene(size_t sceneIndex) override
+		{
+			(void)sceneIndex;
+		}
+		void pollEvents(void) override
+		{
+		}
 	};
 
 	class MeasureTextFixture: public guillaume::systems::tests::TestMeasureText
 	{
 		protected:
-		RendererStub renderer;
-		guillaume::systems::MeasureText measureTextSystem { renderer };
+		std::unique_ptr<EngineStub> engineStub = std::make_unique<EngineStub>();
+		EngineStub *enginePtr = engineStub.get();
+		std::unique_ptr<guillaume::Engine> engine { std::move(engineStub) };
+		std::shared_ptr<utility::RessourceProvider> ressourceProvider =
+			std::make_shared<utility::RessourceProvider>();
+		std::shared_ptr<utility::SystemIO> systemIO =
+			std::make_shared<utility::DefaultSystemIO>();
+		guillaume::systems::MeasureText measureTextSystem {
+			ressourceProvider, systemIO, engine
+		};
 		guillaume::ecs::ComponentRegistry componentRegistry;
 		guillaume::ecs::EntityRegistryContainer entityRegistry;
 		guillaume::ecs::Entity::Identifier entityIdentifier {
@@ -111,7 +126,7 @@ TEST_F(MeasureTextFixture, SynchronizesBoundSizeWithMeasuredText)
 		.getComponent<guillaume::components::Text>(entityIdentifier)
 		.setContent("Measure me")
 		.setFontSize(32);
-	renderer.measurement = { 140.0f, 28.0f };
+	enginePtr->measurement = { 140.0f, 28.0f };
 	guillaume::ecs::LevelOrderTraveler traveler;
 
 	measureTextSystem.routine(componentRegistry, entityRegistry, traveler);
@@ -121,8 +136,8 @@ TEST_F(MeasureTextFixture, SynchronizesBoundSizeWithMeasuredText)
 			entityIdentifier);
 	EXPECT_EQ(bound.getWidth(), 140U);
 	EXPECT_EQ(bound.getHeight(), 28U);
-	EXPECT_EQ(renderer.measureCallCount, 1);
-	EXPECT_EQ(renderer.lastContent, "Measure me");
+	EXPECT_EQ(enginePtr->measureCallCount, 1);
+	EXPECT_EQ(enginePtr->lastContent, "Measure me");
 }
 
 TEST_F(MeasureTextFixture, SkipsMeasurementWhenRequiredComponentIsMissing)
@@ -133,7 +148,7 @@ TEST_F(MeasureTextFixture, SkipsMeasurementWhenRequiredComponentIsMissing)
 
 	measureTextSystem.routine(componentRegistry, entityRegistry, traveler);
 
-	EXPECT_EQ(renderer.measureCallCount, 0);
+	EXPECT_EQ(enginePtr->measureCallCount, 0);
 }
 
 namespace guillaume::systems::tests

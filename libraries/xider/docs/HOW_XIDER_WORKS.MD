@@ -12,8 +12,7 @@ application.
 
 ## Runtime Responsibilities
 
-- `xider::EventHandler` receives platform events.
-- `xider::Renderer` forwards draw work to Evan.
+- `xider::Engine` receives platform events and forwards draw work to Evan.
 - `xider::XIDER` manages the application and scene lifetime.
 - The `Main` and `Settings` scenes define the visible application state.
 

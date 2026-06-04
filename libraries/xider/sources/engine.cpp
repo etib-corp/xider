@@ -20,39 +20,69 @@
  SOFTWARE.
  */
 
-#include "guillaume/renderer.hpp"
+#include "xider/engine.hpp"
 
-namespace guillaume
+namespace xider
 {
-	Renderer::Renderer(std::shared_ptr<utility::RessourceProvider> ressourceProvider)
-		: Loggable()
-		, _ressourceProvider(ressourceProvider)
+	Engine::Engine(std::unique_ptr<evan::Engine> engine)
+		: _evanEngine(std::move(engine))
+		, guillaume::Engine()
 	{
 	}
 
-	void Renderer::setView(const utility::graphic::ViewF &view)
+	Engine::~Engine(void)
 	{
-		_view = view;
 	}
 
-	/**
-	 * @brief Get the full view model.
-	 * @return The view instance.
-	 */
-	utility::graphic::ViewF Renderer::getView(void) const
+	void Engine::clear(void)
 	{
-		return _view;
 	}
 
-	std::shared_ptr<utility::RessourceProvider> Renderer::getRessourceProvider(void)
+	void Engine::present(void)
 	{
-		return _ressourceProvider;
+		if (_evanEngine) {
+			_evanEngine->render();
+		}
 	}
 
-	std::shared_ptr<utility::DefaultSystemIO> Renderer::getSystemIO(void)
+	void Engine::drawVertices(
+		const std::vector<utility::graphic::VertexF> &vertices)
 	{
-		return _systemIO;
+		(void)vertices;
 	}
 
+	utility::math::Vector2F
+		Engine::measureText(const utility::graphic::Text &text)
+	{
+		return { 0.0f, 0.0f };
+	}
 
-}	 // namespace guillaume
+	guillaume::Engine::ViewportSize Engine::getViewportSize(void) const
+	{
+		return { 0.0f, 0.0f };
+	}
+
+	void Engine::drawText(const utility::graphic::Text &text,
+						  const utility::graphic::PoseF &pose)
+	{
+		_evanEngine->drawText(std::make_shared<utility::graphic::Text>(text));
+	}
+
+	void Engine::addScene(size_t sceneIndex)
+	{
+		_evanEngine->addScene(sceneIndex);
+	}
+
+	void Engine::pollEvents(void)
+	{
+		auto events = _evanEngine->pollEvents();
+		auto callback = this->getEventCallback();
+	
+		if (!callback) {
+			return;
+		}
+		for (auto &event: events) {
+			callback(event);
+		}
+	}
+}	 // namespace xider

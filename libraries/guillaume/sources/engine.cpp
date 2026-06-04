@@ -20,46 +20,43 @@
  SOFTWARE.
  */
 
-#pragma once
+#include "guillaume/engine.hpp"
 
-#include <evan/Engine.hpp>
-
-#include <guillaume/event/event_handler.hpp>
-
-namespace xider
+namespace guillaume
 {
-	/**
-	 * @brief Event handling adapter for the xider application.
-	 *
-	 * Integrates the underlying `guillaume::event::EventHandler` with the
-	 * xider engine so events can be polled and dispatched to game systems.
-	 */
-	class EventHandler: public guillaume::event::EventHandler
+	Engine::Engine(void)
+		: _gotNewEvents(false)
 	{
-	public:
-		/**
-		 * @brief Construct a new EventHandler
-		 */
-		EventHandler(void);
+	}
 
-		/**
-		 * @brief Destroy the EventHandler
-		 */
-		~EventHandler(void) override;
+	Engine::Handler &Engine::getEventCallback(void)
+	{
+		return _callback;
+	}
 
-		/**
-		 * @brief Poll for OS/input events and dispatch them.
-		 */
-		void pollEvents(void) override;
+	void Engine::setGotNewEvents(bool gotNewEvents)
+	{
+		_gotNewEvents = gotNewEvents;
+	}
 
-		/**
-		 * @brief Set the engine instance used by the handler.
-		 * @param engine Shared pointer to the `evan::Engine` instance.
-		 */
-		void setEngine(std::shared_ptr<evan::Engine> engine);
+	void Engine::setEventCallback(const Handler &callback)
+	{
+		_callback = callback;
+	}
 
-	private:
-		std::shared_ptr<evan::Engine> _engine; ///< Reference to the engine instance
-	};
+	bool Engine::gotNewEvents(void) const
+	{
+		return _gotNewEvents;
+	}
 
-}	 // namespace xider
+	void Engine::setView(const utility::graphic::ViewF &view)
+	{
+		_view = view;
+	}
+
+	utility::graphic::ViewF Engine::getView(void) const
+	{
+		return _view;
+	}
+
+}	 // namespace guillaume

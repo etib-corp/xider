@@ -44,8 +44,8 @@ namespace guillaume::event
 	 *     });
 	 * @endcode
 	 *
-	 * @see EventSubscriber
-	 * @see EventHandler
+ * @see EventSubscriber
+ * @see Engine
 	 */
 	class EventBus
 	{

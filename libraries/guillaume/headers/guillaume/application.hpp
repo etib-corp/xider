@@ -32,7 +32,12 @@
 
 #include <utility/logging/loggable.hpp>
 #include <utility/logging/standard_logger.hpp>
+
+#include <utility/event/quit_event.hpp>
+
 #include <utility/ressource_provider.hpp>
+
+#include <utility/system_io/default_system_io.hpp>
 
 #include <utility/demangle.hpp>
 
@@ -40,15 +45,12 @@
 #include "guillaume/ecs/system_registry.hpp"
 
 #include "guillaume/metadata.hpp"
-#include "guillaume/renderer.hpp"
-#include "guillaume/scene.hpp"
-#include "guillaume/scene_manager.hpp"
+#include "guillaume/engine.hpp"
 #include "guillaume/scene_manager_filler.hpp"
 
 #include "guillaume/event/event_bus.hpp"
-#include "guillaume/event/event_handler.hpp"
+#include "guillaume/event/event_subscriber.hpp"
 
-#include "guillaume/systems/glyph_render.hpp"
 #include "guillaume/systems/hand_button.hpp"
 #include "guillaume/systems/hand_motion.hpp"
 #include "guillaume/systems/hand_pinch.hpp"
@@ -64,51 +66,48 @@
 #include "guillaume/systems/rectangle_render.hpp"
 #include "guillaume/systems/text_input.hpp"
 #include "guillaume/systems/text_render.hpp"
+#include "guillaume/systems/glyph_render.hpp"
 
 namespace guillaume
 {
 	/**
 	 * @brief Application base class.
 	 *
-	 * @tparam RendererType The type of the renderer used by the application.
-	 * @tparam EventHandlerType The type of the event handler used by the
-	 * application.
+	 * @tparam SceneTypes Variadic template parameter pack for scene types used
+	 * in the application. Each scene type must inherit from the Scene class.
 	 *
 	 * @code
-	 * class MyRenderer : public Renderer { ... };
-	 * class MyEventHandler : public event::EventHandler { ... };
-	 * Application<MyRenderer, MyEventHandler> app;
+	 * class MyEngine : public Engine { ... };
+	 * Application<MyEngine> app;
 	 * return app.run();
 	 * @endcode
 	 *
 	 * @see ecs::SystemRegistry
 	 * @see event::EventBus
-	 * @see event::EventHandler
-	 * @see Renderer
+	 * @see Engine
 	 */
-	template<InheritFromRenderer RendererType,
-			 event::InheritFromEventHandler EventHandlerType,
-			 InheritFromScene... SceneTypes>
-	class Application:
-		protected utility::logging::Loggable<
-			Application<RendererType, EventHandlerType, SceneTypes...>,
-			utility::logging::StandardLogger>
+	template<InheritFromScene... SceneTypes> class Application:
+		protected utility::logging::Loggable<Application<SceneTypes...>,
+											 utility::logging::StandardLogger>
 	{
-		protected:
+		private:
+		std::unique_ptr<Engine>
+			_engine;	///< Unique pointer to the application engine
+		std::unique_ptr<SceneManager>
+			_sceneManager;			  ///< Manager for application scenes
+		event::EventBus _eventBus;	  ///< Event bus dispatching to systems
+		event::EventSubscriber<utility::event::QuitEvent>
+			_quitEventSubscriber;	 ///< Subscriber for quit events
+		ecs::SystemRegistry _systemRegistry;	///< Shared system registry
+		ecs::SystemPhaseList _systemPhases;		///< Ordered list of phases and
+												///< traversal strategies
 		std::shared_ptr<utility::RessourceProvider>
 			_ressourceProvider;	   ///< Shared
 								   ///< ressource
 								   ///< provider
-
-		private:
-		RendererType _renderer;			   ///< Main application renderer
-		EventHandlerType _eventHandler;	   ///< Application event handler
-		std::unique_ptr<SceneManager>
-			_sceneManager;			  ///< Manager for application scenes
-		event::EventBus _eventBus;	  ///< Event bus dispatching to systems
-		ecs::SystemRegistry _systemRegistry;	///< Shared system registry
-		ecs::SystemPhaseList _systemPhases;		///< Ordered list of phases and
-												///< traversal strategies
+		std::shared_ptr<utility::DefaultSystemIO>
+			_systemIO;	  ///< Shared system IO for file access and other
+						  ///< OS-level interactions
 
 		template<typename PhaseType> void runPhase(PhaseType &phaseDefinition);
 
@@ -116,6 +115,16 @@ namespace guillaume
 		 * @brief Register core systems used by the application.
 		 */
 		void registerCoreSystems(void);
+
+		protected:
+		/**
+		 * @brief Get a shared pointer to the resource provider.
+		 * @return Shared pointer to the resource provider.
+		 */
+		std::shared_ptr<utility::RessourceProvider> getRessourceProvider(void)
+		{
+			return _ressourceProvider;
+		}
 
 		public:
 		/**
@@ -129,34 +138,10 @@ namespace guillaume
 		virtual ~Application(void);
 
 		/**
-		 * @brief Set the renderer for the application.
-		 * @param renderer The renderer to use.
+		 * @brief Set the engine for the application.
+		 * @param engine The engine to be used by the application.
 		 */
-		void setRenderer(RendererType renderer);
-
-		/**
-		 * @brief Get a reference to the renderer.
-		 * @return Reference to the application renderer.
-		 */
-		RendererType &getRenderer(void);
-
-		/**
-		 * @brief Get a const reference to the renderer.
-		 * @return Const reference to the application renderer.
-		 */
-		const RendererType &getRenderer(void) const;
-
-		/**
-		 * @brief Get a reference to the event handler.
-		 * @return Reference to the application event handler.
-		 */
-		EventHandlerType &getEventHandler(void);
-
-		/**
-		 * @brief Get a const reference to the event handler.
-		 * @return Const reference to the application event handler.
-		 */
-		const EventHandlerType &getEventHandler(void) const;
+		void setEngine(std::unique_ptr<Engine> engine);
 
 		/**
 		 * @brief Run one system update pass for the active scene.
@@ -164,12 +149,12 @@ namespace guillaume
 		void routine(void);
 
 		/**
-		 * @brief Poll events from the event handler.
+		 * @brief Poll events from the engine.
 		 */
 		void pollEvents(void);
 
 		/**
-		 * @brief Clear the renderer.
+		 * @brief Clear the engine rendering target.
 		 */
 		void clear(void);
 
@@ -179,20 +164,19 @@ namespace guillaume
 		void present(void);
 
 		/**
-		 * @brief Check if the event handler has new events.
+		 * @brief Check if the engine has new events.
 		 * @return True if new events were received, false otherwise.
 		 */
 		bool gotNewEvents(void) const;
 
 		/**
-		 * @brief Check if the application should quit (using event handler).
+		 * @brief Check if the application should quit (using engine).
 		 * @return True if the application should quit, false otherwise.
 		 */
-		bool shouldQuit(void) const;
+		bool shouldQuit(void);
 
 		/**
-		 * @brief Run the application main loop using the event handler's
-		 * shouldQuit.
+		 * @brief Run the application main loop
 		 * @return Exit code.
 		 */
 		int run(void);

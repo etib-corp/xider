@@ -20,31 +20,34 @@
  SOFTWARE.
  */
 
-#include "xider/event_handler.hpp"
+#include "guillaume/event_handler.hpp"
 
-namespace xider
+namespace guillaume
 {
 
 	EventHandler::EventHandler(void)
-		: guillaume::event::EventHandler()
+		: _gotNewEvents(false)
 	{
-		getLogger().info("SDL3 Event Handler initialized");
 	}
 
-	EventHandler::~EventHandler(void)
+	EventHandler::Handler &EventHandler::getEventCallback(void)
 	{
-		getLogger().info("SDL3 Event Handler destroyed");
+		return _callback;
 	}
 
-	void EventHandler::pollEvents(void)
+	void EventHandler::setGotNewEvents(bool gotNewEvents)
 	{
-		_engine->pollEvents();
+		_gotNewEvents = gotNewEvents;
 	}
 
-	void EventHandler::setEngine(std::shared_ptr<evan::Engine> engine)
+	void EventHandler::setEventCallback(const Handler &callback)
 	{
-		getLogger().info("Setting engine for event handler");
-		_engine = engine;
+		_callback = callback;
 	}
 
-}	 // namespace xider
+	bool EventHandler::gotNewEvents(void) const
+	{
+		return _gotNewEvents;
+	}
+
+}	 // namespace guillaume

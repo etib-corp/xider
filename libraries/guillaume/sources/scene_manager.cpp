@@ -76,4 +76,13 @@ namespace guillaume
 		return getActiveScene()->getComponentRegistry();
 	}
 
+	std::vector<std::type_index> SceneManager::getRegisteredSceneTypes(void) const
+	{
+		std::vector<std::type_index> sceneTypes;
+		for (const auto &entry : _scenes) {
+			sceneTypes.push_back(entry.first);
+		}
+		return sceneTypes;
+	}
+
 }	 // namespace guillaume

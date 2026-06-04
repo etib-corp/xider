@@ -116,6 +116,12 @@ namespace guillaume
 		 * @return Reference to the active component registry.
 		 */
 		ecs::ComponentRegistry &getActiveComponentRegistry(void);
+
+		/**
+		 * @brief Get a list of all registered scene types.
+		 * @return Vector of type indices for all registered scenes.
+		 */
+		std::vector<std::type_index> getRegisteredSceneTypes(void) const;
 	};
 }	 // namespace guillaume
 
