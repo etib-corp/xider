@@ -25,9 +25,35 @@
 #include <functional>
 
 #include "guillaume/ecs/component.hpp"
+#include "guillaume/components/interaction.hpp"
+#include "utility/event/hand_squeeze_event.hpp"
 
 namespace guillaume::components
 {
+
+	/**
+	 * @brief Component handling hand squeeze interactions.
+	 * @see systems::HandSqueeze
+	 */
+	class HandSqueezeInteraction:
+		public Interaction<utility::event::HandSqueezeEvent>
+	{
+		public:
+		/**
+		 * @brief Constructs a new HandSqueezeInteraction instance.
+		 */
+		HandSqueezeInteraction(void)
+			: Interaction()
+		{
+		}
+
+		/**
+		 * @brief Destructor for the HandSqueezeInteraction class.
+		 */
+		~HandSqueezeInteraction(void) = default;
+	};
+
+#if 0
 	/**
 	 * @brief Component handling hand squeeze interactions.
 	 * @see systems::HandSqueeze
@@ -209,5 +235,6 @@ namespace guillaume::components
 		 */
 		bool isSqueezed(void) const;
 	};
+#endif
 
 }	 // namespace guillaume::components

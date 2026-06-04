@@ -20,8 +20,40 @@
  SOFTWARE.
  */
 
-#include "guillaume/components/hand_squeeze_interaction.hpp"
+#pragma once
+
+#include "guillaume/components/interaction.hpp"
 
 namespace guillaume::components
 {
-} 	// namespace guillaume::components
+	template<typename EventType>
+	InteractionBase<EventType>::InteractionBase(void)
+		: ecs::Component()
+	{
+	}
+
+	template<typename EventType>
+	void InteractionBase<EventType>::setOnEventHandler(
+		const EventHandler &handler)
+	{
+		_onEventHandler = handler;
+		setHasChanged(true);
+	}
+
+	template<typename EventType> InteractionBase<EventType>::EventHandler
+		InteractionBase<EventType>::getOnEventHandler(void) const
+	{
+		return _onEventHandler;
+	}
+
+	template<typename EventType>
+	Interaction<EventType, false>::Interaction(void)
+		: InteractionBase<EventType>()
+	{
+	}
+
+	template<typename EventType> Interaction<EventType, true>::Interaction(void)
+		: InteractionBase<EventType>()
+	{
+	}
+}	 // namespace guillaume::components
