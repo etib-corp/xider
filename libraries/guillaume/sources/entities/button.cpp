@@ -274,7 +274,8 @@ namespace guillaume::entities
 	static utility::graphic::Color32Bit
 		getContainerColor(Button::Color style, bool isHovered, bool isPressed)
 	{
-		const auto &scheme = guillaume::defaultTheme.getLightScheme();
+		const auto &scheme = guillaume::defaultTheme.getScheme(
+			guillaume::ThemeSchemeRole::Light);
 
 		auto applyStateAlpha = [](const utility::graphic::Color32Bit &color,
 								  std::uint8_t alpha) {
@@ -357,7 +358,8 @@ namespace guillaume::entities
 
 	static utility::graphic::Color32Bit getContentColor(Button::Color style)
 	{
-		const auto &scheme = guillaume::defaultTheme.getLightScheme();
+		const auto &scheme = guillaume::defaultTheme.getScheme(
+			guillaume::ThemeSchemeRole::Light);
 
 		switch (style) {
 			case Button::Color::Elevated:
