@@ -47,6 +47,17 @@ namespace utility
 		return 0;  // Return 0 if the shader name is not found
 	}
 
+	uint32_t RessourceProvider::getMaterialID(const std::string &materialName) const
+	{
+		auto it = _elementsIDs.find(materialName);
+
+		if (it != _elementsIDs.end()) {
+			return it->second;
+		}
+
+		return 0;
+	}
+
 	////////////////////
 	// Public Methods //
 	////////////////////

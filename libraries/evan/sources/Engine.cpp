@@ -28,7 +28,7 @@ void evan::Engine::initializeAssetManager(void *platformAssetManager)
 evan::Engine::Engine(
 	std::shared_ptr<utility::RessourceProvider> ressourceProvider,
 	std::shared_ptr<IPlatform> platform)
-	: _platform(platform)
+	: _platform(platform), _ressourceProvider(ressourceProvider)
 {
 	if (!g_systemIO) {
 #ifdef __ANDROID__
@@ -87,7 +87,15 @@ evan::Engine::~Engine()
 void evan::Engine::drawText(std::shared_ptr<utility::graphic::Text> text)
 {
 	std::map<uint32_t, utility::graphic::Mesh> rawObjects;
-	uint32_t material_id = 0;
+	auto material_id = _ressourceProvider->getMaterialID(
+		text->getFontFamily() + "_material");
+
+	if (material_id == 0) {
+		std::cerr << "Warning: Material '" << text->getFontFamily() + "_material"
+				  << "' not found for text object. Text will not be rendered."
+				  << std::endl;
+		return;  // Skip rendering this text if its material is not found
+	}
 
 	for (const auto &mesh: text->getMeshes()) {
 		rawObjects.emplace(material_id, *mesh);
@@ -97,6 +105,7 @@ void evan::Engine::drawText(std::shared_ptr<utility::graphic::Text> text)
 		std::make_shared<RenderObject>(_deviceContext, rawObjects, "text");
 
 	_scenes[_currentScene].addObject(_nextObjectID++, textObject);
+	_ressourceManager->sync();
 }
 
 void evan::Engine::drawPrimitive(

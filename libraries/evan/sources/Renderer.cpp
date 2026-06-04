@@ -460,9 +460,7 @@ void evan::Renderer::recordCommandBuffer(VkRenderPass renderPass,
 			vkCmdBindDescriptorSets(
 				commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, _pipelineLayouts[correspondingPipelineID],
 				0, 1,
-				&scene.getMaterials()
-					 .at(mesh.getMaterialID())
-					 ->getDescriptorSets()[_currentFrameIndex],
+				&material->getDescriptorSets()[_currentFrameIndex],
 				0, nullptr);
 		}
 

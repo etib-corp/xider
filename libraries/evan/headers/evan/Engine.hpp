@@ -373,6 +373,7 @@ namespace evan
 		 * portable across different operating systems and platforms.
 		 */
 		std::shared_ptr<IPlatform> _platform;
+		std::shared_ptr<utility::RessourceProvider> _ressourceProvider;
 
 		/**
 		 * A shared pointer to a RessourceManager object, which manages the loading

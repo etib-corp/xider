@@ -94,6 +94,16 @@ namespace utility
 		[[nodiscard]] uint32_t getShaderID(const std::string &shaderName) const;
 
 		/**
+		 * @brief Retrieves the unique material ID associated with a given material name.
+		 *
+		 * @param materialName The name of the material for which to retrieve the ID.
+		 *
+		 * @return The unique material ID associated with the given material name, or
+		 * 0 if the material name is not found.
+		 */
+		[[nodiscard]] uint32_t getMaterialID(const std::string &materialName) const;
+
+		/**
 		 * @brief Loads a font resource from a specified file path.
 		 *
 		 * @param path The file path to the font resource to be loaded.
