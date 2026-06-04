@@ -39,6 +39,9 @@ evan::Engine::Engine(
 #endif
 	}
 
+	ressourceProvider->loadShader("assets/shaders/text.vert.spv",
+								  "assets/shaders/text.frag.spv",
+								  *g_systemIO);
 	ressourceProvider->loadShader("assets/shaders/default.vert.spv",
 								  "assets/shaders/default.frag.spv",
 								  *g_systemIO);

@@ -11,7 +11,7 @@ namespace utility::graphic
 {
 	TextMaterial::TextMaterial()
 	{
-		_shaderName = "text_shader";
+		_shaderName = "text";
 	}
 
 	void TextMaterial::addAtlas(const std::string &name,

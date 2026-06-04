@@ -277,7 +277,7 @@ namespace utility
 		 *
 		 * @return A string representing the unique shader name constructed from the vertex and fragment shader file paths.
 		 */
-		const std::string &buildShaderPath(const std::string &vertexPath, const std::string &fragmentPath) const;
+		std::string buildShaderPath(const std::string &vertexPath, const std::string &fragmentPath) const;
 
 		/**
 		 * @brief Retrieves the next unique ID for a resource.
@@ -298,7 +298,7 @@ namespace utility
 		 * @note Do not modify this variable directly.
 		 * Use the getNextID() method to retrieve the next unique ID for a resource.
 		 */
-		uint32_t _currentID = 0;
+		uint32_t _currentID = 1;
 
 		/**
 		 * @brief Internal maps to store loaded fonts for efficient retrieval.
