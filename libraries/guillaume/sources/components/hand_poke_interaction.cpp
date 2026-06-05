@@ -24,41 +24,4 @@
 
 namespace guillaume::components
 {
-
-	HandPokeInteraction::HandPokeInteraction(void)
-		: ecs::Component()
-	{
-		_onPokeHandler = nullptr;
-		_isPoked	   = false;
-	}
-
-	HandPokeInteraction &
-		HandPokeInteraction::setOnPokeHandler(const PokeHandler &handler)
-	{
-		_onPokeHandler = handler;
-		setHasChanged(true);
-		return *this;
-	}
-
-	HandPokeInteraction::PokeHandler
-		HandPokeInteraction::getOnPokeHandler(void) const
-	{
-		return _onPokeHandler;
-	}
-
-	bool HandPokeInteraction::isPoked(void) const
-	{
-		return _isPoked;
-	}
-
-	HandPokeInteraction &HandPokeInteraction::setPoked(bool isPoked)
-	{
-		if (_isPoked == isPoked) {
-			return *this;
-		}
-		_isPoked = isPoked;
-		setHasChanged(true);
-		return *this;
-	}
-
 }	 // namespace guillaume::components

@@ -24,4 +24,8 @@
 
 namespace guillaume::components
 {
-} 	// namespace guillaume::components
+    HandSqueezeInteraction::HandSqueezeInteraction(void)
+        : Interaction()
+    {
+    }
+}	 // namespace guillaume::components
