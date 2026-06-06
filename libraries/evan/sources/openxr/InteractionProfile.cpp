@@ -114,6 +114,8 @@ std::string evan::InteractionProfile::getCurrentInteractionProfilePath(
 std::vector<XrPath> evan::InteractionProfile::enumerateBoundSourcesForAction(
 	XrInstance instance, XrSession session, XrAction action)
 {
+	this->getLogger().info("Enumerating bound sources for action");
+
 	std::vector<XrPath> paths;
 
 	if (session == XR_NULL_HANDLE || action == XR_NULL_HANDLE) {
@@ -136,8 +138,7 @@ std::vector<XrPath> evan::InteractionProfile::enumerateBoundSourcesForAction(
 	result = xrEnumerateBoundSourcesForAction(
 		session, &enumerateInfo, sourceCount, &sourceCount, paths.data());
 	if (result != XR_SUCCESS) {
-		std::cerr << "Failed to enumerate bound action source paths: " << result
-				  << std::endl;
+		this->getLogger().error("Failed to enumerate bound action source paths: " + std::to_string(result));
 		return {};
 	}
 
@@ -148,6 +149,8 @@ std::vector<std::string>
 	evan::InteractionProfile::enumerateBoundSourcePathStringsForAction(
 		XrInstance instance, XrSession session, XrAction action)
 {
+	this->getLogger().info("Enumerating bound source path strings for action");
+
 	std::vector<std::string> sourcePathStrings;
 	std::vector<XrPath> sourcePaths =
 		enumerateBoundSourcesForAction(instance, session, action);
