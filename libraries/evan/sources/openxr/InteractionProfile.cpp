@@ -17,8 +17,7 @@ std::string evan::InteractionProfile::getRuntimeName(XrInstance instance)
 
 	XrResult result = xrGetInstanceProperties(instance, &instanceProperties);
 	if (result != XR_SUCCESS) {
-		std::cerr << "Failed to get OpenXR instance properties: " << result
-				  << std::endl;
+		this->getLogger().error("Failed to get OpenXR instance properties: " + std::to_string(result));
 		return {};
 	}
 	return std::string(instanceProperties.runtimeName);
@@ -32,8 +31,7 @@ std::string evan::InteractionProfile::getSystemName(XrInstance instance,
 	XrResult result =
 		xrGetSystemProperties(instance, systemId, &systemProperties);
 	if (result != XR_SUCCESS) {
-		std::cerr << "Failed to get OpenXR system properties: " << result
-				  << std::endl;
+		this->getLogger().error("Failed to get OpenXR system properties: " + std::to_string(result));
 		return {};
 	}
 	return std::string(systemProperties.systemName);
@@ -46,8 +44,7 @@ XrPath evan::InteractionProfile::stringToPath(XrInstance instance,
 
 	XrResult result = xrStringToPath(instance, pathString.c_str(), &path);
 	if (result != XR_SUCCESS) {
-		std::cerr << "Failed to convert string to OpenXR path ('" << pathString
-				  << "'): " << result << std::endl;
+		this->getLogger().error("Failed to convert string to OpenXR path ('" + pathString + "'): " + std::to_string(result));
 		return XR_NULL_PATH;
 	}
 	return path;
@@ -64,8 +61,7 @@ std::string evan::InteractionProfile::pathToString(XrInstance instance,
 	XrResult result =
 		xrPathToString(instance, path, 0, &pathStringSize, nullptr);
 	if (result != XR_SUCCESS || pathStringSize == 0) {
-		std::cerr << "Failed to get OpenXR path string size: " << result
-				  << std::endl;
+		this->getLogger().error("Failed to get OpenXR path string size: " + std::to_string(result));
 		return {};
 	}
 
@@ -73,8 +69,7 @@ std::string evan::InteractionProfile::pathToString(XrInstance instance,
 	result = xrPathToString(instance, path, pathStringSize, &pathStringSize,
 							pathString.data());
 	if (result != XR_SUCCESS) {
-		std::cerr << "Failed to convert OpenXR path to string: " << result
-				  << std::endl;
+		this->getLogger().error("Failed to convert OpenXR path to string: " + std::to_string(result));
 		return {};
 	}
 
@@ -88,7 +83,7 @@ std::string evan::InteractionProfile::getCurrentInteractionProfilePath(
 	XrInstance instance, XrSession session, const std::string &userPathString)
 {
 	if (session == XR_NULL_HANDLE) {
-		std::cerr << "OpenXR session is not initialized." << std::endl;
+		this->getLogger().error("Invalid OpenXR session handle");
 		return {};
 	}
 
@@ -100,8 +95,7 @@ std::string evan::InteractionProfile::getCurrentInteractionProfilePath(
 	XrInteractionProfileState state { XR_TYPE_INTERACTION_PROFILE_STATE };
 	XrResult result = xrGetCurrentInteractionProfile(session, userPath, &state);
 	if (result != XR_SUCCESS) {
-		std::cerr << "Failed to get current interaction profile for '"
-				  << userPathString << "': " << result << std::endl;
+		this->getLogger().error("Failed to get current interaction profile for '" + userPathString + "': " + std::to_string(result));
 		return {};
 	}
 
@@ -138,7 +132,7 @@ std::vector<XrPath> evan::InteractionProfile::enumerateBoundSourcesForAction(
 	result = xrEnumerateBoundSourcesForAction(
 		session, &enumerateInfo, sourceCount, &sourceCount, paths.data());
 	if (result != XR_SUCCESS) {
-		this->getLogger().error("Failed to enumerate bound action source paths: " + std::to_string(result));
+		this->getLogger().error("Failed to enumerate bound sources for action: " + std::to_string(result));
 		return {};
 	}
 
