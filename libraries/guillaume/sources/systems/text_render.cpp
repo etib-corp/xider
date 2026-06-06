@@ -67,7 +67,7 @@ namespace guillaume::systems
 			textComponent.getFontSize(), _defaultFontPath);
 		text.setColor(colorComponent.getColor());
 
-		_renderer->drawText(text, transformComponent.getPose());
+		_renderer->addText(text, transformComponent.getPose());
 	}
 
 }	 // namespace guillaume::systems

@@ -113,7 +113,7 @@ namespace guillaume::systems
 			boundComponent.getHeight(), _defaultFontPath);
 		glyphText.setColor(colorComponent.getColor());
 
-		_renderer->drawText(glyphText, transformComponent.getPose());
+		_renderer->addText(glyphText, transformComponent.getPose());
 	}
 
 	void GlyphRender::loadGlyphCodes(const std::string &filePath)
