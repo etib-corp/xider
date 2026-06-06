@@ -11,6 +11,8 @@
 
 #include "evan/glfw/DesktopBackend.hpp"
 
+#include <limits>
+
 namespace evan
 {
 	/**
