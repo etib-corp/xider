@@ -9,10 +9,15 @@
 
 evan::GPUShader::GPUShader(VkDevice device, const utility::graphic::Shader &shader)
 {
+	this->getLogger().info("Initializing GPUShader...");
+
 	VkShaderModuleCreateInfo createInfo {};
 
 	auto vertexCode   = shader.getVertexCode();
 	auto fragmentCode = shader.getFragmentCode();
+
+	this->getLogger().info("Vertex shader code size: " + std::to_string(vertexCode.size() * sizeof(uint32_t)) + " bytes");
+	this->getLogger().info("Fragment shader code size: " + std::to_string(fragmentCode.size() * sizeof(uint32_t)) + " bytes");
 
 	createInfo.sType	= VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
 	createInfo.codeSize = vertexCode.size() * sizeof(uint32_t);
@@ -24,7 +29,7 @@ evan::GPUShader::GPUShader(VkDevice device, const utility::graphic::Shader &shad
 
 	if (vkCreateShaderModule(device, &createInfo, nullptr, &_vertexShaderModule)
 		!= VK_SUCCESS) {
-		// throw an error if the shader module creation fails
+		this->getLogger().error("Failed to create vertex shader module.");
 		return;
 	}
 
@@ -34,13 +39,14 @@ evan::GPUShader::GPUShader(VkDevice device, const utility::graphic::Shader &shad
 	if (vkCreateShaderModule(device, &createInfo, nullptr,
 							 &_fragmentShaderModule)
 		!= VK_SUCCESS) {
-		// throw an error if the shader module creation fails
+		this->getLogger().error("Failed to create fragment shader module.");
 		return;
 	}
 }
 
 evan::GPUShader::~GPUShader()
 {
+	this->getLogger().info("Destroying GPUShader...");
 }
 
 ////////////////////
@@ -49,7 +55,10 @@ evan::GPUShader::~GPUShader()
 
 void evan::GPUShader::destroy()
 {
+	this->getLogger().info("Destroying GPUShader modules...");
 	vkDestroyShaderModule(_logicalDevice, _vertexShaderModule, nullptr);
+
+	this->getLogger().info("Destroying fragment shader module...");
 	vkDestroyShaderModule(_logicalDevice, _fragmentShaderModule, nullptr);
 }
 

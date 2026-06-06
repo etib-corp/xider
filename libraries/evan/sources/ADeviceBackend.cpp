@@ -24,9 +24,16 @@ void evan::ADeviceBackend::createBuffer(
 	bufferInfo.usage	   = properties._usage;
 	bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
+	this->getLogger().info("Creating buffer with size: " + std::to_string(properties._size)
+						 + " and usage flags: "
+						 + std::to_string(properties._usage));
 	if (vkCreateBuffer(_device, &bufferInfo, nullptr, &properties._buffer)
 		!= VK_SUCCESS) {
-		throw std::runtime_error("failed to create buffer!");
+			this->getLogger().error("Failed to create buffer with size: "
+								 + std::to_string(properties._size)
+								 + " and usage flags: "
+								 + std::to_string(properties._usage));
+			return;
 	}
 
 	VkMemoryRequirements memRequirements;
@@ -39,19 +46,30 @@ void evan::ADeviceBackend::createBuffer(
 	allocInfo.memoryTypeIndex = this->findMemoryType(
 		memRequirements.memoryTypeBits, properties._properties);
 
+	this->getLogger().info("Allocating buffer memory with size: "
+						 + std::to_string(memRequirements.size)
+						 + " and memory type index: "
+						 + std::to_string(allocInfo.memoryTypeIndex));
 	if (vkAllocateMemory(_device, &allocInfo, nullptr,
 						 &properties._bufferMemory)
 		!= VK_SUCCESS) {
-		throw std::runtime_error("failed to allocate buffer memory!");
+		this->getLogger().error("Failed to allocate buffer memory!");
+		return;
 	}
 
+	this->getLogger().info("Successfully allocated buffer memory!");
+	this->getLogger().info("Binding buffer to memory...");
 	vkBindBufferMemory(_device, properties._buffer, properties._bufferMemory,
 					   0);
+	this->getLogger().info("Successfully bound buffer to memory!");
 }
 
 void evan::ADeviceBackend::transitionImageLayout(
 	const TransitionImageLayoutProperties &properties) const
 {
+	this->getLogger().info("Transitioning image layout from "
+						 + std::to_string(properties._oldLayout) + " to "
+						 + std::to_string(properties._newLayout));
 	VkCommandBuffer commandBuffer =
 		this->beginSingleTimeCommands(properties._commandPool);
 
@@ -69,11 +87,22 @@ void evan::ADeviceBackend::transitionImageLayout(
 	barrier.subresourceRange.layerCount		= 1;
 	barrier.subresourceRange.levelCount		= properties._mipLevels;
 
+	this->getLogger().info("Setting up image memory barrier for layout transition...");
+	this->getLogger().info("Old layout: " + std::to_string(barrier.oldLayout)
+						 + ", new layout: " + std::to_string(barrier.newLayout)
+						 + ", image: " + std::to_string((uintptr_t)barrier.image)
+						 + ", aspect mask: " + std::to_string(barrier.subresourceRange.aspectMask)
+						 + ", base mip level: " + std::to_string(barrier.subresourceRange.baseMipLevel)
+						 + ", level count: " + std::to_string(barrier.subresourceRange.levelCount)
+						 + ", base array layer: " + std::to_string(barrier.subresourceRange.baseArrayLayer)
+						 + ", layer count: " + std::to_string(barrier.subresourceRange.layerCount));
+
 	VkPipelineStageFlags sourceStage;
 	VkPipelineStageFlags destinationStage;
 
 	if (properties._oldLayout == VK_IMAGE_LAYOUT_UNDEFINED
 		&& properties._newLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL) {
+		this->getLogger().info("Transitioning from undefined layout to transfer destination optimal layout...");
 		barrier.srcAccessMask = 0;
 		barrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
 
@@ -82,6 +111,7 @@ void evan::ADeviceBackend::transitionImageLayout(
 	} else if (properties._oldLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
 			   && properties._newLayout
 				   == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL) {
+		this->getLogger().info("Transitioning from transfer destination optimal layout to shader read-only optimal layout...");
 		barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
 		barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
 
@@ -90,6 +120,7 @@ void evan::ADeviceBackend::transitionImageLayout(
 	} else if (properties._oldLayout == VK_IMAGE_LAYOUT_UNDEFINED
 			   && properties._newLayout
 				   == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL) {
+		this->getLogger().info("Transitioning from undefined layout to depth-stencil attachment optimal layout...");
 		barrier.srcAccessMask = 0;
 		barrier.dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT
 			| VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
@@ -97,22 +128,31 @@ void evan::ADeviceBackend::transitionImageLayout(
 		sourceStage		 = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
 		destinationStage = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
 	} else {
-		throw std::invalid_argument("unsupported layout transition!");
+		this->getLogger().error("unsupported layout transition!");
+		return;
 	}
 
 	if (properties._newLayout
 		== VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL) {
+		this->getLogger().info("Setting aspect mask for depth-stencil image...");
+
 		barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
 
 		if (this->hasStencilComponent(properties._format)) {
+			this->getLogger().info("Image format has stencil component, adding stencil aspect to aspect mask...");
 			barrier.subresourceRange.aspectMask |= VK_IMAGE_ASPECT_STENCIL_BIT;
 		}
 	} else {
+		this->getLogger().info("Setting aspect mask for color image...");
 		barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 	}
 
+	this->getLogger().info("Submitting pipeline barrier...");
+
 	vkCmdPipelineBarrier(commandBuffer, sourceStage, destinationStage, 0, 0,
 						 nullptr, 0, nullptr, 1, &barrier);
+
+	this->getLogger().info("Successfully submitted pipeline barrier!");
 
 	this->endSingleTimeCommands(properties._commandPool,
 								properties._graphicsQueue, commandBuffer);
@@ -121,16 +161,22 @@ void evan::ADeviceBackend::transitionImageLayout(
 VkCommandBuffer evan::ADeviceBackend::beginSingleTimeCommands(
 	VkCommandPool commandPool) const
 {
+	this->getLogger().info("Beginning single time command buffer...");
+
 	VkCommandBufferAllocateInfo allocInfo {};
 	allocInfo.sType		  = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
 	allocInfo.level		  = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
 	allocInfo.commandPool = commandPool;
 	allocInfo.commandBufferCount = 1;
-
 	VkCommandBuffer commandBuffer;
+
+	this->getLogger().info("Allocating command buffer with " + std::to_string(allocInfo.commandBufferCount)
+						 + " command buffer(s) from command pool: "
+						 + std::to_string((uintptr_t)commandPool));
+
 	if (vkAllocateCommandBuffers(_device, &allocInfo, &commandBuffer)
 		!= VK_SUCCESS) {
-		std::cerr << "Failed to allocate command buffer" << std::endl;
+		this->getLogger().error("Failed to allocate command buffer");
 		return VK_NULL_HANDLE;
 	}
 
@@ -138,8 +184,11 @@ VkCommandBuffer evan::ADeviceBackend::beginSingleTimeCommands(
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 
+	this->getLogger().info("Beginning command buffer recording using one-time submit flag...");
+
 	vkBeginCommandBuffer(commandBuffer, &beginInfo);
 
+	this->getLogger().info("Successfully began recording command buffer!");
 	return commandBuffer;
 }
 
@@ -147,6 +196,8 @@ void evan::ADeviceBackend::endSingleTimeCommands(
 	VkCommandPool commandPool, VkQueue graphicsQueue,
 	VkCommandBuffer commandBuffer) const
 {
+	this->getLogger().info("Ending single time command buffer...");
+
 	vkEndCommandBuffer(commandBuffer);
 
 	VkSubmitInfo submitInfo {};
@@ -154,15 +205,35 @@ void evan::ADeviceBackend::endSingleTimeCommands(
 	submitInfo.commandBufferCount = 1;
 	submitInfo.pCommandBuffers	  = &commandBuffer;
 
+	this->getLogger().info("Submitting command buffer...");
+
 	vkQueueSubmit(graphicsQueue, 1, &submitInfo, VK_NULL_HANDLE);
+
+	this->getLogger().info("Waiting for queue to become idle...");
+
 	vkQueueWaitIdle(graphicsQueue);
 
+	this->getLogger().info("Freeing command buffer...");
+
 	vkFreeCommandBuffers(_device, commandPool, 1, &commandBuffer);
+
+	this->getLogger().info("Successfully ended single time command buffer!");
 }
 
 void evan::ADeviceBackend::createImage(
 	const CreateImageProperties &properties) const
 {
+	this->getLogger().info("Creating image with:\n width: "
+						 + std::to_string(properties._width)
+						 + ",\n height: " + std::to_string(properties._height)
+						 + ",\n mip levels: " + std::to_string(properties._mipLevels)
+						 + ",\n num samples: " + std::to_string(properties._numSamples)
+						 + ",\n format: " + std::to_string(properties._format)
+						 + ",\n tiling: " + std::to_string(properties._tiling)
+						 + ",\n usage flags: " + std::to_string(properties._usage)
+						 + ",\n memory properties: "
+						 + std::to_string(properties._properties));
+
 	VkImageCreateInfo imageInfo {};
 	imageInfo.sType			= VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 	imageInfo.imageType		= VK_IMAGE_TYPE_2D;
@@ -179,10 +250,25 @@ void evan::ADeviceBackend::createImage(
 	imageInfo.mipLevels		= properties._mipLevels;
 	imageInfo.samples		= properties._numSamples;
 
+	this->getLogger().info("Image creation info:\n width: " + std::to_string(imageInfo.extent.width)
+						 + ",\n height: " + std::to_string(imageInfo.extent.height)
+						 + ",\n mip levels: " + std::to_string(imageInfo.mipLevels)
+						 + ",\n num samples: " + std::to_string(imageInfo.samples)
+						 + ",\n format: " + std::to_string(imageInfo.format)
+						 + ",\n tiling: " + std::to_string(imageInfo.tiling)
+						 + ",\n usage flags: " + std::to_string(imageInfo.usage)
+						 + ",\n memory properties: "
+						 + std::to_string(properties._properties));
+
+	this->getLogger().info("Creating image...");
+
 	if (vkCreateImage(_device, &imageInfo, nullptr, &properties._image)
 		!= VK_SUCCESS) {
-		throw std::runtime_error("failed to create image!");
+		this->getLogger().error("Failed to create image!");
+		return;
 	}
+
+	this->getLogger().info("Successfully created image!");
 
 	VkMemoryRequirements memRequirements;
 	vkGetImageMemoryRequirements(_device, properties._image, &memRequirements);
@@ -193,17 +279,34 @@ void evan::ADeviceBackend::createImage(
 	allocInfo.memoryTypeIndex = this->findMemoryType(
 		memRequirements.memoryTypeBits, properties._properties);
 
+	this->getLogger().info("Allocating image memory with size: "
+						 + std::to_string(memRequirements.size)
+						 + " and memory type index: "
+						 + std::to_string(allocInfo.memoryTypeIndex));
+
+	this->getLogger().info("Allocating image memory...");
+
 	if (vkAllocateMemory(_device, &allocInfo, nullptr, &properties._imageMemory)
 		!= VK_SUCCESS) {
-		throw std::runtime_error("Failed to allocate image memory!");
+		this->getLogger().error("Failed to allocate image memory!");
+		return;
 	}
 
+	this->getLogger().info("Successfully allocated image memory!");
+	this->getLogger().info("Binding image to memory...");
+
 	vkBindImageMemory(_device, properties._image, properties._imageMemory, 0);
+
+	this->getLogger().info("Successfully bound image to memory!");
 }
 
 void evan::ADeviceBackend::copyBufferToImage(
 	const CopyBufferToImageProperties &properties) const
 {
+	this->getLogger().info("Copying buffer to image with:\n width: "
+						 + std::to_string(properties._width)
+						 + ",\n height: " + std::to_string(properties._height));
+
 	VkCommandBuffer commandBuffer =
 		this->beginSingleTimeCommands(properties._commandPool);
 
@@ -218,8 +321,25 @@ void evan::ADeviceBackend::copyBufferToImage(
 	region.imageOffset					   = { 0, 0, 0 };
 	region.imageExtent = { properties._width, properties._height, 1 };
 
+	this->getLogger().info("Region for buffer to image copy:\n buffer offset: " + std::to_string(region.bufferOffset)
+						 + ",\n buffer row length: " + std::to_string(region.bufferRowLength)
+						 + ",\n buffer image height: " + std::to_string(region.bufferImageHeight)
+						 + ",\n image aspect mask: " + std::to_string(region.imageSubresource.aspectMask)
+						 + ",\n image mip level: " + std::to_string(region.imageSubresource.mipLevel)
+						 + ",\n image base array layer: " + std::to_string(region.imageSubresource.baseArrayLayer)
+						 + ",\n image layer count: " + std::to_string(region.imageSubresource.layerCount)
+						 + ",\n image offset: (" + std::to_string(region.imageOffset.x) + ", "
+						 + std::to_string(region.imageOffset.y) + ", "
+						 + std::to_string(region.imageOffset.z) + ")"
+						 + ",\n image extent: (" + std::to_string(region.imageExtent.width) + ", "
+						 + std::to_string(region.imageExtent.height) + ", "
+						 + std::to_string(region.imageExtent.depth) + ")");
+	this->getLogger().info("Copying buffer to image...");
+
 	vkCmdCopyBufferToImage(commandBuffer, properties._buffer, properties._image,
 						   VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
+
+	this->getLogger().info("Successfully copied buffer to image!");
 
 	this->endSingleTimeCommands(properties._commandPool,
 								properties._graphicsQueue, commandBuffer);
@@ -228,6 +348,7 @@ void evan::ADeviceBackend::copyBufferToImage(
 void evan::ADeviceBackend::copyBuffer(
 	const CopyBufferProperties &properties) const
 {
+	this->getLogger().info("Copying buffer with size: " + std::to_string(properties._size));
 	VkCommandBuffer commandBuffer =
 		this->beginSingleTimeCommands(properties._commandPool);
 
@@ -235,6 +356,8 @@ void evan::ADeviceBackend::copyBuffer(
 	copyRegion.size = properties._size;
 	vkCmdCopyBuffer(commandBuffer, properties._srcBuffer, properties._dstBuffer,
 					1, &copyRegion);
+
+	this->getLogger().info("Successfully copied buffer!");
 
 	this->endSingleTimeCommands(properties._commandPool,
 								properties._graphicsQueue, commandBuffer);
@@ -245,6 +368,10 @@ VkImageView
 										  VkImageAspectFlags aspectFlags,
 										  uint32_t mipLevels) const
 {
+	this->getLogger().info("Creating image view with format: " + std::to_string(format)
+						 + ", aspect flags: " + std::to_string(aspectFlags)
+						 + ", and mip levels: " + std::to_string(mipLevels));
+
 	VkImageViewCreateInfo viewInfo {};
 	viewInfo.sType	  = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
 	viewInfo.image	  = image;
@@ -256,12 +383,23 @@ VkImageView
 	viewInfo.subresourceRange.baseArrayLayer = 0;
 	viewInfo.subresourceRange.layerCount	 = 1;
 	viewInfo.subresourceRange.levelCount	 = mipLevels;
-
 	VkImageView imageView;
+
+	this->getLogger().info("Image view creation info:\n format: " + std::to_string(viewInfo.format)
+						 + ", aspect flags: " + std::to_string(viewInfo.subresourceRange.aspectMask)
+						 + ", mip levels: " + std::to_string(viewInfo.subresourceRange.levelCount)
+						 + ", base mip level: " + std::to_string(viewInfo.subresourceRange.baseMipLevel)
+						 + ", layer count: " + std::to_string(viewInfo.subresourceRange.layerCount)
+						 + ", base array layer: " + std::to_string(viewInfo.subresourceRange.baseArrayLayer));
+	this->getLogger().info("Creating image view...");
+
 	if (vkCreateImageView(_device, &viewInfo, nullptr, &imageView)
 		!= VK_SUCCESS) {
-		throw std::runtime_error("failed to create texture image view!");
+		this->getLogger().error("Failed to create texture image view!");
+		return VK_NULL_HANDLE;
 	}
+
+	this->getLogger().info("Successfully created image view!");
 
 	return imageView;
 }
@@ -272,10 +410,18 @@ VkImageView
 
 std::vector<VkLayerProperties> evan::ADeviceBackend::getAvailableLayers()
 {
+	this->getLogger().info("Enumerating available Vulkan layers...");
+
 	uint32_t layerCount;
 	vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
+
+	this->getLogger().info("Found " + std::to_string(layerCount) + " available Vulkan layer(s).");
+
 	std::vector<VkLayerProperties> availableLayers(layerCount);
 	vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
+
+	this->getLogger().info("Successfully enumerated available Vulkan layers.");
+
 	return availableLayers;
 }
 
@@ -285,6 +431,7 @@ std::vector<VkLayerProperties> evan::ADeviceBackend::getAvailableLayers()
 
 bool evan::ADeviceBackend::hasStencilComponent(VkFormat format) const
 {
+	this->getLogger().info("Checking if format " + std::to_string(format) + " has stencil component...");
 	return format == VK_FORMAT_D32_SFLOAT_S8_UINT
 		|| format == VK_FORMAT_D24_UNORM_S8_UINT;
 }
@@ -293,6 +440,9 @@ uint32_t
 	evan::ADeviceBackend::findMemoryType(uint32_t typeFilter,
 										 VkMemoryPropertyFlags properties) const
 {
+	this->getLogger().info("Finding suitable memory type for type filter: " + std::to_string(typeFilter)
+						 + " and memory property flags: " + std::to_string(properties));
+
 	VkPhysicalDeviceMemoryProperties memProperties;
 
 	vkGetPhysicalDeviceMemoryProperties(_physicalDevice, &memProperties);
@@ -300,9 +450,12 @@ uint32_t
 		if ((typeFilter & (1 << i))
 			&& (memProperties.memoryTypes[i].propertyFlags & properties)
 				== properties) {
+			this->getLogger().info("Found suitable memory type at index: " + std::to_string(i));
 			return i;
 		}
 	}
 
-	throw std::runtime_error("Failed to find suitable memory type!");
+	this->getLogger().error("Failed to find suitable memory type!");
+	this->getLogger().warning("Returning 0 as fallback, but this may lead to undefined behavior!");
+	return 0;
 }

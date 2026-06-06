@@ -9,6 +9,9 @@
 
 #include <utility/graphic/shader.hpp>
 
+#include <utility/logging/loggable.hpp>
+#include <utility/logging/standard_logger.hpp>
+
 #include "evan/EvanPlatform.hpp"
 
 namespace evan
@@ -22,7 +25,9 @@ namespace evan
 	 * the shader modules and to destroy the shader modules when they are no
 	 * longer needed.
 	 */
-	class GPUShader
+	class GPUShader : protected utility::logging::Loggable<
+			GPUShader,
+			utility::logging::StandardLogger>
 	{
 		public:
 		/**

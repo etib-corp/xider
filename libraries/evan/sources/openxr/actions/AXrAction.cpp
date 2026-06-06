@@ -28,6 +28,8 @@ const std::string &evan::AXrAction::getBindingPath() const
 
 void evan::AXrAction::createAction(const PropertiesXrActions &properties)
 {
+	this->getLogger().info("Creating action: " + properties.actionName);
+
 	_actionName	 = properties.actionName;
 	_bindingPath = properties.bindingPath;
 
@@ -41,7 +43,9 @@ void evan::AXrAction::createAction(const PropertiesXrActions &properties)
 	XrResult result =
 		xrCreateAction(properties.actionSet, &actionCreateInfo, &_action);
 	if (result != XR_SUCCESS) {
-		throw std::runtime_error("Failed to create action: "
-								 + std::to_string(result));
+		this->getLogger().error("Failed to create action: " + properties.actionName +
+								  " with error code: " + std::to_string(result));
+		return;
 	}
+	this->getLogger().info("Successfully created action: " + properties.actionName);
 }

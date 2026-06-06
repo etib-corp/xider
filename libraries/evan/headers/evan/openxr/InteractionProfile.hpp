@@ -7,6 +7,9 @@
 
 #pragma once
 
+#include <utility/logging/loggable.hpp>
+#include <utility/logging/standard_logger.hpp>
+
 #include "evan/EvanPlatform.hpp"
 #include <openxr/openxr.h>
 
@@ -21,7 +24,9 @@ namespace evan
 	 * retrieving runtime and system information, converting between strings and
 	 * paths, and enumerating bound sources for actions.
 	 */
-	class InteractionProfile
+	class InteractionProfile : protected utility::logging::Loggable<
+			InteractionProfile,
+			utility::logging::StandardLogger>
 	{
 		public:
 

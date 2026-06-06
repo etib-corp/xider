@@ -11,6 +11,7 @@
 
 evan::Scene::~Scene()
 {
+	this->getLogger().info("Destroying Scene...");
 }
 
 ////////////////////
@@ -19,22 +20,29 @@ evan::Scene::~Scene()
 
 void evan::Scene::destroy(VkDevice device)
 {
-	for (auto &[_, object]: _objects) {
+	this->getLogger().info("Destroying Scene and cleaning up GPU resources...");
+
+	this->getLogger().info("Destroying renderable objects...");
+	for (auto &[id, object]: _objects) {
+		this->getLogger().info("Destroying renderable object with ID " + std::to_string(id));
 		object->destroy(device);
 	}
 
-	for (auto &[_, material]: _materials) {
+	for (auto &[id, material]: _materials) {
+		this->getLogger().info("Destroying material with ID " + std::to_string(id));
 		material->destroy(device);
 	}
 }
 
 void evan::Scene::addObject(uint32_t objectID, std::shared_ptr<RenderObject> renderObject)
 {
+	this->getLogger().info("Adding renderable object with ID " + std::to_string(objectID) + " to Scene...");
 	_objects[objectID] = renderObject;
 }
 
 bool evan::Scene::removeObject(uint32_t objectID)
 {
+	this->getLogger().info("Removing renderable object with ID " + std::to_string(objectID) + " from Scene...");
 	return _objects.erase(objectID) > 0;
 }
 
@@ -42,13 +50,13 @@ bool evan::Scene::removeObject(uint32_t objectID)
 // Getters //
 /////////////
 
-const std::vector<evan::GPUMesh> &evan::Scene::getMeshes() const
+const std::vector<std::shared_ptr<evan::GPUMesh>> &evan::Scene::getMeshes() const
 {
-	static std::vector<GPUMesh> meshes;
+	static std::vector<std::shared_ptr<GPUMesh>> meshes;
 	meshes.clear();
 
 	for (const auto &[_, object]: _objects) {
-		const std::vector<GPUMesh> &objectMeshes = object->getMeshes();
+		const std::vector<std::shared_ptr<GPUMesh>> &objectMeshes = object->getMeshes();
 		meshes.insert(meshes.end(), objectMeshes.begin(), objectMeshes.end());
 	}
 

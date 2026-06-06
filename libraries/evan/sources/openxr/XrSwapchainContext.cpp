@@ -11,6 +11,8 @@
 
 evan::XrSwapchainContext::XrSwapchainContext(const DeviceContext &deviceContext)
 {
+	this->getLogger().info("Initializing XrSwapchainContext");
+
 	createRenderPass(deviceContext.getDeviceBackend(),
 					 deviceContext.getMsaaSamples());
 
@@ -28,6 +30,8 @@ evan::XrSwapchainContext::XrSwapchainContext(const DeviceContext &deviceContext)
 	auto swapchainFormat = selectSwapchainFormat(swapchainFormats);
 
 	for (const auto &viewConfig: _viewsConfigurations) {
+		this->getLogger().info("Creating swapchain for view configuration");
+
 		XrSwapchainCreateInfo swapchainCreateInfo {};
 		swapchainCreateInfo.type	  = XR_TYPE_SWAPCHAIN_CREATE_INFO;
 		swapchainCreateInfo.arraySize = 1;
@@ -48,9 +52,9 @@ evan::XrSwapchainContext::XrSwapchainContext(const DeviceContext &deviceContext)
 		XrResult result =
 			xrCreateSwapchain(session, &swapchainCreateInfo, &swapchain);
 		if (result != XR_SUCCESS) {
-			std::cerr << "Failed to create swapchain for view configuration "
-						 "with error code: "
-					  << result << std::endl;
+			this->getLogger().error("Failed to create swapchain for view configuration "
+									 "with error code: " +
+									 std::to_string(result));
 			continue;
 		}
 		evan::XrSwapchainImage::CreateXrSwapchainImageProperties properties {
@@ -70,7 +74,10 @@ evan::XrSwapchainContext::XrSwapchainContext(const DeviceContext &deviceContext)
 
 void evan::XrSwapchainContext::destroy(VkDevice device)
 {
+	this->getLogger().info("Destroying XrSwapchainContext and releasing resources");
+
 	for (const auto &swapchainImage: _swapchainImages) {
+		this->getLogger().info("Destroying swapchain image and releasing resources");
 		swapchainImage->destroy(device);
 	}
 	_swapchainImages.clear();
@@ -80,6 +87,8 @@ VkResult evan::XrSwapchainContext::aquireImage(
 	uint32_t index, VkDevice device, VkSemaphore imageAvailableSemaphore,
 	VkFence inFlightFence, uint32_t &imageIndex)
 {
+	this->getLogger().info("Acquiring swapchain image");
+
 	XrSwapchain swapchain =
 		dynamic_cast<XrSwapchainImage *>(_swapchainImages[index].get())
 			->_swapchain;
@@ -88,8 +97,7 @@ VkResult evan::XrSwapchainContext::aquireImage(
 	XrResult result =
 		xrAcquireSwapchainImage(swapchain, &acquire_info, &imageIndex);
 	if (result != XR_SUCCESS) {
-		std::cerr << "Failed to acquire swapchain image with error code: "
-				  << result << std::endl;
+		this->getLogger().error("Failed to acquire swapchain image with error code: " + std::to_string(result));
 		return VK_ERROR_OUT_OF_DATE_KHR;
 	}
 	return VK_SUCCESS;
@@ -97,6 +105,8 @@ VkResult evan::XrSwapchainContext::aquireImage(
 
 void evan::XrSwapchainContext::waitForImage(uint32_t index)
 {
+	this->getLogger().info("Waiting for swapchain image");
+
 	XrSwapchain swapchain =
 		dynamic_cast<XrSwapchainImage *>(_swapchainImages[index].get())
 			->_swapchain;
@@ -105,17 +115,21 @@ void evan::XrSwapchainContext::waitForImage(uint32_t index)
 	wait_info.timeout = XR_INFINITE_DURATION;
 	XrResult result	  = xrWaitSwapchainImage(swapchain, &wait_info);
 	if (result != XR_SUCCESS) {
-		std::cerr << "Failed to wait for swapchain image with error code: "
-				  << result << std::endl;
+		this->getLogger().error("Failed to wait for swapchain image with error code: " + std::to_string(result));
+		return;
 	}
+	this->getLogger().info("Successfully waited for swapchain image");
 }
 
 void evan::XrSwapchainContext::updateProjectionLayerViews()
 {
+	this->getLogger().info("Updating projection layer views based on current swapchain images and view configurations");
+
 	const size_t count = std::min(_views.size(), _swapchainImages.size());
 
 	_projectionLayerViews.resize(count);
 	for (size_t i = 0; i < count; ++i) {
+		this->getLogger().info("Updating projection layer view for index: " + std::to_string(i));
 		auto *viewSwapchain =
 			dynamic_cast<XrSwapchainImage *>(_swapchainImages[i].get());
 
@@ -135,6 +149,7 @@ void evan::XrSwapchainContext::updateProjectionLayerViews()
 			static_cast<int32_t>(viewSwapchain->_height)
 		};
 	}
+	this->getLogger().info("Finished updating projection layer views");
 }
 
 /////////////

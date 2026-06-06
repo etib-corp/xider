@@ -11,6 +11,7 @@
 evan::AndroidXrPlatform::AndroidXrPlatform(
 	const AndroidPlatformData &platformData)
 {
+	this->getLogger().info("Initializing AndroidXrPlatform with provided Android platform data.");
 	_platformData = platformData;
 #ifdef __ANDROID__
 	PFN_xrInitializeLoaderKHR initializeLoader = nullptr;

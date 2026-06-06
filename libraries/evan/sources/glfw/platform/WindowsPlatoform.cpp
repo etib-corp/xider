@@ -11,16 +11,21 @@ evan::WindowsDesktopPlatform::WindowsDesktopPlatform(const std::string &name,
 													 const uint32_t width,
 													 const uint32_t height)
 {
+	this->getLogger().info("Initializing WindowsDesktopPlatform with window name: " + name + ", width: " + std::to_string(width) + ", height: " + std::to_string(height));
 	if (!glfwInit()) {
-		throw std::runtime_error("Failed to initialize GLFW");
+		this->getLogger().error("Failed to initialize GLFW");
+		return;
 	}
 
+	this->getLogger().info("GLFW initialized successfully");
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
+	this->getLogger().info("Creating GLFW window");
 	_window = glfwCreateWindow(width, height, name.c_str(), nullptr, nullptr);
 	if (!_window) {
-		throw std::runtime_error("Failed to create GLFW window");
+		this->getLogger().error("Failed to create GLFW window");
+		return;
 	}
 }
 
@@ -56,10 +61,13 @@ VkSurfaceKHR
 
 	if (vkCreateWin32SurfaceKHR(instance, &createInfo, nullptr, &surface)
 		!= VK_SUCCESS) {
-		throw std::runtime_error("Failed to create window surface!");
+		this->getLogger().error("Failed to create Vulkan surface");
+		return VK_NULL_HANDLE;
 	}
 #else
-	throw std::runtime_error("Unsupported platform for surface creation");
+	this->getLogger().error("Unsupported platform for surface creation");
+	return VK_NULL_HANDLE;
 #endif
+	this->getLogger().info("Vulkan surface created successfully");
 	return surface;
 }

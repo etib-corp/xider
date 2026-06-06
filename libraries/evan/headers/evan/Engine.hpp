@@ -25,6 +25,9 @@
 
 #include <utility/event/event.hpp>
 
+#include <utility/logging/loggable.hpp>
+#include <utility/logging/standard_logger.hpp>
+
 #include "Scene.hpp"
 #include "RenderObject.hpp"
 #include "RessourceManager.hpp"
@@ -68,7 +71,9 @@ namespace evan
 	 * establishing the core structure and functionality of the engine, with
 	 * plans for further enhancements and optimizations in the future.
 	 */
-	class Engine
+	class Engine : protected utility::logging::Loggable<
+			Engine,
+			utility::logging::StandardLogger>
 	{
 		public:
 		/**
@@ -341,7 +346,7 @@ namespace evan
 		 * textures, allowing the engine to efficiently manage and render
 		 * multiple scenes within the application.
 		 */
-		std::map<size_t, Scene> _scenes;
+		std::map<size_t, std::shared_ptr<Scene>> _scenes;
 
 		/**
 		 * An index to keep track of the current scene being rendered or

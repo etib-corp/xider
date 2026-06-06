@@ -11,6 +11,9 @@
 
 #include "evan/ADeviceBackend.hpp"
 
+#include <utility/logging/loggable.hpp>
+#include <utility/logging/standard_logger.hpp>
+
 namespace evan
 {
 	/**
@@ -31,7 +34,9 @@ namespace evan
 	 * Frame class is properly integrated with the device backend to manage
 	 * Vulkan resources effectively.
 	 */
-	class Frame
+	class Frame : protected utility::logging::Loggable<
+			Frame,
+			utility::logging::StandardLogger>
 	{
 		public:
 		/**

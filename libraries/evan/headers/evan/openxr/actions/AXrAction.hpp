@@ -13,6 +13,9 @@
 
 #include <utility/event/hand_button_event.hpp>
 
+#include <utility/logging/loggable.hpp>
+#include <utility/logging/standard_logger.hpp>
+
 namespace evan
 {
 
@@ -29,7 +32,9 @@ namespace evan
 	 * action based on specified properties. The class also ensures proper
 	 * cleanup of the OpenXR resources when the object is destroyed.
 	 */
-	class AXrAction
+	class AXrAction : protected utility::logging::Loggable<
+			AXrAction,
+			utility::logging::StandardLogger>
 	{
 		public:
 		/**
