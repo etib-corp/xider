@@ -43,10 +43,10 @@ std::vector<std::unique_ptr<utility::event::Event>>
 		thumbStickEvent->setHandType(_handType);
 		thumbStickEvent->setAxis(state.currentState.x, state.currentState.y);
 
-		std::cout << "Thumb stick for hand " << static_cast<int>(_handType)
-				  << " is at position (" << state.currentState.x << ", "
-				  << state.currentState.y << ")" << std::endl;
-
+		this->getLogger().info("Thumb stick for hand "
+							 + std::to_string(static_cast<int>(_handType))
+							 + " is active at position (" + std::to_string(state.currentState.x)
+							 + ", " + std::to_string(state.currentState.y) + ")");
 		events.push_back(std::move(thumbStickEvent));
 	}
 	return events;
