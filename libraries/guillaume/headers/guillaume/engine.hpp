@@ -153,7 +153,7 @@ namespace guillaume
 		 * @return A unique identifier for the added text.
 		 */
 		virtual size_t addText(const utility::graphic::Text &text,
-							  const utility::graphic::PoseF &pose) = 0;
+							   const utility::graphic::PoseF &pose) = 0;
 
 		/**
 		 * @brief Set the full view model.
