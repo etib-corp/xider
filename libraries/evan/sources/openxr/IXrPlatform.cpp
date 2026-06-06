@@ -45,7 +45,7 @@ std::vector<std::unique_ptr<utility::event::Event>> evan::IXrPlatform::pollEvent
 				break;
 			}
 			default:
-				this->getLogger().warn("Unhandled event type: " + std::to_string(eventDataBuffer.type));
+				this->getLogger().warning("Unhandled event type: " + std::to_string(eventDataBuffer.type));
 				break;
 		}
 		eventDataBuffer = { XR_TYPE_EVENT_DATA_BUFFER };
