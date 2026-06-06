@@ -84,7 +84,7 @@ void evan::GPUTexture::createImage(const ADeviceBackend &deviceBackend,
 	}
 
 	_mipLevel = static_cast<uint32_t>(
-					std::floor(std::log2(std::max(texWidth, texHeight))))
+					std::floor(std::log2((std::max)(texWidth, texHeight))))
 		+ 1;
 	this->getLogger().info("Calculated mip levels: " + std::to_string(_mipLevel));
 

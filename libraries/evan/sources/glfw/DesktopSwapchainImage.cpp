@@ -202,7 +202,7 @@ VkExtent2D evan::DesktopSwapchainImage::chooseSwapExtent(
 	int height = 0;
 
 	if (capabilities.currentExtent.width
-		!= std::numeric_limits<uint32_t>::max()) {
+		!= (std::numeric_limits<uint32_t>::max)()) {
 		this->getLogger().info("Current extent is defined by the surface capabilities. Using current extent: (" + std::to_string(capabilities.currentExtent.width) + ", " + std::to_string(capabilities.currentExtent.height) + ")");
 		return capabilities.currentExtent;
 	}
