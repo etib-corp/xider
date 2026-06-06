@@ -109,7 +109,7 @@ namespace evan
 		 * It also assumes that the caller will not modify the returned vector,
 		 * as it is a constant reference to the internal state of the Scene.
 		 */
-		const std::vector<GPUMesh> &getMeshes() const;
+		const std::vector<std::shared_ptr<GPUMesh>> &getMeshes() const;
 
 		/**
 		 * @brief Retrieves the materials contained in the Scene.

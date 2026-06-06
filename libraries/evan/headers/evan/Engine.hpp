@@ -346,7 +346,7 @@ namespace evan
 		 * textures, allowing the engine to efficiently manage and render
 		 * multiple scenes within the application.
 		 */
-		std::map<size_t, Scene> _scenes;
+		std::map<size_t, std::shared_ptr<Scene>> _scenes;
 
 		/**
 		 * An index to keep track of the current scene being rendered or

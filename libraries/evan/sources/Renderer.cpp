@@ -31,8 +31,8 @@ evan::Renderer::Renderer(DeviceContext &deviceContext, VkRenderPass renderPass,
 
 	this->getLogger().info("Creating frames for rendering...");
 	for (int frameIndex = 0; frameIndex < MAX_FRAMES_IN_FLIGHT; frameIndex++) {
-		_frames.emplace_back(deviceContext.getCommandPool(),
-							 *deviceContext.getDeviceBackend());
+		_frames.emplace_back(std::make_shared<Frame>(deviceContext.getCommandPool(),
+													 *deviceContext.getDeviceBackend()));
 	}
 	this->getLogger().info("Frames created successfully.");
 }
@@ -54,17 +54,17 @@ void evan::Renderer::destroy(VkDevice device)
 
 	this->getLogger().info("Destroying graphics pipelines...");
 	for (const auto &[id, pipeline]: _pipelines) {
-		this->getLogger().info("Destroying pipeline: " + id);
+		this->getLogger().info("Destroying pipeline: " + std::to_string(id));
 		vkDestroyPipeline(device, pipeline, nullptr);
 	}
 	for (const auto &[id, pipelineLayout]: _pipelineLayouts) {
-		this->getLogger().info("Destroying pipeline layout: " + id);
+		this->getLogger().info("Destroying pipeline layout: " + std::to_string(id));
 		vkDestroyPipelineLayout(device, pipelineLayout, nullptr);
 	}
 
 	this->getLogger().info("Destroying frames...");
-	for (Frame &frame: _frames) {
-		frame.destroy(device);
+	for (const auto &frame: _frames) {
+		frame->destroy(device);
 	}
 }
 
@@ -86,14 +86,14 @@ void evan::Renderer::drawFrame(const DeviceContext &deviceContext,
 
 		this->getLogger().info("Waiting for in-flight fence...");
 		vkWaitForFences(deviceContext.getDeviceBackend()->_device, 1,
-						&_frames[_currentFrameIndex]._inFlight, VK_TRUE,
+						&_frames[_currentFrameIndex]->_inFlight, VK_TRUE,
 						UINT64_MAX);
 
 		uint32_t imageIndex;
 		this->getLogger().info("Aquiring swapchain image...");
 		auto result = swapchainContext.aquireImage(
 			i, deviceContext.getDeviceBackend()->_device,
-			_frames[_currentFrameIndex]._image, VK_NULL_HANDLE, imageIndex);
+			_frames[_currentFrameIndex]->_image, VK_NULL_HANDLE, imageIndex);
 
 		swapchainContext.waitForImage(i);
 
@@ -115,7 +115,7 @@ void evan::Renderer::drawFrame(const DeviceContext &deviceContext,
 
 		this->getLogger().info("Resetting in-flight fence...");
 		vkResetFences(deviceContext.getDeviceBackend()->_device, 1,
-					  &_frames[_currentFrameIndex]._inFlight);
+					  &_frames[_currentFrameIndex]->_inFlight);
 
 		this->resetCommandBuffers();
 
@@ -131,7 +131,7 @@ void evan::Renderer::drawFrame(const DeviceContext &deviceContext,
 			VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT
 		};
 		VkSemaphore signalSemaphores[] = {
-			_frames[_currentFrameIndex]._render
+			_frames[_currentFrameIndex]->_render
 		};
 		VkSubmitInfo submitInfo {};
 		submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
@@ -140,7 +140,7 @@ void evan::Renderer::drawFrame(const DeviceContext &deviceContext,
 		submitInfo.pWaitDstStageMask  = waitStages;
 		submitInfo.commandBufferCount = 1;
 		submitInfo.pCommandBuffers =
-			&_frames[_currentFrameIndex]._commandBuffer;
+			&_frames[_currentFrameIndex]->_commandBuffer;
 		// submitInfo.signalSemaphoreCount = 1;
 		// submitInfo.pSignalSemaphores = signalSemaphores;
 
@@ -148,7 +148,7 @@ void evan::Renderer::drawFrame(const DeviceContext &deviceContext,
 		this->getLogger().info("Current frame index: " + std::to_string(_currentFrameIndex));
 
 		if (vkQueueSubmit(deviceContext.getGraphicsQueue(), 1, &submitInfo,
-						  _frames[_currentFrameIndex]._inFlight)
+						  _frames[_currentFrameIndex]->_inFlight)
 			!= VK_SUCCESS) {
 			this->getLogger().error("Failed to submit draw command buffer! Skipping frame rendering.");
 			return;
@@ -183,7 +183,7 @@ void evan::Renderer::createFrame(VkCommandPool commandPool,
 								 const ADeviceBackend &deviceBackend)
 {
 	this->getLogger().info("Creating frame with command pool...");
-	_frames.emplace_back(commandPool, deviceBackend);
+	_frames.emplace_back(std::make_shared<Frame>(commandPool, deviceBackend));
 }
 
 /////////////
@@ -198,8 +198,8 @@ VkDescriptorPool evan::Renderer::getDescriptorPool() const
 const std::vector<VkBuffer> evan::Renderer::getUniformBuffers() const
 {
 	std::vector<VkBuffer> uniformBuffers;
-	for (const Frame &frame: _frames) {
-		uniformBuffers.push_back(frame.getUniformBuffer());
+	for (const auto &frame: _frames) {
+		uniformBuffers.push_back(frame->getUniformBuffer());
 	}
 	return uniformBuffers;
 }
@@ -258,7 +258,7 @@ void evan::Renderer::createGraphicsPipelines(VkDevice device,
 
 	this->getLogger().info("Iterating over shaders to create pipelines...");
 	for (const auto &[id, shader]: _ressourceManager->getShaders()) {
-		this->getLogger().info("Creating pipeline for shader: " + id);
+		this->getLogger().info("Creating pipeline for shader: " + std::to_string(id));
 
 		VkPipelineShaderStageCreateInfo vertShaderStageInfo {};
 		vertShaderStageInfo.sType =
@@ -281,7 +281,7 @@ void evan::Renderer::createGraphicsPipelines(VkDevice device,
 		vertexInputInfo.sType =
 			VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 
-		this->getLogger().info("Getting vertex input descriptions for shader: " + id);
+		this->getLogger().info("Getting vertex input descriptions for shader: " + std::to_string(id));
 		auto bindingDescription	   = GPUVertex::getBindingDescription();
 		auto attributeDescriptions = GPUVertex::getAttributeDescriptions();
 
@@ -433,7 +433,7 @@ void evan::Renderer::createDescriptorPool(VkDevice device,
 void evan::Renderer::resetCommandBuffers()
 {
 	this->getLogger().info("Resetting command buffer for current frame index: " + std::to_string(_currentFrameIndex));
-	_frames[_currentFrameIndex].resetCommandBuffer();
+	_frames[_currentFrameIndex]->resetCommandBuffer();
 }
 
 void evan::Renderer::updateUniformBuffer(const Scene &scene,
@@ -449,7 +449,7 @@ void evan::Renderer::updateUniformBuffer(const Scene &scene,
 	ubo.proj  = swapchainContext.getProjection(currentIndex);
 	// ubo.proj[1][1] *= -1;
 
-	memcpy(_frames[_currentFrameIndex]._uniformBufferMapped, &ubo, sizeof(ubo));
+	memcpy(_frames[_currentFrameIndex]->_uniformBufferMapped, &ubo, sizeof(ubo));
 	this->getLogger().info("Uniform buffer updated successfully.");
 }
 
@@ -462,7 +462,7 @@ void evan::Renderer::recordCommandBuffer(VkRenderPass renderPass,
 
 	_ressourceManager->sync();
 
-	auto commandBuffer = _frames[_currentFrameIndex]._commandBuffer;
+	auto commandBuffer = _frames[_currentFrameIndex]->_commandBuffer;
 
 	VkCommandBufferBeginInfo beginInfo {};
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -515,8 +515,8 @@ void evan::Renderer::recordCommandBuffer(VkRenderPass renderPass,
 	this->getLogger().info("Iterating over meshes in the scene to record draw commands...");
 
 	for (const auto &mesh: scene.getMeshes()) {
-		this->getLogger().info("Processing mesh with material ID: " + std::to_string(mesh.getMaterialID()));
-		auto materialID = mesh.getMaterialID();
+		this->getLogger().info("Processing mesh with material ID: " + std::to_string(mesh->getMaterialID()));
+		auto materialID = mesh->getMaterialID();
 		auto material = _ressourceManager->getMaterial(materialID);
 
 		if (!material) {
@@ -532,32 +532,32 @@ void evan::Renderer::recordCommandBuffer(VkRenderPass renderPass,
 					_pipelines[correspondingPipelineID]);
 
 		VkDeviceSize offsets[] = { 0 };
-		VkBuffer vertexBuffer  = mesh.getVertexBuffer();
+		VkBuffer vertexBuffer  = mesh->getVertexBuffer();
 
-		this->getLogger().info("Binding vertex buffer for mesh...");
+		this->getLogger().info("Binding vertex buffer for ->..");
 
 		vkCmdBindVertexBuffers(commandBuffer, 0, 1, &vertexBuffer, offsets);
 
 		this->getLogger().info("Binding index buffer for mesh...");
 
-		vkCmdBindIndexBuffer(commandBuffer, mesh.getIndexBuffer(), 0,
+		vkCmdBindIndexBuffer(commandBuffer, mesh->getIndexBuffer(), 0,
 							 VK_INDEX_TYPE_UINT32);
 
-		if (!materialBound[mesh.getMaterialID()]) {
-			this->getLogger().info("Binding descriptor set for material ID: " + std::to_string(mesh.getMaterialID()));
-			materialBound[mesh.getMaterialID()] = true;
+		if (!materialBound[mesh->getMaterialID()]) {
+			this->getLogger().info("Binding descriptor set for material ID: " + std::to_string(mesh->getMaterialID()));
+			materialBound[mesh->getMaterialID()] = true;
 			vkCmdBindDescriptorSets(
 				commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, _pipelineLayouts[correspondingPipelineID],
 				0, 1,
 				&scene.getMaterials()
-					 .at(mesh.getMaterialID())
+					 .at(mesh->getMaterialID())
 					 ->getDescriptorSets()[_currentFrameIndex],
 				0, nullptr);
 		}
 
-		this->getLogger().info("Drawing indexed mesh with index count: " + std::to_string(mesh.getIndexCount()));
+		this->getLogger().info("Drawing indexed mesh with index count: " + std::to_string(mesh->getIndexCount()));
 
-		vkCmdDrawIndexed(commandBuffer, mesh.getIndexCount(), 1, 0, 0, 0);
+		vkCmdDrawIndexed(commandBuffer, mesh->getIndexCount(), 1, 0, 0, 0);
 	}
 
 	this->getLogger().info("All meshes processed. Ending render pass...");

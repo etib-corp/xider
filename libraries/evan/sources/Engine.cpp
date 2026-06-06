@@ -73,7 +73,7 @@ evan::Engine::~Engine()
 	_renderer->destroy(device);
 	_swapchainContext->destroy(device);
 	for (auto &[_, scene]: _scenes) {
-		scene.destroy(device);
+		scene->destroy(device);
 	}
 	_deviceContext.reset();
 	this->getLogger().info("Engine destroyed and resources cleaned up successfully.");
@@ -101,7 +101,7 @@ void evan::Engine::drawText(std::shared_ptr<utility::graphic::Text> text)
 	std::shared_ptr<RenderObject> textObject = std::make_shared<RenderObject>(_deviceContext, rawObjects, "text");
 
 	this->getLogger().info("Adding text RenderObject to current scene: " + std::to_string(_currentScene));
-	_scenes[_currentScene].addObject(_nextObjectID++, textObject);
+	_scenes[_currentScene]->addObject(_nextObjectID++, textObject);
 }
 
 void evan::Engine::drawPrimitive(std::shared_ptr<utility::graphic::Primitive> primitive)
@@ -122,9 +122,7 @@ void evan::Engine::addScene(size_t sceneIndex)
 {
 	this->getLogger().info("Adding new scene with index: " + std::to_string(sceneIndex));
 
-	Scene newScene = Scene();
-
-	_scenes.emplace(sceneIndex, std::move(newScene));
+	_scenes[sceneIndex] = std::make_shared<Scene>();
 	if (_scenes.size() == 1) {
 		_currentScene = sceneIndex;
 	}
@@ -155,7 +153,7 @@ void evan::Engine::render()
 	}
 
 	_renderer->drawFrame(*_deviceContext, *_swapchainContext,
-						 currentSceneIt->second);
+						 *currentSceneIt->second);
 }
 
 std::vector<std::unique_ptr<utility::event::Event>> evan::Engine::pollEvents()

@@ -42,9 +42,7 @@ evan::RenderObject::RenderObject(
 
         this->getLogger().info("Creating GPUMesh for mesh ID: " + std::to_string(id));
 
-		GPUMesh gpuMesh(deviceContext, gpuVertices, mesh.getIndices(), id);
-
-		_meshes.emplace_back(gpuMesh);
+		_meshes.emplace_back(std::make_shared<GPUMesh>(deviceContext, gpuVertices, mesh.getIndices(), id));
 	}
     this->getLogger().info("All meshes processed and GPU meshes created successfully.");
 }
@@ -61,8 +59,8 @@ evan::RenderObject::~RenderObject()
 void evan::RenderObject::destroy(VkDevice device)
 {
     this->getLogger().info("Destroying RenderObject resources for pipeline layer: " + _pipelineLayer);
-	for (GPUMesh &mesh: _meshes) {
-		mesh.destroy(device);
+	for (const auto &mesh: _meshes) {
+		mesh->destroy(device);
 	}
 }
 
@@ -70,7 +68,7 @@ void evan::RenderObject::destroy(VkDevice device)
 // Getters //
 /////////////
 
-const std::vector<evan::GPUMesh> &evan::RenderObject::getMeshes() const
+const std::vector<std::shared_ptr<evan::GPUMesh>> &evan::RenderObject::getMeshes() const
 {
 	return _meshes;
 }

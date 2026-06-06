@@ -220,7 +220,7 @@ namespace evan
 		 * this collection of frames to handle multiple frames in flight and to
 		 * ensure proper synchronization between rendering operations.
 		 */
-		std::vector<Frame> _frames;
+		std::vector<std::shared_ptr<Frame>> _frames;
 
 		/**
 		 * @brief The index of the current frame being rendered.

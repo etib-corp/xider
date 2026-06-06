@@ -59,7 +59,7 @@ namespace evan
 		 *
 		 * @return A constant reference to a vector of GPUMesh instances representing the meshes associated with this RenderObject. These GPUMesh instances can be used for rendering operations and contain the necessary GPU resources for rendering the meshes.
 		 */
-		[[nodiscard]] const std::vector<GPUMesh> &getMeshes() const;
+		[[nodiscard]] const std::vector<std::shared_ptr<GPUMesh>> &getMeshes() const;
 
 		/**
 		 * @brief Retrieves the pipeline layer associated with this RenderObject. The pipeline layer is a string that can be used to determine which shader program and rendering configurations should be applied when rendering this object. It can be used to group render objects with similar rendering requirements together for efficient batching and state management in the rendering process.
@@ -69,7 +69,7 @@ namespace evan
 		[[nodiscard]] std::string getPipelineLayer() const;
 
 		protected:
-        std::vector<GPUMesh> _meshes;	///< A vector of GPUMesh instances representing the meshes associated with this RenderObject. Each GPUMesh contains the necessary GPU resources for rendering a mesh that is part of this object.
+        std::vector<std::shared_ptr<GPUMesh>> _meshes;	///< A vector of GPUMesh instances representing the meshes associated with this RenderObject. Each GPUMesh contains the necessary GPU resources for rendering a mesh that is part of this object.
         std::string _pipelineLayer;		///< A string representing the pipeline layer associated with this RenderObject, which can be used to determine rendering configurations for this object during the rendering process. The pipeline layer can be used to group render objects with similar rendering requirements together for efficient batching and state management in the rendering process.
 	};
 }	 // namespace evan
