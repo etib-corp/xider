@@ -95,6 +95,28 @@ bool evan::XrDeviceBackend::preprocessFrame(ASwapchainContext &swapchainContext)
 				  << std::endl;
 		return false;
 	}
+
+	if (viewCount > 0) {
+		const XrView &view = views[0];
+		const float radToDeg = 180.0f / 3.14159265f;
+		utility::graphic::ViewF currentView;
+
+		utility::graphic::Position<float> position(
+			static_cast<float>(view.pose.position.x),
+			static_cast<float>(view.pose.position.y),
+			static_cast<float>(view.pose.position.z));
+		utility::graphic::Orientation<float> orientation(
+			static_cast<float>(view.pose.orientation.x),
+			static_cast<float>(view.pose.orientation.y),
+			static_cast<float>(view.pose.orientation.z),
+			static_cast<float>(view.pose.orientation.w));
+
+		currentView.setPose(utility::graphic::Pose<float>(position, orientation));
+		currentView.setFieldOfView(utility::graphic::FieldOfViewF(
+			view.fov.angleUp * radToDeg, view.fov.angleDown * radToDeg,
+			view.fov.angleLeft * radToDeg, view.fov.angleRight * radToDeg));
+		swapchainContext.setView(currentView);
+	}
 	return true;
 }
 

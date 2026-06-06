@@ -153,16 +153,6 @@ glm::mat4 evan::XrSwapchainContext::getProjection(int index) const
 	float nearZ		  = 0.1f;
 	float farZ		  = 10.0f;
 
-	// Update the view's field of view (convert from radians to degrees)
-	const float radToDeg = 180.0f / 3.14159265f;
-	_view.setFieldOfView(
-		utility::graphic::FieldOfView<float>(
-			fov.angleUp * radToDeg,	  // up
-			fov.angleDown * radToDeg, // down
-			fov.angleLeft * radToDeg, // left
-			fov.angleRight * radToDeg // right
-		));
-
 	float tanLeft  = tanf(fov.angleLeft);
 	float tanRight = tanf(fov.angleRight);
 	float tanUp	   = tanf(fov.angleUp);
@@ -186,39 +176,15 @@ glm::mat4 evan::XrSwapchainContext::getProjection(int index) const
 glm::mat4 evan::XrSwapchainContext::getView(int index) const
 {
 	const auto &pose = _views[index].pose;
-	const auto &fov = _views[index].fov;
-
-	// Update the view's pose and field of view
-	utility::graphic::Position<float> position(
-		static_cast<float>(pose.position.x),
-		static_cast<float>(pose.position.y),
-		static_cast<float>(pose.position.z));
-
-	utility::graphic::Orientation<float> orientation(
-		static_cast<float>(pose.orientation.x),
-		static_cast<float>(pose.orientation.y),
-		static_cast<float>(pose.orientation.z),
-		static_cast<float>(pose.orientation.w));
-
-	_view.setPose(
-		utility::graphic::Pose<float>(position, orientation));
-
-	// Also update field of view (convert from radians to degrees)
-	const float radToDeg = 180.0f / 3.14159265f;
-	_view.setFieldOfView(
-		utility::graphic::FieldOfView<float>(
-			fov.angleUp * radToDeg,	  // up
-			fov.angleDown * radToDeg, // down
-			fov.angleLeft * radToDeg, // left
-			fov.angleRight * radToDeg // right
-		));
 
 	const glm::quat orientation_glm(pose.orientation.w, pose.orientation.x,
-									 pose.orientation.y, pose.orientation.z);
-	const glm::vec3 position_glm(pose.position.x, pose.position.y, pose.position.z);
+									pose.orientation.y, pose.orientation.z);
+	const glm::vec3 position_glm(pose.position.x, pose.position.y,
+								 pose.position.z);
 
-	const glm::mat4 rotation	= glm::mat4_cast(glm::conjugate(orientation_glm));
-	const glm::mat4 translation = glm::translate(glm::mat4(1.0f), -position_glm);
+	const glm::mat4 rotation = glm::mat4_cast(glm::conjugate(orientation_glm));
+	const glm::mat4 translation =
+		glm::translate(glm::mat4(1.0f), -position_glm);
 
 	return rotation * translation;
 }
