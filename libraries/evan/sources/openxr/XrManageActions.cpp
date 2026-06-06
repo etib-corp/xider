@@ -10,6 +10,8 @@
 
 evan::XrManageActions::XrManageActions(XrDeviceBackend &deviceBackend)
 {
+	this->getLogger().info("Initializing XrManageActions");
+
 	createActionSet(deviceBackend);
 
 	_handsMotionActions =
@@ -32,12 +34,16 @@ evan::XrManageActions::XrManageActions(XrDeviceBackend &deviceBackend)
 
 evan::XrManageActions::~XrManageActions()
 {
+	this->getLogger().info("Destroying XrManageActions");
+
 	xrDestroyActionSet(_actionSet);
 }
 
 std::vector<std::unique_ptr<utility::event::Event>>
 	evan::XrManageActions::pollActions(XrDeviceBackend &deviceBackend)
 {
+	this->getLogger().debug("Polling actions from OpenXR runtime");
+
 	std::vector<std::unique_ptr<utility::event::Event>> events;
 
 	const XrActiveActionSet activeActionSet { _actionSet, XR_NULL_PATH };
@@ -47,7 +53,7 @@ std::vector<std::unique_ptr<utility::event::Event>>
 
 	XrResult result = xrSyncActions(deviceBackend._session, &syncInfo);
 	if (result != XR_SUCCESS) {
-		std::cerr << "Failed to sync actions: " << result << std::endl;
+		this->getLogger().error("Failed to sync actions: " + std::to_string(result));
 		return events;
 	}
 	auto handEvents = _handsMotionActions->getEvents(deviceBackend);
@@ -65,6 +71,8 @@ std::vector<std::unique_ptr<utility::event::Event>>
 
 void evan::XrManageActions::createActionSet(XrDeviceBackend &deviceBackend)
 {
+	this->getLogger().info("Creating main action set for XrManageActions");
+
 	XrActionSetCreateInfo actionSetInfo { XR_TYPE_ACTION_SET_CREATE_INFO };
 	std::strncpy(actionSetInfo.actionSetName, "gameplay",
 				 XR_MAX_ACTION_SET_NAME_SIZE);
@@ -75,13 +83,17 @@ void evan::XrManageActions::createActionSet(XrDeviceBackend &deviceBackend)
 	XrResult result = xrCreateActionSet(deviceBackend._XrInstance,
 										&actionSetInfo, &_actionSet);
 	if (result != XR_SUCCESS) {
-		throw std::runtime_error("Failed to create action set");
+		this->getLogger().error("Failed to create action set: " + std::to_string(result));
+		return;
 	}
+	this->getLogger().info("Successfully created main action set for XrManageActions");
 }
 
 void evan::XrManageActions::attachSessionActionSet(
 	XrDeviceBackend &deviceBackend)
 {
+	this->getLogger().info("Attaching action set to OpenXR session");
+
 	XrSessionActionSetsAttachInfo attachInfo {
 		XR_TYPE_SESSION_ACTION_SETS_ATTACH_INFO
 	};
@@ -91,13 +103,16 @@ void evan::XrManageActions::attachSessionActionSet(
 	XrResult result =
 		xrAttachSessionActionSets(deviceBackend._session, &attachInfo);
 	if (result != XR_SUCCESS) {
-		std::cerr << "Failed to attach action sets: " << result << std::endl;
-		throw std::runtime_error("Failed to attach action sets");
+		this->getLogger().error("Failed to attach action sets: " + std::to_string(result));
+		return;
 	}
+	this->getLogger().info("Successfully attached action set to OpenXR session");
 }
 
 void evan::XrManageActions::bindActionSets(XrDeviceBackend &deviceBackend)
 {
+	this->getLogger().info("Binding action sets to OpenXR interaction profile");
+
 	std::vector<XrActionSuggestedBinding> bindings {
 		{ _handsMotionActions->_handAimAction,
 		  InteractionProfile::stringToPath(deviceBackend._XrInstance,
@@ -155,8 +170,8 @@ void evan::XrManageActions::bindActionSets(XrDeviceBackend &deviceBackend)
 	XrResult result						= xrSuggestInteractionProfileBindings(
 		deviceBackend._XrInstance, &suggestedBindings);
 	if (result != XR_SUCCESS) {
-		std::cerr << "Failed to suggest interaction profile bindings: "
-				  << result << std::endl;
+		this->getLogger().error("Failed to suggest interaction profile bindings: " + std::to_string(result));
 		return;
 	}
+	this->getLogger().info("Successfully suggested interaction profile bindings");
 }
