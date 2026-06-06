@@ -39,4 +39,10 @@ namespace utility::graphic
 	{
 		return _indices;
 	}
+
+	void Mesh::reset(void)
+	{
+		_vertices.clear();
+		_indices.clear();
+	}
 }	 // namespace utility::graphic
