@@ -28,6 +28,9 @@ namespace xider
 		: _evanEngine(std::move(engine))
 		, guillaume::Engine()
 	{
+		if (_evanEngine) {
+			guillaume::Engine::setView(_evanEngine->getView());
+		}
 	}
 
 	Engine::~Engine(void)
@@ -48,6 +51,27 @@ namespace xider
 	size_t Engine::addMesh(const utility::graphic::Mesh &mesh)
 	{
 		return _evanEngine->addMesh(mesh);
+	}
+
+	bool Engine::removeObject(size_t objectID)
+	{
+		return _evanEngine->removeObject(objectID);
+	}
+
+	void Engine::setView(const utility::graphic::ViewF &view)
+	{
+		guillaume::Engine::setView(view);
+		if (_evanEngine) {
+			_evanEngine->setView(view);
+		}
+	}
+
+	utility::graphic::ViewF Engine::getView(void) const
+	{
+		if (_evanEngine) {
+			return _evanEngine->getView();
+		}
+		return guillaume::Engine::getView();
 	}
 
 	utility::math::Vector2F

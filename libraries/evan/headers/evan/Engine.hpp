@@ -19,6 +19,7 @@
 
 #include <utility/graphic/model.hpp>
 #include <utility/graphic/primitive.hpp>
+#include <utility/graphic/view.hpp>
 #include <utility/graphic/text/text.hpp>
 
 #include <utility/ressource_provider.hpp>
@@ -128,6 +129,25 @@ namespace evan
 		 * manipulation of the text object in the scene.
 		 */
 		size_t addText(std::shared_ptr<utility::graphic::Text> text);
+
+		/**
+		 * @brief Removes a previously added render object from the current scene.
+		 * @param objectID The identifier returned by addText or addMesh.
+		 * @return True when the object was removed from the scene.
+		 */
+		bool removeObject(size_t objectID);
+
+		/**
+		 * @brief Set the mirrored view state.
+		 * @param view The new view.
+		 */
+		void setView(const utility::graphic::ViewF &view);
+
+		/**
+		 * @brief Get the mirrored view state.
+		 * @return The current view.
+		 */
+		utility::graphic::ViewF getView(void) const;
 
 		/**
 		 * @brief Adds a primitive object to the scene. This method takes a

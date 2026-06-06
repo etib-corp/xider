@@ -28,7 +28,7 @@ void evan::Engine::initializeAssetManager(void *platformAssetManager)
 evan::Engine::Engine(
 	std::shared_ptr<utility::RessourceProvider> ressourceProvider,
 	std::shared_ptr<IPlatform> platform)
-	: _platform(platform), _ressourceProvider(ressourceProvider)
+	: _platform(platform), _ressourceProvider(ressourceProvider), _view()
 {
 	if (!g_systemIO) {
 #ifdef __ANDROID__
@@ -136,6 +136,25 @@ size_t evan::Engine::addMesh(const utility::graphic::Mesh &mesh)
 	auto objectID = _scenes[_currentScene].addObject(_nextObjectID++, meshObject);
 	_ressourceManager->sync();
 	return objectID;
+}
+
+bool evan::Engine::removeObject(size_t objectID)
+{
+	auto currentSceneIt = _scenes.find(_currentScene);
+	if (currentSceneIt == _scenes.end()) {
+		return false;
+	}
+	return currentSceneIt->second.removeObject(static_cast<uint32_t>(objectID));
+}
+
+void evan::Engine::setView(const utility::graphic::ViewF &view)
+{
+	
+}
+
+utility::graphic::ViewF evan::Engine::getView(void) const
+{
+
 }
 
 void evan::Engine::addScene(size_t sceneIndex)

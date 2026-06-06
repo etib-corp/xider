@@ -137,6 +137,14 @@ namespace guillaume
 		virtual size_t addMesh(const utility::graphic::Mesh &mesh) = 0;
 
 		/**
+		 * @brief Remove a previously added render object.
+		 *
+		 * @param objectID The identifier returned by addMesh/addText.
+		 * @return True when the object was removed.
+		 */
+		virtual bool removeObject(size_t objectID) = 0;
+
+		/**
 		 * @brief Measures the pixel dimensions of a given text string when
 		 * rendered with a specific font.
 		 * @param text The text to measure.
@@ -160,13 +168,13 @@ namespace guillaume
 		 * @param view The new view instance.
 		 * @note Synchronizes cached orientation and last mouse ray.
 		 */
-		void setView(const utility::graphic::ViewF &view);
+		virtual void setView(const utility::graphic::ViewF &view);
 
 		/**
 		 * @brief Get the full view model.
 		 * @return The view instance.
 		 */
-		utility::graphic::ViewF getView(void) const;
+		virtual utility::graphic::ViewF getView(void) const;
 
 		/**
 		 * @brief Add a scene to the renderer.

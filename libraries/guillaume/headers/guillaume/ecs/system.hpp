@@ -166,6 +166,22 @@ namespace guillaume::ecs
 		 */
 		virtual void
 			update(const ecs::Entity::Identifier &entityIdentifier) = 0;
+
+		/**
+		 * @brief Called once per frame before entity processing begins.
+		 * Use this to perform per-frame setup for the system.
+		 */
+		virtual void prepare(void)
+		{
+		}
+
+		/**
+		 * @brief Called once per frame after entity processing finishes.
+		 * Use this to perform per-frame cleanup for the system.
+		 */
+		virtual void cleanup(void)
+		{
+		}
 	};
 
 	/**

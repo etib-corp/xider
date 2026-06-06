@@ -240,12 +240,13 @@ namespace utility::graphic
 		/**
 		 * @brief Equality comparison.
 		 * @param other Text object to compare with.
-		 * @return True when all properties are equal.
+		 * @return True when the visible text state is equal.
 		 */
 		bool operator==(const Text &other) const
 		{
 			return _content == other._content && _fontPath == other._fontPath
-				&& _fontSize == other._fontSize && _color == other._color;
+				&& _fontSize == other._fontSize && _color == other._color
+				&& _pose == other._pose;
 		}
 
 		/**

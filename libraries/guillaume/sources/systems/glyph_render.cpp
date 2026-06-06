@@ -26,6 +26,27 @@
 
 namespace guillaume::systems
 {
+	void GlyphRender::prepare(void)
+	{
+		for (auto &[_, entry]: _cache) {
+			entry.used = false;
+		}
+	}
+
+	void GlyphRender::cleanup(void)
+	{
+		for (auto it = _cache.begin(); it != _cache.end();) {
+			if (it->second.used) {
+				++it;
+				continue;
+			}
+			if (it->second.objectId != 0) {
+				_renderer->removeObject(it->second.objectId);
+			}
+			it = _cache.erase(it);
+		}
+	}
+
 	namespace
 	{
 		std::string codePointToUtf8(uint32_t codePoint)
@@ -108,12 +129,29 @@ namespace guillaume::systems
 
 		const uint32_t glyphCode =
 			_glyphCode.count(glyphName) > 0 ? _glyphCode[glyphName] : '?';
+		auto &cacheEntry = _cache[entityIdentifier];
+		cacheEntry.used = true;
+
 		utility::graphic::Text glyphText(
 			_ressourceProvider, _systemIO, codePointToUtf8(glyphCode),
 			boundComponent.getHeight(), _defaultFontPath);
 		glyphText.setColor(colorComponent.getColor());
+		const auto pose = transformComponent.getPose();
 
-		_renderer->addText(glyphText, transformComponent.getPose());
+		if (cacheEntry.objectId != 0 && cacheEntry.text.has_value()
+			&& *cacheEntry.text == glyphText
+			&& cacheEntry.pose == pose) {
+			return;
+		}
+
+		if (cacheEntry.objectId != 0) {
+			_renderer->removeObject(cacheEntry.objectId);
+		}
+
+		cacheEntry.objectId = _renderer->addText(glyphText, pose);
+		cacheEntry.text = glyphText;
+		cacheEntry.pose = pose;
+
 	}
 
 	void GlyphRender::loadGlyphCodes(const std::string &filePath)

@@ -27,6 +27,27 @@
 
 namespace guillaume::systems
 {
+	void RectangleRender::prepare(void)
+	{
+		for (auto &[_, entry]: _cache) {
+			entry.used = false;
+		}
+	}
+
+	void RectangleRender::cleanup(void)
+	{
+		for (auto it = _cache.begin(); it != _cache.end();) {
+			if (it->second.used) {
+				++it;
+				continue;
+			}
+			if (it->second.objectId != 0) {
+				_engine->removeObject(it->second.objectId);
+			}
+			it = _cache.erase(it);
+		}
+	}
+
 	utility::graphic::PositionD RectangleRender::rotatePositionByQuaternion(
 		const utility::graphic::PositionD &position,
 		const utility::graphic::OrientationF &orientation) const
@@ -173,19 +194,20 @@ namespace guillaume::systems
 	}
 
 	void RectangleRender::buildTriangleFanVertices(
+		utility::graphic::Mesh &mesh,
 		const utility::graphic::PositionD &center,
 		const std::vector<utility::graphic::PositionD> &outline,
 		const utility::graphic::Color32Bit &color)
 	{
 
 		// OpenGL triangle fan expects the first vertex to be the fan anchor.
-		_meshes.addVertex(createVertex(center, color));
+		mesh.addVertex(createVertex(center, color));
 		for (const auto &outlineVertex: outline) {
-			_meshes.addVertex(createVertex(outlineVertex, color));
+			mesh.addVertex(createVertex(outlineVertex, color));
 		}
 
 		if (!outline.empty()) {
-			_meshes.addVertex(createVertex(outline.front(), color));
+			mesh.addVertex(createVertex(outline.front(), color));
 		}
 	}
 
@@ -203,7 +225,7 @@ namespace guillaume::systems
 		: ecs::SystemFiller<components::Transform, components::Bound,
 							components::Color, components::Borders>(
 			  ecs::Phase::Render)
-		, _engine(engine), _meshes({}, {})
+		, _engine(engine)
 	{
 	}
 
@@ -240,6 +262,8 @@ namespace guillaume::systems
 		const auto height	   = boundComponent.getHeight();
 		const auto color	   = colorComponent.getColor();
 		const float radius	   = extractAverageRadius(bordersComponent);
+		auto &cacheEntry = _cache[entityIdentifier];
+		cacheEntry.used = true;
 
 		const utility::graphic::PositionD center(
 			position[0], position[1] - (height / 2.0f), position[2]);
@@ -247,10 +271,20 @@ namespace guillaume::systems
 			center, orientation, utility::math::Vector2F({ 1.0f, 1.0f }),
 			utility::math::Vector2F({ (float)width, (float)height }), radius);
 
-		_meshes.reset();
-		buildTriangleFanVertices(center, roundedVertices, color);
+		utility::graphic::Mesh mesh(std::vector<utility::graphic::VertexD> {},
+								std::vector<uint32_t> {});
+		buildTriangleFanVertices(mesh, center, roundedVertices, color);
 
-		_engine->addMesh(_meshes);
+		if (cacheEntry.mesh.has_value() && *cacheEntry.mesh == mesh) {
+			return;
+		}
+
+		if (cacheEntry.objectId != 0) {
+			_engine->removeObject(cacheEntry.objectId);
+		}
+
+		cacheEntry.objectId = _engine->addMesh(mesh);
+		cacheEntry.mesh = mesh;
 	}
 
 }	 // namespace guillaume::systems

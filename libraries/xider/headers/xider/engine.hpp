@@ -79,6 +79,20 @@ namespace xider
 		size_t addMesh(const utility::graphic::Mesh &mesh) override;
 
 		/**
+		 * @brief Synchronizes the view across Guillaume and Evan.
+		 * @param view The view to apply.
+		 */
+		void setView(const utility::graphic::ViewF &view) override;
+
+		/**
+		 * @brief Returns the mirrored view state.
+		 * @return The current view.
+		 */
+		utility::graphic::ViewF getView(void) const override;
+
+		bool removeObject(size_t objectID) override;
+
+		/**
 		 * @brief Draws text at the specified position.
 		 * @param text The text to render.
 		 * @param pose The position and orientation for the text.

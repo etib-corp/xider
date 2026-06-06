@@ -26,6 +26,26 @@
 
 namespace guillaume::systems
 {
+	void TextRender::prepare(void)
+	{
+		for (auto &[_, entry]: _cache) {
+			entry.used = false;
+		}
+	}
+
+	void TextRender::cleanup(void)
+	{
+		for (auto it = _cache.begin(); it != _cache.end();) {
+			if (it->second.used) {
+				++it;
+				continue;
+			}
+			if (it->second.objectId != 0) {
+				_renderer->removeObject(it->second.objectId);
+			}
+			it = _cache.erase(it);
+		}
+	}
 
 	TextRender::TextRender(
 		std::shared_ptr<utility::RessourceProvider> ressourceProvider,
@@ -62,12 +82,29 @@ namespace guillaume::systems
 		const auto &colorComponent =
 			getComponent<components::Color>(entityIdentifier);
 
+		auto &cacheEntry = _cache[entityIdentifier];
+		cacheEntry.used = true;
+
 		utility::graphic::Text text(
 			_ressourceProvider, _systemIO, textComponent.getContent(),
 			textComponent.getFontSize(), _defaultFontPath);
 		text.setColor(colorComponent.getColor());
+		const auto pose = transformComponent.getPose();
 
-		_renderer->addText(text, transformComponent.getPose());
+		if (cacheEntry.objectId != 0 && cacheEntry.text.has_value()
+			&& *cacheEntry.text == text
+			&& cacheEntry.pose == pose) {
+			return;
+		}
+
+		if (cacheEntry.objectId != 0) {
+			_renderer->removeObject(cacheEntry.objectId);
+		}
+
+		cacheEntry.objectId = _renderer->addText(text, pose);
+		cacheEntry.text = text;
+		cacheEntry.pose = pose;
+
 	}
 
 }	 // namespace guillaume::systems

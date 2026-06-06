@@ -53,6 +53,11 @@ namespace
 		void present(void) override
 		{
 		}
+		bool removeObject(size_t objectID) override
+		{
+			(void)objectID;
+			return true;
+		}
 		void drawVertices(
 			const std::vector<utility::graphic::VertexF> &vertices) override
 		{

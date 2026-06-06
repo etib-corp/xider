@@ -22,6 +22,9 @@
 
 #pragma once
 
+#include <map>
+#include <optional>
+
 #include "guillaume/ecs/system_filler.hpp"
 
 #include "guillaume/components/borders.hpp"
@@ -46,9 +49,16 @@ namespace guillaume::systems
 								 components::Color, components::Borders>
 	{
 		private:
+		struct CacheEntry
+		{
+			std::optional<utility::graphic::Mesh> mesh;
+			size_t objectId { 0 };
+			bool used { false };
+		};
+
+		private:
 		std::unique_ptr<Engine> &_engine;	 ///< Engine instance
-		utility::graphic::Mesh _meshes;	 ///< Meshes used for rendering rectangles
-						  ///< allocations.
+		std::map<ecs::Entity::Identifier, CacheEntry> _cache;
 
 		private:
 		/**
@@ -146,6 +156,7 @@ namespace guillaume::systems
 		 * @note This method appends into the internal _vertices buffer.
 		 */
 		void buildTriangleFanVertices(
+			utility::graphic::Mesh &mesh,
 			const utility::graphic::PositionD &center,
 			const std::vector<utility::graphic::PositionD> &outline,
 			const utility::graphic::Color32Bit &color);
@@ -178,6 +189,8 @@ namespace guillaume::systems
 		 */
 		virtual void
 			update(const ecs::Entity::Identifier &entityIdentifier) override;
+		void prepare(void) override;
+		void cleanup(void) override;
 	};
 
 }	 // namespace guillaume::systems
