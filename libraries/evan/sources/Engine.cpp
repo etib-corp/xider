@@ -28,7 +28,7 @@ void evan::Engine::initializeAssetManager(void *platformAssetManager)
 evan::Engine::Engine(
 	std::shared_ptr<utility::RessourceProvider> ressourceProvider,
 	std::shared_ptr<IPlatform> platform)
-	: _platform(platform), _ressourceProvider(ressourceProvider), _view()
+	: _platform(platform), _ressourceProvider(ressourceProvider)
 {
 	if (!g_systemIO) {
 #ifdef __ANDROID__
@@ -149,12 +149,12 @@ bool evan::Engine::removeObject(size_t objectID)
 
 void evan::Engine::setView(const utility::graphic::ViewF &view)
 {
-	
+	_swapchainContext->setView(view);
 }
 
 utility::graphic::ViewF evan::Engine::getView(void) const
 {
-
+	return _swapchainContext->getView();
 }
 
 void evan::Engine::addScene(size_t sceneIndex)

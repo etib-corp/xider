@@ -145,3 +145,13 @@ VkFormat evan::ASwapchainContext::findSupportedFormat(
 
 	throw std::runtime_error("failed to find supported format!");
 }
+
+void evan::ASwapchainContext::setView(const utility::graphic::ViewF &view)
+{
+	_view = view;
+}
+
+utility::graphic::ViewF evan::ASwapchainContext::getView(void) const
+{
+	return _view;
+}

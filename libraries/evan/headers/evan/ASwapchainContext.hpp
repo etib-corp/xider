@@ -11,6 +11,8 @@
 #include "evan/ADeviceBackend.hpp"
 #include "evan/ASwapchainImage.hpp"
 
+#include <utility/graphic/view.hpp>
+
 #include <map>
 #include <memory>
 #include <iostream>
@@ -191,6 +193,37 @@ namespace evan
 		virtual glm::mat4 getView(int index) const = 0;
 
 		/**
+		 * @brief Sets the view state for the swapchain context.
+		 *
+		 * This function allows setting the view state for the swapchain context
+		 * using a utility::graphic::ViewF object. The view state includes
+		 * parameters such as the camera position, orientation, and field of
+		 * view, which are essential for rendering operations. Implement this
+		 * function to enable users to configure the view state for the swapchain
+		 * context according to their rendering needs.
+		 *
+		 * @param view A utility::graphic::ViewF object representing the view
+		 * state to be set for the swapchain context.
+		 */
+		void setView(const utility::graphic::ViewF &view);
+
+		/**
+		 * @brief Retrieves the current view state for the swapchain context.
+		 *
+		 * This function returns the current view state for the swapchain context
+		 * as a utility::graphic::ViewF object. The view state includes
+		 * parameters such as the camera position, orientation, and field of
+		 * view, which are essential for rendering operations. Implement this
+		 * function to allow users to access the current view state of the
+		 * swapchain context for use in rendering calculations or for updating
+		 * the view state as needed.
+		 *
+		 * @return The current view state for the swapchain context as a
+		 * utility::graphic::ViewF object.
+		 */
+		utility::graphic::ViewF getView(void) const;
+
+		/**
 		 * @brief Retrieves the projection matrix for the specified image index
 		 * in the swapchain.
 		 *
@@ -336,6 +369,11 @@ namespace evan
 									 const std::vector<VkFormat> &candidates,
 									 VkImageTiling tiling,
 									 VkFormatFeatureFlags features);
+
+		/**
+		 * @brief View state for the swapchain context
+		 */
+		utility::graphic::ViewF _view;
 
 		private:
 	};
