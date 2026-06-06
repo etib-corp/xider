@@ -20,39 +20,34 @@
  SOFTWARE.
  */
 
-#include "guillaume/renderer.hpp"
+#include "guillaume/event_handler.hpp"
 
 namespace guillaume
 {
-	Renderer::Renderer(std::shared_ptr<utility::RessourceProvider> ressourceProvider)
-		: Loggable()
-		, _ressourceProvider(ressourceProvider)
+
+	EventHandler::EventHandler(void)
+		: _gotNewEvents(false)
 	{
 	}
 
-	void Renderer::setView(const utility::graphic::ViewF &view)
+	EventHandler::Handler &EventHandler::getEventCallback(void)
 	{
-		_view = view;
+		return _callback;
 	}
 
-	/**
-	 * @brief Get the full view model.
-	 * @return The view instance.
-	 */
-	utility::graphic::ViewF Renderer::getView(void) const
+	void EventHandler::setGotNewEvents(bool gotNewEvents)
 	{
-		return _view;
+		_gotNewEvents = gotNewEvents;
 	}
 
-	std::shared_ptr<utility::RessourceProvider> Renderer::getRessourceProvider(void)
+	void EventHandler::setEventCallback(const Handler &callback)
 	{
-		return _ressourceProvider;
+		_callback = callback;
 	}
 
-	std::shared_ptr<utility::DefaultSystemIO> Renderer::getSystemIO(void)
+	bool EventHandler::gotNewEvents(void) const
 	{
-		return _systemIO;
+		return _gotNewEvents;
 	}
-
 
 }	 // namespace guillaume

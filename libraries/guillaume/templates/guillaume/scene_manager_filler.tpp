@@ -30,6 +30,10 @@ namespace guillaume
 	SceneManagerFiller<SceneTypes...>::SceneManagerFiller(void)
 		: SceneManager()
 	{
+		if constexpr (sizeof...(SceneTypes) == 0) {
+			throw std::invalid_argument(
+				"SceneManagerFiller requires at least one scene type");
+		}
 		(addScene<SceneTypes>(), ...);
 	}
 

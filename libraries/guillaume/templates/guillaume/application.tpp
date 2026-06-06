@@ -27,12 +27,8 @@
 namespace guillaume
 {
 
-	template<InheritFromRenderer RendererType,
-			 event::InheritFromEventHandler EventHandlerType,
-			 InheritFromScene... SceneTypes>
-	template<typename PhaseType>
-	void Application<RendererType, EventHandlerType, SceneTypes...>::runPhase(
-		PhaseType &phaseDefinition)
+	template<InheritFromScene... SceneTypes> template<typename PhaseType>
+	void Application<SceneTypes...>::runPhase(PhaseType &phaseDefinition)
 	{
 		const ecs::Phase phase					= phaseDefinition.getPhase();
 		const ecs::EntityTreeTraveler &traveler = phaseDefinition.getTraveler();
@@ -47,18 +43,16 @@ namespace guillaume
 								+ std::to_string(static_cast<int>(phase)));
 	}
 
-	template<InheritFromRenderer RendererType,
-			 event::InheritFromEventHandler EventHandlerType,
-			 InheritFromScene... SceneTypes>
-	void Application<RendererType, EventHandlerType,
-					 SceneTypes...>::registerCoreSystems()
+	template<InheritFromScene... SceneTypes>
+	void Application<SceneTypes...>::registerCoreSystems()
 	{
 		_systemRegistry.registerNewSystem(
-			std::make_unique<systems::MeasureText>(_renderer));
+			std::make_unique<systems::MeasureText>(_ressourceProvider,
+												   _systemIO, _engine));
 		_systemRegistry.registerNewSystem(
-			std::make_unique<systems::MouseMotion>(_eventBus, _renderer));
+			std::make_unique<systems::MouseMotion>(_eventBus, _engine));
 		_systemRegistry.registerNewSystem(
-			std::make_unique<systems::MouseButton>(_eventBus, _renderer));
+			std::make_unique<systems::MouseButton>(_eventBus, _engine));
 		_systemRegistry.registerNewSystem(
 			std::make_unique<systems::HandMotion>(_eventBus));
 		_systemRegistry.registerNewSystem(
@@ -75,100 +69,56 @@ namespace guillaume
 			std::make_unique<systems::HandThumbStick>(_eventBus));
 		_systemRegistry.registerNewSystem(
 			std::make_unique<systems::HandTrigger>(_eventBus));
+		_systemRegistry.registerNewSystem(std::make_unique<systems::TextRender>(
+			_ressourceProvider, _systemIO, _engine));
 		_systemRegistry.registerNewSystem(
-			std::make_unique<systems::TextRender>(_renderer));
-		_systemRegistry.registerNewSystem(
-			std::make_unique<systems::GlyphRender>(_renderer));
+			std::make_unique<systems::GlyphRender>(_ressourceProvider,
+												   _systemIO, _engine));
 		_systemRegistry.registerNewSystem(
 			std::make_unique<systems::KeyboardControl>(_eventBus));
 		_systemRegistry.registerNewSystem(
 			std::make_unique<systems::TextInput>(_eventBus));
 		_systemRegistry.registerNewSystem(
-			std::make_unique<systems::RectangleRender>(_renderer));
+			std::make_unique<systems::RectangleRender>(_engine));
 	}
 
-	template<InheritFromRenderer RendererType,
-			 event::InheritFromEventHandler EventHandlerType,
-			 InheritFromScene... SceneTypes>
-	Application<RendererType, EventHandlerType, SceneTypes...>::Application(
-		void)
+	template<InheritFromScene... SceneTypes>
+	Application<SceneTypes...>::Application(void)
 		: _ressourceProvider(std::make_shared<utility::RessourceProvider>())
-		, _renderer(_ressourceProvider)
-		, _eventHandler()
+		, _systemIO(std::make_shared<utility::DefaultSystemIO>())
+		, _engine(nullptr)
 		, _sceneManager(nullptr)
 		, _eventBus()
+		, _quitEventSubscriber(_eventBus)
 		, _systemRegistry()
 		, _systemPhases()
 	{
 		registerCoreSystems();
-		_eventHandler.setEventCallback(
-			[this](std::unique_ptr<utility::event::Event> &event) {
-				this->_eventBus.publish(std::move(event));
-			});
 		_sceneManager = std::make_unique<SceneManagerFiller<SceneTypes...>>();
 	}
 
-	template<InheritFromRenderer RendererType,
-			 event::InheritFromEventHandler EventHandlerType,
-			 InheritFromScene... SceneTypes>
-	Application<RendererType, EventHandlerType, SceneTypes...>::~Application(
-		void)
+	template<InheritFromScene... SceneTypes>
+	Application<SceneTypes...>::~Application(void)
 	{
 	}
 
-	template<InheritFromRenderer RendererType,
-			 event::InheritFromEventHandler EventHandlerType,
-			 InheritFromScene... SceneTypes>
-	void Application<RendererType, EventHandlerType, SceneTypes...>::setRenderer(RendererType renderer)
+	template<InheritFromScene... SceneTypes>
+	void Application<SceneTypes...>::setEngine(std::unique_ptr<Engine> engine)
 	{
-		std::destroy_at(std::addressof(_renderer));
-		std::construct_at(std::addressof(_renderer), std::move(renderer));
+		_engine = std::move(engine);
+		_engine->setEventCallback(
+			[this](std::unique_ptr<utility::event::Event> &event) {
+				this->_eventBus.publish(std::move(event));
+			});
+		std::vector<std::type_index> sceneTypes =
+			_sceneManager->getRegisteredSceneTypes();
+		for (const auto &sceneType: sceneTypes) {
+			_engine->addScene(sceneType.hash_code());
+		}
 	}
 
-	template<InheritFromRenderer RendererType,
-			 event::InheritFromEventHandler EventHandlerType,
-			 InheritFromScene... SceneTypes>
-	RendererType &
-		Application<RendererType, EventHandlerType, SceneTypes...>::getRenderer(
-			void)
-	{
-		return _renderer;
-	}
-
-	template<InheritFromRenderer RendererType,
-			 event::InheritFromEventHandler EventHandlerType,
-			 InheritFromScene... SceneTypes>
-	const RendererType &
-		Application<RendererType, EventHandlerType, SceneTypes...>::getRenderer(
-			void) const
-	{
-		return _renderer;
-	}
-
-	template<InheritFromRenderer RendererType,
-			 event::InheritFromEventHandler EventHandlerType,
-			 InheritFromScene... SceneTypes>
-	EventHandlerType &Application<RendererType, EventHandlerType,
-								  SceneTypes...>::getEventHandler(void)
-	{
-		return _eventHandler;
-	}
-
-	template<InheritFromRenderer RendererType,
-			 event::InheritFromEventHandler EventHandlerType,
-			 InheritFromScene... SceneTypes>
-	const EventHandlerType &
-		Application<RendererType, EventHandlerType,
-					SceneTypes...>::getEventHandler(void) const
-	{
-		return _eventHandler;
-	}
-
-	template<InheritFromRenderer RendererType,
-			 event::InheritFromEventHandler EventHandlerType,
-			 InheritFromScene... SceneTypes>
-	void Application<RendererType, EventHandlerType, SceneTypes...>::routine(
-		void)
+	template<InheritFromScene... SceneTypes>
+	void Application<SceneTypes...>::routine(void)
 	{
 		std::apply(
 			[this](auto &...phaseDefinition) {
@@ -177,65 +127,53 @@ namespace guillaume
 			_systemPhases);
 	}
 
-	template<InheritFromRenderer RendererType,
-			 event::InheritFromEventHandler EventHandlerType,
-			 InheritFromScene... SceneTypes>
-	void Application<RendererType, EventHandlerType, SceneTypes...>::pollEvents(
-		void)
+	template<InheritFromScene... SceneTypes>
+	void Application<SceneTypes...>::pollEvents(void)
 	{
-		_eventHandler.pollEvents();
+		_engine->pollEvents();
 	}
 
-	template<InheritFromRenderer RendererType,
-			 event::InheritFromEventHandler EventHandlerType,
-			 InheritFromScene... SceneTypes>
-	void Application<RendererType, EventHandlerType, SceneTypes...>::clear(void)
+	template<InheritFromScene... SceneTypes>
+	void Application<SceneTypes...>::clear(void)
 	{
-		_renderer.clear();
+		_engine->clear();
 	}
 
-	template<InheritFromRenderer RendererType,
-			 event::InheritFromEventHandler EventHandlerType,
-			 InheritFromScene... SceneTypes>
-	void Application<RendererType, EventHandlerType, SceneTypes...>::present(
-		void)
+	template<InheritFromScene... SceneTypes>
+	void Application<SceneTypes...>::present(void)
 	{
-		_renderer.present();
+		_engine->present();
 	}
 
-	template<InheritFromRenderer RendererType,
-			 event::InheritFromEventHandler EventHandlerType,
-			 InheritFromScene... SceneTypes>
-	bool Application<RendererType, EventHandlerType,
-					 SceneTypes...>::gotNewEvents(void) const
+	template<InheritFromScene... SceneTypes>
+	bool Application<SceneTypes...>::gotNewEvents(void) const
 	{
-		return _eventHandler.gotNewEvents();
+		return _engine->gotNewEvents();
 	}
 
-	template<InheritFromRenderer RendererType,
-			 event::InheritFromEventHandler EventHandlerType,
-			 InheritFromScene... SceneTypes>
-	bool Application<RendererType, EventHandlerType, SceneTypes...>::shouldQuit(
-		void) const
+	template<InheritFromScene... SceneTypes>
+	bool Application<SceneTypes...>::shouldQuit(void)
 	{
-		return _eventHandler.shouldQuit();
+		if (_quitEventSubscriber.hasPendingEvents()) {
+			_quitEventSubscriber.getNextEvent();
+			return true;
+		}
+		return false;
 	}
 
-	template<InheritFromRenderer RendererType,
-			 event::InheritFromEventHandler EventHandlerType,
-			 InheritFromScene... SceneTypes>
-	int Application<RendererType, EventHandlerType, SceneTypes...>::run(void)
+	template<InheritFromScene... SceneTypes>
+	int Application<SceneTypes...>::run(void)
 	{
 		this->getLogger().info("Entering main loop");
-		while (!_eventHandler.shouldQuit()) {
+		while (!shouldQuit()) {
 			try {
-				_eventHandler.pollEvents();
-				if (!_eventHandler.gotNewEvents()) {
+				_engine->pollEvents();
+				if (!_engine->gotNewEvents()) {
 					continue;
 				}
-				_renderer.clear();
+				_engine->clear();
 				routine();
-				_renderer.present();
+				_engine->present();
 			} catch (const std::exception &exception) {
 				this->getLogger().error(std::string("Application error: ")
 										+ exception.what());

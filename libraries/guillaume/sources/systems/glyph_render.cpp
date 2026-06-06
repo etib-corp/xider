@@ -56,11 +56,16 @@ namespace guillaume::systems
 		}
 	}	 // namespace
 
-	GlyphRender::GlyphRender(Renderer &renderer)
+	GlyphRender::GlyphRender(
+		std::shared_ptr<utility::RessourceProvider> ressourceProvider,
+		std::shared_ptr<utility::SystemIO> systemIO,
+		std::unique_ptr<Engine> &engine)
 		: ecs::SystemFiller<components::Transform, components::Bound,
 							components::Glyph, components::Color>(
 			  ecs::Phase::Render)
-		, _renderer(renderer)
+		, _ressourceProvider(ressourceProvider)
+		, _systemIO(systemIO)
+		, _renderer(engine)
 		, _defaultFontPath(
 			  "assets/fonts/Material_Symbols_Outlined/"
 			  "MaterialSymbolsOutlined-VariableFont_FILL,GRAD,opsz,wght.ttf")
@@ -104,14 +109,11 @@ namespace guillaume::systems
 		const uint32_t glyphCode =
 			_glyphCode.count(glyphName) > 0 ? _glyphCode[glyphName] : '?';
 		utility::graphic::Text glyphText(
-			_renderer.getRessourceProvider(),
-			_renderer.getSystemIO(),
-			codePointToUtf8(glyphCode),
-			boundComponent.getHeight(),
-			_defaultFontPath);
+			_ressourceProvider, _systemIO, codePointToUtf8(glyphCode),
+			boundComponent.getHeight(), _defaultFontPath);
 		glyphText.setColor(colorComponent.getColor());
 
-		_renderer.drawText(glyphText, transformComponent.getPose());
+		_renderer->drawText(glyphText, transformComponent.getPose());
 	}
 
 	void GlyphRender::loadGlyphCodes(const std::string &filePath)

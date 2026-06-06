@@ -24,4 +24,4 @@
 
 namespace guillaume::tests
 {
-}	 // namespace guillaume::tests
+}   // namespace guillaume::tests

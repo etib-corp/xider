@@ -30,7 +30,7 @@
 #include "guillaume/components/text.hpp"
 #include "guillaume/components/transform.hpp"
 
-#include "guillaume/renderer.hpp"
+#include "guillaume/engine.hpp"
 
 namespace guillaume::systems
 {
@@ -45,16 +45,28 @@ namespace guillaume::systems
 		public ecs::SystemFiller<components::Text, components::Bound>
 	{
 		private:
-		Renderer &_renderer;	///< Renderer instance
+		std::shared_ptr<utility::RessourceProvider>
+			_ressourceProvider;	   ///< Shared resource provider for loading
+								   ///< fonts and glyphs
+		std::shared_ptr<utility::SystemIO>
+			_systemIO;	  ///< Shared system IO for file operations
+		std::unique_ptr<Engine>
+			&_renderer;	   ///< Engine instance for text measurement
 		std::string
 			_defaultFontPath;	 ///< Default font used for text measurement
 
 		public:
 		/**
 		 * @brief Construct a text measuring system.
-		 * @param renderer The renderer used to measure text.
+		 * @param ressourceProvider Shared resource provider for loading fonts
+		 * and glyphs.
+		 * @param systemIO Shared system IO for file operations.
+		 * @param engine The engine used to measure text.
 		 */
-		MeasureText(Renderer &renderer);
+		MeasureText(
+			std::shared_ptr<utility::RessourceProvider> ressourceProvider,
+			std::shared_ptr<utility::SystemIO> systemIO,
+			std::unique_ptr<Engine> &engine);
 
 		/**
 		 * @brief Default destructor.

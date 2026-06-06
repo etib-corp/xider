@@ -20,45 +20,69 @@
  SOFTWARE.
  */
 
-#include "guillaume/event/event_handler.hpp"
+#include "xider/engine.hpp"
 
-namespace guillaume::event
+namespace xider
 {
-
-	EventHandler::EventHandler(void)
-		: _shouldQuit(false)
-		, _gotNewEvents(false)
+	Engine::Engine(std::unique_ptr<evan::Engine> engine)
+		: _evanEngine(std::move(engine))
+		, guillaume::Engine()
 	{
 	}
 
-	EventHandler::Handler &EventHandler::getEventCallback(void)
+	Engine::~Engine(void)
 	{
-		return _callback;
 	}
 
-	void EventHandler::setShouldQuit(bool shouldQuit)
+	void Engine::clear(void)
 	{
-		_shouldQuit = shouldQuit;
 	}
 
-	void EventHandler::setGotNewEvents(bool gotNewEvents)
+	void Engine::present(void)
 	{
-		_gotNewEvents = gotNewEvents;
+		if (_evanEngine) {
+			_evanEngine->render();
+		}
 	}
 
-	void EventHandler::setEventCallback(const Handler &callback)
+	void Engine::drawVertices(
+		const std::vector<utility::graphic::VertexF> &vertices)
 	{
-		_callback = callback;
+		(void)vertices;
 	}
 
-	bool EventHandler::shouldQuit(void) const
+	utility::math::Vector2F
+		Engine::measureText(const utility::graphic::Text &text)
 	{
-		return _shouldQuit;
+		return { 0.0f, 0.0f };
 	}
 
-	bool EventHandler::gotNewEvents(void) const
+	guillaume::Engine::ViewportSize Engine::getViewportSize(void) const
 	{
-		return _gotNewEvents;
+		return { 0.0f, 0.0f };
 	}
 
-}	 // namespace guillaume::event
+	void Engine::drawText(const utility::graphic::Text &text,
+						  const utility::graphic::PoseF &pose)
+	{
+		_evanEngine->drawText(std::make_shared<utility::graphic::Text>(text));
+	}
+
+	void Engine::addScene(size_t sceneIndex)
+	{
+		_evanEngine->addScene(sceneIndex);
+	}
+
+	void Engine::pollEvents(void)
+	{
+		auto events = _evanEngine->pollEvents();
+		auto callback = this->getEventCallback();
+	
+		if (!callback) {
+			return;
+		}
+		for (auto &event: events) {
+			callback(event);
+		}
+	}
+}	 // namespace xider

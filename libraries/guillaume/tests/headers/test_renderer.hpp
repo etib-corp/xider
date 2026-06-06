@@ -24,7 +24,7 @@
 
 #include <gtest/gtest.h>
 
-#include <guillaume/renderer.hpp>
+#include <guillaume/engine.hpp>
 
 namespace guillaume::tests
 {

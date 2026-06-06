@@ -5,6 +5,8 @@
 ** Engine
 */
 
+#include <utility/event/quit_event.hpp>
+
 #include "evan/Engine.hpp"
 
 #ifdef __ANDROID__
@@ -12,7 +14,6 @@ std::unique_ptr<utility::AndroidSystemIO> g_systemIO;
 #else
 std::unique_ptr<utility::SystemIO> g_systemIO;
 #endif
-
 
 void evan::Engine::initializeAssetManager(void *platformAssetManager)
 {
@@ -24,7 +25,9 @@ void evan::Engine::initializeAssetManager(void *platformAssetManager)
 #endif
 }
 
-evan::Engine::Engine(std::shared_ptr<utility::RessourceProvider> ressourceProvider, std::shared_ptr<IPlatform> platform)
+evan::Engine::Engine(
+	std::shared_ptr<utility::RessourceProvider> ressourceProvider,
+	std::shared_ptr<IPlatform> platform)
 	: _platform(platform)
 {
 	if (!g_systemIO) {
@@ -40,19 +43,22 @@ evan::Engine::Engine(std::shared_ptr<utility::RessourceProvider> ressourceProvid
 	this->getLogger().info("Loading default shader...");
 
 	ressourceProvider->loadShader("shaders/default.vert.spv", "shaders/default.frag.spv", *g_systemIO);
+	ressourceProvider->loadShader("assets/shaders/default.vert.spv",
+								  "assets/shaders/default.frag.spv",
+								  *g_systemIO);
 
 	_deviceContext	  = std::make_shared<DeviceContext>(*platform);
 	_swapchainContext = platform->createSwapchainContext(*_deviceContext);
 
 	auto deviceBackend = _deviceContext->getDeviceBackend();
 
-	_ressourceManager  = std::make_shared<RessourceManager>(ressourceProvider, _deviceContext);
-	_renderer		   = std::make_shared<Renderer>(*_deviceContext,
-													_swapchainContext->getRenderPass(),
-													_deviceContext->getMsaaSamples(),
-													_ressourceManager);
+	_ressourceManager =
+		std::make_shared<RessourceManager>(ressourceProvider, _deviceContext);
+	_renderer = std::make_shared<Renderer>(
+		*_deviceContext, _swapchainContext->getRenderPass(),
+		_deviceContext->getMsaaSamples(), _ressourceManager);
 	_ressourceManager->init(_renderer);
-	_currentScene	   = 0;
+	_currentScene = 0;
 
 	for (int frameIndex = 0; frameIndex < MAX_FRAMES_IN_FLIGHT; frameIndex++) {
 		_renderer->createFrame(_deviceContext->getCommandPool(),
@@ -104,7 +110,8 @@ void evan::Engine::drawText(std::shared_ptr<utility::graphic::Text> text)
 	_scenes[_currentScene]->addObject(_nextObjectID++, textObject);
 }
 
-void evan::Engine::drawPrimitive(std::shared_ptr<utility::graphic::Primitive> primitive)
+void evan::Engine::drawPrimitive(
+	std::shared_ptr<utility::graphic::Primitive> primitive)
 {
 	this->getLogger().info("Drawing primitive with " + std::to_string(primitive->getMeshes().size()) + " meshes.");
 	this->getLogger().warning("drawPrimitive is not fully implemented yet. This is a placeholder implementation.");
@@ -159,7 +166,13 @@ void evan::Engine::render()
 std::vector<std::unique_ptr<utility::event::Event>> evan::Engine::pollEvents()
 {
 	this->getLogger().info("Polling events from platform...");
-	return _platform->pollEvents(*_deviceContext->getDeviceBackend());
+
+	utility::event::QuitEvent::Factory quitEventFactory;
+	auto events = _platform->pollEvents(*_deviceContext->getDeviceBackend());
+
+	if (_platform->shouldClose())
+		events.emplace_back(quitEventFactory.create());
+	return events;
 }
 
 void evan::Engine::switchScene(size_t sceneIndex)

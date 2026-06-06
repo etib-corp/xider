@@ -25,13 +25,7 @@ jobs:
       - name: Organize documentation for deployment
         run: |
           mkdir -p docs_deploy
-          # Top-level project documentation to root
           cp -r build/docs/html/* docs_deploy/
-          # Library documentation to respective directories
-          cp -r build/libraries/evan/docs/html docs_deploy/evan
-          cp -r build/libraries/guillaume/docs/html docs_deploy/guillaume
-          cp -r build/libraries/utility/docs/html docs_deploy/utility
-          cp -r build/libraries/xider/docs/html docs_deploy/xider
 
       - name: Upload documentation artifact
         uses: actions/upload-artifact@v7.0.1

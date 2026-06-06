@@ -30,7 +30,7 @@
 
 #include <utility/event/event.hpp>
 
-namespace guillaume::event
+namespace guillaume
 {
 
 	/**
@@ -58,13 +58,16 @@ namespace guillaume::event
 											 utility::logging::StandardLogger>
 	{
 		public:
+		/**
+		 * @brief Type alias for an event handler callback function.
+		 *
+		 * Takes a unique pointer to an Event and performs an action.
+		 */
 		using Handler =
-			std::function<void(std::unique_ptr<utility::event::Event>
-								   &)>;	   ///< Event handler type
+			std::function<void(std::unique_ptr<utility::event::Event> &)>;
 
 		private:
 		Handler _callback;	   ///< Event callback function
-		bool _shouldQuit;	   ///< Flag indicating if a quit event was received
 		bool _gotNewEvents;	   ///< Flag indicating if new events were received
 
 		protected:
@@ -73,12 +76,6 @@ namespace guillaume::event
 		 * @return Reference to the event callback function.
 		 */
 		Handler &getEventCallback(void);
-
-		/**
-		 * @brief Set the should quit flag.
-		 * @param shouldQuit True if a quit event was received, false otherwise.
-		 */
-		void setShouldQuit(bool shouldQuit);
 
 		/**
 		 * @brief Set the got new events flag.
@@ -109,12 +106,6 @@ namespace guillaume::event
 		void setEventCallback(const Handler &callback);
 
 		/**
-		 * @brief Check if a quit event has been received.
-		 * @return True if a quit event was received, false otherwise.
-		 */
-		bool shouldQuit(void) const;
-
-		/**
 		 * @brief Check if new events were received in the last poll.
 		 * @return True if new events were received, false otherwise.
 		 */
@@ -137,4 +128,4 @@ namespace guillaume::event
 	template<typename Type>
 	concept InheritFromEventHandler = std::is_base_of_v<EventHandler, Type>;
 
-}	 // namespace guillaume::event
+}	 // namespace guillaume

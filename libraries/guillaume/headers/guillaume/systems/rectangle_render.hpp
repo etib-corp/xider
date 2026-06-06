@@ -29,7 +29,7 @@
 #include "guillaume/components/color.hpp"
 #include "guillaume/components/transform.hpp"
 
-#include "guillaume/renderer.hpp"
+#include "guillaume/engine.hpp"
 
 namespace guillaume::systems
 {
@@ -46,7 +46,7 @@ namespace guillaume::systems
 								 components::Color, components::Borders>
 	{
 		private:
-		Renderer &_renderer;	///< Renderer instance
+		std::unique_ptr<Engine> &_engine;	 ///< Engine instance
 		std::vector<utility::graphic::VertexF>
 			_vertices;	  ///< Reused draw buffer to avoid per-frame
 						  ///< allocations.
@@ -164,9 +164,9 @@ namespace guillaume::systems
 		public:
 		/**
 		 * @brief Construct a rectangle rendering system.
-		 * @param renderer The renderer used to draw rectangles.
+		 * @param engine The engine used to draw rectangles.
 		 */
-		RectangleRender(Renderer &renderer);
+		RectangleRender(std::unique_ptr<Engine> &engine);
 
 		/**
 		 * @brief Default destructor.

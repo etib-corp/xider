@@ -23,14 +23,15 @@
 #pragma once
 
 #include <functional>
+#include <memory>
 #include <optional>
 #include <string>
 #include <vector>
+#include <typeindex>
 
 #include <utility/logging/loggable.hpp>
 #include <utility/logging/standard_logger.hpp>
 
-#include <utility/system_io/default_system_io.hpp>
 #include <utility/ressource_provider.hpp>
 
 #include <utility/graphic/view.hpp>
@@ -41,42 +42,74 @@
 
 #include <utility/math/vector.hpp>
 
+#include <utility/event/event.hpp>
+
 namespace guillaume
 {
 
 	/**
-	 * @brief Renderer interface.
-	 * @see Drawable
-	 * @see Text
-	 * @see Font
+	 * @brief Engine interface combining rendering and event handling.
+	 *
+	 * This class provides an abstract interface for the core engine loop in the
+	 * Guillaume framework. Implementations should provide platform-specific
+	 * rendering and event polling capabilities.
+	 *
+	 * @code
+	 * class MyEngine : public Engine { ... };
+	 * Application<MyEngine> app;
+	 * return app.run();
+	 * @endcode
+	 *
+	 * @see EventBus
 	 */
-	class Renderer:
-		protected utility::logging::Loggable<Renderer,
+	class Engine:
+		protected utility::logging::Loggable<Engine,
 											 utility::logging::StandardLogger>
 	{
 		public:
-		using ViewportSize =
-			utility::math::Vector2F;	///< 2D vector representing viewport
-										///< width and height in pixels.
+		/**
+		 * @brief 2D vector representing viewport width and height in pixels.
+		 */
+		using ViewportSize = utility::math::Vector2F;
+
+		/**
+		 * @brief Type alias for an event handler callback function.
+		 *
+		 * Takes a unique pointer to an Event and performs an action.
+		 */
+		using Handler =
+			std::function<void(std::unique_ptr<utility::event::Event> &)>;
+
+		private:
+		Handler _callback;	   ///< Event callback function
+		bool _gotNewEvents;	   ///< Flag indicating if new events were received
 
 		protected:
 		utility::graphic::ViewF _view;	  ///< View state
-		std::shared_ptr<utility::RessourceProvider>
-			_ressourceProvider;	  ///< Shared text/resource manager
-		std::shared_ptr<utility::DefaultSystemIO> _systemIO;	   ///< Shared asset manager
+
+		/**
+		 * @brief Get the current event callback function.
+		 * @return Reference to the event callback function.
+		 */
+		Handler &getEventCallback(void);
+
+		/**
+		 * @brief Set the got new events flag.
+		 * @param gotNewEvents True if new events were received, false
+		 * otherwise.
+		 */
+		void setGotNewEvents(bool gotNewEvents);
 
 		public:
 		/**
 		 * @brief Default constructor
-		 *
-		 * @param ressourceProvider A shared pointer to a RessourceProvider object, which is responsible for managing the loading and synchronization of GPU resources such as materials and textures. The RessourceProvider interacts with the utility::RessourceProvider to load resources from disk or other sources, and creates corresponding GPU resources using the DeviceContext. It provides methods for synchronizing resources, retrieving specific materials or textures by ID, and managing the lifecycle of GPU resources to ensure efficient memory usage and performance in the rendering process.
 		 */
-		Renderer(std::shared_ptr<utility::RessourceProvider> ressourceProvider);
+		Engine(void);
 
 		/**
 		 * @brief Default destructor
 		 */
-		virtual ~Renderer(void) = default;
+		virtual ~Engine(void) = default;
 
 		public:
 		/**
@@ -138,23 +171,42 @@ namespace guillaume
 		utility::graphic::ViewF getView(void) const;
 
 		/**
-		 * @brief Get the shared utility resource manager.
-		 * @return Reference to the renderer resource manager.
+		 * @brief Add a scene to the renderer.
+		 * @param sceneIndex The index of the scene to add.
 		 */
-		std::shared_ptr<utility::RessourceProvider> getRessourceProvider(void);
+		virtual void addScene(size_t sceneIndex) = 0;
 
 		/**
-		 * @brief Get the shared utility asset manager.
-		 * @return Reference to the renderer asset manager.
+		 * @brief Set the event callback function.
+		 *
+		 * The callback will be invoked for each event when pollEvents() is
+		 * called.
+		 *
+		 * @param callback Function to call when an event is received.
 		 */
-		std::shared_ptr<utility::DefaultSystemIO> getSystemIO(void);
+		void setEventCallback(const Handler &callback);
+
+		/**
+		 * @brief Check if new events were received in the last poll.
+		 * @return True if new events were received, false otherwise.
+		 */
+		bool gotNewEvents(void) const;
+
+		/**
+		 * @brief Poll for events and dispatch them.
+		 *
+		 * This method should check for pending events from the underlying
+		 * platform, convert them to Event objects, and call the registered
+		 * callback for each event.
+		 */
+		virtual void pollEvents(void) = 0;
 	};
 
 	/**
-	 * @brief Concept to ensure a type inherits from Renderer.
+	 * @brief Concept to ensure a type inherits from Engine.
 	 * @tparam Type The type to check.
 	 */
 	template<typename Type>
-	concept InheritFromRenderer = std::is_base_of_v<Renderer, Type>;
+	concept InheritFromEngine = std::is_base_of_v<Engine, Type>;
 
 }	 // namespace guillaume

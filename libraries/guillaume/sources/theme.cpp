@@ -232,245 +232,34 @@ namespace guillaume
 		_description = description;
 	}
 
-	const Scheme &Theme::getLightScheme(void) const
-	{
-		return _lightScheme;
-	}
-
-	const Scheme &Theme::getLightMediumContrastScheme(void) const
-	{
-		return _lightMediumContrastScheme;
-	}
-
-	const Scheme &Theme::getLightHighContrastScheme(void) const
-	{
-		return _lightHighContrastScheme;
-	}
-
-	const Scheme &Theme::getDarkScheme(void) const
-	{
-		return _darkScheme;
-	}
-
-	const Scheme &Theme::getDarkMediumContrastScheme(void) const
-	{
-		return _darkMediumContrastScheme;
-	}
-
-	const Scheme &Theme::getDarkHighContrastScheme(void) const
-	{
-		return _darkHighContrastScheme;
-	}
-
-	const Palette &Theme::getPrimaryPalette(void) const
-	{
-		return _primaryPalette;
-	}
-
-	const Palette &Theme::getSecondaryPalette(void) const
-	{
-		return _secondaryPalette;
-	}
-
-	const Palette &Theme::getTertiaryPalette(void) const
-	{
-		return _tertiaryPalette;
-	}
-
-	const Palette &Theme::getNeutralPalette(void) const
-	{
-		return _neutralPalette;
-	}
-
-	const Palette &Theme::getNeutralVariantPalette(void) const
-	{
-		return _neutralVariantPalette;
-	}
-
-	Scheme &Theme::getLightScheme(void)
-	{
-		return _lightScheme;
-	}
-
-	Scheme &Theme::getLightMediumContrastScheme(void)
-	{
-		return _lightMediumContrastScheme;
-	}
-
-	Scheme &Theme::getLightHighContrastScheme(void)
-	{
-		return _lightHighContrastScheme;
-	}
-
-	Scheme &Theme::getDarkScheme(void)
-	{
-		return _darkScheme;
-	}
-
-	Scheme &Theme::getDarkMediumContrastScheme(void)
-	{
-		return _darkMediumContrastScheme;
-	}
-
-	Scheme &Theme::getDarkHighContrastScheme(void)
-	{
-		return _darkHighContrastScheme;
-	}
-
-	Palette &Theme::getPrimaryPalette(void)
-	{
-		return _primaryPalette;
-	}
-
-	Palette &Theme::getSecondaryPalette(void)
-	{
-		return _secondaryPalette;
-	}
-
-	Palette &Theme::getTertiaryPalette(void)
-	{
-		return _tertiaryPalette;
-	}
-
-	Palette &Theme::getNeutralPalette(void)
-	{
-		return _neutralPalette;
-	}
-
-	Palette &Theme::getNeutralVariantPalette(void)
-	{
-		return _neutralVariantPalette;
-	}
-
-	void Theme::setLightScheme(const Scheme &scheme)
-	{
-		_lightScheme = scheme;
-	}
-
-	void Theme::setLightMediumContrastScheme(const Scheme &scheme)
-	{
-		_lightMediumContrastScheme = scheme;
-	}
-
-	void Theme::setLightHighContrastScheme(const Scheme &scheme)
-	{
-		_lightHighContrastScheme = scheme;
-	}
-
-	void Theme::setDarkScheme(const Scheme &scheme)
-	{
-		_darkScheme = scheme;
-	}
-
-	void Theme::setDarkMediumContrastScheme(const Scheme &scheme)
-	{
-		_darkMediumContrastScheme = scheme;
-	}
-
-	void Theme::setDarkHighContrastScheme(const Scheme &scheme)
-	{
-		_darkHighContrastScheme = scheme;
-	}
-
-	void Theme::setPrimaryPalette(const Palette &palette)
-	{
-		_primaryPalette = palette;
-	}
-
-	void Theme::setSecondaryPalette(const Palette &palette)
-	{
-		_secondaryPalette = palette;
-	}
-
-	void Theme::setTertiaryPalette(const Palette &palette)
-	{
-		_tertiaryPalette = palette;
-	}
-
-	void Theme::setNeutralPalette(const Palette &palette)
-	{
-		_neutralPalette = palette;
-	}
-
-	void Theme::setNeutralVariantPalette(const Palette &palette)
-	{
-		_neutralVariantPalette = palette;
-	}
-
 	const Scheme &Theme::getScheme(ThemeSchemeRole role) const
 	{
-		switch (role) {
-			case ThemeSchemeRole::Light:
-				return _lightScheme;
-			case ThemeSchemeRole::LightMediumContrast:
-				return _lightMediumContrastScheme;
-			case ThemeSchemeRole::LightHighContrast:
-				return _lightHighContrastScheme;
-			case ThemeSchemeRole::Dark:
-				return _darkScheme;
-			case ThemeSchemeRole::DarkMediumContrast:
-				return _darkMediumContrastScheme;
-			case ThemeSchemeRole::DarkHighContrast:
-				return _darkHighContrastScheme;
-		}
-
-		return _lightScheme;
+		return _schemes[role];
 	}
 
 	Scheme &Theme::getScheme(ThemeSchemeRole role)
 	{
-		switch (role) {
-			case ThemeSchemeRole::Light:
-				return _lightScheme;
-			case ThemeSchemeRole::LightMediumContrast:
-				return _lightMediumContrastScheme;
-			case ThemeSchemeRole::LightHighContrast:
-				return _lightHighContrastScheme;
-			case ThemeSchemeRole::Dark:
-				return _darkScheme;
-			case ThemeSchemeRole::DarkMediumContrast:
-				return _darkMediumContrastScheme;
-			case ThemeSchemeRole::DarkHighContrast:
-				return _darkHighContrastScheme;
-		}
-
-		return _lightScheme;
+		return _schemes[role];
 	}
 
 	const Palette &Theme::getPalette(ThemePaletteRole role) const
 	{
-		switch (role) {
-			case ThemePaletteRole::Primary:
-				return _primaryPalette;
-			case ThemePaletteRole::Secondary:
-				return _secondaryPalette;
-			case ThemePaletteRole::Tertiary:
-				return _tertiaryPalette;
-			case ThemePaletteRole::Neutral:
-				return _neutralPalette;
-			case ThemePaletteRole::NeutralVariant:
-				return _neutralVariantPalette;
-		}
-
-		return _primaryPalette;
+		return _palettes[role];
 	}
 
 	Palette &Theme::getPalette(ThemePaletteRole role)
 	{
-		switch (role) {
-			case ThemePaletteRole::Primary:
-				return _primaryPalette;
-			case ThemePaletteRole::Secondary:
-				return _secondaryPalette;
-			case ThemePaletteRole::Tertiary:
-				return _tertiaryPalette;
-			case ThemePaletteRole::Neutral:
-				return _neutralPalette;
-			case ThemePaletteRole::NeutralVariant:
-				return _neutralVariantPalette;
-		}
+		return _palettes[role];
+	}
 
-		return _primaryPalette;
+	void Theme::setScheme(ThemeSchemeRole role, const Scheme &scheme)
+	{
+		_schemes[role] = scheme;
+	}
+
+	void Theme::setPalette(ThemePaletteRole role, const Palette &palette)
+	{
+		_palettes[role] = palette;
 	}
 
 	namespace
@@ -1439,7 +1228,7 @@ namespace guillaume
 			primaryPalette.setTone(
 				Palette::Tone::T100,
 				utility::graphic::Color32Bit(255, 255, 255, 255), "100");
-			theme.setPrimaryPalette(primaryPalette);
+			theme.setPalette(ThemePaletteRole::Primary, primaryPalette);
 
 			// Secondary palette
 			Palette secondaryPalette("Secondary", "Secondary color palette");
@@ -1476,7 +1265,7 @@ namespace guillaume
 			secondaryPalette.setTone(
 				Palette::Tone::T100,
 				utility::graphic::Color32Bit(255, 255, 255, 255), "100");
-			theme.setSecondaryPalette(secondaryPalette);
+			theme.setPalette(ThemePaletteRole::Secondary, secondaryPalette);
 
 			// Tertiary palette
 			Palette tertiaryPalette("Tertiary", "Tertiary color palette");
@@ -1513,7 +1302,7 @@ namespace guillaume
 			tertiaryPalette.setTone(
 				Palette::Tone::T100,
 				utility::graphic::Color32Bit(255, 255, 255, 255), "100");
-			theme.setTertiaryPalette(tertiaryPalette);
+			theme.setPalette(ThemePaletteRole::Tertiary, tertiaryPalette);
 
 			// Neutral palette
 			Palette neutralPalette("Neutral", "Neutral color palette");
@@ -1550,7 +1339,7 @@ namespace guillaume
 			neutralPalette.setTone(
 				Palette::Tone::T100,
 				utility::graphic::Color32Bit(255, 255, 255, 255), "100");
-			theme.setNeutralPalette(neutralPalette);
+			theme.setPalette(ThemePaletteRole::Neutral, neutralPalette);
 
 			// Neutral Variant palette
 			Palette neutralVariantPalette("Neutral Variant",
@@ -1588,7 +1377,8 @@ namespace guillaume
 			neutralVariantPalette.setTone(
 				Palette::Tone::T100,
 				utility::graphic::Color32Bit(255, 255, 255, 255), "100");
-			theme.setNeutralVariantPalette(neutralVariantPalette);
+			theme.setPalette(ThemePaletteRole::NeutralVariant,
+							 neutralVariantPalette);
 		}
 	}	 // namespace
 
@@ -1604,13 +1394,16 @@ namespace guillaume
 			"levels");
 
 		// Initialize all color schemes
-		initializeLightScheme(theme.getLightScheme());
+		initializeLightScheme(theme.getScheme(ThemeSchemeRole::Light));
 		initializeLightMediumContrastScheme(
-			theme.getLightMediumContrastScheme());
-		initializeLightHighContrastScheme(theme.getLightHighContrastScheme());
-		initializeDarkScheme(theme.getDarkScheme());
-		initializeDarkMediumContrastScheme(theme.getDarkMediumContrastScheme());
-		initializeDarkHighContrastScheme(theme.getDarkHighContrastScheme());
+			theme.getScheme(ThemeSchemeRole::LightMediumContrast));
+		initializeLightHighContrastScheme(
+			theme.getScheme(ThemeSchemeRole::LightHighContrast));
+		initializeDarkScheme(theme.getScheme(ThemeSchemeRole::Dark));
+		initializeDarkMediumContrastScheme(
+			theme.getScheme(ThemeSchemeRole::DarkMediumContrast));
+		initializeDarkHighContrastScheme(
+			theme.getScheme(ThemeSchemeRole::DarkHighContrast));
 
 		// Initialize all palettes
 		initializePalettes(theme);

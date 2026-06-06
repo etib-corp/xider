@@ -22,115 +22,33 @@
 
 #pragma once
 
-#include <functional>
-#include <map>
+#include <array>
 
 #include <utility/event/hand_button_event.hpp>
 
-#include "guillaume/ecs/component.hpp"
+#include "guillaume/components/button_interaction.hpp"
 
 namespace guillaume::components
 {
+
+	inline constexpr std::array<
+		utility::event::HandButtonEvent::Button, 6> HandButtons = {
+		utility::event::HandButtonEvent::Button::X,
+		utility::event::HandButtonEvent::Button::Y,
+		utility::event::HandButtonEvent::Button::A,
+		utility::event::HandButtonEvent::Button::B,
+		utility::event::HandButtonEvent::Button::Menu,
+		utility::event::HandButtonEvent::Button::System
+	};
 
 	/**
 	 * @brief Component handling hand button interactions.
 	 * @see systems::HandButton
 	 */
-	class HandButtonInteraction: public ecs::Component
-	{
-		public:
-		static constexpr utility::event::HandButtonEvent::Button Buttons[] = {
-			utility::event::HandButtonEvent::Button::X,
-			utility::event::HandButtonEvent::Button::Y,
-			utility::event::HandButtonEvent::Button::A,
-			utility::event::HandButtonEvent::Button::B,
-			utility::event::HandButtonEvent::Button::Menu,
-			utility::event::HandButtonEvent::Button::System
-		};	  ///< Array of hand buttons to facilitate iteration over button
-			  ///< states and handlers
+	using HandButtonInteraction = ButtonInteraction<
+		utility::event::HandButtonEvent,
+		utility::event::HandButtonEvent::Button,
+		HandButtons.size(),
+		HandButtons>;
 
-		public:
-		using ButtonPressHandler =
-			std::function<void(void)>;	  ///< Type for button press handlers
-		using ButtonReleaseHandler =
-			std::function<void(void)>;	  ///< Type for button release handlers
-
-		private:
-		std::map<utility::event::HandButtonEvent::Button, ButtonPressHandler>
-			_onButtonPressHandlers {};	  ///< Map of button press handlers for
-										  ///< each button
-		std::map<utility::event::HandButtonEvent::Button, ButtonReleaseHandler>
-			_onButtonReleaseHandlers {};	///< Map of button release handlers
-											///< for each button
-		std::map<utility::event::HandButtonEvent::Button, bool>
-			_isButtonPressed {};	///< Map of button press states for each
-									///< button
-
-		public:
-		/**
-		 * @brief Construct a HandButtonInteraction component with default
-		 * handlers and states.
-		 */
-		HandButtonInteraction(void);
-
-		/**
-		 * @brief Default destructor.
-		 */
-		~HandButtonInteraction(void) = default;
-
-		/**
-		 * @brief Set the handler for a button press event.
-		 * @param button The button for which to set the handler.
-		 * @param handler The function to call when the button is pressed.
-		 * @return Reference to this HandButtonInteraction for method chaining.
-		 */
-		HandButtonInteraction &setOnButtonPressHandler(
-			const utility::event::HandButtonEvent::Button &button,
-			const ButtonPressHandler &handler);
-
-		/**
-		 * @brief Get the map of button press handlers.
-		 * @param button The button whose handler is requested.
-		 * @return Reference to the handler for the specified button.
-		 */
-		const ButtonPressHandler &getOnButtonPressHandler(
-			const utility::event::HandButtonEvent::Button &button) const;
-
-		/**
-		 * @brief Set the handler for a button release event.
-		 * @param button The button for which to set the handler.
-		 * @param handler The function to call when the button is released.
-		 * @return Reference to this HandButtonInteraction for method chaining.
-		 */
-		HandButtonInteraction &setOnButtonReleaseHandler(
-			const utility::event::HandButtonEvent::Button &button,
-			const ButtonReleaseHandler &handler);
-
-		/**
-		 * @brief Get the map of button release handlers.
-		 * @param button The button whose release handler is requested.
-		 * @return Reference to the release handler for the specified button.
-		 */
-		const ButtonReleaseHandler &getOnButtonReleaseHandler(
-			const utility::event::HandButtonEvent::Button &button) const;
-
-		/**
-		 * @brief Check if a button is currently pressed.
-		 * @param button The button to check.
-		 * @return True if the button is pressed, false otherwise.
-		 */
-		bool isButtonPressed(
-			const utility::event::HandButtonEvent::Button &button) const;
-
-		/**
-		 * @brief Set the pressed state of a button.
-		 * @param button The button to update.
-		 * @param pressed True if the button is now pressed, false if released.
-		 * @return Reference to this HandButtonInteraction for method chaining.
-		 */
-		HandButtonInteraction &setButtonPressed(
-			const utility::event::HandButtonEvent::Button &button,
-			bool pressed);
-	};
-
-}	 // namespace guillaume::components
+} // namespace guillaume::components

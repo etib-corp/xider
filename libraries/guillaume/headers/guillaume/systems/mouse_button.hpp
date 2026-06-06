@@ -22,55 +22,53 @@
 
 #pragma once
 
-#include "guillaume/ecs/system_filler.hpp"
+#include "guillaume/engine.hpp"
+#include "guillaume/systems/button_interaction_system.hpp"
 
-#include "guillaume/event/event_manager.hpp"
-#include "guillaume/event/event_bus.hpp"
-
-#include "guillaume/components/bound.hpp"
 #include "guillaume/components/mouse_button_interaction.hpp"
-#include "guillaume/components/transform.hpp"
-
-#include "guillaume/renderer.hpp"
 
 #include <utility/event/mouse_button_event.hpp>
 
 namespace guillaume::systems
 {
+
 	/**
 	 * @brief System handling mouse button interactions.
 	 */
 	class MouseButton:
-		public ecs::SystemFiller<components::MouseButtonInteraction,
-								 components::Transform, components::Bound>,
-		public event::EventManager<utility::event::MouseButtonEvent>
+		public ButtonInteractionSystem<
+			utility::event::MouseButtonEvent,
+			components::MouseButtonInteraction,
+			std::function<utility::graphic::RayF(
+				const utility::event::MouseButtonEvent &)>>
 	{
 		private:
-		Renderer &_renderer;	///< Reference to the renderer for potential
-								///< visual feedback on button interactions
+		std::unique_ptr<Engine>
+			&_engine;	   ///< Reference to the engine for potential
+						   ///< visual feedback on button interactions
 
 		public:
 		/**
 		 * @brief Construct the MouseButton system and subscribe to mouse button
 		 * events.
 		 * @param eventBus Reference to the event bus for subscribing to events.
-		 * @param renderer Reference to the renderer for visual feedback.
+		 * @param engine Reference to the engine for visual feedback.
 		 */
-		MouseButton(event::EventBus &eventBus, Renderer &renderer);
-
-		/**
-		 * @brief Default destructor for the MouseButton system.
-		 */
-		~MouseButton(void);
-
-		/**
-		 * @brief Update method called for each entity with the relevant
-		 * components. Processes mouse button events and updates interaction
-		 * states accordingly.
-		 * @param entityIdentifier Identifier of the entity being updated.
-		 */
-		virtual void
-			update(const ecs::Entity::Identifier &entityIdentifier) override;
+		MouseButton(event::EventBus &eventBus,
+					std::unique_ptr<Engine> &engine)
+			: _engine(engine)
+			, ButtonInteractionSystem<
+				  utility::event::MouseButtonEvent,
+				  components::MouseButtonInteraction,
+				  std::function<utility::graphic::RayF(
+					  const utility::event::MouseButtonEvent &)>>(
+				  eventBus,
+				  [&engine](const utility::event::MouseButtonEvent &event) {
+					  return engine->getView().viewPointToRay(
+						  event.getPosition());
+				  })
+		{
+		}
 	};
 
 }	 // namespace guillaume::systems
