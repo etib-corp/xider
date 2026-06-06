@@ -84,7 +84,7 @@ evan::Engine::~Engine()
 // Public Methods //
 ////////////////////
 
-void evan::Engine::drawText(std::shared_ptr<utility::graphic::Text> text)
+size_t evan::Engine::addText(std::shared_ptr<utility::graphic::Text> text)
 {
 	std::map<uint32_t, utility::graphic::Mesh> rawObjects;
 	auto material_id = _ressourceProvider->getMaterialID(
@@ -94,7 +94,7 @@ void evan::Engine::drawText(std::shared_ptr<utility::graphic::Text> text)
 		std::cerr << "Warning: Material '" << text->getFontFamily() + "_material"
 				  << "' not found for text object. Text will not be rendered."
 				  << std::endl;
-		return;  // Skip rendering this text if its material is not found
+		return 0;  // Skip rendering this text if its material is not found
 	}
 
 	for (const auto &mesh: text->getMeshes()) {
@@ -104,17 +104,38 @@ void evan::Engine::drawText(std::shared_ptr<utility::graphic::Text> text)
 	std::shared_ptr<RenderObject> textObject =
 		std::make_shared<RenderObject>(_deviceContext, rawObjects, "text");
 
-	_scenes[_currentScene].addObject(_nextObjectID++, textObject);
+	auto objectID = _scenes[_currentScene].addObject(_nextObjectID++, textObject);
 	_ressourceManager->sync();
+	return objectID;
 }
 
-void evan::Engine::drawPrimitive(
+size_t evan::Engine::addPrimitive(
 	std::shared_ptr<utility::graphic::Primitive> primitive)
 {
+	return 0;  // Placeholder implementation - replace with actual primitive addition logic
 }
 
-void evan::Engine::drawModel(std::shared_ptr<utility::graphic::Model> model)
+size_t evan::Engine::addModel(std::shared_ptr<utility::graphic::Model> model)
 {
+	return 0;  // Placeholder implementation - replace with actual model addition logic
+}
+
+size_t evan::Engine::addObject(std::shared_ptr<utility::graphic::Renderable> object,
+								const std::string &renderMethod)
+{
+	return 0;  // Placeholder implementation - replace with actual renderable object addition logic
+}
+
+size_t evan::Engine::addMesh(const utility::graphic::Mesh &mesh)
+{
+	std::map<uint32_t, utility::graphic::Mesh> rawObjects;
+	auto material_id = _ressourceProvider->getMaterialID("default_material");
+	rawObjects.emplace(material_id, mesh);
+	std::shared_ptr<RenderObject> meshObject =
+		std::make_shared<RenderObject>(_deviceContext, rawObjects, "mesh");
+	auto objectID = _scenes[_currentScene].addObject(_nextObjectID++, meshObject);
+	_ressourceManager->sync();
+	return objectID;
 }
 
 void evan::Engine::addScene(size_t sceneIndex)

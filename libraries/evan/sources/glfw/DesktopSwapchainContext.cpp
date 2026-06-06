@@ -49,11 +49,11 @@ VkResult evan::DesktopSwapchainContext::aquireImage(
 
 glm::mat4 evan::DesktopSwapchainContext::getProjection(int index) const
 {
-	return glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 10.0f);
+	return glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 500.0f);
 }
 
 glm::mat4 evan::DesktopSwapchainContext::getView(int index) const
 {
-	return glm::lookAt(glm::vec3(0.0f, 0.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f),
+	return glm::lookAt(glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(5.0f, 0.0f, 0.0f),
 					   glm::vec3(0.0f, 1.0f, 0.0f));
 }
