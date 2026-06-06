@@ -7,6 +7,9 @@
 
 #include "evan/GPUTexture.hpp"
 
+#include <algorithm>
+#include <cmath>
+
 evan::GPUTexture::GPUTexture(const DeviceContext &deviceContext,
                 const utility::graphic::Texture &texture,
                 TextureType type

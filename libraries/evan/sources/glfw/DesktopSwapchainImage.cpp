@@ -7,6 +7,9 @@
 
 #include "evan/glfw/DesktopSwapchainImage.hpp"
 
+#include <algorithm>
+#include <limits>
+
 #include "evan/DeviceContext.hpp"
 
 evan::DesktopSwapchainImage::DesktopSwapchainImage(
