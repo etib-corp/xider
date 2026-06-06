@@ -17,6 +17,7 @@
 #include "DeviceContext.hpp"
 
 #include <cmath>
+#include <math.h>
 #include <algorithm>
 
 namespace evan
