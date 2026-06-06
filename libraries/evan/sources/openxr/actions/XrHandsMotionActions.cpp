@@ -84,7 +84,7 @@ std::vector<std::unique_ptr<utility::event::Event>>
 
 			handEvent->setAim(pose);
 
-			this->getLogger().info((i == 0 ? "LEFT" : "RIGHT")
+			this->getLogger().info((i == 0 ? std::string("LEFT") : std::string("RIGHT"))
 								   + std::string(" HAND AIM"));
 			this->getLogger().info(
 				"Position: " + std::to_string(aimLocation.pose.position.x)
@@ -123,7 +123,7 @@ std::vector<std::unique_ptr<utility::event::Event>>
 
 			handEvent->setGrip(grip);
 
-			this->getLogger().info((i == 0 ? "LEFT" : "RIGHT") + " HAND GRIP");
+			this->getLogger().info((i == 0 ? std::string("LEFT") : std::string("RIGHT")) + std::string(" HAND GRIP"));
 			this->getLogger().info(
 				"Position: " + std::to_string(gripLocation.pose.position.x)
 				+ ", " + std::to_string(gripLocation.pose.position.y) + ", "
