@@ -30,8 +30,8 @@ evan::XrSwapchainContext::XrSwapchainContext(const DeviceContext &deviceContext)
 	auto swapchainFormat = selectSwapchainFormat(swapchainFormats);
 
 	for (const auto &viewConfig: _viewsConfigurations) {
-		this->getLogger().info("Creating swapchain for view configuration: " +
-							   std::to_string(viewConfig.viewConfigurationType));
+		this->getLogger().info("Creating swapchain for view configuration");
+
 		XrSwapchainCreateInfo swapchainCreateInfo {};
 		swapchainCreateInfo.type	  = XR_TYPE_SWAPCHAIN_CREATE_INFO;
 		swapchainCreateInfo.arraySize = 1;
