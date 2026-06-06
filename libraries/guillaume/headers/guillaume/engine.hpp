@@ -38,7 +38,7 @@
 #include <utility/graphic/ray.hpp>
 #include <utility/graphic/orientation.hpp>
 #include <utility/graphic/text/text.hpp>
-#include <utility/graphic/vertex.hpp>
+#include <utility/graphic/mesh.hpp>
 
 #include <utility/math/vector.hpp>
 
@@ -129,15 +129,12 @@ namespace guillaume
 		virtual void present(void) = 0;
 
 		/**
-		 * @brief Draw a set of vertices forming a mesh.
-		 * @param vertices The list of vertices, each containing position and
-		 * any additional attributes (such as texture coordinates, color, etc.)
-		 * required by the concrete renderer implementation. The vertices are
-		 * interpreted using the renderer's default primitive topology
-		 * (typically a triangle list) to form the mesh.
+		 * @brief Add a mesh to the renderer.
+		 *
+		 * @param mesh The mesh to add to the renderer.
+		 * @return A unique identifier for the added mesh.
 		 */
-		virtual void drawVertices(
-			const std::vector<utility::graphic::VertexF> &vertices) = 0;
+		virtual size_t addMesh(const utility::graphic::Mesh &mesh) = 0;
 
 		/**
 		 * @brief Measures the pixel dimensions of a given text string when
@@ -150,11 +147,12 @@ namespace guillaume
 			measureText(const utility::graphic::Text &text) = 0;
 
 		/**
-		 * @brief Measure the size of the given text using the specified font.
+		 * @brief Add a text element to the renderer at a specified pose.
 		 * @param text The text to draw.
 		 * @param pose The pose at which to draw the text.
+		 * @return A unique identifier for the added text.
 		 */
-		virtual void drawText(const utility::graphic::Text &text,
+		virtual size_t addText(const utility::graphic::Text &text,
 							  const utility::graphic::PoseF &pose) = 0;
 
 		/**
