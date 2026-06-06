@@ -22,28 +22,18 @@
 
 #pragma once
 
-#include <functional>
-
-#include "guillaume/ecs/component.hpp"
+#include "guillaume/components/interaction.hpp"
+#include "utility/event/hand_pinch_event.hpp"
 
 namespace guillaume::components
 {
-
 	/**
 	 * @brief Component handling hand pinch interactions.
 	 * @see systems::HandPinch
 	 */
-	class HandPinchInteraction: public ecs::Component
+	class HandPinchInteraction:
+		public Interaction<utility::event::HandPinchEvent>
 	{
-		public:
-		using PinchHandler =
-			std::function<void(void)>;	  ///< Type for pinch handlers
-
-		private:
-		PinchHandler _onPinchHandler;	 ///< Handler function to call when a
-										 ///< pinch event occurs
-		bool _isPinched { false };		 ///< Current pinch state of the hand
-
 		public:
 		/**
 		 * @brief Construct a HandPinchInteraction component with default
@@ -55,32 +45,6 @@ namespace guillaume::components
 		 * @brief Destroy the HandPinchInteraction component.
 		 */
 		~HandPinchInteraction(void) = default;
-
-		/**
-		 * @brief Set the handler for a pinch event.
-		 * @param handler The function to call when a pinch event occurs.
-		 * @return Reference to this HandPinchInteraction for method chaining.
-		 */
-		HandPinchInteraction &setOnPinchHandler(const PinchHandler &handler);
-
-		/**
-		 * @brief Get the current pinch event handler.
-		 * @return The function set as the pinch event handler.
-		 */
-		PinchHandler getOnPinchHandler(void) const;
-
-		/**
-		 * @brief Check if the hand is currently pinched.
-		 * @return True if the hand is pinched, false otherwise.
-		 */
-		bool isPinched(void) const;
-
-		/**
-		 * @brief Set the pinch state of the hand.
-		 * @param isPinched The new pinch state to set.
-		 * @return Reference to this HandPinchInteraction for method chaining.
-		 */
-		HandPinchInteraction &setPinched(bool isPinched);
 	};
 
 }	 // namespace guillaume::components

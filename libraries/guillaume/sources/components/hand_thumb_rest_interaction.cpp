@@ -25,53 +25,7 @@
 namespace guillaume::components
 {
 	HandThumbRestInteraction::HandThumbRestInteraction(void)
-		: ecs::Component()
+		: Interaction()
 	{
-		_onThumbRestHandler = nullptr;
 	}
-
-	HandThumbRestInteraction &HandThumbRestInteraction::setOnThumbRestHandler(
-		const ThumbRestHandler &handler)
-	{
-		_onThumbRestHandler = handler;
-		setHasChanged(true);
-		return *this;
-	}
-
-	HandThumbRestInteraction::ThumbRestHandler
-		HandThumbRestInteraction::getOnThumbRestHandler(void) const
-	{
-		return _onThumbRestHandler;
-	}
-
-	HandThumbRestInteraction &HandThumbRestInteraction::setTouched(bool touched)
-	{
-		if (_isTouched == touched) {
-			return *this;
-		}
-		_isTouched = touched;
-		setHasChanged(true);
-		return *this;
-	}
-
-	bool HandThumbRestInteraction::isTouched(void) const
-	{
-		return _isTouched;
-	}
-
-	HandThumbRestInteraction &HandThumbRestInteraction::setProximity(bool proximity)
-	{
-		if (_isProximity == proximity) {
-			return *this;
-		}
-		_isProximity = proximity;
-		setHasChanged(true);
-		return *this;
-	}
-
-	bool HandThumbRestInteraction::isProximity(void) const
-	{
-		return _isProximity;
-	}
-
 } 	// namespace guillaume::components

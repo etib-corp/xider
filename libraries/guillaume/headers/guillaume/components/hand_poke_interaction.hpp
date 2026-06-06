@@ -22,65 +22,31 @@
 
 #pragma once
 
-#include <functional>
-
-#include "guillaume/ecs/component.hpp"
+#include "guillaume/components/interaction.hpp"
+#include "utility/event/hand_poke_event.hpp"
 
 namespace guillaume::components
 {
-
 	/**
 	 * @brief Component handling hand poke interactions.
 	 * @see systems::HandPoke
 	 */
-	class HandPokeInteraction: public ecs::Component
+	class HandPokeInteraction: public Interaction<utility::event::HandPokeEvent>
 	{
-		public:
-		using PokeHandler =
-			std::function<void(void)>;	  ///< Type for poke handlers
-
-		private:
-		PokeHandler _onPokeHandler;	   ///< Handler function to call when a poke
-									   ///< event occurs
-		bool _isPoked { false };	   ///< Current poke state of the hand
-
 		public:
 		/**
 		 * @brief Construct a HandPokeInteraction component with default
 		 * handlers and states.
 		 */
-		HandPokeInteraction(void);
+		HandPokeInteraction(void)
+			: Interaction()
+		{
+		}
 
 		/**
 		 * @brief Destroy the HandPokeInteraction component.
 		 */
 		~HandPokeInteraction(void) = default;
-
-		/**
-		 * @brief Set the handler for a poke event.
-		 * @param handler The function to call when a poke event occurs.
-		 * @return Reference to this HandPokeInteraction for method chaining.
-		 */
-		HandPokeInteraction &setOnPokeHandler(const PokeHandler &handler);
-
-		/**
-		 * @brief Get the handler for a poke event.
-		 * @return The function to call when a poke event occurs.
-		 */
-		PokeHandler getOnPokeHandler(void) const;
-
-		/**
-		 * @brief Check if the hand is currently poked.
-		 * @return True if the hand is poked, false otherwise.
-		 */
-		bool isPoked(void) const;
-
-		/**
-		 * @brief Set the poked state of the hand.
-		 * @param isPoked The new poked state to set.
-		 * @return Reference to this HandPokeInteraction for method chaining.
-		 */
-		HandPokeInteraction &setPoked(bool isPoked);
 	};
 
 }	 // namespace guillaume::components
