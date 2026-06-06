@@ -53,8 +53,8 @@ std::vector<std::unique_ptr<utility::event::Event>>
 		xrGetActionStatePose(deviceBackend._session, &getInfo, &poseState);
 
 		if (!poseState.isActive) {
-			this->getLogger().info((i == 0 ? "LEFT" : "RIGHT")
-								   + " hand pose action is not active.");
+			this->getLogger().info((i == 0 ? std::string("LEFT") : std::string("RIGHT"))
+								   + std::string(" hand pose action is not active."));
 			continue;
 		}
 
