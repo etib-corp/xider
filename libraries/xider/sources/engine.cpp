@@ -45,10 +45,10 @@ namespace xider
 		}
 	}
 
-	void Engine::drawVertices(
-		const std::vector<utility::graphic::VertexF> &vertices)
+	size_t Engine::addMesh(
+		const utility::graphic::Mesh &meshes)
 	{
-		(void)vertices;
+		return _evanEngine->addMesh(meshes);
 	}
 
 	utility::math::Vector2F
@@ -62,10 +62,10 @@ namespace xider
 		return { 0.0f, 0.0f };
 	}
 
-	void Engine::drawText(const utility::graphic::Text &text,
+	size_t Engine::addText(const utility::graphic::Text &text,
 						  const utility::graphic::PoseF &pose)
 	{
-		_evanEngine->drawText(std::make_shared<utility::graphic::Text>(text));
+		return _evanEngine->addText(std::make_shared<utility::graphic::Text>(text));
 	}
 
 	void Engine::addScene(size_t sceneIndex)
@@ -77,7 +77,7 @@ namespace xider
 	{
 		auto events = _evanEngine->pollEvents();
 		auto callback = this->getEventCallback();
-	
+
 		if (!callback) {
 			return;
 		}
