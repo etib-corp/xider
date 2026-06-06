@@ -108,7 +108,7 @@ std::string evan::InteractionProfile::getCurrentInteractionProfilePath(
 std::vector<XrPath> evan::InteractionProfile::enumerateBoundSourcesForAction(
 	XrInstance instance, XrSession session, XrAction action)
 {
-	this->getLogger().info("Enumerating bound sources for action");
+	std::cout << "Enumerating bound sources for action" << std::endl;
 
 	std::vector<XrPath> paths;
 
