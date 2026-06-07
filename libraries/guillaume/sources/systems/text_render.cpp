@@ -57,7 +57,7 @@ namespace guillaume::systems
 		, _systemIO(systemIO)
 		, _renderer(engine)
 		, _defaultFontPath(
-			  "assets/fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf")
+			  "fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf")
 	{
 	}
 
