@@ -7,7 +7,7 @@
 
     <application
         android:allowBackup="false"
-        android:label="xider-android"
+        android:label="xider_android"
         android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
 
         <activity
@@ -19,7 +19,7 @@
 
             <meta-data
                 android:name="android.app.lib_name"
-                android:value="xider-android" />
+                android:value="xider_android" />
 
             <meta-data
                 android:name="com.oculus.vr.focusaware"
