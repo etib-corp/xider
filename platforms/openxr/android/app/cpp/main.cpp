@@ -24,7 +24,7 @@
 
 #define LOG_NDEBUG 0
 
-#define LOG_TAG	  "XiderEngine"
+#define LOG_TAG	  "XiderAndroidEngine"
 #define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 
@@ -203,10 +203,6 @@ void android_main(struct android_app *android_app)
 
 	std::cout << "XIDER Application initialized successfully" << std::endl;
 	std::cout << "Entering main application loop..." << std::endl;
-
-	std::vector<std::string> texturePaths = {
-		"./texture1.png",
-	};
 
 	while (!android_app->destroyRequested) {
 		// Process Android events
