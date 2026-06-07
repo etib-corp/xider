@@ -77,7 +77,8 @@ namespace utility
 		auto fontAsset = systemInterface.add(path);
 
 		if (!fontAsset) {
-			throw std::runtime_error("Failed to load font asset: " + path);
+			std::cerr << "Failed to load font asset: " << path << std::endl;
+			return nullptr;
 		}
 
 		auto font = loadFontFromAsset(fontAsset);
@@ -120,24 +121,25 @@ namespace utility
 				auto materialKeyIt = _elementsIDs.find(materialKey);
 
 				if (materialKeyIt == _elementsIDs.end()) {
-					throw std::runtime_error(
-						"Missing text material entry for font atlas: " + name);
+					std::cerr << "Missing text material entry for font atlas: " << name
+							  << std::endl;
+					return;
 				}
 
 				auto materialIt = _materials.find(materialKeyIt->second);
 
 				if (materialIt == _materials.end()) {
-					throw std::runtime_error(
-						"Missing text material for font atlas: " + name);
+					std::cerr << "Missing text material for font atlas: " << name << std::endl;
+					return;
 				}
 
 				auto atlasMaterial = std::dynamic_pointer_cast<graphic::TextMaterial>(
 					materialIt->second);
 
 				if (!atlasMaterial) {
-					throw std::runtime_error(
-						"Misconfigured material for font: " + name
-						+ " is not a TextMaterial");
+					std::cerr << "Misconfigured material for font: " << name
+							  << " is not a TextMaterial" << std::endl;
+					return;
 				}
 
 				atlasMaterial->addAtlas(name, atlas);
@@ -204,24 +206,25 @@ namespace utility
 				auto materialKeyIt = _elementsIDs.find(materialKey);
 
 				if (materialKeyIt == _elementsIDs.end()) {
-					throw std::runtime_error(
-						"Missing text material entry for font atlas: " + name);
+					std::cerr << "Missing text material entry for font atlas: " << name
+							  << std::endl;
+					return;
 				}
 
 				auto materialIt = _materials.find(materialKeyIt->second);
 
 				if (materialIt == _materials.end()) {
-					throw std::runtime_error(
-						"Missing text material for font atlas: " + name);
+					std::cerr << "Missing text material for font atlas: " << name << std::endl;
+					return;
 				}
 
 				auto atlasMaterial = std::dynamic_pointer_cast<graphic::TextMaterial>(
 					materialIt->second);
 
 				if (!atlasMaterial) {
-					throw std::runtime_error(
-						"Misconfigured material for font: " + name
-						+ " is not a TextMaterial");
+					std::cerr << "Misconfigured material for font: " << name
+							  << " is not a TextMaterial" << std::endl;
+					return;
 				}
 
 				atlasMaterial->addAtlas(name, atlas);
@@ -246,7 +249,8 @@ namespace utility
 		auto materialAsset = systemInterface.add(path);
 
 		if (!materialAsset) {
-			throw std::runtime_error("Failed to load material asset: " + path);
+			std::cerr << "Failed to load material asset: " << path << std::endl;
+			return nullptr;
 		}
 
 		auto material = loadMaterialFromAsset(shaderType, materialAsset);
@@ -297,7 +301,8 @@ namespace utility
 		auto textureAsset = systemInterface.add(path);
 
 		if (!textureAsset) {
-			throw std::runtime_error("Failed to load texture asset: " + path);
+			std::cerr << "Failed to load texture asset: " << path << std::endl;
+			return nullptr;
 		}
 
 		auto texture = loadTextureFromAsset(textureAsset);
@@ -326,8 +331,8 @@ namespace utility
 			STBI_rgb_alpha);
 
 		if (!pixels) {
-			throw std::runtime_error("Failed to load texture: "
-									 + textureAsset->path());
+			std::cerr << "Failed to load texture: " << textureAsset->path() << std::endl;
+			return nullptr;
 		}
 
 		auto id = getNextID();
@@ -354,7 +359,8 @@ namespace utility
 		auto modelAsset = systemInterface.add(path);
 
 		if (!modelAsset) {
-			throw std::runtime_error("Failed to load model asset: " + path);
+			std::cerr << "Failed to load model asset: " << path << std::endl;
+			return nullptr;
 		}
 
 		auto id = getNextID();
@@ -415,7 +421,8 @@ namespace utility
 		auto modelAsset = systemInterface.add(path);
 
 		if (!modelAsset) {
-			throw std::runtime_error("Failed to load model asset: " + path);
+			std::cerr << "Failed to load model asset: " << path << std::endl;
+			return nullptr;
 		}
 
 		auto model = std::make_shared<graphic::Model>(modelAsset,
@@ -461,11 +468,13 @@ namespace utility
 		auto fragment = systemInterface.add(fragmentPath);
 
 		if (!vertex) {
-			throw std::runtime_error("Failed to load shader assets: " + vertexPath);
+			std::cerr << "Failed to load shader asset: " << vertexPath << std::endl;
+			return nullptr;
 		}
 
 		if (!fragment) {
-			throw std::runtime_error("Failed to load shader assets: " + fragmentPath);
+			std::cerr << "Failed to load shader asset: " << fragmentPath << std::endl;
+			return nullptr;
 		}
 
 		auto shader = std::make_shared<graphic::Shader>(vertex->content(), fragment->content());
