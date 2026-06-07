@@ -67,8 +67,10 @@ namespace guillaume::systems
 			_systemIO;	  ///< Shared system IO for file operations
 		std::unique_ptr<Engine> &_renderer;	 ///< Engine instance
 		std::string _defaultFontPath;	 ///< Default font for glyph rendering
+		std::string _glyphCodePath;	 ///< Path to glyph code mapping file
 		std::map<std::string, uint32_t> _glyphCode;
 		std::map<ecs::Entity::Identifier, CacheEntry> _cache;
+		bool _glyphCodesLoaded { false }; ///< Whether glyph codes have been loaded
 
 		public:
 		/**
@@ -96,13 +98,6 @@ namespace guillaume::systems
 			update(const ecs::Entity::Identifier &entityIdentifier) override;
 		void prepare(void) override;
 		void cleanup(void) override;
-
-		private:
-		/**
-		 * @brief Load glyph code mappings from a file.
-		 * @param filePath The path to the glyph code mapping file.
-		 */
-		void loadGlyphCodes(const std::string &filePath);
 	};
 
 }	 // namespace guillaume::systems

@@ -10,7 +10,7 @@ The project contain several repositories, each serving a specific purpose within
 - evan: The core graphical API based on Vulkan, GLFW, and OpenXR, providing cross-platform support for XR applications.
 - guillaume: The UI library designed for XR and desktop software, facilitating the creation of user interfaces.
 - xider: The main Integrated Development Environment (IDE) for XR application development, integrating the functionalities of the other repositories.
-- xider-android: The Android-specific implementation of the XIDER IDE, enabling deployment on Android devices.
+- xider_android: The Android-specific implementation of the XIDER IDE, enabling deployment on Android devices.
 - xider-macos: The macOS-specific implementation of the XIDER IDE, enabling deployment on macOS devices.
 - xider-windows: The Windows-specific implementation of the XIDER IDE, enabling deployment on Windows devices.
 - xider-linux: The Linux-specific implementation of the XIDER IDE, enabling deployment on Linux devices.
