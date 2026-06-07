@@ -17,13 +17,17 @@ evan::XrHandsMotionActions::XrHandsMotionActions(XrActionSet actionSet,
 
 evan::XrHandsMotionActions::~XrHandsMotionActions()
 {
+	this->getLogger().info("Destroying hand motion actions and spaces...");
+
 	xrDestroyAction(_handAimAction);
 	xrDestroySpace(_handAimSpace[0]);
 	xrDestroySpace(_handAimSpace[1]);
+	this->getLogger().info("Hand motion actions and spaces destroyed.");
 
 	xrDestroyAction(_handGripAction);
 	xrDestroySpace(_handGripSpace[0]);
 	xrDestroySpace(_handGripSpace[1]);
+	this->getLogger().info("Hand grip actions and spaces destroyed.");
 }
 
 ////////////////////
@@ -49,8 +53,8 @@ std::vector<std::unique_ptr<utility::event::Event>>
 		xrGetActionStatePose(deviceBackend._session, &getInfo, &poseState);
 
 		if (!poseState.isActive) {
-			std::cout << (i == 0 ? "LEFT" : "RIGHT")
-					  << " hand is not active.\n";
+			this->getLogger().info((i == 0 ? std::string("LEFT") : std::string("RIGHT"))
+								   + std::string(" hand pose action is not active."));
 			continue;
 		}
 
@@ -61,7 +65,8 @@ std::vector<std::unique_ptr<utility::event::Event>>
 						  deviceBackend._predictedDisplayTime, &aimLocation);
 
 		if (XR_FAILED(res)) {
-			std::cerr << "Failed to locate hand space: " << res << std::endl;
+			this->getLogger().error("Failed to locate hand space: "
+									+ std::to_string(res));
 			continue;
 		}
 
@@ -79,14 +84,17 @@ std::vector<std::unique_ptr<utility::event::Event>>
 
 			handEvent->setAim(pose);
 
-			std::cout << (i == 0 ? "LEFT" : "RIGHT") << " HAND AIM\n";
-			std::cout << "Position: " << aimLocation.pose.position.x << ", "
-					  << aimLocation.pose.position.y << ", "
-					  << aimLocation.pose.position.z << "\n";
-			std::cout << "Orientation: " << aimLocation.pose.orientation.x
-					  << ", " << aimLocation.pose.orientation.y << ", "
-					  << aimLocation.pose.orientation.z << ", "
-					  << aimLocation.pose.orientation.w << "\n";
+			this->getLogger().info((i == 0 ? std::string("LEFT") : std::string("RIGHT"))
+								   + std::string(" HAND AIM"));
+			this->getLogger().info(
+				"Position: " + std::to_string(aimLocation.pose.position.x)
+				+ ", " + std::to_string(aimLocation.pose.position.y) + ", "
+				+ std::to_string(aimLocation.pose.position.z));
+			this->getLogger().info(
+				"Orientation: " + std::to_string(aimLocation.pose.orientation.x)
+				+ ", " + std::to_string(aimLocation.pose.orientation.y) + ", "
+				+ std::to_string(aimLocation.pose.orientation.z) + ", "
+				+ std::to_string(aimLocation.pose.orientation.w));
 		}
 
 		XrSpaceLocation gripLocation { XR_TYPE_SPACE_LOCATION };
@@ -95,8 +103,8 @@ std::vector<std::unique_ptr<utility::event::Event>>
 							deviceBackend._predictedDisplayTime, &gripLocation);
 
 		if (XR_FAILED(res)) {
-			std::cerr << "Failed to locate hand grip space: " << res
-					  << std::endl;
+			this->getLogger().error("Failed to locate hand grip space: "
+									+ std::to_string(res));
 			continue;
 		}
 
@@ -115,14 +123,17 @@ std::vector<std::unique_ptr<utility::event::Event>>
 
 			handEvent->setGrip(grip);
 
-			std::cout << (i == 0 ? "LEFT" : "RIGHT") << " HAND GRIP\n";
-			std::cout << "Position: " << gripLocation.pose.position.x << ", "
-					  << gripLocation.pose.position.y << ", "
-					  << gripLocation.pose.position.z << "\n";
-			std::cout << "Orientation: " << gripLocation.pose.orientation.x
-					  << ", " << gripLocation.pose.orientation.y << ", "
-					  << gripLocation.pose.orientation.z << ", "
-					  << gripLocation.pose.orientation.w << "\n";
+			this->getLogger().info((i == 0 ? std::string("LEFT") : std::string("RIGHT")) + std::string(" HAND GRIP"));
+			this->getLogger().info(
+				"Position: " + std::to_string(gripLocation.pose.position.x)
+				+ ", " + std::to_string(gripLocation.pose.position.y) + ", "
+				+ std::to_string(gripLocation.pose.position.z));
+			this->getLogger().info(
+				"Orientation: "
+				+ std::to_string(gripLocation.pose.orientation.x) + ", "
+				+ std::to_string(gripLocation.pose.orientation.y) + ", "
+				+ std::to_string(gripLocation.pose.orientation.z) + ", "
+				+ std::to_string(gripLocation.pose.orientation.w));
 		}
 
 		events.push_back(std::move(handEvent));
@@ -133,7 +144,12 @@ std::vector<std::unique_ptr<utility::event::Event>>
 void evan::XrHandsMotionActions::createHandsMotionSpaces(
 	XrDeviceBackend &deviceBackend)
 {
+	this->getLogger().info("Creating hand motion spaces...");
+
 	for (int i = 0; i < 2; i++) {
+		this->getLogger().info("Creating spaces for "
+							   + std::string(i == 0 ? "LEFT" : "RIGHT")
+							   + " hand...");
 		XrActionSpaceCreateInfo spaceCreateInfo {
 			XR_TYPE_ACTION_SPACE_CREATE_INFO
 		};
@@ -145,19 +161,23 @@ void evan::XrHandsMotionActions::createHandsMotionSpaces(
 		XrResult result = xrCreateActionSpace(
 			deviceBackend._session, &spaceCreateInfo, &_handAimSpace[i]);
 		if (result != XR_SUCCESS) {
-			std::cerr << "Failed to create hand space: " << result << std::endl;
-			throw std::runtime_error("Failed to create hand space");
+			this->getLogger().error("Failed to create hand aim space: "
+									+ std::to_string(result));
+			return;
 		}
+		this->getLogger().info("Hand aim space created successfully.");
 
 		spaceCreateInfo.action = _handGripAction;
 		result = xrCreateActionSpace(deviceBackend._session, &spaceCreateInfo,
 									 &_handGripSpace[i]);
 		if (result != XR_SUCCESS) {
-			std::cerr << "Failed to create hand grip space: " << result
-					  << std::endl;
-			throw std::runtime_error("Failed to create hand grip space");
+			this->getLogger().error("Failed to create hand grip space: "
+									+ std::to_string(result));
+			return;
 		}
+		this->getLogger().info("Hand grip space created successfully.");
 	}
+	this->getLogger().info("Hand motion spaces created successfully.");
 }
 
 /////////////////////
@@ -167,6 +187,8 @@ void evan::XrHandsMotionActions::createHandsMotionSpaces(
 void evan::XrHandsMotionActions::createHandsMotionActions(
 	XrActionSet actionSet, XrDeviceBackend &deviceBackend)
 {
+	this->getLogger().info("Creating hand motion actions...");
+
 	// Create pose action
 	XrActionCreateInfo actionInfo { XR_TYPE_ACTION_CREATE_INFO };
 	actionInfo.actionType		   = XR_ACTION_TYPE_POSE_INPUT;
@@ -178,10 +200,12 @@ void evan::XrHandsMotionActions::createHandsMotionActions(
 
 	XrResult result = xrCreateAction(actionSet, &actionInfo, &_handAimAction);
 	if (result != XR_SUCCESS) {
-		std::cerr << "Failed to create hand pose action: " << result
-				  << std::endl;
-		throw std::runtime_error("Failed to create hand pose action");
+		this->getLogger().error("Failed to create hand pose action: "
+								+ std::to_string(result));
+		return;
 	}
+
+	this->getLogger().info("Hand pose action created successfully.");
 
 	// Create grip action
 	actionInfo.actionType		   = XR_ACTION_TYPE_POSE_INPUT;
@@ -193,8 +217,9 @@ void evan::XrHandsMotionActions::createHandsMotionActions(
 
 	result = xrCreateAction(actionSet, &actionInfo, &_handGripAction);
 	if (result != XR_SUCCESS) {
-		std::cerr << "Failed to create hand grip action: " << result
-				  << std::endl;
-		throw std::runtime_error("Failed to create hand grip action");
+		this->getLogger().error("Failed to create hand grip action: "
+								+ std::to_string(result));
+		return;
 	}
+	this->getLogger().info("Hand grip action created successfully.");
 }

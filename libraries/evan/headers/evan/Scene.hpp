@@ -9,6 +9,9 @@
 
 #include <utility/graphic/material.hpp>
 
+#include <utility/logging/loggable.hpp>
+#include <utility/logging/standard_logger.hpp>
+
 #include "evan/EvanPlatform.hpp"
 
 #include "evan/GPUMesh.hpp"
@@ -35,7 +38,9 @@ namespace evan
 	 * assumes that the necessary Vulkan resources (such as the device and
 	 * renderer) are provided during construction.
 	 */
-	class Scene
+	class Scene: protected utility::logging::Loggable<
+			Scene,
+			utility::logging::StandardLogger>
 	{
 		public:
 		Scene() = default;
@@ -105,7 +110,7 @@ namespace evan
 		 * It also assumes that the caller will not modify the returned vector,
 		 * as it is a constant reference to the internal state of the Scene.
 		 */
-		const std::vector<GPUMesh> &getMeshes() const;
+		const std::vector<std::shared_ptr<GPUMesh>> &getMeshes() const;
 
 		/**
 		 * @brief Retrieves the materials contained in the Scene.

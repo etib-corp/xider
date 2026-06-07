@@ -12,6 +12,8 @@
 
 evan::XrDeviceBackend::XrDeviceBackend(const IPlatform &platform)
 {
+	this->getLogger().info("Initializing XrDeviceBackend");
+
 	Version appVersion(0, 1, 0);
 	createXrInstance(platform);
 	getSystem();
@@ -31,15 +33,25 @@ evan::XrDeviceBackend::XrDeviceBackend(const IPlatform &platform)
 
 evan::XrDeviceBackend::~XrDeviceBackend()
 {
+	this->getLogger().info("Destroying XrDeviceBackend");
+
+	this->getLogger().info("Waiting for device to be idle before cleanup");
 	vkDeviceWaitIdle(_device);
+
 	if (_device != VK_NULL_HANDLE) {
+		this->getLogger().info("Destroying Vulkan device");
 		vkDestroyDevice(_device, nullptr);
 	}
 	if (_session != XR_NULL_HANDLE) {
+		this->getLogger().info("Destroying OpenXR session");
 		xrDestroySession(_session);
 	}
+
+	this->getLogger().info("Destroying Vulkan instance");
 	vkDestroyInstance(_VkInstance, nullptr);
+
 	if (_XrInstance != XR_NULL_HANDLE) {
+		this->getLogger().info("Destroying OpenXR instance");
 		xrDestroyInstance(_XrInstance);
 	}
 }
@@ -50,7 +62,10 @@ evan::XrDeviceBackend::~XrDeviceBackend()
 
 bool evan::XrDeviceBackend::preprocessFrame(ASwapchainContext &swapchainContext)
 {
+	this->getLogger().info("Preprocessing frame for OpenXR session");
+
 	if (!_sessionRunning) {
+		this->getLogger().warning("Cannot preprocess frame: XR session is not running");
 		return false;
 	}
 	XrFrameState frameState { XR_TYPE_FRAME_STATE };
@@ -59,13 +74,13 @@ bool evan::XrDeviceBackend::preprocessFrame(ASwapchainContext &swapchainContext)
 	};
 	XrResult result = xrWaitFrame(_session, &frameWaitInfo, &frameState);
 	if (result != XR_SUCCESS) {
-		std::cerr << "Failed to wait for OpenXR frame: " << result << std::endl;
+		this->getLogger().error("Failed to wait for OpenXR frame: " + std::to_string(result));
 		return false;
 	}
 	XrFrameBeginInfo frameBeginInfo { XR_TYPE_FRAME_BEGIN_INFO };
 	result = xrBeginFrame(_session, &frameBeginInfo);
 	if (result != XR_SUCCESS) {
-		std::cerr << "Failed to begin OpenXR frame: " << result << std::endl;
+		this->getLogger().error("Failed to begin OpenXR frame: " + std::to_string(result));
 		return false;
 	}
 	_predictedDisplayTime = frameState.predictedDisplayTime;
@@ -91,8 +106,7 @@ bool evan::XrDeviceBackend::preprocessFrame(ASwapchainContext &swapchainContext)
 										  static_cast<uint32_t>(views.size()),
 										  &viewCount, views.data());
 	if (locateResult != XR_SUCCESS) {
-		std::cerr << "Failed to locate OpenXR views: " << locateResult
-				  << std::endl;
+		this->getLogger().error("Failed to locate OpenXR views: " + std::to_string(locateResult));
 		return false;
 	}
 
@@ -123,6 +137,8 @@ bool evan::XrDeviceBackend::preprocessFrame(ASwapchainContext &swapchainContext)
 bool evan::XrDeviceBackend::processFrame(VkPresentInfoKHR presentInfo,
 										 ASwapchainImage &swapchainImage)
 {
+	this->getLogger().info("Processing frame for OpenXR session");
+
 	XrSwapchain swapchain =
 		dynamic_cast<evan::XrSwapchainImage &>(swapchainImage)._swapchain;
 	XrSwapchainImageReleaseInfo releaseInfo {
@@ -130,8 +146,7 @@ bool evan::XrDeviceBackend::processFrame(VkPresentInfoKHR presentInfo,
 	};
 	XrResult result = xrReleaseSwapchainImage(swapchain, &releaseInfo);
 	if (result != XR_SUCCESS) {
-		std::cerr << "Failed to release OpenXR swapchain image: " << result
-				  << std::endl;
+		this->getLogger().error("Failed to release OpenXR swapchain image: " + std::to_string(result));
 		return false;
 	}
 	return true;
@@ -140,6 +155,8 @@ bool evan::XrDeviceBackend::processFrame(VkPresentInfoKHR presentInfo,
 bool evan::XrDeviceBackend::postprocessFrame(
 	ASwapchainContext &swapchainContext)
 {
+	this->getLogger().info("Postprocessing frame for OpenXR session");
+
 	dynamic_cast<evan::XrSwapchainContext &>(swapchainContext)
 		.updateProjectionLayerViews();
 	auto &projectionLayerViews =
@@ -161,7 +178,7 @@ bool evan::XrDeviceBackend::postprocessFrame(
 
 	XrResult result = xrEndFrame(_session, &frameEndInfo);
 	if (result != XR_SUCCESS) {
-		std::cerr << "Failed to end OpenXR frame: " << result << std::endl;
+		this->getLogger().error("Failed to end OpenXR frame: " + std::to_string(result));
 		return false;
 	}
 	return true;
@@ -169,6 +186,7 @@ bool evan::XrDeviceBackend::postprocessFrame(
 
 evan::QueueFamilyIndices evan::XrDeviceBackend::findQueueFamilies()
 {
+	this->getLogger().info("Finding queue families for OpenXR session");
 	QueueFamilyIndices indices = {};
 	uint32_t queueFamilyCount  = 0;
 
@@ -200,6 +218,8 @@ uint32_t evan::XrDeviceBackend::countSwapchainFormats() const
 std::vector<int64_t> evan::XrDeviceBackend::enumerateSwapchainFormats(
 	uint32_t swapchainFormatCount) const
 {
+	this->getLogger().info("Enumerating swapchain formats for OpenXR session");
+
 	std::vector<int64_t> swapchainFormats(swapchainFormatCount);
 	xrEnumerateSwapchainFormats(_session, swapchainFormatCount,
 								&swapchainFormatCount, swapchainFormats.data());
@@ -209,14 +229,15 @@ std::vector<int64_t> evan::XrDeviceBackend::enumerateSwapchainFormats(
 std::vector<XrViewConfigurationView>
 	evan::XrDeviceBackend::enumerateViewConfigurations() const
 {
+	this->getLogger().info("Enumerating view configurations for OpenXR session");
+
 	uint32_t viewConfigurationCount = 0;
 	xrEnumerateViewConfigurationViews(_XrInstance, _systemId,
 									  XR_VIEW_CONFIGURATION_TYPE_PRIMARY_STEREO,
 									  0, &viewConfigurationCount, nullptr);
 
 	if (viewConfigurationCount == 0) {
-		std::cerr << "No view configurations found for the OpenXR system."
-				  << std::endl;
+		this->getLogger().error("No view configurations found for the OpenXR system.");
 		return {};
 	}
 	std::vector<XrViewConfigurationView> viewConfigurations(
@@ -230,12 +251,16 @@ std::vector<XrViewConfigurationView>
 
 std::vector<std::unique_ptr<utility::event::Event>> evan::XrDeviceBackend::pollActions()
 {
+	this->getLogger().info("Polling actions for OpenXR session");
+
 	if (!_sessionRunning) {
+		this->getLogger().warning("Cannot poll actions: XR session is not running");
 		return {};
 	}
 	if (_actionManager) {
 		return _actionManager->pollActions(*this);
 	}
+	this->getLogger().warning("Action manager is not initialized, cannot poll actions");
 	return {};
 }
 
@@ -247,6 +272,8 @@ void evan::XrDeviceBackend::createInstance(const IPlatform &platform,
 										   const std::string &appName,
 										   Version &appVersion)
 {
+	this->getLogger().info("Creating OpenXR instance for XrDeviceBackend");
+
 	XrGraphicsRequirementsVulkan2KHR graphicsRequirements {};
 	PFN_xrGetVulkanGraphicsRequirements2KHR getVulkanGraphicsRequirements2KHR =
 		nullptr;
@@ -260,25 +287,21 @@ void evan::XrDeviceBackend::createInstance(const IPlatform &platform,
 							  reinterpret_cast<PFN_xrVoidFunction *>(
 								  &getVulkanGraphicsRequirements2KHR))
 		!= XR_SUCCESS) {
-		std::cerr << "Failed to get xrGetVulkanGraphicsRequirements2KHR "
-					 "function pointer."
-				  << std::endl;
+		this->getLogger().error("Failed to get xrGetVulkanGraphicsRequirements2KHR "
+								"function pointer.");
 		return;
 	}
 	XrResult xrResult = getVulkanGraphicsRequirements2KHR(
 		_XrInstance, _systemId, &graphicsRequirements);
 	if (xrResult != XR_SUCCESS) {
-		std::cerr
-			<< "Failed to query Vulkan graphics requirements through OpenXR."
-			<< std::endl;
+		this->getLogger().error("Failed to query Vulkan graphics requirements through OpenXR.");
 		return;
 	}
 	if (xrGetInstanceProcAddr(
 			_XrInstance, "xrCreateVulkanInstanceKHR",
 			reinterpret_cast<PFN_xrVoidFunction *>(&createVulkanInstanceKHR))
 		!= XR_SUCCESS) {
-		std::cerr << "Failed to get xrCreateVulkanInstanceKHR function pointer."
-				  << std::endl;
+		this->getLogger().error("Failed to get xrCreateVulkanInstanceKHR function pointer.");
 		return;
 	}
 
@@ -291,8 +314,10 @@ void evan::XrDeviceBackend::createInstance(const IPlatform &platform,
 	appInfo.apiVersion		   = graphicsRequirements.minApiVersionSupported;
 
 	if (enableValidationLayers) {
+		this->getLogger().info("Enabling validation layers for OpenXR Vulkan instance");
 		extensions = this->getRequiredInstanceExtensions();
 		if (!extensions.empty()) {
+			this->getLogger().info("Adding required instance extensions for OpenXR Vulkan instance");
 			layers = this->getRequiredInstanceExtensionsAndroid();
 		}
 	}
@@ -315,16 +340,18 @@ void evan::XrDeviceBackend::createInstance(const IPlatform &platform,
 	createVulkanInstanceKHR(_XrInstance, &vulkanCreateInfoKHR, &_VkInstance,
 							&result);
 	if (result != VK_SUCCESS) {
-		std::cerr << "Failed to create Vulkan instance through OpenXR."
-				  << std::endl;
+		this->getLogger().error("Failed to create Vulkan instance through OpenXR.");
 		return;
 	}
+	this->getLogger().info("Successfully created Vulkan instance through OpenXR");
 }
 
 void evan::XrDeviceBackend::createLogicalDevice()
 {
+	this->getLogger().info("Creating Vulkan logical device for OpenXR session");
+
 	if (_physicalDevice == VK_NULL_HANDLE) {
-		std::cerr << "Invalid Vulkan physical device provided." << std::endl;
+		this->getLogger().error("Invalid Vulkan physical device provided.");
 		return;
 	}
 
@@ -334,15 +361,12 @@ void evan::XrDeviceBackend::createLogicalDevice()
 			_XrInstance, "xrCreateVulkanDeviceKHR",
 			reinterpret_cast<PFN_xrVoidFunction *>(&createVulkanDeviceKHR))
 		!= XR_SUCCESS) {
-		std::cerr << "Failed to get xrCreateVulkanDeviceKHR function pointer."
-				  << std::endl;
+		this->getLogger().error("Failed to get xrCreateVulkanDeviceKHR function pointer.");
 		return;
 	}
 	evan::QueueFamilyIndices indices = findQueueFamilies();
 	if (!indices.graphicsFamily.has_value()) {
-		std::cerr
-			<< "Failed to find required queue families for the Vulkan device."
-			<< std::endl;
+		this->getLogger().error("Failed to find required queue families for the Vulkan device.");
 		return;
 	}
 
@@ -372,16 +396,18 @@ void evan::XrDeviceBackend::createLogicalDevice()
 	createVulkanDeviceKHR(_XrInstance, &vulkanDeviceCreateInfoKHR, &_device,
 						  &result);
 	if (result != VK_SUCCESS) {
-		std::cerr << "Failed to create Vulkan device through OpenXR."
-				  << std::endl;
+		this->getLogger().error("Failed to create Vulkan device through OpenXR.");
 		return;
 	}
+	this->getLogger().info("Successfully created Vulkan device through OpenXR");
 }
 
 void evan::XrDeviceBackend::pickPhysicalDevice()
 {
+	this->getLogger().info("Picking Vulkan physical device for OpenXR session");
+
 	if (_VkInstance == VK_NULL_HANDLE) {
-		std::cerr << "Invalid Vulkan instance provided." << std::endl;
+		this->getLogger().error("Invalid Vulkan instance provided.");
 		return;
 	}
 	PFN_xrGetVulkanGraphicsDevice2KHR getVulkanGraphicsDevice2KHR = nullptr;
@@ -391,11 +417,10 @@ void evan::XrDeviceBackend::pickPhysicalDevice()
 							  reinterpret_cast<PFN_xrVoidFunction *>(
 								  &getVulkanGraphicsDevice2KHR))
 		!= XR_SUCCESS) {
-		std::cerr
-			<< "Failed to get xrGetVulkanGraphicsDevice2KHR function pointer."
-			<< std::endl;
+		this->getLogger().error("Failed to get xrGetVulkanGraphicsDevice2KHR function pointer.");
 		return;
 	}
+
 	deviceGetInfo.type			 = XR_TYPE_VULKAN_GRAPHICS_DEVICE_GET_INFO_KHR;
 	deviceGetInfo.systemId		 = _systemId;
 	deviceGetInfo.vulkanInstance = _VkInstance;
@@ -403,15 +428,16 @@ void evan::XrDeviceBackend::pickPhysicalDevice()
 	if (getVulkanGraphicsDevice2KHR(_XrInstance, &deviceGetInfo,
 									&_physicalDevice)
 		!= XR_SUCCESS) {
-		std::cerr << "Failed to get Vulkan physical device through OpenXR."
-				  << std::endl;
+		this->getLogger().error("Failed to get Vulkan physical device through OpenXR.");
 		return;
 	}
-	return;
+	this->getLogger().info("Successfully obtained Vulkan physical device through OpenXR");
 }
 
 void evan::XrDeviceBackend::createVisualizedSpace()
 {
+	this->getLogger().info("Creating visualized reference space for OpenXR session");
+
 	XrReferenceSpaceCreateInfo spaceCreateInfo {
 		XR_TYPE_REFERENCE_SPACE_CREATE_INFO
 	};
@@ -424,11 +450,11 @@ void evan::XrDeviceBackend::createVisualizedSpace()
 		spaceCreateInfo.referenceSpaceType = XR_REFERENCE_SPACE_TYPE_LOCAL;
 		result = xrCreateReferenceSpace(_session, &spaceCreateInfo, &_space);
 		if (result != XR_SUCCESS) {
-			std::cerr << "Failed to create OpenXR reference space: " << result
-					  << std::endl;
+			this->getLogger().error("Failed to create OpenXR reference space.");
 			return;
 		}
 	}
+	this->getLogger().info("Successfully created visualized reference space for OpenXR session");
 }
 
 std::vector<VkExtensionProperties>
@@ -441,8 +467,7 @@ std::vector<VkExtensionProperties>
 	if (vkEnumerateInstanceExtensionProperties(layerName.c_str(),
 											   &extensionCount, nullptr)
 		!= VK_SUCCESS) {
-		std::cerr << "Failed to enumerate OpenXR instance extension properties."
-				  << std::endl;
+		this->getLogger().error("Failed to enumerate OpenXR instance extension properties.");
 		return extensions;
 	}
 
@@ -450,8 +475,7 @@ std::vector<VkExtensionProperties>
 	if (vkEnumerateInstanceExtensionProperties(
 			layerName.c_str(), &extensionCount, extensions.data())
 		!= VK_SUCCESS) {
-		std::cerr << "Failed to enumerate OpenXR instance extension properties."
-				  << std::endl;
+		this->getLogger().error("Failed to enumerate OpenXR instance extension properties.");
 		return {};
 	}
 
@@ -464,6 +488,8 @@ std::vector<VkExtensionProperties>
 
 void evan::XrDeviceBackend::createXrInstance(const IPlatform &platform)
 {
+	this->getLogger().info("Creating OpenXR instance for XrDeviceBackend");
+
 	std::vector<std::string> requiredExtensions =
 		platform.getRequiredInstanceExtensions();
 	std::vector<const char *> extensions;
@@ -488,10 +514,10 @@ void evan::XrDeviceBackend::createXrInstance(const IPlatform &platform)
 	XrResult result = xrCreateInstance(&createInfo, &_XrInstance);
 	if (result != XR_SUCCESS) {
 		// TODO: Throw an exception or handle the error appropriately
-		std::cerr << "Failed to create OpenXR instance: " << result
-				  << std::endl;
+		this->getLogger().error("Failed to create OpenXR instance.");
 		return;
 	}
+	this->getLogger().info("Successfully created OpenXR instance");
 }
 
 void evan::XrDeviceBackend::getSystem()
@@ -502,21 +528,21 @@ void evan::XrDeviceBackend::getSystem()
 	XrResult result = xrGetSystem(_XrInstance, &systemInfo, &_systemId);
 	if (result != XR_SUCCESS) {
 		// TODO: Throw an exception or handle the error appropriately
-		std::cerr << "Failed to get OpenXR system: " << result << std::endl;
+		this->getLogger().error("Failed to get OpenXR system.");
 		return;
 	}
 }
 
 void evan::XrDeviceBackend::createSession()
 {
+	this->getLogger().info("Creating OpenXR session for XrDeviceBackend");
+
 	XrSessionCreateInfo sessionCreateInfo			  = {};
 	XrGraphicsBindingVulkan2KHR graphicsBindingVulkan = {};
 	QueueFamilyIndices indices						  = findQueueFamilies();
 
 	if (indices.graphicsFamily == std::nullopt) {
-		std::cerr << "Failed to create OpenXR session: no graphics queue "
-					 "family found."
-				  << std::endl;
+		this->getLogger().error("Failed to create OpenXR session: no graphics queue family found.");
 		return;
 	}
 
@@ -532,9 +558,10 @@ void evan::XrDeviceBackend::createSession()
 
 	if (xrCreateSession(_XrInstance, &sessionCreateInfo, &_session)
 		!= XR_SUCCESS) {
-		std::cerr << "Failed to create OpenXR session." << std::endl;
+		this->getLogger().error("Failed to create OpenXR session.");
 		return;
 	}
+	this->getLogger().info("Successfully created OpenXR session");
 }
 
 std::vector<const char *>

@@ -14,6 +14,9 @@
 
 #include <utility/event/hand_thumb_stick_event.hpp>
 
+#include <utility/logging/loggable.hpp>
+#include <utility/logging/standard_logger.hpp>
+
 namespace evan
 {
 
@@ -97,7 +100,9 @@ namespace evan
 	 * application, allowing developers to create immersive experiences that
 	 * utilize thumb stick gestures and movements from hand tracking devices.
 	 */
-	class XrManageThumbStickActions
+	class XrManageThumbStickActions : protected utility::logging::Loggable<
+			XrManageThumbStickActions,
+			utility::logging::StandardLogger>
 	{
 		public:
 		/** @brief Constructs an XrManageThumbStickActions instance with the

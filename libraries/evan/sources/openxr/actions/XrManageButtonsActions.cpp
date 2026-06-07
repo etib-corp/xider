@@ -12,6 +12,8 @@ evan::XrButtonAction::XrButtonAction(
 	utility::event::HandButtonEvent::Button buttonType)
 	: _buttonType(buttonType)
 {
+	this->getLogger().info("Creating button action for button: "
+							+ std::to_string(static_cast<int>(_buttonType)));
 }
 
 ////////////////////
@@ -34,9 +36,8 @@ std::vector<std::unique_ptr<utility::event::Event>>
 		buttonEvent->setButton(_buttonType);
 		buttonEvent->setButtonPressed(state.currentState);
 
-		std::cout << "Button " << static_cast<int>(_buttonType) << " is "
-				  << (state.currentState ? "pressed" : "not pressed")
-				  << std::endl;
+		this->getLogger().info("Button " + std::to_string(static_cast<int>(_buttonType)) + " is "
+								+ (state.currentState ? "pressed" : "not pressed"));
 
 		events.push_back(std::move(buttonEvent));
 	}
@@ -47,6 +48,8 @@ std::vector<std::unique_ptr<utility::event::Event>>
 evan::XrManageButtonsActions::XrManageButtonsActions(
 	XrActionSet actionSet, XrDeviceBackend &deviceBackend)
 {
+	this->getLogger().info("Creating button actions...");
+
 	_buttonAAction = std::make_unique<XrButtonAction>(
 		utility::event::HandButtonEvent::Button::A);
 	_buttonBAction = std::make_unique<XrButtonAction>(
@@ -67,12 +70,18 @@ evan::XrManageButtonsActions::XrManageButtonsActions(
 	propertiesButtonAAction.actionType	= XR_ACTION_TYPE_BOOLEAN_INPUT;
 	_buttonAAction->createAction(propertiesButtonAAction);
 
+	this->getLogger().info("Button A action created with name: " + propertiesButtonAAction.actionName
+							+ " and binding path: " + propertiesButtonAAction.bindingPath);
+
 	evan::AXrAction::PropertiesXrActions propertiesButtonBAction;
 	propertiesButtonBAction.actionName	= "button_b_action";
 	propertiesButtonBAction.bindingPath = "/user/hand/right/input/b/click";
 	propertiesButtonBAction.actionSet	= actionSet;
 	propertiesButtonBAction.actionType	= XR_ACTION_TYPE_BOOLEAN_INPUT;
 	_buttonBAction->createAction(propertiesButtonBAction);
+
+	this->getLogger().info("Button B action created with name: " + propertiesButtonBAction.actionName
+							+ " and binding path: " + propertiesButtonBAction.bindingPath);
 
 	evan::AXrAction::PropertiesXrActions propertiesButtonXAction;
 	propertiesButtonXAction.actionName	= "button_x_action";
@@ -81,12 +90,18 @@ evan::XrManageButtonsActions::XrManageButtonsActions(
 	propertiesButtonXAction.actionType	= XR_ACTION_TYPE_BOOLEAN_INPUT;
 	_buttonXAction->createAction(propertiesButtonXAction);
 
+	this->getLogger().info("Button X action created with name: " + propertiesButtonXAction.actionName
+							+ " and binding path: " + propertiesButtonXAction.bindingPath);
+
 	evan::AXrAction::PropertiesXrActions propertiesButtonYAction;
 	propertiesButtonYAction.actionName	= "button_y_action";
 	propertiesButtonYAction.bindingPath = "/user/hand/left/input/y/click";
 	propertiesButtonYAction.actionSet	= actionSet;
 	propertiesButtonYAction.actionType	= XR_ACTION_TYPE_BOOLEAN_INPUT;
 	_buttonYAction->createAction(propertiesButtonYAction);
+
+	this->getLogger().info("Button Y action created with name: " + propertiesButtonYAction.actionName
+							+ " and binding path: " + propertiesButtonYAction.bindingPath);
 
 	evan::AXrAction::PropertiesXrActions propertiesButtonMenuAction;
 	propertiesButtonMenuAction.actionName = "button_menu_action";
@@ -96,6 +111,9 @@ evan::XrManageButtonsActions::XrManageButtonsActions(
 	propertiesButtonMenuAction.actionType = XR_ACTION_TYPE_BOOLEAN_INPUT;
 	_buttonMenuAction->createAction(propertiesButtonMenuAction);
 
+	this->getLogger().info("Button Menu action created with name: " + propertiesButtonMenuAction.actionName
+							+ " and binding path: " + propertiesButtonMenuAction.bindingPath);
+
 	evan::AXrAction::PropertiesXrActions propertiesButtonSystemAction;
 	propertiesButtonSystemAction.actionName = "button_system_action";
 	propertiesButtonSystemAction.bindingPath =
@@ -103,10 +121,14 @@ evan::XrManageButtonsActions::XrManageButtonsActions(
 	propertiesButtonSystemAction.actionSet	= actionSet;
 	propertiesButtonSystemAction.actionType = XR_ACTION_TYPE_BOOLEAN_INPUT;
 	_buttonSystemAction->createAction(propertiesButtonSystemAction);
+
+	this->getLogger().info("Button System action created with name: " + propertiesButtonSystemAction.actionName
+							+ " and binding path: " + propertiesButtonSystemAction.bindingPath);
 }
 
 evan::XrManageButtonsActions::~XrManageButtonsActions()
 {
+	this->getLogger().info("Destroying button actions...");
 }
 
 ////////////////////

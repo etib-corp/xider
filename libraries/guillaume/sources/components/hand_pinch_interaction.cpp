@@ -26,39 +26,7 @@ namespace guillaume::components
 {
 
 	HandPinchInteraction::HandPinchInteraction(void)
-		: ecs::Component()
+		: Interaction()
 	{
-		_onPinchHandler = nullptr;
-		_isPinched		= false;
 	}
-
-	HandPinchInteraction &
-		HandPinchInteraction::setOnPinchHandler(const PinchHandler &handler)
-	{
-		_onPinchHandler = handler;
-		setHasChanged(true);
-		return *this;
-	}
-
-	HandPinchInteraction::PinchHandler
-		HandPinchInteraction::getOnPinchHandler(void) const
-	{
-		return _onPinchHandler;
-	}
-
-	bool HandPinchInteraction::isPinched(void) const
-	{
-		return _isPinched;
-	}
-
-	HandPinchInteraction &HandPinchInteraction::setPinched(bool isPinched)
-	{
-		if (_isPinched == isPinched) {
-			return *this;
-		}
-		_isPinched = isPinched;
-		setHasChanged(true);
-		return *this;
-	}
-
 }	 // namespace guillaume::components

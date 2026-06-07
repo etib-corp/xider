@@ -9,6 +9,8 @@
 
 evan::IDesktopPlatform::~IDesktopPlatform()
 {
+	this->getLogger().info("Destroying IDesktopPlatform and releasing associated resources...");
+
 	glfwDestroyWindow(_window);
 	glfwTerminate();
 }
@@ -20,6 +22,7 @@ evan::IDesktopPlatform::~IDesktopPlatform()
 std::shared_ptr<evan::ADeviceBackend>
 	evan::IDesktopPlatform::createDeviceBackend() const
 {
+	this->getLogger().info("Creating device backend for Desktop platform...");
 	return std::make_shared<DesktopBackend>(*this);
 }
 
@@ -27,6 +30,7 @@ std::shared_ptr<evan::ASwapchainContext>
 	evan::IDesktopPlatform::createSwapchainContext(
 		const DeviceContext &deviceContext) const
 {
+	this->getLogger().info("Creating swapchain context for Desktop platform...");
 	return std::make_shared<DesktopSwapchainContext>(deviceContext, _window);
 }
 
@@ -34,17 +38,19 @@ std::shared_ptr<evan::ASwapchainContext>
 std::vector<std::unique_ptr<utility::event::Event>>
 	evan::IDesktopPlatform::pollEvents(ADeviceBackend &deviceBackend)
 {
+	this->getLogger().info("Polling events for Desktop platform...");
 	glfwPollEvents();
 
 	std::vector<std::unique_ptr<utility::event::Event>> events;
 
+	this->getLogger().info("Processing keyboard events for Desktop platform...");
 	events.insert(events.end(),
 			   std::make_move_iterator(_keyboardEvents.begin()),
 			   std::make_move_iterator(_keyboardEvents.end()));
-
 	// Clear keyboard events after processing them
 	_keyboardEvents.clear();
 
+	this->getLogger().info("Processing mouse button events for Desktop platform...");
 	events.insert(events.end(),
 			   std::make_move_iterator(_mouseButtonEvents.begin()),
 			   std::make_move_iterator(_mouseButtonEvents.end()));
@@ -52,6 +58,7 @@ std::vector<std::unique_ptr<utility::event::Event>>
 	// Clear mouse button events after processing them
 	_mouseButtonEvents.clear();
 
+	this->getLogger().info("Processing mouse motion events for Desktop platform...");
 	events.insert(events.end(),
 			   std::make_move_iterator(_mouseMotionEvents.begin()),
 			   std::make_move_iterator(_mouseMotionEvents.end()));
@@ -65,6 +72,8 @@ std::vector<std::unique_ptr<utility::event::Event>>
 std::vector<std::string>
 	evan::IDesktopPlatform::getRequiredInstanceExtensions() const
 {
+	this->getLogger().info("Getting required instance extensions for Desktop platform...");
+
 	uint32_t glfwExtensionCount = 0;
 	const char **glfwExtensions =
 		glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
@@ -73,6 +82,7 @@ std::vector<std::string>
 
 	extensions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
 	if (enableValidationLayers == true) {
+		this->getLogger().info("Validation layers are enabled. Adding VK_EXT_DEBUG_UTILS_EXTENSION_NAME to required instance extensions.");
 		extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 	}
 	return std::vector<std::string>(extensions.begin(), extensions.end());
@@ -80,6 +90,7 @@ std::vector<std::string>
 
 bool evan::IDesktopPlatform::shouldClose() const
 {
+	this->getLogger().info("Checking if Desktop window should close...");
 	return glfwWindowShouldClose(_window);
 }
 
@@ -91,6 +102,7 @@ utility::event::KeyboardEvent::KeyCode
 
 utility::event::MouseButtonEvent::Button evan::IDesktopPlatform::convertGlfwMouseButtonToButton(int glfwButton) const
 {
+	this->getLogger().info("Converting GLFW mouse button to event button...");
 	switch (glfwButton) {
 	case GLFW_MOUSE_BUTTON_LEFT:
 		return utility::event::MouseButtonEvent::Button::Left;

@@ -12,14 +12,19 @@
 evan::DesktopSwapchainContext::DesktopSwapchainContext(
 	const DeviceContext &deviceContext, GLFWwindow *window)
 {
+	this->getLogger().info("Initializing DesktopSwapchainContext...");
+
 	this->createRenderPass(deviceContext.getDeviceBackend(),
 						   deviceContext.getMsaaSamples());
+
+	this->getLogger().info("Creating swapchain images for DesktopSwapchainContext...");
 	_swapchainImages.push_back(std::make_shared<DesktopSwapchainImage>(
 		deviceContext, window, _renderPass));
 }
 
 evan::DesktopSwapchainContext::~DesktopSwapchainContext()
 {
+	this->getLogger().info("Destroying DesktopSwapchainContext...");
 }
 
 ////////////////////
@@ -28,8 +33,14 @@ evan::DesktopSwapchainContext::~DesktopSwapchainContext()
 
 void evan::DesktopSwapchainContext::destroy(VkDevice device)
 {
+	this->getLogger().info("Destroying swapchain and associated resources for DesktopSwapchainContext...");
+
+	this->getLogger().info("Destroying render pass for DesktopSwapchainContext...");
 	vkDestroyRenderPass(device, _renderPass, nullptr);
+
+	this->getLogger().info("Destroying swapchain images for DesktopSwapchainContext...");
 	for (const auto &swapchainImage: _swapchainImages) {
+		this->getLogger().info("Destroying swapchain image and releasing associated resources...");
 		swapchainImage->destroy(device);
 	}
 }
@@ -38,10 +49,12 @@ VkResult evan::DesktopSwapchainContext::aquireImage(
 	uint32_t index, VkDevice device, VkSemaphore imageAvailableSemaphore,
 	VkFence inFlightFence, uint32_t &imageIndex)
 {
+	this->getLogger().info("Acquiring next available image from swapchain for DesktopSwapchainContext...");
 	VkSwapchainKHR swapchain =
 		dynamic_cast<DesktopSwapchainImage *>(_swapchainImages[index].get())
 			->_swapchain;
 
+	this->getLogger().info("Calling vkAcquireNextImageKHR to acquire image from swapchain...");
 	return vkAcquireNextImageKHR(device, swapchain, UINT64_MAX,
 								 imageAvailableSemaphore, inFlightFence,
 								 &imageIndex);

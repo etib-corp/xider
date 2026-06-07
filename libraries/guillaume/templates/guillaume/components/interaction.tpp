@@ -23,26 +23,37 @@
 #pragma once
 
 #include "guillaume/components/interaction.hpp"
-#include "utility/event/hand_squeeze_event.hpp"
 
 namespace guillaume::components
 {
-	/**
-	 * @brief Component handling hand squeeze interactions.
-	 * @see systems::HandSqueeze
-	 */
-	class HandSqueezeInteraction:
-		public Interaction<utility::event::HandSqueezeEvent>
+	template<typename EventType>
+	InteractionBase<EventType>::InteractionBase(void)
+		: ecs::Component()
 	{
-		public:
-		/**
-		 * @brief Constructs a new HandSqueezeInteraction instance.
-		 */
-		HandSqueezeInteraction(void);
+	}
 
-		/**
-		 * @brief Destructor for the HandSqueezeInteraction class.
-		 */
-		~HandSqueezeInteraction(void) = default;
-	};
+	template<typename EventType>
+	void InteractionBase<EventType>::setOnEventHandler(
+		const EventHandler &handler)
+	{
+		_onEventHandler = handler;
+		setHasChanged(true);
+	}
+
+	template<typename EventType> InteractionBase<EventType>::EventHandler
+		InteractionBase<EventType>::getOnEventHandler(void) const
+	{
+		return _onEventHandler;
+	}
+
+	template<typename EventType>
+	Interaction<EventType, false>::Interaction(void)
+		: InteractionBase<EventType>()
+	{
+	}
+
+	template<typename EventType> Interaction<EventType, true>::Interaction(void)
+		: InteractionBase<EventType>()
+	{
+	}
 }	 // namespace guillaume::components

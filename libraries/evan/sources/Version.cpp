@@ -10,6 +10,8 @@
 evan::Version::Version(unsigned int major, unsigned int minor,
 					   unsigned int patch)
 {
+	this->getLogger().info("Constructing Version object with version " + std::to_string(major) + "." + std::to_string(minor) + "." + std::to_string(patch));
+
 	this->_major = major;
 	this->_minor = minor;
 	this->_patch = patch;
@@ -17,6 +19,7 @@ evan::Version::Version(unsigned int major, unsigned int minor,
 
 evan::Version::~Version()
 {
+	this->getLogger().info("Destroying Version object...");
 }
 
 uint32_t evan::Version::to_uint32_t()

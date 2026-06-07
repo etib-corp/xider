@@ -9,6 +9,7 @@
 
 evan::LinuxXrPlatform::LinuxXrPlatform()
 {
+	this->getLogger().info("LinuxXrPlatform initialized");
 }
 
 ////////////////////

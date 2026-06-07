@@ -47,12 +47,18 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL defaultDebugCallback(
 
 evan::DesktopBackend::DesktopBackend(const IPlatform &platform)
 {
+	this->getLogger().info("Initializing DesktopBackend...");
+
 	Version appVersion(0, 1, 0);
 
+	this->getLogger().info("Setting up GLFW platform for DesktopBackend...");
 	auto glfwPlatform = dynamic_cast<const IDesktopPlatform *>(&platform);
 
 	this->createInstance(platform, "Evan", appVersion);
+
+	this->getLogger().info("Creating Vulkan surface for DesktopBackend...");
 	_surface = glfwPlatform->createSurface(_VkInstance);
+
 	this->pickPhysicalDevice();
 	this->createLogicalDevice();
 	this->createPresentQueue();
@@ -62,8 +68,13 @@ evan::DesktopBackend::DesktopBackend(const IPlatform &platform)
 
 evan::DesktopBackend::~DesktopBackend()
 {
+	this->getLogger().info("Destroying DesktopBackend and cleaning up Vulkan resources...");
 	vkDestroyDevice(_device, nullptr);
+
+	this->getLogger().info("Destroying Vulkan surface...");
 	vkDestroySurfaceKHR(_VkInstance, _surface, nullptr);
+
+	this->getLogger().info("Destroying Vulkan instance...");
 	vkDestroyInstance(_VkInstance, nullptr);
 }
 
@@ -74,27 +85,37 @@ evan::DesktopBackend::~DesktopBackend()
 bool evan::DesktopBackend::processFrame(VkPresentInfoKHR presentInfo,
 										ASwapchainImage &swapchainImage)
 {
+	this->getLogger().info("Processing frame for DesktopBackend...");
 	VkResult result = vkQueuePresentKHR(_presentQueue, &presentInfo);
 
 	if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR) {
+		this->getLogger().info("Swap chain is out of date or suboptimal.");
 		return false;
 	} else if (result != VK_SUCCESS) {
-		throw std::runtime_error("Failed to present swap chain image!");
+		this->getLogger().error("Failed to present swap chain image!");
+		return false;
 	}
+	this->getLogger().info("Frame presented successfully.");
 	return true;
 }
 
 uint32_t evan::DesktopBackend::countSwapchainFormats() const
 {
+	this->getLogger().info("Counting available swap chain formats for DesktopBackend...");
+
 	uint32_t formatCount;
 	vkGetPhysicalDeviceSurfaceFormatsKHR(_physicalDevice, _surface,
 										 &formatCount, nullptr);
+
+	this->getLogger().info("Found " + std::to_string(formatCount) + " swap chain formats available.");
 	return formatCount;
 }
 
 std::vector<int64_t> evan::DesktopBackend::enumerateSwapchainFormats(
 	uint32_t swapchainFormatCount) const
 {
+	this->getLogger().info("Enumerating swap chain formats for DesktopBackend...");
+
 	std::vector<VkSurfaceFormatKHR> swapchainFormats(swapchainFormatCount);
 	vkGetPhysicalDeviceSurfaceFormatsKHR(
 		_physicalDevice, _surface, &swapchainFormatCount,
@@ -104,76 +125,115 @@ std::vector<int64_t> evan::DesktopBackend::enumerateSwapchainFormats(
 	for (size_t i = 0; i < swapchainFormatCount; i++) {
 		swapchainFormats64[i] = static_cast<int64_t>(swapchainFormats[i].format);
 	}
+	this->getLogger().info("Enumerated " + std::to_string(swapchainFormatCount) + " swap chain formats successfully.");
 	return swapchainFormats64;
 }
 
 evan::QueueFamilyIndices evan::DesktopBackend::findQueueFamilies()
 {
+	this->getLogger().info("Finding queue families for DesktopBackend...");
+
 	QueueFamilyIndices indices;
 
 	uint32_t queueFamilyCount = 0;
 	vkGetPhysicalDeviceQueueFamilyProperties(_physicalDevice, &queueFamilyCount,
 											 nullptr);
 
+	this->getLogger().info("Found " + std::to_string(queueFamilyCount) + " queue families available.");
+
 	std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
 	vkGetPhysicalDeviceQueueFamilyProperties(_physicalDevice, &queueFamilyCount,
 											 queueFamilies.data());
 
+	this->getLogger().info("Checking queue families for graphics and presentation support...");
 	for (uint32_t i = 0; i < queueFamilies.size(); i++) {
+		this->getLogger().info("Checking queue family " + std::to_string(i) + " with " + std::to_string(queueFamilies[i].queueCount) + " queues...");
 		if (queueFamilies[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) {
 			indices.graphicsFamily = i;
 		}
 
 		VkBool32 presentSupport = false;
+
+		this->getLogger().info("Checking if queue family " + std::to_string(i) + " supports presentation...");
 		vkGetPhysicalDeviceSurfaceSupportKHR(_physicalDevice, i, _surface,
 											 &presentSupport);
 
 		if (presentSupport) {
+			this->getLogger().info("Queue family " + std::to_string(i) + " supports presentation.");
 			indices.presentFamily = i;
 		}
 
 		if (indices.isComplete()) {
+			this->getLogger().info("Found suitable queue families for graphics and presentation support.");
 			break;
 		}
 	}
 
+	this->getLogger().info("Queue family indices found: Graphics Family = " +
+							(indices.graphicsFamily.has_value()
+								 ? std::to_string(indices.graphicsFamily.value())
+								 : "None") +
+							", Present Family = " +
+							(indices.presentFamily.has_value()
+								 ? std::to_string(indices.presentFamily.value())
+								 : "None"));
 	return indices;
 }
 
 evan::SwapChainSupportDetails evan::DesktopBackend::querySwapChainSupport()
 {
+	this->getLogger().info("Querying swap chain support details for DesktopBackend...");
+
 	SwapChainSupportDetails details;
 	uint32_t formatCount;
 	uint32_t presentModeCount;
 
+	this->getLogger().info("Querying surface capabilities...");
 	vkGetPhysicalDeviceSurfaceCapabilitiesKHR(_physicalDevice, _surface,
 											  &details.capabilities);
 	if (vkGetPhysicalDeviceSurfaceFormatsKHR(_physicalDevice, _surface,
 											 &formatCount, nullptr)
-		!= VK_SUCCESS)
+		!= VK_SUCCESS) {
+		this->getLogger().error("Failed to query surface formats!");
+		this->getLogger().info("Returning swap chain support details with capabilities but no formats or present modes.");
 		return details;
+	}
 	if (formatCount != 0) {
+		this->getLogger().info("Found " + std::to_string(formatCount) + " surface formats available.");
 		details.formats.resize(formatCount);
+
+		this->getLogger().info("Querying surface formats...");
 		vkGetPhysicalDeviceSurfaceFormatsKHR(
 			_physicalDevice, _surface, &formatCount, details.formats.data());
 	}
 
+	this->getLogger().info("Querying surface present modes...");
 	if (vkGetPhysicalDeviceSurfacePresentModesKHR(_physicalDevice, _surface,
 												  &presentModeCount, nullptr)
-		!= VK_SUCCESS)
+		!= VK_SUCCESS) {
+		this->getLogger().error("Failed to query surface present modes!");
+		this->getLogger().info("Returning swap chain support details with capabilities and formats but no present modes.");
 		return details;
+	}
 	if (presentModeCount != 0) {
+		this->getLogger().info("Found " + std::to_string(presentModeCount) + " surface present modes available.");
 		details.presentModes.resize(presentModeCount);
+		this->getLogger().info("Querying surface present modes...");
 		vkGetPhysicalDeviceSurfacePresentModesKHR(_physicalDevice, _surface,
 												  &presentModeCount,
 												  details.presentModes.data());
 	}
+	this->getLogger().info("Swap chain support details queried successfully.");
 	return details;
 }
 
 void evan::DesktopBackend::createPresentQueue()
 {
+	this->getLogger().info("Creating present queue for DesktopBackend...");
+
 	QueueFamilyIndices indices = this->findQueueFamilies();
+
+	this->getLogger().info("Retrieving present queue from logical device...");
 
 	vkGetDeviceQueue(_device, indices.presentFamily.value(), 0, &_presentQueue);
 }
@@ -186,9 +246,12 @@ void evan::DesktopBackend::createInstance(const evan::IPlatform &platform,
 										  const std::string &appName,
 										  evan::Version &appVersion)
 {
+	this->getLogger().info("Creating Vulkan instance for DesktopBackend...");
+
 	if (enableValidationLayers && !this->checkValidationLayerSupport()) {
-		throw std::runtime_error(
-			"Validation layers requested, but not available!");
+		this->getLogger().error("Validation layers requested, but not available!");
+		this->getLogger().warning("Stopping instance creation due to missing validation layers.");
+		return;
 	}
 
 	VkApplicationInfo appInfo {};
@@ -199,12 +262,22 @@ void evan::DesktopBackend::createInstance(const evan::IPlatform &platform,
 	appInfo.engineVersion	   = VK_MAKE_VERSION(0, 1, 0);
 	appInfo.apiVersion		   = VK_API_VERSION_1_1;
 
+	this->getLogger().info("Setting up instance creation information using application info:\n"
+							"Application Name = " + appName +
+							",\nApplication Version = " +
+							std::to_string(appVersion._major) + "." +
+							std::to_string(appVersion._minor) + "." +
+							std::to_string(appVersion._patch) +
+							",\nEngine Name = Evan,\nEngine Version = 0.1.0,\nAPI Version = 1.1");
+
 	VkInstanceCreateInfo createInfo {};
 	createInfo.sType			= VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 	createInfo.pApplicationInfo = &appInfo;
 
 	auto extensions = platform.getRequiredInstanceExtensions();
 
+	this->getLogger().info("Required instance extensions for platform: " +
+							std::to_string(extensions.size()) + " extensions found.");
 	// Because the extensions are stored as std::string, we need to convert them
 	// to const char* to pass them to the Vulkan API.
 	auto extensionsWrapped = std::vector<const char *>(extensions.size());
@@ -222,6 +295,7 @@ void evan::DesktopBackend::createInstance(const evan::IPlatform &platform,
 	createInfo.ppEnabledLayerNames = validationLayers.data();
 
 	if (enableValidationLayers == true) {
+		this->getLogger().info("Validation layers enabled for instance creation. Setting up debug messenger create info...");
 		VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo {};
 
 		this->populateDebugMessengerCreateInfo(debugCreateInfo,
@@ -230,12 +304,11 @@ void evan::DesktopBackend::createInstance(const evan::IPlatform &platform,
 			(VkDebugUtilsMessengerCreateInfoEXT *)&debugCreateInfo;
 	}
 
+	this->getLogger().info("Creating Vulkan instance with the specified application info, extensions, and validation layers...");
 	VkResult result = vkCreateInstance(&createInfo, nullptr, &_VkInstance);
 
 	if (result == VK_ERROR_INCOMPATIBLE_DRIVER) {
-		std::cout << "Failed to create instance due to incompatible driver ! "
-					 "Trying with MacOS settings..."
-				  << std::endl;
+		this->getLogger().warning("Failed to create Vulkan instance due to incompatible driver. This may be caused by running on a platform that requires the VK_KHR_portability_subset extension, such as MacOS. Retrying instance creation with VK_KHR_portability_subset enabled...");
 
 		createInfo.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
 
@@ -245,44 +318,67 @@ void evan::DesktopBackend::createInstance(const evan::IPlatform &platform,
 		result = vkCreateInstance(&createInfo, nullptr, &_VkInstance);
 		switch (result) {
 			case VK_ERROR_OUT_OF_HOST_MEMORY:
-				throw std::runtime_error("Host out of memory !");
+				this->getLogger().error("Host out of memory while creating Vulkan instance!");
+				return;
 			case VK_ERROR_OUT_OF_DEVICE_MEMORY:
-				throw std::runtime_error("Device out of memory !");
+				this->getLogger().error("Device out of memory while creating Vulkan instance!");
+				return;
 			case VK_ERROR_INITIALIZATION_FAILED:
-				throw std::runtime_error("Initialization failed !");
+				this->getLogger().error("Vulkan initialization failed while creating instance!");
+				return;
 			case VK_ERROR_LAYER_NOT_PRESENT:
-				throw std::runtime_error("Layer not present !");
+				this->getLogger().error("Validation layer not present while creating Vulkan instance!");
+				return;
 			case VK_ERROR_EXTENSION_NOT_PRESENT:
-				throw std::runtime_error("Extension not present !");
+				this->getLogger().error("Required extension not present while creating Vulkan instance!");
+				return;
 			case VK_ERROR_INCOMPATIBLE_DRIVER:
-				throw std::runtime_error("Incompatible driver !");
+				this->getLogger().error("Failed to create Vulkan instance due to incompatible driver, even with VK_KHR_portability_subset enabled! This may indicate a deeper issue with the Vulkan implementation on this platform.");
+				return;
 			default:
-				break;
+				this->getLogger().error("Failed to create Vulkan instance due to unknown error! VkResult: " + std::to_string(result));
+				return;
 		}
 	}
 	if (result == VK_SUCCESS) {
-		std::cout << "Instance created !" << std::endl;
+		this->getLogger().info("Vulkan instance created successfully!");
 	} else {
-		throw std::runtime_error("Failed to create instance !");
+		this->getLogger().error("Failed to create Vulkan instance! VkResult: " + std::to_string(result));
 	}
 }
 
 void evan::DesktopBackend::createLogicalDevice()
 {
+	this->getLogger().info("Creating logical device for DesktopBackend...");
+
 	std::vector<const char *> desktopExtensions = deviceExtensions;
 
 #ifdef __APPLE__
 	desktopExtensions.push_back("VK_KHR_portability_subset");
 #endif
 
+	this->getLogger().info("Required device extensions for logical device creation: " +
+							std::to_string(desktopExtensions.size()) + " extensions required.");
+	std::string extensionsList;
+	for (const char *ext: desktopExtensions) {
+		extensionsList += std::string(ext) + ", ";
+	}
+	this->getLogger().info("Device extensions: " + extensionsList);
+
 	QueueFamilyIndices indices = this->findQueueFamilies();
+
+	this->getLogger().info("Setting up queue create infos for logical device creation...");
 
 	std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
 	std::set<uint32_t> uniqueQueueFamilies = { indices.graphicsFamily.value(),
 											   indices.presentFamily.value() };
 
 	float queuePriority = 1.0f;
+
+	this->getLogger().info("Unique queue families identified: " +
+							std::to_string(uniqueQueueFamilies.size()) + " unique queue families found.");
 	for (uint32_t queueFamily: uniqueQueueFamilies) {
+		this->getLogger().info("Setting up queue create info for queue family index " + std::to_string(queueFamily) + " with priority " + std::to_string(queuePriority) + "...");
 		VkDeviceQueueCreateInfo queueCreateInfo {};
 		queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
 		queueCreateInfo.queueFamilyIndex = queueFamily;
@@ -293,11 +389,14 @@ void evan::DesktopBackend::createLogicalDevice()
 
 	VkPhysicalDeviceFeatures deviceFeatures {};
 	VkPhysicalDeviceFeatures supportedFeatures;
+
+	this->getLogger().info("Querying supported features of the physical device...");
 	vkGetPhysicalDeviceFeatures(_physicalDevice, &supportedFeatures);
 
 	deviceFeatures.samplerAnisotropy = supportedFeatures.samplerAnisotropy;
 	deviceFeatures.sampleRateShading = supportedFeatures.sampleRateShading;
 
+	this->getLogger().info("Setting up extended dynamic state features...");
 	VkPhysicalDeviceExtendedDynamicStateFeaturesEXT extendedDynamicState {};
 	extendedDynamicState.sType =
 		VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_FEATURES_EXT;
@@ -318,42 +417,64 @@ void evan::DesktopBackend::createLogicalDevice()
 		static_cast<uint32_t>(desktopExtensions.size());
 	createInfo.ppEnabledExtensionNames = desktopExtensions.data();
 
+	this->getLogger().info("Enabling validation layers for logical device creation...");
 	if (enableValidationLayers) {
+		this->getLogger().info("Validation layers enabled. Setting up validation layers for logical device creation...");
 		createInfo.enabledLayerCount =
 			static_cast<uint32_t>(validationLayers.size());
 		createInfo.ppEnabledLayerNames = validationLayers.data();
 	} else {
+		this->getLogger().info("Validation layers not enabled. Skipping validation layer setup for logical device creation.");
 		createInfo.enabledLayerCount = 0;
 	}
 
+	this->getLogger().info("Creating logical device with the specified queue create infos, enabled features, extensions, and validation layers...");
 	if (vkCreateDevice(_physicalDevice, &createInfo, nullptr, &_device)
 		!= VK_SUCCESS) {
-		throw std::runtime_error("failed to create logical device!");
+		this->getLogger().error("Failed to create logical device!");
+		return;
 	}
+	this->getLogger().info("Logical device created successfully!");
 }
 
 void evan::DesktopBackend::pickPhysicalDevice()
 {
+	this->getLogger().info("Picking physical device for DesktopBackend...");
+
 	uint32_t deviceCount = 0;
+
+	this->getLogger().info("Enumerating physical devices...");
 	vkEnumeratePhysicalDevices(_VkInstance, &deviceCount, nullptr);
 
 	if (deviceCount == 0) {
-		throw std::runtime_error("Failed to find GPUs with Vulkan support!");
+		this->getLogger().error("Failed to find GPUs with Vulkan support!");
+		return;
 	}
+
+	this->getLogger().info("Found " + std::to_string(deviceCount) + " physical devices with Vulkan support. Evaluating suitability...");
 
 	std::vector<VkPhysicalDevice> devices(deviceCount);
 	vkEnumeratePhysicalDevices(_VkInstance, &deviceCount, devices.data());
 
+	this->getLogger().info("Checking each physical device for suitability...");
 	for (const auto &device: devices) {
+		VkPhysicalDeviceProperties deviceProperties;
+		vkGetPhysicalDeviceProperties(device, &deviceProperties);
+
+		this->getLogger().info("Evaluating physical device: " + std::string(deviceProperties.deviceName));
+
 		if (this->isDeviceSuitable(device, deviceExtensions)) {
+			this->getLogger().info("Physical device " + std::string(deviceProperties.deviceName) + " is suitable. Selecting this device.");
 			_physicalDevice = device;
 			break;
 		}
 	}
 
 	if (_physicalDevice == VK_NULL_HANDLE) {
-		throw std::runtime_error("Failed to find a suitable GPU!");
+		this->getLogger().error("Failed to find a suitable GPU!");
+		return;
 	}
+	this->getLogger().info("Physical device selected successfully.");
 }
 
 /////////////////////
@@ -446,10 +567,14 @@ void evan::DesktopBackend::populateDebugMessengerCreateInfo(
 
 void evan::DesktopBackend::setupCallbackEvent(const IPlatform &platform)
 {
+	this->getLogger().info("Setting up GLFW input callbacks for DesktopBackend...");
+
 	auto glfwPlatform = dynamic_cast<const IDesktopPlatform *>(&platform);
 
+	this->getLogger().info("Setting GLFW window user pointer to the platform instance for callback access...");
 	glfwSetWindowUserPointer( glfwPlatform->_window, (void*)glfwPlatform);
 
+	this->getLogger().info("Setting GLFW key callback for keyboard input events...");
 	glfwSetKeyCallback(glfwPlatform->_window, [](GLFWwindow *window, int key,
 												  int scancode, int action,
 												  int mods) {
@@ -469,6 +594,7 @@ void evan::DesktopBackend::setupCallbackEvent(const IPlatform &platform)
 		}
 	});
 
+	this->getLogger().info("Setting GLFW mouse button callback for mouse input events...");
 	glfwSetMouseButtonCallback(glfwPlatform->_window, [](GLFWwindow *window, int button,
 												  int action, int mods) {
 		auto* self = static_cast<evan::IDesktopPlatform*>(glfwGetWindowUserPointer(window));
@@ -484,6 +610,7 @@ void evan::DesktopBackend::setupCallbackEvent(const IPlatform &platform)
 		std::cout << "Mouse button " << actionStr << ": " << button << std::endl;
 	});
 
+	this->getLogger().info("Setting GLFW cursor position callback for mouse motion events...");
 	glfwSetCursorPosCallback(glfwPlatform->_window, [](GLFWwindow *window, double xpos, double ypos) {
 		auto* self = static_cast<evan::IDesktopPlatform*>(glfwGetWindowUserPointer(window));
 

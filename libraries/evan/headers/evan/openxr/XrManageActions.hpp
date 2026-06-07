@@ -7,6 +7,9 @@
 
 #pragma once
 
+#include <utility/logging/loggable.hpp>
+#include <utility/logging/standard_logger.hpp>
+
 #include "evan/openxr/actions/XrHandsMotionActions.hpp"
 #include "evan/openxr/actions/XrManageButtonsActions.hpp"
 #include "evan/openxr/actions/XrManageThumbStickActions.hpp"
@@ -31,7 +34,9 @@ namespace evan
 	 * integrating input handling into an OpenXR application, allowing
 	 * developers to focus on creating immersive experiences.
 	 */
-	class XrManageActions
+	class XrManageActions : protected utility::logging::Loggable<
+			XrManageActions,
+			utility::logging::StandardLogger>
 	{
 		public:
 		/**

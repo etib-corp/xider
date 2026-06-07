@@ -7,25 +7,49 @@
 
 #include "evan/RenderObject.hpp"
 
-evan::RenderObject::RenderObject(std::shared_ptr<DeviceContext> deviceContext, const std::map<uint32_t, utility::graphic::Mesh> &rawObjects, const std::string &pipelineLayer)
-    : _pipelineLayer(pipelineLayer)
+evan::RenderObject::RenderObject(
+	std::shared_ptr<DeviceContext> deviceContext,
+	const std::map<uint32_t, utility::graphic::Mesh> &rawObjects,
+	const std::string &pipelineLayer)
+	: _pipelineLayer(pipelineLayer)
 {
-    for (const auto &[id, mesh] : rawObjects) {
-        std::vector<GPUVertex> gpuVertices;
+	this->getLogger().info("Creating RenderObject with pipeline layer: "
+						   + pipelineLayer);
 
-        for (const auto &vertex : mesh.getVertices()) {
-            GPUVertex gpuVertex = GPUVertex::createFromVertexD(vertex);
-            gpuVertices.push_back(gpuVertex);
-        }
+	this->getLogger().info("Processing raw mesh data to create GPU meshes...");
+	for (const auto &[id, mesh]: rawObjects) {
+		this->getLogger().info(
+			"Processing mesh with ID: " + std::to_string(id)
+			+ " and vertex count: " + std::to_string(mesh.getVertices().size())
+			+ " and index count: " + std::to_string(mesh.getIndices().size()));
+		std::vector<GPUVertex> gpuVertices;
 
-        GPUMesh gpuMesh(deviceContext, gpuVertices, mesh.getIndices(), id);
+		this->getLogger().info("Converting vertices to GPUVertex format...");
+		for (const auto &vertex: mesh.getVertices()) {
+			this->getLogger().info(
+				"Converting vertex with position: ("
+				+ std::to_string(vertex.getPosition().getX()) + ", "
+				+ std::to_string(vertex.getPosition().getY()) + ", "
+				+ std::to_string(vertex.getPosition().getZ())
+				+ ") and normal: (" + std::to_string(vertex.getNormal().x)
+				+ ", " + std::to_string(vertex.getNormal().y) + ", "
+				+ std::to_string(vertex.getNormal().z) + ") and texCoord: ("
+				+ std::to_string(vertex.getTextureCoordinates().x) + ", "
+				+ std::to_string(vertex.getTextureCoordinates().y) + ")");
+			GPUVertex gpuVertex = GPUVertex::createFromVertexD(vertex);
+			gpuVertices.push_back(gpuVertex);
+		}
 
-        _meshes.emplace_back(gpuMesh);
-    }
+        this->getLogger().info("Creating GPUMesh for mesh ID: " + std::to_string(id));
+
+		_meshes.emplace_back(std::make_shared<GPUMesh>(deviceContext, gpuVertices, mesh.getIndices(), id));
+	}
+    this->getLogger().info("All meshes processed and GPU meshes created successfully.");
 }
 
 evan::RenderObject::~RenderObject()
 {
+    this->getLogger().info("Destroying RenderObject with pipeline layer: " + _pipelineLayer);
 }
 
 ////////////////////
@@ -34,21 +58,22 @@ evan::RenderObject::~RenderObject()
 
 void evan::RenderObject::destroy(VkDevice device)
 {
-    for (GPUMesh &mesh : _meshes) {
-        mesh.destroy(device);
-    }
+    this->getLogger().info("Destroying RenderObject resources for pipeline layer: " + _pipelineLayer);
+	for (const auto &mesh: _meshes) {
+		mesh->destroy(device);
+	}
 }
 
 /////////////
 // Getters //
 /////////////
 
-const std::vector<evan::GPUMesh> &evan::RenderObject::getMeshes() const
+const std::vector<std::shared_ptr<evan::GPUMesh>> &evan::RenderObject::getMeshes() const
 {
-    return _meshes;
+	return _meshes;
 }
 
 std::string evan::RenderObject::getPipelineLayer() const
 {
-    return _pipelineLayer;
+	return _pipelineLayer;
 }

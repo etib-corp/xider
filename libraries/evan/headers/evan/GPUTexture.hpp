@@ -9,9 +9,16 @@
 
 #include <utility/graphic/texture.hpp>
 
+#include "utility/logging/logger.hpp"
+#include "utility/logging/standard_logger.hpp"
+
 #include "EvanPlatform.hpp"
 
 #include "DeviceContext.hpp"
+
+#include <cmath>
+#include <math.h>
+#include <algorithm>
 
 namespace evan
 {
@@ -23,7 +30,9 @@ namespace evan
      *
      * @note The GPUTexture class is designed to work with the Vulkan API and is intended to be used in conjunction with a device backend that provides access to the Vulkan device and related resources. It is important to ensure that the GPUTexture is properly managed and destroyed to prevent resource leaks in the Vulkan application.
      */
-    class GPUTexture {
+    class GPUTexture : protected utility::logging::Loggable<
+			GPUTexture,
+			utility::logging::StandardLogger> {
         public:
             /**
              * @brief Enum class representing different types of textures that can be
