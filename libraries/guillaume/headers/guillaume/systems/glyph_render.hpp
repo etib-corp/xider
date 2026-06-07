@@ -23,8 +23,11 @@
 #pragma once
 
 #include <fstream>
+#include <map>
+#include <optional>
 
 #include <utility/ressource_provider.hpp>
+#include <utility/graphic/text/text.hpp>
 
 #include "guillaume/ecs/system_filler.hpp"
 
@@ -48,6 +51,15 @@ namespace guillaume::systems
 								 components::Glyph, components::Color>
 	{
 		private:
+		struct CacheEntry
+		{
+			std::optional<utility::graphic::Text> text;
+			utility::graphic::PoseF pose;
+			size_t objectId { 0 };
+			bool used { false };
+		};
+
+		private:
 		std::shared_ptr<utility::RessourceProvider>
 			_ressourceProvider;	   //< Shared resource provider for loading
 								   //fonts and glyphs
@@ -55,7 +67,10 @@ namespace guillaume::systems
 			_systemIO;	  ///< Shared system IO for file operations
 		std::unique_ptr<Engine> &_renderer;	 ///< Engine instance
 		std::string _defaultFontPath;	 ///< Default font for glyph rendering
+		std::string _glyphCodePath;	 ///< Path to glyph code mapping file
 		std::map<std::string, uint32_t> _glyphCode;
+		std::map<ecs::Entity::Identifier, CacheEntry> _cache;
+		bool _glyphCodesLoaded { false }; ///< Whether glyph codes have been loaded
 
 		public:
 		/**
@@ -81,13 +96,8 @@ namespace guillaume::systems
 		 */
 		virtual void
 			update(const ecs::Entity::Identifier &entityIdentifier) override;
-
-		private:
-		/**
-		 * @brief Load glyph code mappings from a file.
-		 * @param filePath The path to the glyph code mapping file.
-		 */
-		void loadGlyphCodes(const std::string &filePath);
+		void prepare(void) override;
+		void cleanup(void) override;
 	};
 
 }	 // namespace guillaume::systems

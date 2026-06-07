@@ -77,8 +77,9 @@ namespace evan
 		 * @param objectID A uint32_t representing the unique identifier for the renderable object being added to the Scene. This ID can be used to manage and access the object within the Scene.
 		 * @param renderObject A shared pointer to a RenderObject instance representing the renderable object being added to the Scene. The RenderObject contains the necessary information about the meshes and materials for rendering
 		 * the object as part of the Scene. The shared pointer allows for efficient memory management and ensures that the RenderObject is properly cleaned up when it is no longer needed.
+		 * @return A size_t representing the object ID of the added renderable object. This ID can be used to manage and access the object within the Scene.
 		 */
-		void addObject(uint32_t objectID, std::shared_ptr<RenderObject> renderObject);
+		size_t addObject(uint32_t objectID, std::shared_ptr<RenderObject> renderObject);
 
 		/**
 		 * @brief Removes a renderable object from the Scene based on the specified object ID.
@@ -87,7 +88,7 @@ namespace evan
 		 *
 		 * @param objectID A uint32_t representing the unique identifier for the renderable object to be removed from the Scene. This ID is used to locate and remove the corresponding RenderObject from the internal map of objects in the Scene.
 		 *
-		 * @return A boolean value indicating whether the object was successfully removed from the Scene. The method returns true if the object was found and removed, and false if the object with the specified ID
+		 * @return A boolean value indicating whether the object was successfully removed from the Scene. The method returns true if the object was found and removed, and false if the object with the specified ID was not found.
 		 */
 		bool removeObject(uint32_t objectID);
 

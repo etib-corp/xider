@@ -85,6 +85,35 @@ namespace utility::graphic
 		 */
 		const std::vector<uint32_t> &getIndices() const;
 
+		/**
+		 * @brief Reset the mesh by clearing all vertices and indices.
+		 *
+		 * This method removes all vertex and index data from the mesh, effectively
+		 * resetting it to an empty state. This can be useful for reusing a Mesh
+		 * object without needing to create a new instance.
+		 */
+		void reset(void);
+
+		/**
+		 * @brief Equality comparison.
+		 * @param other Mesh object to compare with.
+		 * @return True when vertices and indices are equal.
+		 */
+		bool operator==(const Mesh &other) const
+		{
+			return _vertices == other._vertices && _indices == other._indices;
+		}
+
+		/**
+		 * @brief Inequality comparison.
+		 * @param other Mesh object to compare with.
+		 * @return True when vertices or indices differ.
+		 */
+		bool operator!=(const Mesh &other) const
+		{
+			return !(*this == other);
+		}
+
 		private:
 		/**
 		 * @brief Internal storage for the vertices and indices of the mesh.

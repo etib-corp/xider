@@ -20,12 +20,59 @@
  SOFTWARE.
  */
 
+#include <sstream>
+
 #include <utility/graphic/text/text.hpp>
 
 #include "guillaume/systems/glyph_render.hpp"
 
 namespace guillaume::systems
 {
+	void GlyphRender::prepare(void)
+	{
+		for (auto &[_, entry]: _cache) {
+			entry.used = false;
+		}
+
+		if (!_glyphCodesLoaded) {
+			auto file = _systemIO->add(_glyphCodePath);
+			if (file) {
+				std::istringstream stream(file->content());
+				std::string line;
+				while (std::getline(stream, line)) {
+					size_t spacePos = line.find(' ');
+					if (spacePos != std::string::npos) {
+						std::string name = line.substr(0, spacePos);
+						uint32_t code =
+							std::stoul(line.substr(spacePos + 1), &spacePos, 16);
+						_glyphCode[name] = code;
+					}
+				}
+				getLogger().info("Loaded "
+								 + std::to_string(_glyphCode.size())
+								 + " glyph codes from " + _glyphCodePath);
+			} else {
+				getLogger().error(
+					"Failed to load glyph code asset: " + _glyphCodePath);
+			}
+			_glyphCodesLoaded = true;
+		}
+	}
+
+	void GlyphRender::cleanup(void)
+	{
+		for (auto it = _cache.begin(); it != _cache.end();) {
+			if (it->second.used) {
+				++it;
+				continue;
+			}
+			if (it->second.objectId != 0) {
+				_renderer->removeObject(it->second.objectId);
+			}
+			it = _cache.erase(it);
+		}
+	}
+
 	namespace
 	{
 		std::string codePointToUtf8(uint32_t codePoint)
@@ -69,10 +116,10 @@ namespace guillaume::systems
 		, _defaultFontPath(
 			  "assets/fonts/Material_Symbols_Outlined/"
 			  "MaterialSymbolsOutlined-VariableFont_FILL,GRAD,opsz,wght.ttf")
+		, _glyphCodePath(
+			  "assets/fonts/Material_Symbols_Outlined/"
+			  "MaterialSymbolsOutlined[FILL,GRAD,opsz,wght].codepoints")
 	{
-		loadGlyphCodes(
-			"assets/fonts/Material_Symbols_Outlined/"
-			"MaterialSymbolsOutlined[FILL,GRAD,opsz,wght].codepoints");
 	}
 
 	GlyphRender::~GlyphRender(void)
@@ -108,33 +155,29 @@ namespace guillaume::systems
 
 		const uint32_t glyphCode =
 			_glyphCode.count(glyphName) > 0 ? _glyphCode[glyphName] : '?';
+		auto &cacheEntry = _cache[entityIdentifier];
+		cacheEntry.used = true;
+
 		utility::graphic::Text glyphText(
 			_ressourceProvider, _systemIO, codePointToUtf8(glyphCode),
 			boundComponent.getHeight(), _defaultFontPath);
 		glyphText.setColor(colorComponent.getColor());
+		const auto pose = transformComponent.getPose();
 
-		_renderer->drawText(glyphText, transformComponent.getPose());
-	}
-
-	void GlyphRender::loadGlyphCodes(const std::string &filePath)
-	{
-		std::ifstream file(filePath);
-		if (!file.is_open()) {
-			getLogger().error("Failed to open glyph code file: " + filePath);
+		if (cacheEntry.objectId != 0 && cacheEntry.text.has_value()
+			&& *cacheEntry.text == glyphText
+			&& cacheEntry.pose == pose) {
 			return;
 		}
-		std::string line;
-		while (std::getline(file, line)) {
-			size_t spacePos = line.find(' ');
-			if (spacePos != std::string::npos) {
-				std::string name = line.substr(0, spacePos);
-				uint32_t code =
-					std::stoul(line.substr(spacePos + 1), &spacePos, 16);
-				_glyphCode[name] = code;
-			}
+
+		if (cacheEntry.objectId != 0) {
+			_renderer->removeObject(cacheEntry.objectId);
 		}
-		getLogger().info("Loaded " + std::to_string(_glyphCode.size())
-						 + " glyph codes from " + filePath);
+
+		cacheEntry.objectId = _renderer->addText(glyphText, pose);
+		cacheEntry.text = glyphText;
+		cacheEntry.pose = pose;
+
 	}
 
-}	 // namespace guillaume::systems
+}   // namespace guillaume::systems

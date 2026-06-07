@@ -42,7 +42,14 @@ namespace guillaume
 				sqlite3_close(_database);
 				_database = nullptr;
 			}
-			throw std::runtime_error("Failed to open local storage database: " + _storageFilePath.string() + " - reason: " + sqlite3_errmsg(_database));
+			// Fallback to in-memory database if file-based storage fails
+			if (sqlite3_open(":memory:", &_database) != SQLITE_OK) {
+				if (_database) {
+					sqlite3_close(_database);
+					_database = nullptr;
+				}
+				throw std::runtime_error("Failed to open local storage database (file and in-memory fallback): " + _storageFilePath.string() + " - reason: " + sqlite3_errmsg(_database));
+			}
 		}
 
 		initializeSchema();

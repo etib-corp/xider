@@ -39,13 +39,23 @@ namespace utility
 
 	uint32_t RessourceProvider::getShaderID(const std::string &shaderName) const
 	{
-		auto it = _elementsIDs.find(shaderName);
+		for (const auto &[name, id]: _elementsIDs) {
+			if (name.starts_with(shaderName)) {
+				return id;
+			}
+		}
+		return 0;  // Return 0 if the shader name is not found
+	}
+
+	uint32_t RessourceProvider::getMaterialID(const std::string &materialName) const
+	{
+		auto it = _elementsIDs.find(materialName);
 
 		if (it != _elementsIDs.end()) {
 			return it->second;
 		}
 
-		return 0;  // Return 0 if the shader name is not found
+		return 0;
 	}
 
 	////////////////////
@@ -257,8 +267,8 @@ namespace utility
 		}
 
 		std::string shaderName = (shaderType == ShaderType::TEXT_SHADER)
-			? "text_shader"
-			: "mesh_shader";
+			? "text"
+			: "mesh";
 		std::vector<File> textureAssets = { *materialAsset };
 		auto material = std::make_shared<graphic::Material>(*this, shaderName,
 															textureAssets);
@@ -491,11 +501,13 @@ namespace utility
 	// Protected Methods //
 	///////////////////////
 
-	const std::string &RessourceProvider::buildShaderPath(const std::string &vertexPath, const std::string &fragmentPath) const
+	std::string RessourceProvider::buildShaderPath(const std::string &vertexPath, const std::string &fragmentPath) const
 	{
-		auto path = new std::string(vertexPath + "_with_" + fragmentPath);
+		std::string pureVertexName = vertexPath.substr(vertexPath.find_last_of("/\\") + 1);
+		std::string pureFragmentName = fragmentPath.substr(fragmentPath.find_last_of("/\\") + 1);
+		std::string path = pureVertexName + "_with_" + pureFragmentName;
 
-		return *path;
+		return path;
 	}
 
 	uint32_t RessourceProvider::getNextID()

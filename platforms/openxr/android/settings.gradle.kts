@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "xider-android"
+rootProject.name = "xider_android"
 include(":app")

@@ -28,6 +28,9 @@ namespace xider
 		: _evanEngine(std::move(engine))
 		, guillaume::Engine()
 	{
+		if (_evanEngine) {
+			guillaume::Engine::setView(_evanEngine->getView());
+		}
 	}
 
 	Engine::~Engine(void)
@@ -45,10 +48,30 @@ namespace xider
 		}
 	}
 
-	void Engine::drawVertices(
-		const std::vector<utility::graphic::VertexF> &vertices)
+	size_t Engine::addMesh(const utility::graphic::Mesh &mesh)
 	{
-		(void)vertices;
+		return _evanEngine->addMesh(mesh);
+	}
+
+	bool Engine::removeObject(size_t objectID)
+	{
+		return _evanEngine->removeObject(objectID);
+	}
+
+	void Engine::setView(const utility::graphic::ViewF &view)
+	{
+		guillaume::Engine::setView(view);
+		if (_evanEngine) {
+			_evanEngine->setView(view);
+		}
+	}
+
+	utility::graphic::ViewF Engine::getView(void) const
+	{
+		if (_evanEngine) {
+			return _evanEngine->getView();
+		}
+		return guillaume::Engine::getView();
 	}
 
 	utility::math::Vector2F
@@ -62,10 +85,11 @@ namespace xider
 		return { 0.0f, 0.0f };
 	}
 
-	void Engine::drawText(const utility::graphic::Text &text,
-						  const utility::graphic::PoseF &pose)
+	size_t Engine::addText(const utility::graphic::Text &text,
+						   const utility::graphic::PoseF &pose)
 	{
-		_evanEngine->drawText(std::make_shared<utility::graphic::Text>(text));
+		return _evanEngine->addText(
+			std::make_shared<utility::graphic::Text>(text));
 	}
 
 	void Engine::addScene(size_t sceneIndex)
@@ -75,9 +99,9 @@ namespace xider
 
 	void Engine::pollEvents(void)
 	{
-		auto events = _evanEngine->pollEvents();
+		auto events	  = _evanEngine->pollEvents();
 		auto callback = this->getEventCallback();
-	
+
 		if (!callback) {
 			return;
 		}

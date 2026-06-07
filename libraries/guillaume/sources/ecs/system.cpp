@@ -59,6 +59,7 @@ namespace guillaume::ecs
 		return _signature;
 	}
 
+
 	void System::routine(ecs::ComponentRegistry &componentRegistry,
 						 ecs::EntityRegistry &entityRegistry,
 						 const ecs::EntityTreeTraveler &traveler)
@@ -84,6 +85,9 @@ namespace guillaume::ecs
 		}
 
 		std::size_t matchingEntities = 0;
+		// Per-frame setup
+		prepare();
+
 		for (const auto *entity: traversedEntities) {
 			if ((entity->getSignature() & getSignature()) != getSignature()) {
 				continue;
@@ -91,6 +95,9 @@ namespace guillaume::ecs
 			++matchingEntities;
 			update(entity->getIdentifier());
 		}
+
+		// Per-frame cleanup
+		cleanup();
 
 		getLogger().debug("System routine finished. Visited entities: "
 						  + std::to_string(traversedEntities.size())

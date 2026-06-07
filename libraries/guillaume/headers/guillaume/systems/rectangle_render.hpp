@@ -22,6 +22,9 @@
 
 #pragma once
 
+#include <map>
+#include <optional>
+
 #include "guillaume/ecs/system_filler.hpp"
 
 #include "guillaume/components/borders.hpp"
@@ -46,10 +49,16 @@ namespace guillaume::systems
 								 components::Color, components::Borders>
 	{
 		private:
+		struct CacheEntry
+		{
+			std::optional<utility::graphic::Mesh> mesh;
+			size_t objectId { 0 };
+			bool used { false };
+		};
+
+		private:
 		std::unique_ptr<Engine> &_engine;	 ///< Engine instance
-		std::vector<utility::graphic::VertexF>
-			_vertices;	  ///< Reused draw buffer to avoid per-frame
-						  ///< allocations.
+		std::map<ecs::Entity::Identifier, CacheEntry> _cache;
 
 		private:
 		/**
@@ -58,8 +67,8 @@ namespace guillaume::systems
 		 * @param orientation Orientation used as rotation.
 		 * @return Rotated point.
 		 */
-		utility::graphic::PositionF rotatePositionByQuaternion(
-			const utility::graphic::PositionF &position,
+		utility::graphic::PositionD rotatePositionByQuaternion(
+			const utility::graphic::PositionD &position,
 			const utility::graphic::OrientationF &orientation) const;
 
 		/**
@@ -115,9 +124,9 @@ namespace guillaume::systems
 		 * @param orientation Rectangle world orientation.
 		 * @return World-space vertices.
 		 */
-		std::vector<utility::graphic::PositionF> transformToWorldVertices(
+		std::vector<utility::graphic::PositionD> transformToWorldVertices(
 			const std::vector<utility::math::Vector2F> &localVertices,
-			const utility::graphic::PositionF &center,
+			const utility::graphic::PositionD &center,
 			const utility::graphic::OrientationF &orientation) const;
 
 		/**
@@ -132,8 +141,8 @@ namespace guillaume::systems
 		 * @param epsilon Threshold used to consider radius as zero.
 		 * @return World-space outline vertices.
 		 */
-		std::vector<utility::graphic::PositionF> buildRoundedRectVertices(
-			const utility::graphic::PositionF &center,
+		std::vector<utility::graphic::PositionD> buildRoundedRectVertices(
+			const utility::graphic::PositionD &center,
 			const utility::graphic::OrientationF &orientation,
 			const utility::math::Vector2F &scale,
 			const utility::math::Vector2F &size, float radius,
@@ -147,8 +156,9 @@ namespace guillaume::systems
 		 * @note This method appends into the internal _vertices buffer.
 		 */
 		void buildTriangleFanVertices(
-			const utility::graphic::PositionF &center,
-			const std::vector<utility::graphic::PositionF> &outline,
+			utility::graphic::Mesh &mesh,
+			const utility::graphic::PositionD &center,
+			const std::vector<utility::graphic::PositionD> &outline,
 			const utility::graphic::Color32Bit &color);
 
 		/**
@@ -157,8 +167,8 @@ namespace guillaume::systems
 		 * @param color Vertex color.
 		 * @return Render vertex.
 		 */
-		utility::graphic::VertexF
-			createVertex(const utility::graphic::PositionF &position,
+		utility::graphic::VertexD
+			createVertex(const utility::graphic::PositionD &position,
 						 const utility::graphic::Color32Bit &color) const;
 
 		public:
@@ -179,6 +189,8 @@ namespace guillaume::systems
 		 */
 		virtual void
 			update(const ecs::Entity::Identifier &entityIdentifier) override;
+		void prepare(void) override;
+		void cleanup(void) override;
 	};
 
 }	 // namespace guillaume::systems

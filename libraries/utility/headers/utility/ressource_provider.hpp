@@ -94,6 +94,16 @@ namespace utility
 		[[nodiscard]] uint32_t getShaderID(const std::string &shaderName) const;
 
 		/**
+		 * @brief Retrieves the unique material ID associated with a given material name.
+		 *
+		 * @param materialName The name of the material for which to retrieve the ID.
+		 *
+		 * @return The unique material ID associated with the given material name, or
+		 * 0 if the material name is not found.
+		 */
+		[[nodiscard]] uint32_t getMaterialID(const std::string &materialName) const;
+
+		/**
 		 * @brief Loads a font resource from a specified file path.
 		 *
 		 * @param path The file path to the font resource to be loaded.
@@ -277,7 +287,7 @@ namespace utility
 		 *
 		 * @return A string representing the unique shader name constructed from the vertex and fragment shader file paths.
 		 */
-		const std::string &buildShaderPath(const std::string &vertexPath, const std::string &fragmentPath) const;
+		std::string buildShaderPath(const std::string &vertexPath, const std::string &fragmentPath) const;
 
 		/**
 		 * @brief Retrieves the next unique ID for a resource.
@@ -298,7 +308,7 @@ namespace utility
 		 * @note Do not modify this variable directly.
 		 * Use the getNextID() method to retrieve the next unique ID for a resource.
 		 */
-		uint32_t _currentID = 0;
+		uint32_t _currentID = 1;
 
 		/**
 		 * @brief Internal maps to store loaded fonts for efficient retrieval.

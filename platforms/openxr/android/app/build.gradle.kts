@@ -2,7 +2,7 @@ plugins {
     id("com.android.application")
 }
 android {
-    namespace = "com.xider.android"
+    namespace = "com.xider.xider_android"
     compileSdk {
         version = release(36) {
             minorApiLevel = 1
@@ -10,7 +10,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.xider.android"
+        applicationId = "com.xider.xider_android"
         minSdk = 32
         targetSdk = 36
         versionCode = 1

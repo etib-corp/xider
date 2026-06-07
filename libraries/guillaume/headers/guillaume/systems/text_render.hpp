@@ -22,6 +22,9 @@
 
 #pragma once
 
+#include <map>
+#include <optional>
+
 #include "guillaume/ecs/system_filler.hpp"
 
 #include "guillaume/components/text.hpp"
@@ -43,6 +46,15 @@ namespace guillaume::systems
 								 components::Color>
 	{
 		private:
+		struct CacheEntry
+		{
+			std::optional<utility::graphic::Text> text;
+			utility::graphic::PoseF pose;
+			size_t objectId { 0 };
+			bool used { false };
+		};
+
+		private:
 		std::shared_ptr<utility::RessourceProvider>
 			_ressourceProvider;	   ///< Shared resource provider for loading
 								   ///< fonts and glyphs
@@ -50,6 +62,7 @@ namespace guillaume::systems
 			_systemIO;	  ///< Shared system IO for file operations
 		std::unique_ptr<Engine> &_renderer;	 ///< Engine instance
 		std::string _defaultFontPath;	 ///< Default font for text rendering
+		std::map<ecs::Entity::Identifier, CacheEntry> _cache;
 
 		public:
 		/**
@@ -75,6 +88,8 @@ namespace guillaume::systems
 		 */
 		virtual void
 			update(const ecs::Entity::Identifier &entityIdentifier) override;
+		void prepare(void) override;
+		void cleanup(void) override;
 	};
 
 }	 // namespace guillaume::systems

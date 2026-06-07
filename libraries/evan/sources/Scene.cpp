@@ -34,10 +34,11 @@ void evan::Scene::destroy(VkDevice device)
 	}
 }
 
-void evan::Scene::addObject(uint32_t objectID, std::shared_ptr<RenderObject> renderObject)
+size_t evan::Scene::addObject(uint32_t objectID, std::shared_ptr<RenderObject> renderObject)
 {
 	this->getLogger().info("Adding renderable object with ID " + std::to_string(objectID) + " to Scene...");
 	_objects[objectID] = renderObject;
+	return objectID;
 }
 
 bool evan::Scene::removeObject(uint32_t objectID)

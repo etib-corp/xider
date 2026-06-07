@@ -206,3 +206,13 @@ VkFormat evan::ASwapchainContext::findSupportedFormat(
 	this->getLogger().warning("Returning VK_FORMAT_UNDEFINED to indicate failure to find a supported format. Ensure that the candidates provided are compatible with the physical device and meet the required tiling and feature criteria.");
 	return VK_FORMAT_UNDEFINED;
 }
+
+void evan::ASwapchainContext::setView(const utility::graphic::ViewF &view)
+{
+	_view = view;
+}
+
+utility::graphic::ViewF evan::ASwapchainContext::getView(void) const
+{
+	return _view;
+}

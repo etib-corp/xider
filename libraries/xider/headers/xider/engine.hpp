@@ -33,8 +33,8 @@ namespace xider
 {
 	/**
 	 * @class Engine
-	 * @brief XIDER's engine combining rendering and event handling backed by the
-	 * Evan graphics engine.
+	 * @brief XIDER's engine combining rendering and event handling backed by
+	 * the Evan graphics engine.
 	 *
 	 * This class provides a unified interface that wraps the Evan graphics
 	 * engine, which uses Vulkan for high-performance graphics, and integrates
@@ -59,7 +59,6 @@ namespace xider
 		 */
 		~Engine(void) override;
 
-
 		/**
 		 * @brief Clears the current render target.
 		 * Prepares the rendering surface for the next frame.
@@ -73,19 +72,34 @@ namespace xider
 		void present(void) override;
 
 		/**
-		 * @brief Draws a set of vertices.
-		 * @param vertices The vertices to draw.
+		 * @brief Adds a mesh to the renderer.
+		 * @param mesh The mesh to add to the renderer.
+		 * @return A unique identifier for the added mesh.
 		 */
-		void drawVertices(
-			const std::vector<utility::graphic::VertexF> &vertices) override;
+		size_t addMesh(const utility::graphic::Mesh &mesh) override;
+
+		/**
+		 * @brief Synchronizes the view across Guillaume and Evan.
+		 * @param view The view to apply.
+		 */
+		void setView(const utility::graphic::ViewF &view) override;
+
+		/**
+		 * @brief Returns the mirrored view state.
+		 * @return The current view.
+		 */
+		utility::graphic::ViewF getView(void) const override;
+
+		bool removeObject(size_t objectID) override;
 
 		/**
 		 * @brief Draws text at the specified position.
 		 * @param text The text to render.
 		 * @param pose The position and orientation for the text.
+		 * @return A unique identifier for the added text.
 		 */
-		void drawText(const utility::graphic::Text &text,
-					  const utility::graphic::PoseF &pose) override;
+		size_t addText(const utility::graphic::Text &text,
+					   const utility::graphic::PoseF &pose) override;
 
 		/**
 		 * @brief Measures text dimensions.
@@ -113,4 +127,4 @@ namespace xider
 		void pollEvents(void) override;
 	};
 
-}   // namespace xider
+}	 // namespace xider

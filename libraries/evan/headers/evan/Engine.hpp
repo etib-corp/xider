@@ -19,6 +19,7 @@
 
 #include <utility/graphic/model.hpp>
 #include <utility/graphic/primitive.hpp>
+#include <utility/graphic/view.hpp>
 #include <utility/graphic/text/text.hpp>
 
 #include <utility/ressource_provider.hpp>
@@ -85,12 +86,21 @@ namespace evan
 		 * configurations. This constructor is useful for quickly getting
 		 * started with the engine without needing to specify custom parameters.
 		 *
-		 * @param ressourceProvider A shared pointer to a RessourceProvider object, which is responsible for managing the loading and synchronization of GPU resources such as materials and textures. The RessourceProvider interacts with the utility::RessourceProvider to load resources from disk or other sources, and creates corresponding GPU resources using the DeviceContext. It provides methods for synchronizing resources, retrieving specific materials or textures by ID, and managing the lifecycle of GPU resources to ensure efficient memory usage and performance in the rendering process.
-		 * @param platform A shared pointer to an IPlatform object, which provides
-		 * an abstraction layer for platform-specific operations. The IPlatform
-		 * interface defines methods for window management, input handling, and
-		 * other platform-dependent functionality, allowing the engine to be
-		 * portable across different operating systems and platforms.
+		 * @param ressourceProvider A shared pointer to a RessourceProvider
+		 * object, which is responsible for managing the loading and
+		 * synchronization of GPU resources such as materials and textures. The
+		 * RessourceProvider interacts with the utility::RessourceProvider to
+		 * load resources from disk or other sources, and creates corresponding
+		 * GPU resources using the DeviceContext. It provides methods for
+		 * synchronizing resources, retrieving specific materials or textures by
+		 * ID, and managing the lifecycle of GPU resources to ensure efficient
+		 * memory usage and performance in the rendering process.
+		 * @param platform A shared pointer to an IPlatform object, which
+		 * provides an abstraction layer for platform-specific operations. The
+		 * IPlatform interface defines methods for window management, input
+		 * handling, and other platform-dependent functionality, allowing the
+		 * engine to be portable across different operating systems and
+		 * platforms.
 		 *
 		 * @note The Engine class is designed to be flexible and extensible,
 		 * allowing for future enhancements and additions to the engine's
@@ -98,69 +108,142 @@ namespace evan
 		 * core structure and functionality of the engine, with plans for
 		 * further improvements and optimizations in the future.
 		 */
-		Engine(std::shared_ptr<utility::RessourceProvider> ressourceProvider, std::shared_ptr<IPlatform> platform);
+		Engine(std::shared_ptr<utility::RessourceProvider> ressourceProvider,
+			   std::shared_ptr<IPlatform> platform);
 
 		~Engine();
 
 		/**
-		 * @brief Draws a text object on the screen. This method takes a shared
-		 * pointer to a Text object, which contains the necessary information for
-		 * rendering the text, such as the string content, font, size, and color.
+		 * @brief Adds a text object to the scene. This method takes a shared
+		 * pointer to a Text object, which contains the necessary information
+		 * for rendering the text, such as the string content, font, size, and
+		 * color.
 		 *
-		 * The drawText method is responsible for setting up the appropriate graphics
-		 * pipeline, binding the necessary resources, and issuing the draw calls to
-		 * render the text on the screen. It interacts with the Renderer and DeviceContext
-		 * to ensure that the text is rendered correctly, taking into account factors
-		 * such as the current scene, camera position, and any transformations applied to the text.
+		 * The addText method is responsible for setting up the appropriate
+		 * graphics pipeline, binding the necessary resources, and issuing the
+		 * draw calls to render the text on the screen. It interacts with the
+		 * Renderer and DeviceContext to ensure that the text is rendered
+		 * correctly, taking into account factors such as the current scene,
+		 * camera position, and any transformations applied to the text.
 		 *
-		 * @param text A shared pointer to the Text object to be drawn on the screen.
+		 * @param text A shared pointer to the Text object to be added to the
+		 * scene.
+		 *
+		 * @return The unique identifier (size_t) of the added text object
+		 * within the scene, which can be used for future reference or
+		 * manipulation of the text object in the scene.
 		 */
-		void drawText(std::shared_ptr<utility::graphic::Text> text);
+		size_t addText(std::shared_ptr<utility::graphic::Text> text);
 
 		/**
-		 * @brief Draws a primitive object on the screen. This method takes a shared
-		 * pointer to a Primitive object, which contains the necessary information for
-		 * rendering the primitive, such as the mesh data, material properties, and any
-		 * transformations applied to the primitive.
-		 *
-		 * The drawPrimitive method is responsible for setting up the appropriate graphics
-		 * pipeline, binding the necessary resources, and issuing the draw calls to
-		 * render the primitive on the screen. It interacts with the Renderer and DeviceContext
-		 * to ensure that the primitive is rendered correctly, taking into account factors
-		 * such as the current scene, camera position, and any transformations applied to the primitive.
-		 *
-		 * @param primitive A shared pointer to the Primitive object to be drawn on the screen.
+		 * @brief Removes a previously added render object from the current scene.
+		 * @param objectID The identifier returned by addText or addMesh.
+		 * @return True when the object was removed from the scene.
 		 */
-		void drawPrimitive(std::shared_ptr<utility::graphic::Primitive> primitive);
+		bool removeObject(size_t objectID);
 
 		/**
-		 * @brief Draws a model object on the screen. This method takes a shared
-		 * pointer to a Model object, which contains the necessary information for
-		 * rendering the model, such as the mesh data, material properties, and any
-		 * transformations applied to the model.
-		 *
-		 * The drawModel method is responsible for setting up the appropriate graphics
-		 * pipeline, binding the necessary resources, and issuing the draw calls to
-		 * render the model on the screen. It interacts with the Renderer and DeviceContext
-		 * to ensure that the model is rendered correctly, taking into account factors
-		 * such as the current scene, camera position, and any transformations applied to the model.
-		 *
-		 * @param model A shared pointer to the Model object to be drawn on the screen.
+		 * @brief Set the mirrored view state.
+		 * @param view The new view.
 		 */
-		void drawModel(std::shared_ptr<utility::graphic::Model> model);
+		void setView(const utility::graphic::ViewF &view);
 
 		/**
-		 * @brief Draws a generic renderable object on the screen. This method takes a shared
-		 * pointer to a Renderable object, which is a base class for various types of render
-		 * objects, such as Text, Primitive, and Model. The method also takes a string parameter
-		 * representing the render method to be used for drawing the object, allowing for flexibility in how the object is rendered.
-		 *
-		 * The drawObject method is responsible for determining the appropriate graphics pipeline and rendering approach based on the type of the Renderable object and the specified render method. It interacts with the Renderer and DeviceContext to ensure that the object is rendered correctly, taking into account factors such as the current scene, camera position, and any transformations applied to the object.
-		 *
-		 * @param object A shared pointer to the Renderable object to be drawn on the screen.
-		 * @param renderMethod A string representing the render method to be used for drawing the object, allowing for flexibility in how the object is rendered.
+		 * @brief Get the mirrored view state.
+		 * @return The current view.
 		 */
-		void drawObject(std::shared_ptr<utility::graphic::Renderable> object, const std::string &renderMethod);
+		utility::graphic::ViewF getView(void) const;
+
+		/**
+		 * @brief Adds a primitive object to the scene. This method takes a
+		 * shared pointer to a Primitive object, which contains the necessary
+		 * information for rendering the primitive, such as the mesh data,
+		 * material properties, and any transformations applied to the
+		 * primitive.
+		 *
+		 * The addPrimitive method is responsible for setting up the appropriate
+		 * graphics pipeline, binding the necessary resources, and issuing the
+		 * draw calls to render the primitive on the screen. It interacts with
+		 * the Renderer and DeviceContext to ensure that the primitive is
+		 * rendered correctly, taking into account factors such as the current
+		 * scene, camera position, and any transformations applied to the
+		 * primitive.
+		 *
+		 * @param primitive A shared pointer to the Primitive object to be drawn
+		 * on the screen.
+		 * @return The unique identifier (size_t) of the added primitive object
+		 * within the scene, which can be used for future reference or
+		 * manipulation of the primitive object in the scene.
+		 */
+		size_t addPrimitive(
+			std::shared_ptr<utility::graphic::Primitive> primitive);
+
+		/**
+		 * @brief Adds a model object to the scene. This method takes a shared
+		 * pointer to a Model object, which contains the necessary information
+		 * for rendering the model, such as the mesh data, material properties,
+		 * and any transformations applied to the model.
+		 *
+		 * The addModel method is responsible for setting up the appropriate
+		 * graphics pipeline, binding the necessary resources, and issuing the
+		 * draw calls to render the model on the screen. It interacts with the
+		 * Renderer and DeviceContext to ensure that the model is rendered
+		 * correctly, taking into account factors such as the current scene,
+		 * camera position, and any transformations applied to the model.
+		 *
+		 * @param model A shared pointer to the Model object to be added to the
+		 * scene.
+		 * @return The unique identifier (size_t) of the added model object
+		 * within the scene, which can be used for future reference or
+		 * manipulation of the model object in the scene.
+		 */
+		size_t addModel(std::shared_ptr<utility::graphic::Model> model);
+
+		/**
+		 * @brief Adds a generic renderable object to the scene. This method
+		 * takes a shared pointer to a Renderable object, which is a base class
+		 * for various types of render objects, such as Text, Primitive, and
+		 * Model. The method also takes a string parameter representing the
+		 * render method to be used for drawing the object, allowing for
+		 * flexibility in how the object is rendered.
+		 *
+		 * The addObject method is responsible for determining the appropriate
+		 * graphics pipeline and rendering approach based on the type of the
+		 * Renderable object and the specified render method. It interacts with
+		 * the Renderer and DeviceContext to ensure that the object is rendered
+		 * correctly, taking into account factors such as the current scene,
+		 * camera position, and any transformations applied to the object.
+		 *
+		 * @param object A shared pointer to the Renderable object to be added
+		 * to the scene.
+		 * @param renderMethod A string representing the render method to be
+		 * used for drawing the object, allowing for flexibility in how the
+		 * object is rendered.
+		 * @return The unique identifier (size_t) of the added renderable object
+		 * within the scene, which can be used for future reference or
+		 * manipulation of the renderable object in the scene.
+		 */
+		size_t addObject(std::shared_ptr<utility::graphic::Renderable> object,
+						 const std::string &renderMethod);
+
+		/**
+		 * @brief Adds a mesh to the renderer. This method takes a Mesh object,
+		 * which contains the necessary information for rendering the mesh, such
+		 * as the vertex data, index data, and material properties.
+		 *
+		 * The addMesh method is responsible for setting up the appropriate
+		 * graphics pipeline, binding the necessary resources, and issuing the
+		 * draw calls to render the mesh on the screen. It interacts with the
+		 * Renderer and DeviceContext to ensure that the mesh is rendered
+		 * correctly, taking into account factors such as the current scene,
+		 * camera position, and any transformations applied to the mesh.
+		 *
+		 * @param mesh The Mesh object to be added to the renderer.
+		 * @return The unique identifier (size_t) of the added mesh within the
+		 * renderer, which can be used for future reference or manipulation of
+		 * the mesh in the renderer.
+		 */
+		size_t addMesh(const utility::graphic::Mesh &mesh);
 
 		/**
 		 * @brief Updates the state of the engine. This method is responsible
@@ -219,8 +302,8 @@ namespace evan
 		 * events that were polled from the platform. Each Event object contains
 		 * information about the type of event, such as input events.
 		 * The vector may contain events such as keyboard input, mouse input, or
-		 * xr controller input, depending on the specific events that were polled from
-		 * the platform during the current frame.
+		 * xr controller input, depending on the specific events that were
+		 * polled from the platform during the current frame.
 		 *
 		 * see utility::event::Event for more details on the Event class and its
 		 * derived classes representing specific types of events.
@@ -269,9 +352,10 @@ namespace evan
 		 * to the textures used in the scene. These textures may be associated
 		 * with the materials used by the meshes.
 		 * @param meshData A map where the key is a string representing the mesh
-		 * name, and the value is a vector of GPUMesh objects representing the mesh
-		 * data for that mesh name. Each GPUMesh object contains information about
-		 * the vertices, indices, and material ID associated with that mesh.
+		 * name, and the value is a vector of GPUMesh objects representing the
+		 * mesh data for that mesh name. Each GPUMesh object contains
+		 * information about the vertices, indices, and material ID associated
+		 * with that mesh.
 		 */
 		void updateScene(size_t sceneIndex,
 						 std::vector<std::string> texturePaths,
@@ -280,16 +364,20 @@ namespace evan
 		/**
 		 * @brief Initializes the asset manager for the engine.
 		 *
-		 * Sets up the global asset manager instance based on the target platform.
-		 * On Android, creates an AndroidAssetManager with the provided platform asset manager.
-		 * On other platforms, creates a DefaultAssetManager.
+		 * Sets up the global asset manager instance based on the target
+		 * platform. On Android, creates an AndroidAssetManager with the
+		 * provided platform asset manager. On other platforms, creates a
+		 * DefaultAssetManager.
 		 *
 		 * @param platformAssetManager Platform-specific asset manager pointer.
-		 *                             On Android, this should be a pointer to AAssetManager.
-		 *                             On other platforms, this parameter is ignored and can be nullptr.
+		 *                             On Android, this should be a pointer to
+		 * AAssetManager. On other platforms, this parameter is ignored and can
+		 * be nullptr.
 		 *
-		 * @note This function should be called during engine initialization before any asset loading operations.
-		 * @note The global asset manager is stored in g_assetManager as a unique_ptr.
+		 * @note This function should be called during engine initialization
+		 * before any asset loading operations.
+		 * @note The global asset manager is stored in g_assetManager as a
+		 * unique_ptr.
 		 */
 		static void initializeAssetManager(void *platformAssetManager);
 
@@ -380,14 +468,38 @@ namespace evan
 		std::shared_ptr<IPlatform> _platform;
 
 		/**
-		 * A shared pointer to a RessourceManager object, which manages the loading
-		 * and synchronization of GPU resources such as materials and textures. The RessourceManager interacts with the utility::RessourceProvider to load resources from disk or other sources, and creates corresponding GPU resources using the DeviceContext. It provides methods for synchronizing resources, retrieving specific materials or textures by ID, and managing the lifecycle of GPU resources to ensure efficient memory usage and performance in the rendering process.
+		 * A shared pointer to a RessourceProvider object, which is responsible
+		 * for managing and loading various resources such as fonts, materials,
+		 * and textures in a graphics application. The RessourceProvider
+		 * provides methods to load resources from file paths or from asset
+		 * objects, and it maintains internal maps to store loaded resources for
+		 * efficient retrieval. It supports loading fonts, materials, and
+		 * textures, and it can handle different shader types for materials.
+		 */
+		std::shared_ptr<utility::RessourceProvider> _ressourceProvider;
+
+		/**
+		 * A shared pointer to a RessourceManager object, which manages the
+		 * loading and synchronization of GPU resources such as materials and
+		 * textures. The RessourceManager interacts with the
+		 * utility::RessourceProvider to load resources from disk or other
+		 * sources, and creates corresponding GPU resources using the
+		 * DeviceContext. It provides methods for synchronizing resources,
+		 * retrieving specific materials or textures by ID, and managing the
+		 * lifecycle of GPU resources to ensure efficient memory usage and
+		 * performance in the rendering process.
 		 */
 		std::shared_ptr<RessourceManager> _ressourceManager;
 
 		private:
 		/**
-		 * A counter to generate unique object IDs for scenes, render objects, or other entities managed by the engine. This counter is incremented each time a new object is created, ensuring that each object receives a unique identifier that can be used for tracking and management purposes within the engine. The _nextObjectID can be used to assign IDs to new scenes, render objects, or any other entities that require unique identification within the engine's data structures.
+		 * A counter to generate unique object IDs for scenes, render objects,
+		 * or other entities managed by the engine. This counter is incremented
+		 * each time a new object is created, ensuring that each object receives
+		 * a unique identifier that can be used for tracking and management
+		 * purposes within the engine. The _nextObjectID can be used to assign
+		 * IDs to new scenes, render objects, or any other entities that require
+		 * unique identification within the engine's data structures.
 		 */
 		size_t _nextObjectID = 1;
 	};
