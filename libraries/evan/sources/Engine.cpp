@@ -48,10 +48,32 @@ evan::Engine::Engine(
 	ressourceProvider->loadShader("assets/shaders/text.vert.spv",
 								  "assets/shaders/text.frag.spv", *g_systemIO);
 
+	/**
+	 * We load shaders from both "assets/shaders/" and "shaders/" directories to
+	 * accommodate different platforms and build configurations. On Android, assets
+	 * are typically stored in the "assets/" directory, while on other platforms,
+	 * shaders may be stored in a "shaders/" directory within the project.
+	 */
+	ressourceProvider->loadShader("assets/shaders/default.vert.spv",
+								  "assets/shaders/default.frag.spv",
+								  *g_systemIO);
+	ressourceProvider->loadShader("shaders/text.vert.spv",
+								"shaders/text.frag.spv", *g_systemIO);
+
 	this->getLogger().info("Loading default shader...");
 
 	ressourceProvider->loadShader("assets/shaders/default.vert.spv",
 								  "assets/shaders/default.frag.spv",
+								  *g_systemIO);
+
+	/**
+	 * We load shaders from both "assets/shaders/" and "shaders/" directories to
+	 * accommodate different platforms and build configurations. On Android, assets
+	 * are typically stored in the "assets/" directory, while on other platforms,
+	 * shaders may be stored in a "shaders/" directory within the project.
+	 */
+	ressourceProvider->loadShader("shaders/default.vert.spv",
+								  "shaders/default.frag.spv",
 								  *g_systemIO);
 
 	_deviceContext	  = std::make_shared<DeviceContext>(*platform);
