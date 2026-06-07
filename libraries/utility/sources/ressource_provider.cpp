@@ -13,6 +13,11 @@
 namespace utility
 {
 
+	RessourceProvider::RessourceProvider(SystemIO &systemInterface)
+		: _systemInterface(systemInterface)
+	{
+	}
+
 	/////////////
 	// Getters //
 	/////////////
@@ -63,8 +68,7 @@ namespace utility
 	////////////////////
 
 	std::shared_ptr<graphic::Font>
-		RessourceProvider::loadFont(const std::string &path,
-								   SystemIO &systemInterface)
+		RessourceProvider::loadFont(const std::string &path)
 	{
 		auto it = _elementsIDs.find(path);
 
@@ -74,7 +78,7 @@ namespace utility
 			}
 		}
 
-		auto fontAsset = systemInterface.add(path);
+		auto fontAsset = _systemInterface.add(path);
 
 		if (!fontAsset) {
 			std::cerr << "Failed to load font asset: " << path << std::endl;
@@ -235,8 +239,7 @@ namespace utility
 
 	std::shared_ptr<graphic::Material>
 		RessourceProvider::loadMaterial(const std::string &path,
-									   ShaderType shaderType,
-									   SystemIO &systemInterface)
+									   ShaderType shaderType)
 	{
 		auto it = _elementsIDs.find(path);
 
@@ -246,7 +249,7 @@ namespace utility
 			}
 		}
 
-		auto materialAsset = systemInterface.add(path);
+		auto materialAsset = _systemInterface.add(path);
 
 		if (!materialAsset) {
 			std::cerr << "Failed to load material asset: " << path << std::endl;
@@ -287,8 +290,7 @@ namespace utility
 	}
 
 	std::shared_ptr<graphic::Texture>
-		RessourceProvider::loadTexture(const std::string &path,
-									  SystemIO &systemInterface)
+		RessourceProvider::loadTexture(const std::string &path)
 	{
 		auto it = _elementsIDs.find(path);
 
@@ -298,7 +300,7 @@ namespace utility
 			}
 		}
 
-		auto textureAsset = systemInterface.add(path);
+		auto textureAsset = _systemInterface.add(path);
 
 		if (!textureAsset) {
 			std::cerr << "Failed to load texture asset: " << path << std::endl;
@@ -345,8 +347,7 @@ namespace utility
 		return _textures[id];
 	}
 
-	std::shared_ptr<graphic::Model> RessourceProvider::loadModel(const std::string &path,
-																SystemIO &systemInterface)
+	std::shared_ptr<graphic::Model> RessourceProvider::loadModel(const std::string &path)
 	{
 		auto it = _elementsIDs.find(path);
 
@@ -356,7 +357,7 @@ namespace utility
 			}
 		}
 
-		auto modelAsset = systemInterface.add(path);
+		auto modelAsset = _systemInterface.add(path);
 
 		if (!modelAsset) {
 			std::cerr << "Failed to load model asset: " << path << std::endl;
@@ -408,7 +409,7 @@ namespace utility
 		return _models[id];
 	}
 
-	std::shared_ptr<graphic::Model> RessourceProvider::loadObj(const std::string &path, SystemIO &systemInterface)
+	std::shared_ptr<graphic::Model> RessourceProvider::loadObj(const std::string &path)
 	{
 		auto it = _elementsIDs.find(path);
 
@@ -418,7 +419,7 @@ namespace utility
 			}
 		}
 
-		auto modelAsset = systemInterface.add(path);
+		auto modelAsset = _systemInterface.add(path);
 
 		if (!modelAsset) {
 			std::cerr << "Failed to load model asset: " << path << std::endl;
@@ -453,7 +454,7 @@ namespace utility
 		return _models[id];
 	}
 
-	std::shared_ptr<graphic::Shader> RessourceProvider::loadShader(const std::string &vertexPath, const std::string &fragmentPath, SystemIO &systemInterface)
+	std::shared_ptr<graphic::Shader> RessourceProvider::loadShader(const std::string &vertexPath, const std::string &fragmentPath)
 	{
 		auto path = buildShaderPath(vertexPath, fragmentPath);
 		auto it = _elementsIDs.find(path);
@@ -464,8 +465,8 @@ namespace utility
 			}
 		}
 
-		auto vertex = systemInterface.add(vertexPath);
-		auto fragment = systemInterface.add(fragmentPath);
+		auto vertex = _systemInterface.add(vertexPath);
+		auto fragment = _systemInterface.add(fragmentPath);
 
 		if (!vertex) {
 			std::cerr << "Failed to load shader asset: " << vertexPath << std::endl;
