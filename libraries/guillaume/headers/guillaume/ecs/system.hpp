@@ -28,7 +28,7 @@
 #include <vector>
 
 #include <utility/logging/loggable.hpp>
-#include <utility/logging/standard_logger.hpp>
+#include <utility/logging/default_logger.hpp>
 #include <utility/demangle.hpp>
 
 #include "guillaume/ecs/component.hpp"
@@ -51,8 +51,7 @@ namespace guillaume::ecs
 	 * @see SystemFiller
 	 */
 	class System:
-		protected utility::logging::Loggable<System,
-											 utility::logging::StandardLogger>
+		protected utility::logging::Loggable<System, utility::logging::DefaultLogger>
 	{
 		private:
 		Phase _phase;					 ///< Update phase of the system

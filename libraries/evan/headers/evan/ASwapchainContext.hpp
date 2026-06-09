@@ -14,7 +14,7 @@
 #include <utility/graphic/view.hpp>
 
 #include <utility/logging/loggable.hpp>
-#include <utility/logging/standard_logger.hpp>
+#include <utility/logging/default_logger.hpp>
 
 #include <map>
 #include <memory>
@@ -36,9 +36,7 @@ namespace evan
 	 * swapchain-related operations in the engine.
 	 *
 	 */
-	class ASwapchainContext : protected utility::logging::Loggable<
-			ASwapchainContext,
-			utility::logging::StandardLogger>
+	class ASwapchainContext : protected utility::logging::Loggable<ASwapchainContext, utility::logging::DefaultLogger>
 	{
 		public:
 		virtual ~ASwapchainContext() = default;

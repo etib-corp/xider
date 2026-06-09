@@ -19,7 +19,7 @@ bool evan::IXrPlatform::shouldClose() const
 
 std::vector<std::unique_ptr<utility::event::Event>> evan::IXrPlatform::pollEvents(ADeviceBackend &deviceBackend)
 {
-	this->getLogger().info("Polling OpenXR events");
+	this->getLogger().info() << "Polling OpenXR events";
 
 	XrEventDataBuffer eventDataBuffer { XR_TYPE_EVENT_DATA_BUFFER };
 	evan::XrDeviceBackend &xrDeviceBackend =
@@ -31,7 +31,7 @@ std::vector<std::unique_ptr<utility::event::Event>> evan::IXrPlatform::pollEvent
 		   == XR_SUCCESS) {
 		switch (eventDataBuffer.type) {
 			case XR_TYPE_EVENT_DATA_SESSION_STATE_CHANGED: {
-				this->getLogger().info("Processing session state changed event");
+				this->getLogger().info() << "Processing session state changed event";
 				auto sessionStateChangedEvent =
 					*reinterpret_cast<XrEventDataSessionStateChanged *>(
 						&eventDataBuffer);
@@ -40,12 +40,12 @@ std::vector<std::unique_ptr<utility::event::Event>> evan::IXrPlatform::pollEvent
 				break;
 			}
 			case XR_TYPE_EVENT_DATA_INSTANCE_LOSS_PENDING: {
-				this->getLogger().info("Instance loss pending event received");
+				this->getLogger().info() << "Instance loss pending event received";
 				_shouldClose = true;
 				break;
 			}
 			default:
-				this->getLogger().warning("Unhandled event type: " + std::to_string(eventDataBuffer.type));
+				this->getLogger().warning() << "Unhandled event type: " << eventDataBuffer.type;
 				break;
 		}
 		eventDataBuffer = { XR_TYPE_EVENT_DATA_BUFFER };
@@ -74,7 +74,7 @@ void evan::IXrPlatform::processSessionStateChangedEvent(
 	const XrEventDataSessionStateChanged &eventData,
 	evan::XrDeviceBackend &xrDeviceBackend)
 {
-	this->getLogger().info("Processing session state changed event");
+	this->getLogger().info() << "Processing session state changed event";
 
 	switch (eventData.state) {
 		case XR_SESSION_STATE_READY: {

@@ -8,7 +8,7 @@
 #pragma once
 
 #include <utility/logging/loggable.hpp>
-#include <utility/logging/standard_logger.hpp>
+#include <utility/logging/default_logger.hpp>
 
 #include "evan/EvanPlatform.hpp"
 
@@ -88,9 +88,7 @@ namespace evan
 	 * actions as needed, allowing for flexible management of various input
 	 * actions in an OpenXR application.
 	 */
-	class XrManageButtonsActions : protected utility::logging::Loggable<
-			XrManageButtonsActions,
-			utility::logging::StandardLogger>
+	class XrManageButtonsActions : protected utility::logging::Loggable<XrManageButtonsActions, utility::logging::DefaultLogger>
 	{
 		public:
 		/** @brief Constructs an XrManageButtonsActions instance with the

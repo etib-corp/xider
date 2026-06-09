@@ -25,8 +25,8 @@
  * @brief Standard output/error logger declaration.
  *
  * Declares `utility::StandardLogger`, which routes INFO_LEVEL/DEBUG_LEVEL to
- * stdout and WARNING_LEVEL/ERROR_LEVEL to stderr. See implementation in
- * sources/standard_logger.cpp.
+ * stdout and WARNING_LEVEL/ERROR_LEVEL to stderr, with ANSI colors and
+ * enriched metadata.
  */
 
 #pragma once
@@ -36,59 +36,32 @@
 namespace utility::logging
 {
 
+/**
+ * @brief Standard output/error logger implementation.
+ *
+ * Logs DEBUG_LEVEL and INFO_LEVEL messages to stdout, WARNING_LEVEL and
+ * ERROR_LEVEL to stderr. Adds ANSI color per level and includes source
+ * file, line, and function name in the output.
+ */
+class StandardLogger: public Logger
+{
+	public:
 	/**
-	 * @brief Standard output/error logger implementation.
-	 *
-	 * Logs DEBUG_LEVEL and INFO_LEVEL messages to stdout, WARNING_LEVEL and
-	 * ERROR_LEVEL to stderr.
+	 * @brief Constructor with logger name.
+	 * @param name The name of the logger.
 	 */
-	class StandardLogger: public Logger
-	{
-		public:
-		/**
-		 * @brief Constructor with logger name.
-		 * @param name The name of the logger.
-		 */
-		StandardLogger(const std::string &name);
+	StandardLogger(const std::string &name);
 
-		/**
-		 * @brief Destructor ensuring output streams are flushed.
-		 */
-		~StandardLogger(void) override;
+	/**
+	 * @brief Destructor ensuring output streams are flushed.
+	 */
+	~StandardLogger(void) override;
 
-		/**
-		 * @brief Log a debug message to stdout.
-		 * @param message The message to log.
-		 */
-		void debug(const std::string &message) override;
-
-		/**
-		 * @brief Log an informational message to stdout.
-		 * @param message The message to log.
-		 */
-		void info(const std::string &message) override;
-
-		/**
-		 * @brief Log a warning message to stderr.
-		 * @param message The message to log.
-		 */
-		void warning(const std::string &message) override;
-
-		/**
-		 * @brief Log an error message to stderr.
-		 * @param message The message to log.
-		 */
-		void error(const std::string &message) override;
-
-		/**
-		 * @brief Log a message with specified level.
-		 *
-		 * Routes DEBUG_LEVEL and INFO_LEVEL to stdout, WARNING_LEVEL and
-		 * ERROR_LEVEL to stderr.
-		 * @param level The severity level.
-		 * @param message The message to log.
-		 */
-		void log(LogLevel level, const std::string &message) override;
-	};
+	/**
+	 * @brief Output a formatted log record to the appropriate stream.
+	 * @param record The log record to output.
+	 */
+	void output(const LogRecord &record) override;
+};
 
 }	 // namespace utility::logging

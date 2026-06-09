@@ -26,7 +26,7 @@
 #include <stdexcept>
 
 #include <utility/logging/loggable.hpp>
-#include <utility/logging/standard_logger.hpp>
+#include <utility/logging/default_logger.hpp>
 
 #include "guillaume/ecs/component_registry.hpp"
 #include "guillaume/ecs/entity_registry.hpp"
@@ -45,8 +45,7 @@ namespace guillaume
 	 */
 	class Scene:
 		public ecs::EntityRegistryContainer,
-		public utility::logging::Loggable<Scene,
-										  utility::logging::StandardLogger>
+		public utility::logging::Loggable<Scene, utility::logging::DefaultLogger>
 	{
 		private:
 		LocalStorage &

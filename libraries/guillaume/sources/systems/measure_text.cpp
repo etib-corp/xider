@@ -47,8 +47,7 @@ namespace guillaume::systems
 
 	void MeasureText::update(const ecs::Entity::Identifier &entityIdentifier)
 	{
-		getLogger().debug("Updating MeasureText system for entity "
-						  + std::to_string(entityIdentifier));
+		getLogger().debug() << "Updating MeasureText system for entity " << entityIdentifier;
 		if (!requireComponent<components::Text>(entityIdentifier)
 			|| !requireComponent<components::Bound>(entityIdentifier)) {
 			return;

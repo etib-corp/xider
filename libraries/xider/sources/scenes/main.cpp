@@ -32,7 +32,7 @@ namespace xider::scenes
 			   guillaume::SessionStorage &sessionStorage)
 		: guillaume::Scene(localStorage, sessionStorage)
 	{
-		getLogger().info("Main scene created");
+		getLogger().info() << "Main scene created";
 
 		auto &panelBuilder =
 			getBuilderManager()
@@ -50,7 +50,7 @@ namespace xider::scenes
 
 		buttonDirector.makeIconTextButton(
 			buttonBuilder, "settings", "Settings", [this]() {
-				this->getLogger().info("Button icon text clicked!");
+				this->getLogger().info() << "Button icon text clicked!";
 			});
 	}
 

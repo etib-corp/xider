@@ -10,7 +10,7 @@
 #include <utility/graphic/material.hpp>
 
 #include <utility/logging/loggable.hpp>
-#include <utility/logging/standard_logger.hpp>
+#include <utility/logging/default_logger.hpp>
 
 #include "evan/EvanPlatform.hpp"
 
@@ -38,9 +38,7 @@ namespace evan
 	 * assumes that the necessary Vulkan resources (such as the device and
 	 * renderer) are provided during construction.
 	 */
-	class Scene: protected utility::logging::Loggable<
-			Scene,
-			utility::logging::StandardLogger>
+	class Scene: protected utility::logging::Loggable<Scene, utility::logging::DefaultLogger>
 	{
 		public:
 		Scene() = default;

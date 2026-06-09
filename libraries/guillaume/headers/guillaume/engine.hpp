@@ -30,7 +30,7 @@
 #include <typeindex>
 
 #include <utility/logging/loggable.hpp>
-#include <utility/logging/standard_logger.hpp>
+#include <utility/logging/default_logger.hpp>
 
 #include <utility/ressource_provider.hpp>
 
@@ -63,8 +63,7 @@ namespace guillaume
 	 * @see EventBus
 	 */
 	class Engine:
-		protected utility::logging::Loggable<Engine,
-											 utility::logging::StandardLogger>
+		protected utility::logging::Loggable<Engine, utility::logging::DefaultLogger>
 	{
 		public:
 		/**

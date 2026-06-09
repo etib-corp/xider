@@ -31,7 +31,7 @@
 #include <utility>
 
 #include <utility/logging/loggable.hpp>
-#include <utility/logging/standard_logger.hpp>
+#include <utility/logging/default_logger.hpp>
 
 #include <utility/demangle.hpp>
 
@@ -83,8 +83,7 @@ namespace guillaume::ecs
 	 * @see ComponentStorage
 	 */
 	class ComponentRegistry:
-		public utility::logging::Loggable<ComponentRegistry,
-										  utility::logging::StandardLogger>
+		public utility::logging::Loggable<ComponentRegistry, utility::logging::DefaultLogger>
 	{
 		private:
 		std::map<std::type_index, std::unique_ptr<IComponentStorage>>

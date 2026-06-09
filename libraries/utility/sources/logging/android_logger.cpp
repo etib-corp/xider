@@ -20,41 +20,46 @@
  SOFTWARE.
  */
 
-#include "guillaume/systems/text_input.hpp"
+#include "utility/logging/android_logger.hpp"
 
-namespace guillaume::systems
+#ifdef __ANDROID__
+
+namespace utility::logging
 {
 
-	TextInput::TextInput(event::EventBus &eventBus)
-		: ecs::SystemFiller<components::Text, components::Focus>(
-			  ecs::Phase::Event)
-		, _textInputSubscriber(eventBus)
-	{
+AndroidLogger::AndroidLogger(const std::string &name)
+	: Logger(name)
+{
+}
+
+AndroidLogger::~AndroidLogger() = default;
+
+void AndroidLogger::output(const LogRecord &record)
+{
+	android_LogPriority priority = ANDROID_LOG_VERBOSE;
+	switch (record.level) {
+		case LogLevel::DEBUG_LEVEL:
+			priority = ANDROID_LOG_DEBUG;
+			break;
+		case LogLevel::INFO_LEVEL:
+			priority = ANDROID_LOG_INFO;
+			break;
+		case LogLevel::WARNING_LEVEL:
+			priority = ANDROID_LOG_WARN;
+			break;
+		case LogLevel::ERROR_LEVEL:
+			priority = ANDROID_LOG_ERROR;
+			break;
 	}
 
-	void TextInput::update(const ecs::Entity::Identifier &entityIdentifier)
-	{
-		getLogger().debug() << "Updating TextInput system for entity " << entityIdentifier;
-		if (!_textInputSubscriber.hasPendingEvents()) {
-			return;
-		}
+	std::string tag = record.loggerName;
+	std::string msg = "[" + record.timestamp + "] [" + record.file + ":"
+					  + std::to_string(record.line) + " " + record.function
+					  + "] " + record.message;
 
-		auto &text			= getComponent<components::Text>(entityIdentifier);
-		std::string content = text.getContent();
+	__android_log_print(priority, tag.c_str(), "%s", msg.c_str());
+}
 
-		while (_textInputSubscriber.hasPendingEvents()) {
-			const auto textInputEvent = _textInputSubscriber.getNextEvent();
-			if (!textInputEvent) {
-				continue;
-			}
+}	 // namespace utility::logging
 
-			const auto committedText = textInputEvent->getText();
-			if (!committedText.empty()) {
-				content += committedText;
-			}
-		}
-
-		text.setContent(content);
-	}
-
-}	 // namespace guillaume::systems
+#endif // __ANDROID__

@@ -15,7 +15,7 @@
 #include <utility/graphic/texture.hpp>
 
 #include <utility/logging/loggable.hpp>
-#include <utility/logging/standard_logger.hpp>
+#include <utility/logging/default_logger.hpp>
 
 #include "GPUMaterial.hpp"
 #include "GPUTexture.hpp"
@@ -29,9 +29,7 @@ namespace evan {
      * and it creates corresponding GPU resources (GPUMaterial and GPUTexture) for use in rendering.
      * It maintains internal maps to store these GPU resources for efficient retrieval based on their IDs.
      */
-    class RessourceManager: protected utility::logging::Loggable<
-			RessourceManager,
-			utility::logging::StandardLogger> {
+    class RessourceManager: protected utility::logging::Loggable<RessourceManager, utility::logging::DefaultLogger> {
         public:
         /**
          * @brief Constructs a RessourceManager instance with the given resource provider, device context, and renderer.

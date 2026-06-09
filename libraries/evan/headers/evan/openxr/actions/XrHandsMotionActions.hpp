@@ -14,7 +14,7 @@
 #include <utility/event/hand_motion_event.hpp>
 
 #include <utility/logging/loggable.hpp>
-#include <utility/logging/standard_logger.hpp>
+#include <utility/logging/default_logger.hpp>
 
 #include <openxr/openxr.h>
 
@@ -36,9 +36,7 @@ namespace evan
 	 * application, allowing developers to create immersive experiences that
 	 * utilize hand gestures and movements.
 	 */
-	class XrHandsMotionActions : protected utility::logging::Loggable<
-			XrHandsMotionActions,
-			utility::logging::StandardLogger>
+	class XrHandsMotionActions : protected utility::logging::Loggable<XrHandsMotionActions, utility::logging::DefaultLogger>
 	{
 		public:
 		/** @brief Constructs an XrHandsMotionActions instance with the

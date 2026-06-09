@@ -48,12 +48,9 @@ namespace guillaume::systems
 						_glyphCode[name] = code;
 					}
 				}
-				getLogger().info("Loaded "
-								 + std::to_string(_glyphCode.size())
-								 + " glyph codes from " + _glyphCodePath);
+				getLogger().info() << "Loaded " << _glyphCode.size() << " glyph codes from " << _glyphCodePath;
 			} else {
-				getLogger().error(
-					"Failed to load glyph code asset: " + _glyphCodePath);
+				getLogger().error() << "Failed to load glyph code asset: " << _glyphCodePath;
 			}
 			_glyphCodesLoaded = true;
 		}
@@ -128,8 +125,7 @@ namespace guillaume::systems
 
 	void GlyphRender::update(const ecs::Entity::Identifier &entityIdentifier)
 	{
-		getLogger().debug("Updating GlyphRender system for entity "
-						  + std::to_string(entityIdentifier));
+		getLogger().debug() << "Updating GlyphRender system for entity " << entityIdentifier;
 		if (!requireComponent<components::Transform>(entityIdentifier)
 			|| !requireComponent<components::Bound>(entityIdentifier)
 			|| !requireComponent<components::Glyph>(entityIdentifier)
@@ -148,10 +144,8 @@ namespace guillaume::systems
 
 		const std::string glyphName = glyphComponent.getName();
 
-		getLogger().debug("Rendering glyph '" + glyphName + "' for entity "
-						  + std::to_string(entityIdentifier));
-		getLogger().debug("Glyph code found for '" + glyphName
-						  + "': " + std::to_string(glyphComponent.getCode()));
+		getLogger().debug() << "Rendering glyph '" << glyphName << "' for entity " << entityIdentifier;
+		getLogger().debug() << "Glyph code found for '" << glyphName << "': " << glyphComponent.getCode();
 
 		const uint32_t glyphCode =
 			_glyphCode.count(glyphName) > 0 ? _glyphCode[glyphName] : '?';

@@ -35,24 +35,21 @@ namespace guillaume
 			std::make_unique<SceneType>(_localStorage, _sessionStorage);
 		if (_activeSceneType == typeid(void)) {
 			_activeSceneType = typeIndex;
-			getLogger().info("No active scene set. Defaulting to first "
-							 "registered scene");
+			getLogger().info() << "No active scene set. Defaulting to first "
+							 "registered scene";
 		}
-		getLogger().info("Registered scene type: "
-						 + utility::demangle<SceneType>());
+		getLogger().info() << "Registered scene type: " << utility::demangle<SceneType>();
 	}
 
 	template<InheritFromScene SceneType> void SceneManager::switchToScene(void)
 	{
 		std::type_index typeIndex(typeid(SceneType));
 		if (_scenes.find(typeIndex) == _scenes.end()) {
-			getLogger().error("Scene switch failed. Scene type is not "
-							  "registered: "
-							  + utility::demangle<SceneType>());
+			getLogger().error() << "Scene switch failed. Scene type is not "
+							  "registered: " << utility::demangle<SceneType>();
 			throw std::runtime_error("Scene not found in scene manager");
 		}
 		_activeSceneType = typeIndex;
-		getLogger().info("Switched active scene to type: "
-						 + utility::demangle<SceneType>());
+		getLogger().info() << "Switched active scene to type: " << utility::demangle<SceneType>();
 	}
 }	 // namespace guillaume

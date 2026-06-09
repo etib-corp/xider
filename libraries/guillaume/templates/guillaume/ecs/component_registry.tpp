@@ -68,9 +68,7 @@ namespace guillaume::ecs
 	{
 		auto &storage = getOrCreateStorage<ComponentType>();
 		storage.emplace(entityIdentifier);
-		getLogger().debug("Registered component of type "
-						  + utility::demangle<ComponentType>() + " for entity "
-						  + std::to_string(entityIdentifier));
+		getLogger().debug() << "Registered component of type " << utility::demangle<ComponentType>() << " for entity " << entityIdentifier;
 	}
 
 	template<InheritFromComponent ComponentType>
