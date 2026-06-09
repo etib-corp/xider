@@ -67,8 +67,7 @@ namespace guillaume::systems
 
 	void TextRender::update(const ecs::Entity::Identifier &entityIdentifier)
 	{
-		getLogger().debug("Updating TextRender system for entity "
-						  + std::to_string(entityIdentifier));
+		getLogger().debug() << "Updating TextRender system for entity " << entityIdentifier;
 		if (!requireComponent<components::Transform>(entityIdentifier)
 			|| !requireComponent<components::Text>(entityIdentifier)
 			|| !requireComponent<components::Color>(entityIdentifier)) {

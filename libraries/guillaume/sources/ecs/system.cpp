@@ -65,7 +65,7 @@ namespace guillaume::ecs
 						 const ecs::EntityTreeTraveler &traveler)
 	{
 		_activeComponentRegistry = &componentRegistry;
-		getLogger().debug("System routine started");
+		getLogger().debug() << "System routine started";
 
 		auto traversedEntities = traveler.travel(entityRegistry);
 
@@ -80,8 +80,8 @@ namespace guillaume::ecs
 
 		if (hasPendingChanges) {
 			componentRegistry.resetChangedFlags();
-			getLogger().debug("System routine applied pending component "
-							  "changes");
+			getLogger().debug() << "System routine applied pending component "
+							  "changes";
 		}
 
 		std::size_t matchingEntities = 0;
@@ -99,10 +99,7 @@ namespace guillaume::ecs
 		// Per-frame cleanup
 		cleanup();
 
-		getLogger().debug("System routine finished. Visited entities: "
-						  + std::to_string(traversedEntities.size())
-						  + ", matching entities: "
-						  + std::to_string(matchingEntities));
+		getLogger().debug() << "System routine finished. Visited entities: " << traversedEntities.size() << ", matching entities: " << matchingEntities;
 
 		_activeComponentRegistry = nullptr;
 	}

@@ -10,7 +10,7 @@
 evan::XrSwapchainImage::XrSwapchainImage(
 	const CreateXrSwapchainImageProperties &properties)
 {
-	this->getLogger().info("Initializing XrSwapchainImage");
+	this->getLogger().info() << "Initializing XrSwapchainImage";
 
 	uint32_t swapchainImageCount = 0;
 	xrEnumerateSwapchainImages(properties.swapchain, 0, &swapchainImageCount,
@@ -58,10 +58,10 @@ evan::XrSwapchainImage::XrSwapchainImage(
 
 void evan::XrSwapchainImage::destroy(VkDevice device)
 {
-	this->getLogger().info("Destroying XrSwapchainImage and releasing resources");
+	this->getLogger().info() << "Destroying XrSwapchainImage and releasing resources";
 
 	for (size_t i = 0; i < _swapchainImages.size(); ++i) {
-		this->getLogger().info("Destroying image view and framebuffer for swapchain image index: " + std::to_string(i));
+		this->getLogger().info() << "Destroying image view and framebuffer for swapchain image index: " << i;
 		vkDestroyImageView(device, _imageViews[i], nullptr);
 		vkDestroyFramebuffer(device, _framebuffers[i], nullptr);
 	}
@@ -69,7 +69,7 @@ void evan::XrSwapchainImage::destroy(VkDevice device)
 	_imageViews.clear();
 	_framebuffers.clear();
 
-	this->getLogger().info("Destroying color and depth resources for swapchain image");
+	this->getLogger().info() << "Destroying color and depth resources for swapchain image";
 	vkDestroyImage(device, _colorImage, nullptr);
 	vkFreeMemory(device, _colorMemory, nullptr);
 	vkDestroyImageView(device, _colorView, nullptr);

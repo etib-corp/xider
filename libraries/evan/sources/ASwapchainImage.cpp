@@ -69,14 +69,14 @@ uint32_t evan::ASwapchainImage::getFramebufferCount() const
 void evan::ASwapchainImage::createImageViews(
 	const ADeviceBackend &deviceBackend)
 {
-	this->getLogger().info("Creating image views for swapchain images with format: " + std::to_string(_format) + " and aspect mask: " + std::to_string(VK_IMAGE_ASPECT_COLOR_BIT) + "...");
+	this->getLogger().info() << "Creating image views for swapchain images with format: " << _format << " and aspect mask: " << VK_IMAGE_ASPECT_COLOR_BIT << "...";
 
 	_imageViews.resize(_images.size());
 
-	this->getLogger().info("Number of image views to create: " + std::to_string(_imageViews.size()));
+	this->getLogger().info() << "Number of image views to create: " << _imageViews.size();
 
 	for (uint32_t i = 0; i < _images.size(); i++) {
-		this->getLogger().info("Creating image view for swapchain image " + std::to_string(i) + " with image handle: " + std::to_string((uintptr_t)_images[i]));
+		this->getLogger().info() << "Creating image view for swapchain image " << i << " with image handle: " << (uintptr_t)_images[i];
 		_imageViews[i] = deviceBackend.createImageView(
 			_images[i], _format, VK_IMAGE_ASPECT_COLOR_BIT, 1);
 	}
@@ -85,7 +85,7 @@ void evan::ASwapchainImage::createImageViews(
 void evan::ASwapchainImage::createColorResources(
 	const ADeviceBackend &deviceBackend, VkSampleCountFlagBits msaaSamples)
 {
-	this->getLogger().info("Creating color resources for swapchain images with format: " + std::to_string(_format) + " and MSAA samples: " + std::to_string(msaaSamples) + "...");
+	this->getLogger().info() << "Creating color resources for swapchain images with format: " << _format << " and MSAA samples: " << msaaSamples << "...";
 
 	VkFormat colorFormat								  = _format;
 	ADeviceBackend::CreateImageProperties imageProperties = {
@@ -102,14 +102,7 @@ void evan::ASwapchainImage::createColorResources(
 		._imageMemory = _colorMemory
 	};
 
-	this->getLogger().info("Creating color image using:\n color format: " + std::to_string(colorFormat)
-							 + "\n width: " + std::to_string(_extent.width)
-							 + "\n height: " + std::to_string(_extent.height)
-							 + "\n mip levels: " + std::to_string(1)
-							 + "\n num samples: " + std::to_string(msaaSamples)
-							 + "\n tiling: " + std::to_string(VK_IMAGE_TILING_OPTIMAL)
-							 + "\n usage: " + std::to_string(VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT)
-							 + "\n properties: " + std::to_string(VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
+	this->getLogger().info() << "Creating color image using:\n color format: " << colorFormat << "\n width: " << _extent.width << "\n height: " << _extent.height << "\n mip levels: " << 1 << "\n num samples: " << msaaSamples << "\n tiling: " << VK_IMAGE_TILING_OPTIMAL << "\n usage: " << (VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT) << "\n properties: " << VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 
 	deviceBackend.createImage(imageProperties);
 	_colorView = deviceBackend.createImageView(_colorImage, colorFormat,
@@ -119,7 +112,7 @@ void evan::ASwapchainImage::createColorResources(
 void evan::ASwapchainImage::createDepthResources(
 	const DeviceContext &deviceContext)
 {
-	this->getLogger().info("Creating depth resources for swapchain images...");
+	this->getLogger().info() << "Creating depth resources for swapchain images...";
 
 	VkPhysicalDevice physicalDevice =
 		deviceContext.getDeviceBackend()->_physicalDevice;
@@ -128,17 +121,17 @@ void evan::ASwapchainImage::createDepthResources(
 	VkCommandPool commandPool		  = deviceContext.getCommandPool();
 	VkQueue graphicsQueue			  = deviceContext.getGraphicsQueue();
 
-	this->getLogger().info("MSAA samples: " + std::to_string(msaaSamples));
-	this->getLogger().info("Finding supported depth format...");
+	this->getLogger().info() << "MSAA samples: " << msaaSamples;
+	this->getLogger().info() << "Finding supported depth format...";
 
 	VkFormat depthFormat = this->findDepthFormat(physicalDevice);
 
 	if (depthFormat == VK_FORMAT_UNDEFINED) {
-		this->getLogger().error("Failed to find a supported depth format!");
+		this->getLogger().error() << "Failed to find a supported depth format!";
 		return;
 	}
 
-	this->getLogger().info("Found supported depth format: " + std::to_string(depthFormat));
+	this->getLogger().info() << "Found supported depth format: " << depthFormat;
 
 	ADeviceBackend::CreateImageProperties depthImageProperties = {
 		._width		  = _extent.width,
@@ -153,21 +146,13 @@ void evan::ASwapchainImage::createDepthResources(
 		._imageMemory = _depthMemory
 	};
 
-	this->getLogger().info("Creating depth image using:\n depth format: "
-							 + std::to_string(depthFormat)
-							 + "\n width: " + std::to_string(_extent.width)
-							 + "\n height: " + std::to_string(_extent.height)
-							 + "\n mip levels: " + std::to_string(1)
-							 + "\n num samples: " + std::to_string(msaaSamples)
-							 + "\n tiling: " + std::to_string(VK_IMAGE_TILING_OPTIMAL)
-							 + "\n usage: " + std::to_string(VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)
-							 + "\n properties: " + std::to_string(VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
+	this->getLogger().info() << "Creating depth image using:\n depth format: " << depthFormat << "\n width: " << _extent.width << "\n height: " << _extent.height << "\n mip levels: " << 1 << "\n num samples: " << msaaSamples << "\n tiling: " << VK_IMAGE_TILING_OPTIMAL << "\n usage: " << VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT << "\n properties: " << VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 
 	deviceContext.getDeviceBackend()->createImage(depthImageProperties);
 	_depthView = deviceContext.getDeviceBackend()->createImageView(
 		_depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, 1);
 
-	this->getLogger().info("Transitioning depth image layout to DEPTH_STENCIL_ATTACHMENT_OPTIMAL...");
+	this->getLogger().info() << "Transitioning depth image layout to DEPTH_STENCIL_ATTACHMENT_OPTIMAL...";
 
 	ADeviceBackend::TransitionImageLayoutProperties transitionProperties = {
 		._commandPool	= commandPool,
@@ -182,23 +167,20 @@ void evan::ASwapchainImage::createDepthResources(
 	deviceContext.getDeviceBackend()->transitionImageLayout(
 		transitionProperties);
 
-	this->getLogger().info("Depth resources creation terminated.");
+	this->getLogger().info() << "Depth resources creation terminated.";
 }
 
 void evan::ASwapchainImage::createFramebuffers(VkDevice logicalDevice,
 											   VkRenderPass renderPass)
 {
-	this->getLogger().info("Creating framebuffers for swapchain images...");
+	this->getLogger().info() << "Creating framebuffers for swapchain images...";
 
 	_framebuffers.resize(_imageViews.size());
 
-	this->getLogger().info("Number of framebuffers to create: " + std::to_string(_framebuffers.size()));
+	this->getLogger().info() << "Number of framebuffers to create: " << _framebuffers.size();
 
 	for (size_t i = 0; i < _imageViews.size(); i++) {
-		this->getLogger().info("Creating framebuffer " + std::to_string(i) + " with color view: "
-							 + std::to_string((uintptr_t)_colorView) + ", depth view: "
-							 + std::to_string((uintptr_t)_depthView) + ", image view: "
-							 + std::to_string((uintptr_t)_imageViews[i]));
+		this->getLogger().info() << "Creating framebuffer " << i << " with color view: " << (uintptr_t)_colorView << ", depth view: " << (uintptr_t)_depthView << ", image view: " << (uintptr_t)_imageViews[i];
 
 		std::array<VkImageView, 3> attachments = { _colorView, _depthView,
 												   _imageViews[i] };
@@ -213,17 +195,13 @@ void evan::ASwapchainImage::createFramebuffers(VkDevice logicalDevice,
 		framebufferInfo.height		 = _extent.height;
 		framebufferInfo.layers		 = 1;
 
-		this->getLogger().info("Framebuffer creation info:\n render pass: " + std::to_string((uintptr_t)renderPass)
-							 + ", attachment count: " + std::to_string(framebufferInfo.attachmentCount)
-							 + ", width: " + std::to_string(framebufferInfo.width)
-							 + ", height: " + std::to_string(framebufferInfo.height)
-							 + ", layers: " + std::to_string(framebufferInfo.layers));
+		this->getLogger().info() << "Framebuffer creation info:\n render pass: " << (uintptr_t)renderPass << ", attachment count: " << framebufferInfo.attachmentCount << ", width: " << framebufferInfo.width << ", height: " << framebufferInfo.height << ", layers: " << framebufferInfo.layers;
 
 		if (vkCreateFramebuffer(logicalDevice, &framebufferInfo, nullptr,
 								&_framebuffers[i])
 			!= VK_SUCCESS) {
-			this->getLogger().error("Failed to create framebuffer " + std::to_string(i) + "!");
-			this->getLogger().warning("Skipping framebuffer " + std::to_string(i) + " and continuing with next one...");
+			this->getLogger().error() << "Failed to create framebuffer " << i << "!";
+			this->getLogger().warning() << "Skipping framebuffer " << i << " and continuing with next one...";
 			continue;
 		}
 	}
@@ -232,7 +210,7 @@ void evan::ASwapchainImage::createFramebuffers(VkDevice logicalDevice,
 void evan::ASwapchainImage::createImages(VkDevice logicalDevice,
 										 VkSwapchainKHR swapchain)
 {
-	this->getLogger().info("Retrieving swapchain images...");
+	this->getLogger().info() << "Retrieving swapchain images...";
 
 	uint32_t imageCount;
 
@@ -241,5 +219,5 @@ void evan::ASwapchainImage::createImages(VkDevice logicalDevice,
 	vkGetSwapchainImagesKHR(logicalDevice, swapchain, &imageCount,
 							_images.data());
 
-	this->getLogger().info("Number of swapchain images retrieved: " + std::to_string(imageCount));
+	this->getLogger().info() << "Number of swapchain images retrieved: " << imageCount;
 }

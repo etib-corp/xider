@@ -12,14 +12,12 @@ evan::XrHandThumbStickAction::XrHandThumbStickAction(
 	utility::event::HandEvent::HandType handType)
 	: _handType(handType)
 {
-	this->getLogger().info("Creating thumb stick action for hand "
-						 + std::to_string(static_cast<int>(handType)) + "...");
+	this->getLogger().info() << "Creating thumb stick action for hand " << static_cast<int>(handType) << "...";
 }
 
 evan::XrHandThumbStickAction::~XrHandThumbStickAction()
 {
-	this->getLogger().info("Destroying thumb stick action for hand "
-						 + std::to_string(static_cast<int>(_handType)) + "...");
+	this->getLogger().info() << "Destroying thumb stick action for hand " << static_cast<int>(_handType) << "...";
 }
 
 ////////////////////
@@ -43,10 +41,8 @@ std::vector<std::unique_ptr<utility::event::Event>>
 		thumbStickEvent->setHandType(_handType);
 		thumbStickEvent->setAxis(state.currentState.x, state.currentState.y);
 
-		this->getLogger().info("Thumb stick for hand "
-							 + std::to_string(static_cast<int>(_handType))
-							 + " is active at position (" + std::to_string(state.currentState.x)
-							 + ", " + std::to_string(state.currentState.y) + ")");
+		this->getLogger().info() << "Thumb stick for hand " << static_cast<int>(_handType) << " is active at position (" + std::to_string(state.currentState.x)
+							 + ", " + std::to_string(state.currentState.y) + ")";
 		events.push_back(std::move(thumbStickEvent));
 	}
 	return events;
@@ -55,7 +51,7 @@ std::vector<std::unique_ptr<utility::event::Event>>
 evan::XrManageThumbStickActions::XrManageThumbStickActions(
 	XrActionSet actionSet, XrDeviceBackend &deviceBackend)
 {
-	this->getLogger().info("Creating thumb stick actions for left and right hands...");
+	this->getLogger().info() << "Creating thumb stick actions for left and right hands...";
 
 	_leftHandThumbStickActions = std::make_unique<XrHandThumbStickAction>(
 		utility::event::HandEvent::HandType::Left);
@@ -71,7 +67,7 @@ evan::XrManageThumbStickActions::XrManageThumbStickActions(
 	propertiesLeftThumbStickAction.actionType = XR_ACTION_TYPE_VECTOR2F_INPUT;
 	_leftHandThumbStickActions->createAction(propertiesLeftThumbStickAction);
 
-	this->getLogger().info("Left hand thumb stick action created successfully.");
+	this->getLogger().info() << "Left hand thumb stick action created successfully.";
 
 	// Create actions for right hand thumb stick
 	evan::AXrAction::PropertiesXrActions propertiesRightThumbStickAction;
@@ -82,12 +78,12 @@ evan::XrManageThumbStickActions::XrManageThumbStickActions(
 	propertiesRightThumbStickAction.actionType = XR_ACTION_TYPE_VECTOR2F_INPUT;
 	_rightHandThumbStickActions->createAction(propertiesRightThumbStickAction);
 
-	this->getLogger().info("Right hand thumb stick action created successfully.");
+	this->getLogger().info() << "Right hand thumb stick action created successfully.";
 }
 
 evan::XrManageThumbStickActions::~XrManageThumbStickActions()
 {
-	this->getLogger().info("Destroying thumb stick actions...");
+	this->getLogger().info() << "Destroying thumb stick actions...";
 }
 
 ////////////////////

@@ -14,7 +14,7 @@
 #include "evan/GPUVertex.hpp"
 
 #include <utility/logging/loggable.hpp>
-#include <utility/logging/standard_logger.hpp>
+#include <utility/logging/default_logger.hpp>
 
 namespace evan
 {
@@ -34,9 +34,7 @@ namespace evan
 	 * format defined by the GPUVertex structure. It also assumes that the material
 	 * ID is used to reference material properties for rendering.
 	 */
-	class GPUMesh : protected utility::logging::Loggable<
-			GPUMesh,
-			utility::logging::StandardLogger>
+	class GPUMesh : protected utility::logging::Loggable<GPUMesh, utility::logging::DefaultLogger>
 	{
 		public:
 		/**

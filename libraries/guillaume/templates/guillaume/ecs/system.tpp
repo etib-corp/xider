@@ -73,9 +73,7 @@ namespace guillaume::ecs
 			return true;
 		}
 
-		getLogger().warning(
-			"Entity " + std::to_string(entityIdentifier) + " does not have "
-			+ utility::demangle<ComponentType>() + " component");
+		getLogger().warning() << "Entity " << entityIdentifier << " does not have " << utility::demangle<ComponentType>() << " component";
 		return false;
 	}
 }	 // namespace guillaume::ecs

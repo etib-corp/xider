@@ -20,41 +20,28 @@
  SOFTWARE.
  */
 
-#include "guillaume/systems/text_input.hpp"
+/**
+ * @file default_logger.hpp
+ * @brief Platform-specific default logger alias.
+ *
+ * On Android, `DefaultLogger` resolves to `AndroidLogger`.
+ * On all other platforms, it resolves to `StandardLogger`.
+ */
 
-namespace guillaume::systems
+#pragma once
+
+#ifdef __ANDROID__
+	#include "utility/logging/android_logger.hpp"
+namespace utility::logging
 {
-
-	TextInput::TextInput(event::EventBus &eventBus)
-		: ecs::SystemFiller<components::Text, components::Focus>(
-			  ecs::Phase::Event)
-		, _textInputSubscriber(eventBus)
-	{
-	}
-
-	void TextInput::update(const ecs::Entity::Identifier &entityIdentifier)
-	{
-		getLogger().debug() << "Updating TextInput system for entity " << entityIdentifier;
-		if (!_textInputSubscriber.hasPendingEvents()) {
-			return;
-		}
-
-		auto &text			= getComponent<components::Text>(entityIdentifier);
-		std::string content = text.getContent();
-
-		while (_textInputSubscriber.hasPendingEvents()) {
-			const auto textInputEvent = _textInputSubscriber.getNextEvent();
-			if (!textInputEvent) {
-				continue;
-			}
-
-			const auto committedText = textInputEvent->getText();
-			if (!committedText.empty()) {
-				content += committedText;
-			}
-		}
-
-		text.setContent(content);
-	}
-
-}	 // namespace guillaume::systems
+	/** @brief Alias for the platform-specific default logger. */
+	using DefaultLogger = AndroidLogger;
+}	 // namespace utility::logging
+#else
+	#include "utility/logging/standard_logger.hpp"
+namespace utility::logging
+{
+	/** @brief Alias for the platform-specific default logger. */
+	using DefaultLogger = StandardLogger;
+}	 // namespace utility::logging
+#endif

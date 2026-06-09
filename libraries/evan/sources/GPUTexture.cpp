@@ -15,7 +15,7 @@ evan::GPUTexture::GPUTexture(const DeviceContext &deviceContext,
                 TextureType type
             ) : type(type)
 {
-	this->getLogger().info("Creating GPUTexture...");
+	this->getLogger().info() << "Creating GPUTexture...";
 
 	auto deviceBackend = deviceContext.getDeviceBackend();
 	auto commandPool = deviceContext.getCommandPool();
@@ -24,13 +24,13 @@ evan::GPUTexture::GPUTexture(const DeviceContext &deviceContext,
     this->createImage(*deviceBackend, texture, commandPool, graphicsQueue);
     this->createImageView(*deviceBackend);
 
-	this->getLogger().info("Creating default sampler for GPUTexture...");
+	this->getLogger().info() << "Creating default sampler for GPUTexture...";
     this->createSampler(*deviceBackend, VkSamplerCreateInfo{});
 }
 
 evan::GPUTexture::~GPUTexture()
 {
-	this->getLogger().info("Destroying GPUTexture...");
+	this->getLogger().info() << "Destroying GPUTexture...";
 }
 
 ////////////////////
@@ -39,15 +39,15 @@ evan::GPUTexture::~GPUTexture()
 
 void evan::GPUTexture::destroy(VkDevice device)
 {
-	this->getLogger().info("Destroying Vulkan resources for GPUTexture...");
+	this->getLogger().info() << "Destroying Vulkan resources for GPUTexture...";
 
-	this->getLogger().info("Destroying image view...");
+	this->getLogger().info() << "Destroying image view...";
     vkDestroyImage(device, _image, nullptr);
 
-	this->getLogger().info("Freeing image memory...");
+	this->getLogger().info() << "Freeing image memory...";
     vkFreeMemory(device, _memory, nullptr);
 
-	this->getLogger().info("Destroying sampler...");
+	this->getLogger().info() << "Destroying sampler...";
     vkDestroySampler(device, sampler, nullptr);
 }
 
@@ -60,22 +60,22 @@ void evan::GPUTexture::createImage(const ADeviceBackend &deviceBackend,
                                  VkCommandPool commandPool,
                                  VkQueue graphicsQueue)
 {
-	this->getLogger().info("Creating Vulkan image for GPUTexture...");
+	this->getLogger().info() << "Creating Vulkan image for GPUTexture...";
 
 	uint32_t texWidth  = texture.width();
 	uint32_t texHeight = texture.height();
 	const uint8_t *pixels = texture._pixels.data();
 
-	this->getLogger().info("Texture dimensions: " + std::to_string(texWidth) + "x" + std::to_string(texHeight));
+	this->getLogger().info() << "Texture dimensions: " << texWidth << "x" << texHeight;
 
 	VkDeviceSize imageSize = texWidth * texHeight * 4;
 	VkBuffer stagingBuffer;
 	VkDeviceMemory stagingBufferMemory;
 
-	this->getLogger().info("Calculated image size: " + std::to_string(imageSize) + " bytes");
+	this->getLogger().info() << "Calculated image size: " << imageSize << " bytes";
 
 	if (texture._pixels.size() == 0) {
-		this->getLogger().warning("Texture pixel data is empty. Creating a 1x1 white texture as a fallback.");
+		this->getLogger().warning() << "Texture pixel data is empty. Creating a 1x1 white texture as a fallback.";
 		uint8_t whitePixel[4] = {255, 255, 255, 255}; // RGBA for white
 		pixels = whitePixel;
 		imageSize = sizeof(whitePixel);
@@ -86,7 +86,7 @@ void evan::GPUTexture::createImage(const ADeviceBackend &deviceBackend,
 	_mipLevel = static_cast<uint32_t>(
 					std::floor(std::log2((std::max)(texWidth, texHeight))))
 		+ 1;
-	this->getLogger().info("Calculated mip levels: " + std::to_string(_mipLevel));
+	this->getLogger().info() << "Calculated mip levels: " << _mipLevel;
 
 	ADeviceBackend::CreateBufferProperties stagingBufferProperties = {
 		._size		 = imageSize,
@@ -101,12 +101,12 @@ void evan::GPUTexture::createImage(const ADeviceBackend &deviceBackend,
 
 	void *data;
 
-	this->getLogger().info("Mapping staging buffer memory and copying pixel data...");
+	this->getLogger().info() << "Mapping staging buffer memory and copying pixel data...";
 	vkMapMemory(deviceBackend._device, stagingBufferMemory, 0, imageSize, 0,
 				&data);
 	memcpy(data, pixels, static_cast<size_t>(imageSize));
 
-	this->getLogger().info("Unmapping staging buffer memory...");
+	this->getLogger().info() << "Unmapping staging buffer memory...";
 	vkUnmapMemory(deviceBackend._device, stagingBufferMemory);
 
 	ADeviceBackend::CreateImageProperties imageProperties = {
@@ -122,7 +122,7 @@ void evan::GPUTexture::createImage(const ADeviceBackend &deviceBackend,
 		._image		  = _image,
 		._imageMemory = _memory
 	};
-	this->getLogger().info("Creating image...");
+	this->getLogger().info() << "Creating image...";
 	deviceBackend.createImage(imageProperties);
 
 	ADeviceBackend::TransitionImageLayoutProperties transitionProperties = {
@@ -157,14 +157,14 @@ void evan::GPUTexture::createImage(const ADeviceBackend &deviceBackend,
 	};
 	this->generateMipmaps(propertiesMipmap, deviceBackend);
 
-	this->getLogger().info("Cleaning up staging buffer...");
+	this->getLogger().info() << "Cleaning up staging buffer...";
 	vkDestroyBuffer(deviceBackend._device, stagingBuffer, nullptr);
 	vkFreeMemory(deviceBackend._device, stagingBufferMemory, nullptr);
 }
 
 void evan::GPUTexture::createImageView(const ADeviceBackend &deviceBackend)
 {
-    this->getLogger().info("Creating image view...");
+    this->getLogger().info() << "Creating image view...";
     view = deviceBackend.createImageView(_image, VK_FORMAT_R8G8B8A8_SRGB,
                                          VK_IMAGE_ASPECT_COLOR_BIT, _mipLevel);
 }
@@ -179,13 +179,13 @@ void evan::GPUTexture::createSampler(const ADeviceBackend &deviceBackend,
 					  ", addressModeV: " + std::to_string(samplerInfo.addressModeV) +
 					  ", addressModeW: " + std::to_string(samplerInfo.addressModeW);
 
-	this->getLogger().info("Creating sampler...");
-	this->getLogger().info("Sampler info provided: " + std::to_string(samplerInfo.sType != 0));
+	this->getLogger().info() << "Creating sampler...";
+	this->getLogger().info() << "Sampler info provided: " << (samplerInfo.sType != 0);
 	if (samplerInfo.sType != 0) {
-		this->getLogger().info("Using provided sampler info.");
-		this->getLogger().info("Sampler info: " + samplerInfoStr);
+		this->getLogger().info() << "Using provided sampler info.";
+		this->getLogger().info() << "Sampler info: " << samplerInfoStr;
 	} else {
-		this->getLogger().info("No sampler info provided. Using default values.");
+		this->getLogger().info() << "No sampler info provided. Using default values.";
 	}
 
     VkPhysicalDeviceProperties properties {};
@@ -201,7 +201,7 @@ void evan::GPUTexture::createSampler(const ADeviceBackend &deviceBackend,
 
     if (vkCreateSampler(deviceBackend._device, &samplerInfo, nullptr, &sampler)
         != VK_SUCCESS) {
-			this->getLogger().error("Failed to create texture sampler!");
+			this->getLogger().error() << "Failed to create texture sampler!";
 			return;
     }
 }
@@ -213,7 +213,7 @@ void evan::GPUTexture::createSampler(const ADeviceBackend &deviceBackend,
 void evan::GPUTexture::generateMipmaps(const GenerateMipmapsProperties &properties,
                                  const ADeviceBackend &deviceBackend)
 {
-	this->getLogger().info("Generating mipmaps for GPUTexture...");
+	this->getLogger().info() << "Generating mipmaps for GPUTexture...";
 
 	VkFormatProperties formatProperties;
 	vkGetPhysicalDeviceFormatProperties(deviceBackend._physicalDevice,
@@ -222,7 +222,7 @@ void evan::GPUTexture::generateMipmaps(const GenerateMipmapsProperties &properti
 
 	if (!(formatProperties.optimalTilingFeatures
 		  & VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT)) {
-		this->getLogger().error("Texture image format does not support linear blitting!");
+		this->getLogger().error() << "Texture image format does not support linear blitting!";
 		return;
 	}
 
@@ -242,11 +242,10 @@ void evan::GPUTexture::generateMipmaps(const GenerateMipmapsProperties &properti
 	int32_t mipWidth  = properties._texWidth;
 	int32_t mipHeight = properties._texHeight;
 
-	this->getLogger().info("Starting mipmap generation loop...");
+	this->getLogger().info() << "Starting mipmap generation loop...";
 
 	for (uint32_t i = 1; i < properties._mipLevels; i++) {
-		this->getLogger().info("Generating mip level " + std::to_string(i) + " with dimensions " +
-								  std::to_string(mipWidth) + "x" + std::to_string(mipHeight));
+		this->getLogger().info() << "Generating mip level " << i << " with dimensions " << mipWidth << "x" << mipHeight;
 
 		barrier.subresourceRange.baseMipLevel = i - 1;
 		barrier.oldLayout	  = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
@@ -254,8 +253,7 @@ void evan::GPUTexture::generateMipmaps(const GenerateMipmapsProperties &properti
 		barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
 		barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
 
-		this->getLogger().info("Transitioning mip level " + std::to_string(i - 1) +
-								  " to TRANSFER_SRC_OPTIMAL for blitting...");
+		this->getLogger().info() << "Transitioning mip level " << i - 1 << " to TRANSFER_SRC_OPTIMAL for blitting...";
 		vkCmdPipelineBarrier(commandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT,
 							 VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, nullptr, 0,
 							 nullptr, 1, &barrier);
@@ -275,8 +273,7 @@ void evan::GPUTexture::generateMipmaps(const GenerateMipmapsProperties &properti
 		blit.dstSubresource.baseArrayLayer = 0;
 		blit.dstSubresource.layerCount	   = 1;
 
-		this->getLogger().info("Blitting from mip level " + std::to_string(i - 1) +
-								  " to mip level " + std::to_string(i) + "...");
+		this->getLogger().info() << "Blitting from mip level " << i - 1 << " to mip level " << i << "...";
 		vkCmdBlitImage(commandBuffer, properties._image,
 					   VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, properties._image,
 					   VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &blit,
@@ -287,18 +284,17 @@ void evan::GPUTexture::generateMipmaps(const GenerateMipmapsProperties &properti
 		barrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
 		barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
 
-		this->getLogger().info("Transitioning mip level " + std::to_string(i - 1) +
-								  " to SHADER_READ_ONLY_OPTIMAL...");
+		this->getLogger().info() << "Transitioning mip level " << i - 1 << " to SHADER_READ_ONLY_OPTIMAL...";
 		vkCmdPipelineBarrier(commandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT,
 							 VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0,
 							 nullptr, 0, nullptr, 1, &barrier);
 
 		if (mipWidth > 1) {
-			this->getLogger().info("Halving mip width for next level...");
+			this->getLogger().info() << "Halving mip width for next level...";
 			mipWidth /= 2;
 		}
 		if (mipHeight > 1) {
-			this->getLogger().info("Halving mip height for next level...");
+			this->getLogger().info() << "Halving mip height for next level...";
 			mipHeight /= 2;
 		}
 	}
@@ -309,14 +305,13 @@ void evan::GPUTexture::generateMipmaps(const GenerateMipmapsProperties &properti
 	barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
 	barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
 
-	this->getLogger().info("Transitioning final mip level " + std::to_string(properties._mipLevels - 1) +
-							  " to SHADER_READ_ONLY_OPTIMAL...");
+	this->getLogger().info() << "Transitioning final mip level " << properties._mipLevels - 1 << " to SHADER_READ_ONLY_OPTIMAL...";
 	vkCmdPipelineBarrier(commandBuffer, VK_PIPELINE_STAGE_TRANSFER_BIT,
 						 VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0, nullptr,
 						 0, nullptr, 1, &barrier);
 	deviceBackend.endSingleTimeCommands(
 		properties._commandPool, properties._graphicsQueue, commandBuffer);
-	this->getLogger().info("Mipmap generation completed.");
+	this->getLogger().info() << "Mipmap generation completed.";
 }
 
 VkSamplerCreateInfo evan::GPUTexture::getDefaultSamplerInfo(

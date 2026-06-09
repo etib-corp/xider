@@ -29,7 +29,7 @@
 #include <typeindex>
 
 #include <utility/logging/loggable.hpp>
-#include <utility/logging/standard_logger.hpp>
+#include <utility/logging/default_logger.hpp>
 
 #include "guillaume/scene.hpp"
 
@@ -48,8 +48,7 @@ namespace guillaume
 	 * application.
 	 */
 	class SceneManager:
-		public utility::logging::Loggable<SceneManager,
-										  utility::logging::StandardLogger>
+		public utility::logging::Loggable<SceneManager, utility::logging::DefaultLogger>
 	{
 		private:
 		std::map<std::type_index, std::unique_ptr<Scene>>

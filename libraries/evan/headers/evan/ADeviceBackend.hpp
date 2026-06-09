@@ -14,7 +14,7 @@
 #include "evan/QueueFamilyIndices.hpp"
 
 #include <utility/logging/loggable.hpp>
-#include <utility/logging/standard_logger.hpp>
+#include <utility/logging/default_logger.hpp>
 
 #include <set>
 #include <iostream>
@@ -41,9 +41,7 @@ namespace evan
 	 * device backends, which will implement the pure virtual functions defined
 	 * here.
 	 */
-	class ADeviceBackend : protected utility::logging::Loggable<
-			ADeviceBackend,
-			utility::logging::StandardLogger>
+	class ADeviceBackend : protected utility::logging::Loggable<ADeviceBackend, utility::logging::DefaultLogger>
 	{
 		public:
 		/**

@@ -12,7 +12,7 @@
 #include <utility/graphic/material.hpp>
 
 #include <utility/logging/loggable.hpp>
-#include <utility/logging/standard_logger.hpp>
+#include <utility/logging/default_logger.hpp>
 
 #include "evan/ADeviceBackend.hpp"
 #include "evan/DeviceContext.hpp"
@@ -38,9 +38,7 @@ namespace evan
 	 * renderer instances. The class also includes functionality for cleaning up
 	 * Vulkan resources when they are no longer needed.
 	 */
-	class GPUMaterial : protected utility::logging::Loggable<
-			GPUMaterial,
-			utility::logging::StandardLogger>
+	class GPUMaterial : protected utility::logging::Loggable<GPUMaterial, utility::logging::DefaultLogger>
 	{
 		public:
 		/**

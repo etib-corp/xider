@@ -31,7 +31,7 @@
 #include <utility>
 
 #include <utility/logging/loggable.hpp>
-#include <utility/logging/standard_logger.hpp>
+#include <utility/logging/default_logger.hpp>
 
 #include <utility/event/quit_event.hpp>
 
@@ -87,8 +87,7 @@ namespace guillaume
 	 * @see Engine
 	 */
 	template<InheritFromScene... SceneTypes> class Application:
-		protected utility::logging::Loggable<Application<SceneTypes...>,
-											 utility::logging::StandardLogger>
+		protected utility::logging::Loggable<Application<SceneTypes...>, utility::logging::DefaultLogger>
 	{
 		private:
 		std::unique_ptr<Engine>

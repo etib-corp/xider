@@ -30,7 +30,7 @@
 #include <typeindex>
 
 #include <utility/logging/loggable.hpp>
-#include <utility/logging/standard_logger.hpp>
+#include <utility/logging/default_logger.hpp>
 
 #include <utility/demangle.hpp>
 
@@ -83,8 +83,7 @@ namespace guillaume::ecs
 	 * @see System
 	 */
 	class SystemRegistry:
-		public utility::logging::Loggable<SystemRegistry,
-										  utility::logging::StandardLogger>
+		public utility::logging::Loggable<SystemRegistry, utility::logging::DefaultLogger>
 	{
 		public:
 		private:

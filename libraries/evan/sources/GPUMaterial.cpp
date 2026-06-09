@@ -17,7 +17,7 @@ evan::GPUMaterial::GPUMaterial(std::shared_ptr<DeviceContext> deviceContext,
 							   uint32_t shaderID)
 	: _shaderID(shaderID)
 {
-	this->getLogger().info("Initializing GPUMaterial with shader ID: " + std::to_string(shaderID) + "...");
+	this->getLogger().info() << "Initializing GPUMaterial with shader ID: " << shaderID << "...";
 
 	auto deviceBackend = deviceContext->getDeviceBackend();
 
@@ -30,7 +30,7 @@ evan::GPUMaterial::GPUMaterial(std::shared_ptr<DeviceContext> deviceContext,
 
 evan::GPUMaterial::~GPUMaterial()
 {
-	this->getLogger().info("Destroying GPUMaterial...");
+	this->getLogger().info() << "Destroying GPUMaterial...";
 }
 
 ////////////////////
@@ -39,7 +39,7 @@ evan::GPUMaterial::~GPUMaterial()
 
 void evan::GPUMaterial::destroy(VkDevice device)
 {
-	this->getLogger().info("Destroying GPUMaterial...");
+	this->getLogger().info() << "Destroying GPUMaterial...";
 }
 
 /////////////
@@ -65,11 +65,11 @@ void evan::GPUMaterial::createDescriptorSets(
 	VkDescriptorPool descriptorPool,
 	const std::vector<VkBuffer> &uniformBuffers)
 {
-	this->getLogger().info("Creating descriptor sets for GPUMaterial with shader ID: " + std::to_string(_shaderID) + "...");
+	this->getLogger().info() << "Creating descriptor sets for GPUMaterial with shader ID: " << _shaderID << "...";
 	std::vector<VkDescriptorSetLayout> layouts(MAX_FRAMES_IN_FLIGHT,
 											   descriptorSetLayout);
 
-	this->getLogger().info("Setting up descriptor set allocation info with " + std::to_string(MAX_FRAMES_IN_FLIGHT) + " frames...");
+	this->getLogger().info() << "Setting up descriptor set allocation info with " << MAX_FRAMES_IN_FLIGHT << " frames...";
 
 	VkDescriptorSetAllocateInfo allocInfo {};
 	allocInfo.sType			 = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
@@ -81,14 +81,14 @@ void evan::GPUMaterial::createDescriptorSets(
 	if (vkAllocateDescriptorSets(logicalDevice, &allocInfo,
 								 _descriptorSets.data())
 		!= VK_SUCCESS) {
-		this->getLogger().error("Failed to allocate descriptor sets !");
+		this->getLogger().error() << "Failed to allocate descriptor sets !";
 		return;
 	}
 
-	this->getLogger().info("Descriptor sets allocated successfully. Configuring descriptor sets for shader access...");
+	this->getLogger().info() << "Descriptor sets allocated successfully. Configuring descriptor sets for shader access...";
 
 	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
-		this->getLogger().info("Configuring descriptor set " + std::to_string(i) + " for GPUMaterial with shader ID: " + std::to_string(_shaderID) + "...");
+		this->getLogger().info() << "Configuring descriptor set " << i << " for GPUMaterial with shader ID: " << _shaderID << "...";
 		std::vector<VkWriteDescriptorSet> descriptorWrites;
 
 		VkDescriptorBufferInfo bufferInfo {};
@@ -104,17 +104,17 @@ void evan::GPUMaterial::createDescriptorSets(
 		uboWrite.descriptorCount = 1;
 		uboWrite.pBufferInfo	 = &bufferInfo;
 
-		this->getLogger().info("Adding uniform buffer descriptor write for descriptor set " + std::to_string(i) + "...");
+		this->getLogger().info() << "Adding uniform buffer descriptor write for descriptor set " << i << "...";
 
 		descriptorWrites.push_back(uboWrite);
 
 		std::vector<VkDescriptorImageInfo> imageInfos;
 		imageInfos.reserve(_textures.size());
 
-		this->getLogger().info("Adding texture descriptor writes for " + std::to_string(_textures.size()) + " textures in descriptor set " + std::to_string(i) + "...");
+		this->getLogger().info() << "Adding texture descriptor writes for " << _textures.size() << " textures in descriptor set " << i << "...";
 
 		for (const auto &texture: _textures) {
-			this->getLogger().info("Configuring descriptor write for texture of type " + std::to_string(static_cast<int>(texture.type)) + " in descriptor set " + std::to_string(i) + "...");
+			this->getLogger().info() << "Configuring descriptor write for texture of type " << static_cast<int>(texture.type) << " in descriptor set " << i << "...";
 
 			VkDescriptorImageInfo imageInfo {};
 			imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
@@ -131,17 +131,17 @@ void evan::GPUMaterial::createDescriptorSets(
 			write.descriptorCount = 1;
 			write.pImageInfo	  = &imageInfos.back();
 
-			this->getLogger().info("Adding descriptor write for texture of type " + std::to_string(static_cast<int>(texture.type)) + " in descriptor set " + std::to_string(i) + "...");
+			this->getLogger().info() << "Adding descriptor write for texture of type " << static_cast<int>(texture.type) << " in descriptor set " << i << "...";
 			descriptorWrites.push_back(write);
 		}
 
-		this->getLogger().info("Updating descriptor sets for GPUMaterial with shader ID: " + std::to_string(_shaderID) + "...");
+		this->getLogger().info() << "Updating descriptor sets for GPUMaterial with shader ID: " << _shaderID << "...";
 
 		vkUpdateDescriptorSets(logicalDevice,
 							   static_cast<uint32_t>(descriptorWrites.size()),
 							   descriptorWrites.data(), 0, nullptr);
 
-		this->getLogger().info("Descriptor sets updated successfully for GPUMaterial with shader ID: " + std::to_string(_shaderID) + "...");
+		this->getLogger().info() << "Descriptor sets updated successfully for GPUMaterial with shader ID: " << _shaderID << "...";
 	}
 }
 
@@ -151,18 +151,18 @@ void evan::GPUMaterial::createDescriptorSets(
 
 uint32_t evan::GPUMaterial::getBinding(GPUTexture::TextureType type)
 {
-	this->getLogger().info("Getting descriptor binding for texture type: " + std::to_string(static_cast<int>(type)) + "...");
+	this->getLogger().info() << "Getting descriptor binding for texture type: " << static_cast<int>(type) << "...";
     switch (type) {
         case GPUTexture::TextureType::Albedo:
-			this->getLogger().info("Returning binding 1 for Albedo texture.");
+			this->getLogger().info() << "Returning binding 1 for Albedo texture.";
 			return 1;
         case GPUTexture::TextureType::Normal:
-			this->getLogger().info("Returning binding 2 for Normal texture.");
+			this->getLogger().info() << "Returning binding 2 for Normal texture.";
 			return 2;
         case GPUTexture::TextureType::Roughness:
-			this->getLogger().info("Returning binding 3 for Roughness texture.");
+			this->getLogger().info() << "Returning binding 3 for Roughness texture.";
 			return 3;
     }
-	this->getLogger().warning("Unknown texture type: " + std::to_string(static_cast<int>(type)) + ". Returning default binding 0.");
+	this->getLogger().warning() << "Unknown texture type: " << static_cast<int>(type) << ". Returning default binding 0.";
 	return 0; // Default binding for unknown texture types
 }

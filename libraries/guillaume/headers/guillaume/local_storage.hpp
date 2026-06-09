@@ -28,7 +28,7 @@
 #include <string>
 
 #include <utility/logging/loggable.hpp>
-#include <utility/logging/standard_logger.hpp>
+#include <utility/logging/default_logger.hpp>
 
 #include "storage.hpp"
 
@@ -43,8 +43,7 @@ namespace guillaume
 	 * Values stored in this class survive across application restarts as long
 	 * as the same database file path is used.
 	 */
-	class LocalStorage: public Storage, public utility::logging::Loggable<LocalStorage,
-									   utility::logging::StandardLogger>
+	class LocalStorage: public Storage, public utility::logging::Loggable<LocalStorage, utility::logging::DefaultLogger>
 	{
 		private:
 		std::filesystem::path

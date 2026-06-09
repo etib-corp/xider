@@ -13,7 +13,7 @@
 #include "evan/IPlatform.hpp"
 
 #include <utility/logging/loggable.hpp>
-#include <utility/logging/standard_logger.hpp>
+#include <utility/logging/default_logger.hpp>
 
 #include <iostream>
 #include <memory>
@@ -31,9 +31,7 @@ namespace evan
 	 * It provides a structured way to manage these resources and perform
 	 * operations related to Vulkan rendering.
 	 */
-	class DeviceContext : protected utility::logging::Loggable<
-			DeviceContext,
-			utility::logging::StandardLogger>
+	class DeviceContext : protected utility::logging::Loggable<DeviceContext, utility::logging::DefaultLogger>
 	{
 		public:
 		/**
