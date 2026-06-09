@@ -11,7 +11,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # 02. Options & configuration
 
-
 # 03. Global properties
 set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -u ANativeActivity_onCreate")
 
@@ -50,9 +49,20 @@ if(NOT TARGET xider)
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../../../../../libraries/xider ${CMAKE_CURRENT_BINARY_DIR}/xider)
 endif()
 
+set(XIDER_HEADERS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/headers")
+set(XIDER_SOURCES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/sources")
+
+include_directories(
+    ${XIDER_HEADERS_DIR}
+)
+
+file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
+    "${XIDER_SOURCES_DIR}/*.cpp"
+)
+
 # 04. Library definition
 add_library(${PROJECT_NAME} SHARED
-    main.cpp
+    ${SOURCES}
 )
 
 # 06. Compile definitions
