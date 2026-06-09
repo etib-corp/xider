@@ -29,7 +29,7 @@ namespace xider::scenes
 					   guillaume::SessionStorage &sessionStorage)
 		: guillaume::Scene(localStorage, sessionStorage)
 	{
-		getLogger().info("Settings scene created");
+		getLogger().info() << "Settings scene created";
 	}
 
 	Settings::~Settings(void)

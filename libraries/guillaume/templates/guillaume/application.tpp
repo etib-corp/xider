@@ -33,14 +33,12 @@ namespace guillaume
 		const ecs::Phase phase					= phaseDefinition.getPhase();
 		const ecs::EntityTreeTraveler &traveler = phaseDefinition.getTraveler();
 
-		this->getLogger().debug("Running systems for phase: "
-								+ std::to_string(static_cast<int>(phase)));
+		this->getLogger().debug() << "Running systems for phase: " << static_cast<int>(phase);
 		for (const auto &system: _systemRegistry.getSystemsByPhase(phase)) {
 			system->routine(_sceneManager->getActiveComponentRegistry(),
 							_sceneManager->getActiveEntityRegistry(), traveler);
 		}
-		this->getLogger().debug("Finished systems for phase: "
-								+ std::to_string(static_cast<int>(phase)));
+		this->getLogger().debug() << "Finished systems for phase: " << static_cast<int>(phase);
 	}
 
 	template<InheritFromScene... SceneTypes>
@@ -163,7 +161,7 @@ namespace guillaume
 	template<InheritFromScene... SceneTypes>
 	int Application<SceneTypes...>::run(void)
 	{
-		this->getLogger().info("Entering main loop");
+		this->getLogger().info() << "Entering main loop";
 		while (!shouldQuit()) {
 			try {
 				_engine->pollEvents();
@@ -174,12 +172,11 @@ namespace guillaume
 				routine();
 				_engine->present();
 			} catch (const std::exception &exception) {
-				this->getLogger().error(std::string("Application error: ")
-										+ exception.what());
+				this->getLogger().error() << std::string("Application error: ") << exception.what();
 				return EXIT_FAILURE;
 			}
 		}
-		this->getLogger().info("Exiting main loop");
+		this->getLogger().info() << "Exiting main loop";
 		return EXIT_SUCCESS;
 	}
 }	 // namespace guillaume

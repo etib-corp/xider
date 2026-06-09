@@ -35,10 +35,11 @@ namespace guillaume::systems
 		if (!_glyphCodesLoaded) {
 			_codePoints = _ressourceProvider->loadCodePoints(_glyphCodePath);
 			if (_codePoints) {
-				getLogger().info("Loaded code points from " + _glyphCodePath);
+				getLogger().info()
+					<< "Loaded code points from " + _glyphCodePath;
 			} else {
-				getLogger().error(
-					"Failed to load glyph code asset: " + _glyphCodePath);
+				getLogger().error()
+					<< "Failed to load glyph code asset: " << _glyphCodePath;
 			}
 			_glyphCodesLoaded = true;
 		}
@@ -81,8 +82,8 @@ namespace guillaume::systems
 
 	void GlyphRender::update(const ecs::Entity::Identifier &entityIdentifier)
 	{
-		getLogger().debug("Updating GlyphRender system for entity "
-						  + std::to_string(entityIdentifier));
+		getLogger().debug()
+			<< "Updating GlyphRender system for entity " << entityIdentifier;
 		if (!requireComponent<components::Transform>(entityIdentifier)
 			|| !requireComponent<components::Bound>(entityIdentifier)
 			|| !requireComponent<components::Glyph>(entityIdentifier)
@@ -101,10 +102,10 @@ namespace guillaume::systems
 
 		const std::string glyphName = glyphComponent.getName();
 
-		getLogger().debug("Rendering glyph '" + glyphName + "' for entity "
-						  + std::to_string(entityIdentifier));
-		getLogger().debug("Glyph code found for '" + glyphName
-						  + "': " + std::to_string(glyphComponent.getCode()));
+		getLogger().debug() << "Rendering glyph '" << glyphName
+							<< "' for entity " << entityIdentifier;
+		getLogger().debug() << "Glyph code found for '" << glyphName
+							<< "': " << glyphComponent.getCode();
 
 		uint32_t glyphCode = 0;
 		if (_codePoints) {
@@ -115,18 +116,16 @@ namespace guillaume::systems
 		}
 
 		auto &cacheEntry = _cache[entityIdentifier];
-		cacheEntry.used = true;
+		cacheEntry.used	 = true;
 
 		utility::graphic::Text glyphText(
-			_ressourceProvider,
-			utility::graphic::CodePoints::toUtf8(glyphCode),
+			_ressourceProvider, utility::graphic::CodePoints::toUtf8(glyphCode),
 			boundComponent.getHeight(), _defaultFontPath);
 		glyphText.setColor(colorComponent.getColor());
 		const auto pose = transformComponent.getPose();
 
 		if (cacheEntry.objectId != 0 && cacheEntry.text.has_value()
-			&& *cacheEntry.text == glyphText
-			&& cacheEntry.pose == pose) {
+			&& *cacheEntry.text == glyphText && cacheEntry.pose == pose) {
 			return;
 		}
 
@@ -135,8 +134,8 @@ namespace guillaume::systems
 		}
 
 		cacheEntry.objectId = _renderer->addText(glyphText, pose);
-		cacheEntry.text = glyphText;
-		cacheEntry.pose = pose;
+		cacheEntry.text		= glyphText;
+		cacheEntry.pose		= pose;
 	}
 
-}   // namespace guillaume::systems
+}	 // namespace guillaume::systems

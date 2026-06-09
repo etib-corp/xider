@@ -27,7 +27,7 @@
 #include <utility/event/event.hpp>
 
 #include <utility/logging/loggable.hpp>
-#include <utility/logging/standard_logger.hpp>
+#include <utility/logging/default_logger.hpp>
 
 #include "Scene.hpp"
 #include "RenderObject.hpp"
@@ -72,9 +72,7 @@ namespace evan
 	 * establishing the core structure and functionality of the engine, with
 	 * plans for further enhancements and optimizations in the future.
 	 */
-	class Engine : protected utility::logging::Loggable<
-			Engine,
-			utility::logging::StandardLogger>
+	class Engine : protected utility::logging::Loggable<Engine, utility::logging::DefaultLogger>
 	{
 		public:
 		/**

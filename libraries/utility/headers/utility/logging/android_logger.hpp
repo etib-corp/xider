@@ -20,41 +20,52 @@
  SOFTWARE.
  */
 
-#include "guillaume/systems/text_input.hpp"
+/**
+ * @file android_logger.hpp
+ * @brief Android logcat logger declaration.
+ *
+ * Declares `utility::AndroidLogger`, which writes all log messages to Android
+ * logcat via `__android_log_print`.
+ */
 
-namespace guillaume::systems
+#pragma once
+
+#ifdef __ANDROID__
+
+#include <android/log.h>
+#include <string>
+
+#include "utility/logging/logger.hpp"
+
+namespace utility::logging
 {
 
-	TextInput::TextInput(event::EventBus &eventBus)
-		: ecs::SystemFiller<components::Text, components::Focus>(
-			  ecs::Phase::Event)
-		, _textInputSubscriber(eventBus)
-	{
-	}
+/**
+ * @brief Android logcat logger implementation.
+ *
+ * Routes all messages to Android logcat with appropriate priorities.
+ */
+class AndroidLogger: public Logger
+{
+	public:
+	/**
+	 * @brief Constructor with logger name.
+	 * @param name The name of the logger (used as logcat tag).
+	 */
+	AndroidLogger(const std::string &name);
 
-	void TextInput::update(const ecs::Entity::Identifier &entityIdentifier)
-	{
-		getLogger().debug() << "Updating TextInput system for entity " << entityIdentifier;
-		if (!_textInputSubscriber.hasPendingEvents()) {
-			return;
-		}
+	/**
+	 * @brief Destructor.
+	 */
+	~AndroidLogger(void) override;
 
-		auto &text			= getComponent<components::Text>(entityIdentifier);
-		std::string content = text.getContent();
+	/**
+	 * @brief Output a log record to Android logcat.
+	 * @param record The log record to output.
+	 */
+	void output(const LogRecord &record) override;
+};
 
-		while (_textInputSubscriber.hasPendingEvents()) {
-			const auto textInputEvent = _textInputSubscriber.getNextEvent();
-			if (!textInputEvent) {
-				continue;
-			}
+}	 // namespace utility::logging
 
-			const auto committedText = textInputEvent->getText();
-			if (!committedText.empty()) {
-				content += committedText;
-			}
-		}
-
-		text.setContent(content);
-	}
-
-}	 // namespace guillaume::systems
+#endif // __ANDROID__

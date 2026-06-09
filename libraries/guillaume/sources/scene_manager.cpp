@@ -28,21 +28,19 @@ namespace guillaume
 		: _scenes()
 		, _activeSceneType(typeid(void))
 	{
-		getLogger().info("SceneManager initialized");
+		getLogger().info() << "SceneManager initialized";
 	}
 
 	SceneManager::~SceneManager(void)
 	{
-		getLogger().info("SceneManager destroyed with "
-						 + std::to_string(_scenes.size())
-						 + " registered scene(s)");
+		getLogger().info() << "SceneManager destroyed with " << _scenes.size() << " registered scene(s)";
 	}
 
 	std::unique_ptr<Scene> &SceneManager::getActiveScene(void)
 	{
 		if (_scenes.empty()) {
-			getLogger().error("Cannot activate scene: no scenes are "
-							  "registered");
+			getLogger().error() << "Cannot activate scene: no scenes are "
+							  "registered";
 			throw std::runtime_error(
 				"SceneManager requires at least one registered scene before "
 				"accessing the active scene");
@@ -50,8 +48,8 @@ namespace guillaume
 
 		if (_activeSceneType == typeid(void)) {
 			_activeSceneType = _scenes.begin()->first;
-			getLogger().info("No active scene set. Defaulting to first "
-							 "registered scene");
+			getLogger().info() << "No active scene set. Defaulting to first "
+							 "registered scene";
 		}
 		return _scenes[_activeSceneType];
 	}

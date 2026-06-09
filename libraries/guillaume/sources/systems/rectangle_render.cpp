@@ -236,8 +236,7 @@ namespace guillaume::systems
 	void
 		RectangleRender::update(const ecs::Entity::Identifier &entityIdentifier)
 	{
-		getLogger().debug("Updating RectangleRender system for entity "
-						  + std::to_string(entityIdentifier));
+		getLogger().debug() << "Updating RectangleRender system for entity " << entityIdentifier;
 
 		if (!requireComponent<components::Bound>(entityIdentifier)
 			|| !requireComponent<components::Transform>(entityIdentifier)

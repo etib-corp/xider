@@ -10,7 +10,7 @@
 
 evan::XrManageActions::XrManageActions(XrDeviceBackend &deviceBackend)
 {
-	this->getLogger().info("Initializing XrManageActions");
+	this->getLogger().info() << "Initializing XrManageActions";
 
 	createActionSet(deviceBackend);
 
@@ -34,7 +34,7 @@ evan::XrManageActions::XrManageActions(XrDeviceBackend &deviceBackend)
 
 evan::XrManageActions::~XrManageActions()
 {
-	this->getLogger().info("Destroying XrManageActions");
+	this->getLogger().info() << "Destroying XrManageActions";
 
 	xrDestroyActionSet(_actionSet);
 }
@@ -42,7 +42,7 @@ evan::XrManageActions::~XrManageActions()
 std::vector<std::unique_ptr<utility::event::Event>>
 	evan::XrManageActions::pollActions(XrDeviceBackend &deviceBackend)
 {
-	this->getLogger().debug("Polling actions from OpenXR runtime");
+	this->getLogger().debug() << "Polling actions from OpenXR runtime";
 
 	std::vector<std::unique_ptr<utility::event::Event>> events;
 
@@ -53,7 +53,7 @@ std::vector<std::unique_ptr<utility::event::Event>>
 
 	XrResult result = xrSyncActions(deviceBackend._session, &syncInfo);
 	if (result != XR_SUCCESS) {
-		this->getLogger().error("Failed to sync actions: " + std::to_string(result));
+		this->getLogger().error() << "Failed to sync actions: " << result;
 		return events;
 	}
 	auto handEvents = _handsMotionActions->getEvents(deviceBackend);
@@ -71,7 +71,7 @@ std::vector<std::unique_ptr<utility::event::Event>>
 
 void evan::XrManageActions::createActionSet(XrDeviceBackend &deviceBackend)
 {
-	this->getLogger().info("Creating main action set for XrManageActions");
+	this->getLogger().info() << "Creating main action set for XrManageActions";
 
 	XrActionSetCreateInfo actionSetInfo { XR_TYPE_ACTION_SET_CREATE_INFO };
 	std::strncpy(actionSetInfo.actionSetName, "gameplay",
@@ -83,16 +83,16 @@ void evan::XrManageActions::createActionSet(XrDeviceBackend &deviceBackend)
 	XrResult result = xrCreateActionSet(deviceBackend._XrInstance,
 										&actionSetInfo, &_actionSet);
 	if (result != XR_SUCCESS) {
-		this->getLogger().error("Failed to create action set: " + std::to_string(result));
+		this->getLogger().error() << "Failed to create action set: " << result;
 		return;
 	}
-	this->getLogger().info("Successfully created main action set for XrManageActions");
+	this->getLogger().info() << "Successfully created main action set for XrManageActions";
 }
 
 void evan::XrManageActions::attachSessionActionSet(
 	XrDeviceBackend &deviceBackend)
 {
-	this->getLogger().info("Attaching action set to OpenXR session");
+	this->getLogger().info() << "Attaching action set to OpenXR session";
 
 	XrSessionActionSetsAttachInfo attachInfo {
 		XR_TYPE_SESSION_ACTION_SETS_ATTACH_INFO
@@ -103,15 +103,15 @@ void evan::XrManageActions::attachSessionActionSet(
 	XrResult result =
 		xrAttachSessionActionSets(deviceBackend._session, &attachInfo);
 	if (result != XR_SUCCESS) {
-		this->getLogger().error("Failed to attach action sets: " + std::to_string(result));
+		this->getLogger().error() << "Failed to attach action sets: " << result;
 		return;
 	}
-	this->getLogger().info("Successfully attached action set to OpenXR session");
+	this->getLogger().info() << "Successfully attached action set to OpenXR session";
 }
 
 void evan::XrManageActions::bindActionSets(XrDeviceBackend &deviceBackend)
 {
-	this->getLogger().info("Binding action sets to OpenXR interaction profile");
+	this->getLogger().info() << "Binding action sets to OpenXR interaction profile";
 
 	std::vector<XrActionSuggestedBinding> bindings {
 		{ _handsMotionActions->_handAimAction,
@@ -170,8 +170,8 @@ void evan::XrManageActions::bindActionSets(XrDeviceBackend &deviceBackend)
 	XrResult result						= xrSuggestInteractionProfileBindings(
 		deviceBackend._XrInstance, &suggestedBindings);
 	if (result != XR_SUCCESS) {
-		this->getLogger().error("Failed to suggest interaction profile bindings: " + std::to_string(result));
+		this->getLogger().error() << "Failed to suggest interaction profile bindings: " << result;
 		return;
 	}
-	this->getLogger().info("Successfully suggested interaction profile bindings");
+	this->getLogger().info() << "Successfully suggested interaction profile bindings";
 }

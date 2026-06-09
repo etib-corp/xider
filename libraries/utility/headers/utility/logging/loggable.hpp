@@ -59,7 +59,7 @@ namespace utility::logging
 
 		protected:
 		/**
-		 * @brief Construct a Loggable with a default StandardLogger.
+		 * @brief Construct a Loggable with the specified LoggerType.
 		 */
 		explicit Loggable(void)
 			: _name(utility::demangle<ClassType>())

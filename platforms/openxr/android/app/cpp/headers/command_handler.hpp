@@ -20,48 +20,38 @@
  SOFTWARE.
  */
 
-/**
- * @file standard_logger.hpp
- * @brief Standard output/error logger declaration.
- *
- * Declares `utility::StandardLogger`, which routes INFO_LEVEL/DEBUG_LEVEL to
- * stdout and WARNING_LEVEL/ERROR_LEVEL to stderr, with ANSI colors and
- * enriched metadata.
- */
-
 #pragma once
 
-#include "utility/logging/logger.hpp"
-
-namespace utility::logging
-{
+#include <android_native_app_glue.h>
+#include <evan/openxr/platform/AndroidXrPlatform.hpp>
+#include <utility/logging/loggable.hpp>
+#include <utility/logging/default_logger.hpp>
 
 /**
- * @brief Standard output/error logger implementation.
+ * @brief Handles Android application lifecycle commands.
  *
- * Logs DEBUG_LEVEL and INFO_LEVEL messages to stdout, WARNING_LEVEL and
- * ERROR_LEVEL to stderr. Adds ANSI color per level and includes source
- * file, line, and function name in the output.
+ * Encapsulates the native-app-glue command processing into a class that
+ * inherits from utility::logging::Loggable so all state transitions are
+ * logged through the platform default logger (AndroidLogger on Android).
  */
-class StandardLogger: public Logger
+class CommandHandler:
+	protected utility::logging::Loggable<CommandHandler,
+										 utility::logging::DefaultLogger>
 {
+	private:
+	evan::AndroidXrPlatform::AndroidAppState *_appState = nullptr;
+
 	public:
 	/**
-	 * @brief Constructor with logger name.
-	 * @param name The name of the logger.
+	 * @brief Link the handler to the application's state struct.
+	 * @param state Pointer to the AndroidAppState maintained by the platform.
 	 */
-	StandardLogger(const std::string &name);
+	void setAppState(evan::AndroidXrPlatform::AndroidAppState *state);
 
 	/**
-	 * @brief Destructor ensuring output streams are flushed.
+	 * @brief Process a single Android app command.
+	 * @param android_app  The android_app structure provided by the framework.
+	 * @param cmd  The command id (APP_CMD_* constants).
 	 */
-	~StandardLogger(void) override;
-
-	/**
-	 * @brief Output a formatted log record to the appropriate stream.
-	 * @param record The log record to output.
-	 */
-	void output(const LogRecord &record) override;
+	void handle(struct android_app *android_app, int32_t cmd);
 };
-
-}	 // namespace utility::logging

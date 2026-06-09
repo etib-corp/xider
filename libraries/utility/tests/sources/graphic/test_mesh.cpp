@@ -8,8 +8,8 @@ using namespace tests::utility::graphic;
 TEST_F(TestMesh, EqualityAndInequality)
 {
 	VertexD vertex(PositionD(1.0, 2.0, 3.0),
-				math::Vector3D { 0.0, 1.0, 0.0 },
-				math::Vector2D { 0.5, 0.25 }, Color32Bit(10, 20, 30, 255));
+				utility::math::Vector3D { 0.0, 1.0, 0.0 },
+				utility::math::Vector2D { 0.5, 0.25 }, Color32Bit(10, 20, 30, 255));
 	std::vector<VertexD> vertices { vertex };
 	std::vector<uint32_t> indices { 0 };
 

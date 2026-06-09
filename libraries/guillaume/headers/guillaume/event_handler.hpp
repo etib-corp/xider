@@ -26,7 +26,7 @@
 #include <memory>
 
 #include <utility/logging/loggable.hpp>
-#include <utility/logging/standard_logger.hpp>
+#include <utility/logging/default_logger.hpp>
 
 #include <utility/event/event.hpp>
 
@@ -54,8 +54,7 @@ namespace guillaume
 	 * @see EventBus
 	 */
 	class EventHandler:
-		protected utility::logging::Loggable<EventHandler,
-											 utility::logging::StandardLogger>
+		protected utility::logging::Loggable<EventHandler, utility::logging::DefaultLogger>
 	{
 		public:
 		/**
