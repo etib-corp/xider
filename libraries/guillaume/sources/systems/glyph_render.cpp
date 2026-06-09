@@ -18,9 +18,7 @@
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  SOFTWARE.
- */
-
-#include <sstream>
+*/
 
 #include <utility/graphic/text/text.hpp>
 
@@ -35,22 +33,9 @@ namespace guillaume::systems
 		}
 
 		if (!_glyphCodesLoaded) {
-			auto file = _systemIO->add(_glyphCodePath);
-			if (file) {
-				std::istringstream stream(file->content());
-				std::string line;
-				while (std::getline(stream, line)) {
-					size_t spacePos = line.find(' ');
-					if (spacePos != std::string::npos) {
-						std::string name = line.substr(0, spacePos);
-						uint32_t code =
-							std::stoul(line.substr(spacePos + 1), &spacePos, 16);
-						_glyphCode[name] = code;
-					}
-				}
-				getLogger().info("Loaded "
-								 + std::to_string(_glyphCode.size())
-								 + " glyph codes from " + _glyphCodePath);
+			_codePoints = _ressourceProvider->loadCodePoints(_glyphCodePath);
+			if (_codePoints) {
+				getLogger().info("Loaded code points from " + _glyphCodePath);
 			} else {
 				getLogger().error(
 					"Failed to load glyph code asset: " + _glyphCodePath);
@@ -73,45 +58,13 @@ namespace guillaume::systems
 		}
 	}
 
-	namespace
-	{
-		std::string codePointToUtf8(uint32_t codePoint)
-		{
-			std::string result;
-			if (codePoint <= 0x7F) {
-				result.push_back(static_cast<char>(codePoint));
-			} else if (codePoint <= 0x7FF) {
-				result.push_back(
-					static_cast<char>(0xC0 | ((codePoint >> 6) & 0x1F)));
-				result.push_back(static_cast<char>(0x80 | (codePoint & 0x3F)));
-			} else if (codePoint <= 0xFFFF) {
-				result.push_back(
-					static_cast<char>(0xE0 | ((codePoint >> 12) & 0x0F)));
-				result.push_back(
-					static_cast<char>(0x80 | ((codePoint >> 6) & 0x3F)));
-				result.push_back(static_cast<char>(0x80 | (codePoint & 0x3F)));
-			} else {
-				result.push_back(
-					static_cast<char>(0xF0 | ((codePoint >> 18) & 0x07)));
-				result.push_back(
-					static_cast<char>(0x80 | ((codePoint >> 12) & 0x3F)));
-				result.push_back(
-					static_cast<char>(0x80 | ((codePoint >> 6) & 0x3F)));
-				result.push_back(static_cast<char>(0x80 | (codePoint & 0x3F)));
-			}
-			return result;
-		}
-	}	 // namespace
-
 	GlyphRender::GlyphRender(
 		std::shared_ptr<utility::RessourceProvider> ressourceProvider,
-		std::shared_ptr<utility::SystemIO> systemIO,
 		std::unique_ptr<Engine> &engine)
 		: ecs::SystemFiller<components::Transform, components::Bound,
 							components::Glyph, components::Color>(
 			  ecs::Phase::Render)
 		, _ressourceProvider(ressourceProvider)
-		, _systemIO(systemIO)
 		, _renderer(engine)
 		, _defaultFontPath(
 			  "assets/fonts/Material_Symbols_Outlined/"
@@ -153,13 +106,20 @@ namespace guillaume::systems
 		getLogger().debug("Glyph code found for '" + glyphName
 						  + "': " + std::to_string(glyphComponent.getCode()));
 
-		const uint32_t glyphCode =
-			_glyphCode.count(glyphName) > 0 ? _glyphCode[glyphName] : '?';
+		uint32_t glyphCode = 0;
+		if (_codePoints) {
+			glyphCode = _codePoints->getCode(glyphName);
+		}
+		if (glyphCode == 0) {
+			glyphCode = '?';
+		}
+
 		auto &cacheEntry = _cache[entityIdentifier];
 		cacheEntry.used = true;
 
 		utility::graphic::Text glyphText(
-			_ressourceProvider, _systemIO, codePointToUtf8(glyphCode),
+			_ressourceProvider,
+			utility::graphic::CodePoints::toUtf8(glyphCode),
 			boundComponent.getHeight(), _defaultFontPath);
 		glyphText.setColor(colorComponent.getColor());
 		const auto pose = transformComponent.getPose();
@@ -177,7 +137,6 @@ namespace guillaume::systems
 		cacheEntry.objectId = _renderer->addText(glyphText, pose);
 		cacheEntry.text = glyphText;
 		cacheEntry.pose = pose;
-
 	}
 
 }   // namespace guillaume::systems

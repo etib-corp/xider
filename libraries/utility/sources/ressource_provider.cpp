@@ -42,6 +42,11 @@ namespace utility
 		return _shaders;
 	}
 
+	std::map<uint32_t, std::shared_ptr<graphic::CodePoints>> RessourceProvider::getCodePoints() const
+	{
+		return _codePoints;
+	}
+
 	uint32_t RessourceProvider::getShaderID(const std::string &shaderName) const
 	{
 		for (const auto &[name, id]: _elementsIDs) {
@@ -507,6 +512,47 @@ namespace utility
 		return _shaders[id];
 	}
 
+	std::shared_ptr<graphic::CodePoints> RessourceProvider::loadCodePoints(const std::string &path)
+	{
+		auto it = _elementsIDs.find(path);
+
+		if (it != _elementsIDs.end()) {
+			if (_codePoints.find(it->second) != _codePoints.end()) {
+				return _codePoints[it->second];
+			}
+		}
+
+		auto codePointsAsset = _systemInterface.add(path);
+
+		if (!codePointsAsset) {
+			std::cerr << "Failed to load codepoints asset: " << path << std::endl;
+			return nullptr;
+		}
+
+		auto codePoints = loadCodePointsFromAsset(codePointsAsset);
+
+		return codePoints;
+	}
+
+	std::shared_ptr<graphic::CodePoints> RessourceProvider::loadCodePointsFromAsset(std::shared_ptr<utility::File> codePointsAsset)
+	{
+		auto it = _elementsIDs.find(codePointsAsset->path());
+
+		if (it != _elementsIDs.end()) {
+			if (_codePoints.find(it->second) != _codePoints.end()) {
+				return _codePoints[it->second];
+			}
+		}
+
+		auto codePoints = std::make_shared<graphic::CodePoints>(codePointsAsset->content());
+		auto id = getNextID();
+
+		_codePoints[id] = codePoints;
+		_elementsIDs[codePointsAsset->path()] = id;
+
+		return _codePoints[id];
+	}
+
 	///////////////////////
 	// Protected Methods //
 	///////////////////////
@@ -525,4 +571,4 @@ namespace utility
 		return _currentID++;
 	}
 
-}	 // namespace utility
+}  	 // namespace utility

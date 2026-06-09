@@ -18,11 +18,10 @@
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  SOFTWARE.
- */
+*/
 
 #pragma once
 
-#include <fstream>
 #include <map>
 #include <optional>
 
@@ -51,8 +50,7 @@ namespace guillaume::systems
 								 components::Glyph, components::Color>
 	{
 		private:
-		struct CacheEntry
-		{
+		struct CacheEntry {
 			std::optional<utility::graphic::Text> text;
 			utility::graphic::PoseF pose;
 			size_t objectId { 0 };
@@ -62,27 +60,25 @@ namespace guillaume::systems
 		private:
 		std::shared_ptr<utility::RessourceProvider>
 			_ressourceProvider;	   //< Shared resource provider for loading
-								   //fonts and glyphs
-		std::shared_ptr<utility::SystemIO>
-			_systemIO;	  ///< Shared system IO for file operations
-		std::unique_ptr<Engine> &_renderer;	 ///< Engine instance
+								   // fonts and glyphs
+		std::unique_ptr<Engine> &_renderer;	   ///< Engine instance
 		std::string _defaultFontPath;	 ///< Default font for glyph rendering
-		std::string _glyphCodePath;	 ///< Path to glyph code mapping file
-		std::map<std::string, uint32_t> _glyphCode;
+		std::string _glyphCodePath;		 ///< Path to glyph code mapping file
+		std::shared_ptr<utility::graphic::CodePoints> _codePoints;
 		std::map<ecs::Entity::Identifier, CacheEntry> _cache;
-		bool _glyphCodesLoaded { false }; ///< Whether glyph codes have been loaded
+		bool _glyphCodesLoaded {
+			false
+		};  	///< Whether glyph codes have been loaded
 
 		public:
 		/**
 		 * @brief Construct a glyph rendering system.
 		 * @param ressourceProvider Shared resource provider for loading fonts
 		 * and glyphs.
-		 * @param systemIO Shared system IO for file operations.
 		 * @param engine The engine used to draw glyph.
 		 */
 		GlyphRender(
 			std::shared_ptr<utility::RessourceProvider> ressourceProvider,
-			std::shared_ptr<utility::SystemIO> systemIO,
 			std::unique_ptr<Engine> &engine);
 
 		/**
@@ -96,8 +92,10 @@ namespace guillaume::systems
 		 */
 		virtual void
 			update(const ecs::Entity::Identifier &entityIdentifier) override;
+
 		void prepare(void) override;
+
 		void cleanup(void) override;
 	};
 
-}	 // namespace guillaume::systems
+}   // namespace guillaume::systems

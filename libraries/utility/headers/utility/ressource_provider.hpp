@@ -4,6 +4,7 @@
 #include <utility/system_io/system_io.hpp>
 
 #include <utility/graphic/text/font.hpp>
+#include <utility/graphic/text/code_points.hpp>
 #include <utility/graphic/text/text_material.hpp>
 #include <utility/graphic/material.hpp>
 #include <utility/graphic/texture.hpp>
@@ -82,6 +83,14 @@ namespace utility
 		 * are shared pointers to the corresponding Shader objects.
 		 */
 		[[nodiscard]] std::map<uint32_t, std::shared_ptr<graphic::Shader>> getShaders() const;
+
+		/**
+		 * @brief Retrieves a map of loaded code points resources.
+		 *
+		 * @return A map where the keys are code points IDs (uint32_t) and the values
+		 * are shared pointers to the corresponding CodePoints objects.
+		 */
+		[[nodiscard]] std::map<uint32_t, std::shared_ptr<graphic::CodePoints>> getCodePoints() const;
 
 		/**
 		 * @brief Retrieves the unique shader ID associated with a given shader name.
@@ -262,6 +271,23 @@ namespace utility
 		 */
 		std::shared_ptr<graphic::Shader> loadShaderFromAssets(std::shared_ptr<utility::File> vertexAsset, std::shared_ptr<utility::File> fragmentAsset);
 
+		/**
+		 * @brief Loads a code points resource from a specified file path.
+		 *
+		 * @param path The file path to the `.codepoints` file to be loaded.
+		 * @return A shared pointer to the loaded CodePoints object.
+		 */
+		std::shared_ptr<graphic::CodePoints> loadCodePoints(const std::string &path);
+
+		/**
+		 * @brief Loads a code points resource from a specified asset.
+		 *
+		 * @param codePointsAsset A shared pointer to the File object
+		 * containing the `.codepoints` data to be loaded.
+		 * @return A shared pointer to the loaded CodePoints object.
+		 */
+		std::shared_ptr<graphic::CodePoints> loadCodePointsFromAsset(std::shared_ptr<utility::File> codePointsAsset);
+
 		protected:
 		/**
 		 * @brief Builds a unique shader name based on the vertex and fragment shader file paths.
@@ -324,6 +350,11 @@ namespace utility
 		 * @brief Internal map to store loaded shaders for efficient retrieval.
 		 */
 		std::map<uint32_t, std::shared_ptr<graphic::Shader>> _shaders;
+
+		/**
+		 * @brief Internal map to store loaded code points resources for efficient retrieval.
+		 */
+		std::map<uint32_t, std::shared_ptr<graphic::CodePoints>> _codePoints;
 
 		/**
 		 * @brief Internal map to store resource IDs for efficient lookup based on file paths.

@@ -101,13 +101,13 @@ namespace guillaume
 		ecs::SystemRegistry _systemRegistry;	///< Shared system registry
 		ecs::SystemPhaseList _systemPhases;		///< Ordered list of phases and
 												///< traversal strategies
-		std::shared_ptr<utility::RessourceProvider>
-			_ressourceProvider;	   ///< Shared
-								   ///< ressource
-								   ///< provider
 		std::shared_ptr<utility::DefaultSystemIO>
-			_systemIO;	  ///< Shared system IO for file access and other
-						  ///< OS-level interactions
+			_systemIO;  	///< Shared system IO for file access and other
+						///< OS-level interactions
+		std::shared_ptr<utility::RessourceProvider>
+			_ressourceProvider;   ///< Shared
+								  ///< ressource
+								  ///< provider
 
 		template<typename PhaseType> void runPhase(PhaseType &phaseDefinition);
 
