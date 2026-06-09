@@ -67,10 +67,10 @@ namespace guillaume::systems
 		, _ressourceProvider(ressourceProvider)
 		, _renderer(engine)
 		, _defaultFontPath(
-			  "assets/fonts/Material_Symbols_Outlined/"
+			  "fonts/Material_Symbols_Outlined/"
 			  "MaterialSymbolsOutlined-VariableFont_FILL,GRAD,opsz,wght.ttf")
 		, _glyphCodePath(
-			  "assets/fonts/Material_Symbols_Outlined/"
+			  "fonts/Material_Symbols_Outlined/"
 			  "MaterialSymbolsOutlined[FILL,GRAD,opsz,wght].codepoints")
 	{
 	}
