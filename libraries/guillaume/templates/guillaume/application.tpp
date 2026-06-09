@@ -83,9 +83,8 @@ namespace guillaume
 	}
 
 	template<InheritFromScene... SceneTypes>
-	Application<SceneTypes...>::Application(void)
-		: _systemIO(std::make_shared<utility::DefaultSystemIO>())
-		, _ressourceProvider(std::make_shared<utility::RessourceProvider>(*_systemIO))
+	Application<SceneTypes...>::Application(std::shared_ptr<utility::RessourceProvider> ressourceProvider)
+		: _ressourceProvider(std::move(ressourceProvider))
 		, _engine(nullptr)
 		, _sceneManager(nullptr)
 		, _eventBus()

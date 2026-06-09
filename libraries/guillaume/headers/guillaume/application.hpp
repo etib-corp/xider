@@ -101,8 +101,6 @@ namespace guillaume
 		ecs::SystemRegistry _systemRegistry;	///< Shared system registry
 		ecs::SystemPhaseList _systemPhases;		///< Ordered list of phases and
 												///< traversal strategies
-		std::shared_ptr<utility::DefaultSystemIO>
-			_systemIO;  	///< Shared system IO for file access and other
 						///< OS-level interactions
 		std::shared_ptr<utility::RessourceProvider>
 			_ressourceProvider;   ///< Shared
@@ -128,9 +126,13 @@ namespace guillaume
 
 		public:
 		/**
-		 * @brief Default constructor
+		 * @brief Construct an application with a shared resource provider.
+		 * @param ressourceProvider Shared pointer to the resource provider to be
+		 * used by the application. This allows for sharing resources across
+		 * different parts of the application, such as systems and scenes, while
+		 * maintaining a single source of truth for resource management.
 		 */
-		Application(void);
+		Application(std::shared_ptr<utility::RessourceProvider> ressourceProvider);
 
 		/**
 		 * @brief Default destructor
