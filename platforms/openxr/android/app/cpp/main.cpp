@@ -37,6 +37,8 @@
 #include <evan/Engine.hpp>
 #include <iostream>
 
+#include <utility/system_io/android_system_io.hpp>
+
 #include <evan/openxr/platform/AndroidXrPlatform.hpp>
 
 #include <xider/xider.hpp>
@@ -178,13 +180,14 @@ static void AppHandleCmd(struct android_app *app, int32_t cmd)
 void android_main(struct android_app *android_app)
 {
 	redirectStdoutToLogcat();
-	std::cout << "XIDER Android Application Started" << std::endl;
 
-	JNIEnv *env;
+	JNIEnv *env = nullptr;
 	android_app->activity->vm->AttachCurrentThread(&env, nullptr);
-
 	android_app->onAppCmd = AppHandleCmd;
-	evan::Engine::initializeAssetManager(android_app->activity->assetManager);
+
+	utility::AndroidSystemIO androidSystemIO(android_app->activity->assetManager);
+	std::shared_ptr<utility::RessourceProvider> ressourceProvider =
+		std::make_shared<utility::RessourceProvider>(androidSystemIO);
 
 	// Initialize XR platform data
 	evan::AndroidXrPlatform::AndroidPlatformData platformData {
@@ -199,10 +202,7 @@ void android_main(struct android_app *android_app)
 	android_app->userData = &xrPlatform->_appState;
 
 	// Initialize XIDER application with Evan engine
-	xider::XIDER app(xrPlatform);
-
-	std::cout << "XIDER Application initialized successfully" << std::endl;
-	std::cout << "Entering main application loop..." << std::endl;
+	xider::XIDER app(xrPlatform, ressourceProvider);
 
 	while (!android_app->destroyRequested) {
 		// Process Android events
@@ -226,7 +226,7 @@ void android_main(struct android_app *android_app)
 
 		// Application lifecycle
 		app.pollEvents();
-		if (app.gotNewEvents())
+		if (!app.gotNewEvents())
 			continue;
 		app.clear();
 		app.routine();
