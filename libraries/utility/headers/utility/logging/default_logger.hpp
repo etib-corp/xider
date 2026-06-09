@@ -31,13 +31,17 @@
 #pragma once
 
 #ifdef __ANDROID__
-#include "utility/logging/android_logger.hpp"
-namespace utility::logging {
-using DefaultLogger = AndroidLogger;
-}
+	#include "utility/logging/android_logger.hpp"
+namespace utility::logging
+{
+	/** @brief Alias for the platform-specific default logger. */
+	using DefaultLogger = AndroidLogger;
+}	 // namespace utility::logging
 #else
-#include "utility/logging/standard_logger.hpp"
-namespace utility::logging {
-using DefaultLogger = StandardLogger;
-}
+	#include "utility/logging/standard_logger.hpp"
+namespace utility::logging
+{
+	/** @brief Alias for the platform-specific default logger. */
+	using DefaultLogger = StandardLogger;
+}	 // namespace utility::logging
 #endif
