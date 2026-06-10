@@ -36,8 +36,12 @@ int main(void)
 	auto macOsDesktopPlatform =
 		std::make_shared<evan::MacOsDesktopPlatform>("XIDER", 1280, 720);
 
+	// Create a resource provider using the default system IO implementation
+	utility::DefaultSystemIO defaultSystemIO;
+	auto ressourceProvider = std::make_shared<utility::RessourceProvider>(defaultSystemIO);
+
 	// Initialize XIDER application with Evan engine
-	xider::XIDER app(macOsDesktopPlatform);
+	xider::XIDER app(macOsDesktopPlatform, ressourceProvider);
 
 	return app.run();
 }

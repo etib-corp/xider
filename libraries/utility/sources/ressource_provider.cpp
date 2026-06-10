@@ -13,6 +13,11 @@
 namespace utility
 {
 
+	RessourceProvider::RessourceProvider(SystemIO &systemInterface)
+		: _systemInterface(systemInterface)
+	{
+	}
+
 	/////////////
 	// Getters //
 	/////////////
@@ -35,6 +40,11 @@ namespace utility
 	std::map<uint32_t, std::shared_ptr<graphic::Shader>> RessourceProvider::getShaders() const
 	{
 		return _shaders;
+	}
+
+	std::map<uint32_t, std::shared_ptr<graphic::CodePoints>> RessourceProvider::getCodePoints() const
+	{
+		return _codePoints;
 	}
 
 	uint32_t RessourceProvider::getShaderID(const std::string &shaderName) const
@@ -63,8 +73,7 @@ namespace utility
 	////////////////////
 
 	std::shared_ptr<graphic::Font>
-		RessourceProvider::loadFont(const std::string &path,
-								   SystemIO &systemInterface)
+		RessourceProvider::loadFont(const std::string &path)
 	{
 		auto it = _elementsIDs.find(path);
 
@@ -74,10 +83,11 @@ namespace utility
 			}
 		}
 
-		auto fontAsset = systemInterface.add(path);
+		auto fontAsset = _systemInterface.add(path);
 
 		if (!fontAsset) {
-			throw std::runtime_error("Failed to load font asset: " + path);
+			std::cerr << "Failed to load font asset: " << path << std::endl;
+			return nullptr;
 		}
 
 		auto font = loadFontFromAsset(fontAsset);
@@ -120,24 +130,25 @@ namespace utility
 				auto materialKeyIt = _elementsIDs.find(materialKey);
 
 				if (materialKeyIt == _elementsIDs.end()) {
-					throw std::runtime_error(
-						"Missing text material entry for font atlas: " + name);
+					std::cerr << "Missing text material entry for font atlas: " << name
+							  << std::endl;
+					return;
 				}
 
 				auto materialIt = _materials.find(materialKeyIt->second);
 
 				if (materialIt == _materials.end()) {
-					throw std::runtime_error(
-						"Missing text material for font atlas: " + name);
+					std::cerr << "Missing text material for font atlas: " << name << std::endl;
+					return;
 				}
 
 				auto atlasMaterial = std::dynamic_pointer_cast<graphic::TextMaterial>(
 					materialIt->second);
 
 				if (!atlasMaterial) {
-					throw std::runtime_error(
-						"Misconfigured material for font: " + name
-						+ " is not a TextMaterial");
+					std::cerr << "Misconfigured material for font: " << name
+							  << " is not a TextMaterial" << std::endl;
+					return;
 				}
 
 				atlasMaterial->addAtlas(name, atlas);
@@ -204,24 +215,25 @@ namespace utility
 				auto materialKeyIt = _elementsIDs.find(materialKey);
 
 				if (materialKeyIt == _elementsIDs.end()) {
-					throw std::runtime_error(
-						"Missing text material entry for font atlas: " + name);
+					std::cerr << "Missing text material entry for font atlas: " << name
+							  << std::endl;
+					return;
 				}
 
 				auto materialIt = _materials.find(materialKeyIt->second);
 
 				if (materialIt == _materials.end()) {
-					throw std::runtime_error(
-						"Missing text material for font atlas: " + name);
+					std::cerr << "Missing text material for font atlas: " << name << std::endl;
+					return;
 				}
 
 				auto atlasMaterial = std::dynamic_pointer_cast<graphic::TextMaterial>(
 					materialIt->second);
 
 				if (!atlasMaterial) {
-					throw std::runtime_error(
-						"Misconfigured material for font: " + name
-						+ " is not a TextMaterial");
+					std::cerr << "Misconfigured material for font: " << name
+							  << " is not a TextMaterial" << std::endl;
+					return;
 				}
 
 				atlasMaterial->addAtlas(name, atlas);
@@ -232,8 +244,7 @@ namespace utility
 
 	std::shared_ptr<graphic::Material>
 		RessourceProvider::loadMaterial(const std::string &path,
-									   ShaderType shaderType,
-									   SystemIO &systemInterface)
+									   ShaderType shaderType)
 	{
 		auto it = _elementsIDs.find(path);
 
@@ -243,10 +254,11 @@ namespace utility
 			}
 		}
 
-		auto materialAsset = systemInterface.add(path);
+		auto materialAsset = _systemInterface.add(path);
 
 		if (!materialAsset) {
-			throw std::runtime_error("Failed to load material asset: " + path);
+			std::cerr << "Failed to load material asset: " << path << std::endl;
+			return nullptr;
 		}
 
 		auto material = loadMaterialFromAsset(shaderType, materialAsset);
@@ -283,8 +295,7 @@ namespace utility
 	}
 
 	std::shared_ptr<graphic::Texture>
-		RessourceProvider::loadTexture(const std::string &path,
-									  SystemIO &systemInterface)
+		RessourceProvider::loadTexture(const std::string &path)
 	{
 		auto it = _elementsIDs.find(path);
 
@@ -294,10 +305,11 @@ namespace utility
 			}
 		}
 
-		auto textureAsset = systemInterface.add(path);
+		auto textureAsset = _systemInterface.add(path);
 
 		if (!textureAsset) {
-			throw std::runtime_error("Failed to load texture asset: " + path);
+			std::cerr << "Failed to load texture asset: " << path << std::endl;
+			return nullptr;
 		}
 
 		auto texture = loadTextureFromAsset(textureAsset);
@@ -326,8 +338,8 @@ namespace utility
 			STBI_rgb_alpha);
 
 		if (!pixels) {
-			throw std::runtime_error("Failed to load texture: "
-									 + textureAsset->path());
+			std::cerr << "Failed to load texture: " << textureAsset->path() << std::endl;
+			return nullptr;
 		}
 
 		auto id = getNextID();
@@ -340,8 +352,7 @@ namespace utility
 		return _textures[id];
 	}
 
-	std::shared_ptr<graphic::Model> RessourceProvider::loadModel(const std::string &path,
-																SystemIO &systemInterface)
+	std::shared_ptr<graphic::Model> RessourceProvider::loadModel(const std::string &path)
 	{
 		auto it = _elementsIDs.find(path);
 
@@ -351,10 +362,11 @@ namespace utility
 			}
 		}
 
-		auto modelAsset = systemInterface.add(path);
+		auto modelAsset = _systemInterface.add(path);
 
 		if (!modelAsset) {
-			throw std::runtime_error("Failed to load model asset: " + path);
+			std::cerr << "Failed to load model asset: " << path << std::endl;
+			return nullptr;
 		}
 
 		auto id = getNextID();
@@ -402,7 +414,7 @@ namespace utility
 		return _models[id];
 	}
 
-	std::shared_ptr<graphic::Model> RessourceProvider::loadObj(const std::string &path, SystemIO &systemInterface)
+	std::shared_ptr<graphic::Model> RessourceProvider::loadObj(const std::string &path)
 	{
 		auto it = _elementsIDs.find(path);
 
@@ -412,10 +424,11 @@ namespace utility
 			}
 		}
 
-		auto modelAsset = systemInterface.add(path);
+		auto modelAsset = _systemInterface.add(path);
 
 		if (!modelAsset) {
-			throw std::runtime_error("Failed to load model asset: " + path);
+			std::cerr << "Failed to load model asset: " << path << std::endl;
+			return nullptr;
 		}
 
 		auto model = std::make_shared<graphic::Model>(modelAsset,
@@ -446,7 +459,7 @@ namespace utility
 		return _models[id];
 	}
 
-	std::shared_ptr<graphic::Shader> RessourceProvider::loadShader(const std::string &vertexPath, const std::string &fragmentPath, SystemIO &systemInterface)
+	std::shared_ptr<graphic::Shader> RessourceProvider::loadShader(const std::string &vertexPath, const std::string &fragmentPath)
 	{
 		auto path = buildShaderPath(vertexPath, fragmentPath);
 		auto it = _elementsIDs.find(path);
@@ -457,15 +470,17 @@ namespace utility
 			}
 		}
 
-		auto vertex = systemInterface.add(vertexPath);
-		auto fragment = systemInterface.add(fragmentPath);
+		auto vertex = _systemInterface.add(vertexPath);
+		auto fragment = _systemInterface.add(fragmentPath);
 
 		if (!vertex) {
-			throw std::runtime_error("Failed to load shader assets: " + vertexPath);
+			std::cerr << "Failed to load shader asset: " << vertexPath << std::endl;
+			return nullptr;
 		}
 
 		if (!fragment) {
-			throw std::runtime_error("Failed to load shader assets: " + fragmentPath);
+			std::cerr << "Failed to load shader asset: " << fragmentPath << std::endl;
+			return nullptr;
 		}
 
 		auto shader = std::make_shared<graphic::Shader>(vertex->content(), fragment->content());
@@ -497,6 +512,47 @@ namespace utility
 		return _shaders[id];
 	}
 
+	std::shared_ptr<graphic::CodePoints> RessourceProvider::loadCodePoints(const std::string &path)
+	{
+		auto it = _elementsIDs.find(path);
+
+		if (it != _elementsIDs.end()) {
+			if (_codePoints.find(it->second) != _codePoints.end()) {
+				return _codePoints[it->second];
+			}
+		}
+
+		auto codePointsAsset = _systemInterface.add(path);
+
+		if (!codePointsAsset) {
+			std::cerr << "Failed to load codepoints asset: " << path << std::endl;
+			return nullptr;
+		}
+
+		auto codePoints = loadCodePointsFromAsset(codePointsAsset);
+
+		return codePoints;
+	}
+
+	std::shared_ptr<graphic::CodePoints> RessourceProvider::loadCodePointsFromAsset(std::shared_ptr<utility::File> codePointsAsset)
+	{
+		auto it = _elementsIDs.find(codePointsAsset->path());
+
+		if (it != _elementsIDs.end()) {
+			if (_codePoints.find(it->second) != _codePoints.end()) {
+				return _codePoints[it->second];
+			}
+		}
+
+		auto codePoints = std::make_shared<graphic::CodePoints>(codePointsAsset->content());
+		auto id = getNextID();
+
+		_codePoints[id] = codePoints;
+		_elementsIDs[codePointsAsset->path()] = id;
+
+		return _codePoints[id];
+	}
+
 	///////////////////////
 	// Protected Methods //
 	///////////////////////
@@ -515,4 +571,4 @@ namespace utility
 		return _currentID++;
 	}
 
-}	 // namespace utility
+}  	 // namespace utility

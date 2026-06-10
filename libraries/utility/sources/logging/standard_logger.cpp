@@ -82,8 +82,10 @@ void StandardLogger::output(const LogRecord &record)
 		ss << resetColor();
 	}
 
-	ss << " [" << record.file << ":" << record.line << " "
-	   << record.function << "] ";
+	if (record.level == LogLevel::DEBUG_LEVEL) {
+		ss << " [" << record.file << ":" << record.line << " "
+		   << record.function << "] ";
+	}
 	ss << record.message;
 
 	if (record.level == LogLevel::WARNING_LEVEL

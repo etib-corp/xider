@@ -33,9 +33,12 @@ int main(void)
 	// Create Linux Xr platform for graphics
 	auto linuxXrPlatform = std::make_shared<evan::LinuxXrPlatform>();
 
+	// Create a resource provider using the default system IO implementation
+	utility::DefaultSystemIO defaultSystemIO;
+	auto ressourceProvider = std::make_shared<utility::RessourceProvider>(defaultSystemIO);
 
 	// Initialize XIDER application with Evan engine
-	xider::XIDER app(linuxXrPlatform);
+	xider::XIDER app(linuxXrPlatform, ressourceProvider);
 
 	return app.run();
 }

@@ -29,15 +29,13 @@ namespace guillaume::systems
 
 	MeasureText::MeasureText(
 		std::shared_ptr<utility::RessourceProvider> ressourceProvider,
-		std::shared_ptr<utility::SystemIO> systemIO,
 		std::unique_ptr<Engine> &engine)
 		: ecs::SystemFiller<components::Text, components::Bound>(
 			  ecs::Phase::Measure)
 		, _ressourceProvider(ressourceProvider)
-		, _systemIO(systemIO)
 		, _renderer(engine)
 		, _defaultFontPath(
-			  "assets/fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf")
+			  "fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf")
 	{
 	}
 
@@ -59,7 +57,7 @@ namespace guillaume::systems
 			getComponent<components::Bound>(entityIdentifier);
 
 		utility::graphic::Text text(
-			_ressourceProvider, _systemIO, textComponent.getContent(),
+			_ressourceProvider, textComponent.getContent(),
 			textComponent.getFontSize(), _defaultFontPath);
 		text.setColor(utility::graphic::Color32Bit());
 

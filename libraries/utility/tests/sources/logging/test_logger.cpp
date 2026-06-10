@@ -77,11 +77,36 @@ TEST(LoggerTest, StreamMultipleValues)
 TEST(LoggerTest, SourceLocationCaptured)
 {
 	TestLogger logger("Test");
-	logger.warning() << "loc test";
+	logger.debug() << "loc test";
 	EXPECT_TRUE(logger.called);
 	EXPECT_NE(logger.lastRecord.file.find("test_logger.cpp"), std::string::npos);
 	EXPECT_GT(logger.lastRecord.line, 0);
 	EXPECT_FALSE(logger.lastRecord.function.empty());
+}
+
+TEST(LoggerTest, SourceLocationSkippedForNonDebug)
+{
+	TestLogger logger("Test");
+
+	logger.info() << "info test";
+	EXPECT_TRUE(logger.called);
+	EXPECT_TRUE(logger.lastRecord.file.empty());
+	EXPECT_EQ(logger.lastRecord.line, 0);
+	EXPECT_TRUE(logger.lastRecord.function.empty());
+
+	logger.called = false;
+	logger.warning() << "warning test";
+	EXPECT_TRUE(logger.called);
+	EXPECT_TRUE(logger.lastRecord.file.empty());
+	EXPECT_EQ(logger.lastRecord.line, 0);
+	EXPECT_TRUE(logger.lastRecord.function.empty());
+
+	logger.called = false;
+	logger.error() << "error test";
+	EXPECT_TRUE(logger.called);
+	EXPECT_TRUE(logger.lastRecord.file.empty());
+	EXPECT_EQ(logger.lastRecord.line, 0);
+	EXPECT_TRUE(logger.lastRecord.function.empty());
 }
 
 TEST(LoggerTest, LevelFiltering)

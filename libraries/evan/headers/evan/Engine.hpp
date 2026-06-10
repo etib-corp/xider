@@ -359,26 +359,6 @@ namespace evan
 						 std::vector<std::string> texturePaths,
 						 std::map<std::string, std::vector<GPUMesh>> meshData);
 
-		/**
-		 * @brief Initializes the asset manager for the engine.
-		 *
-		 * Sets up the global asset manager instance based on the target
-		 * platform. On Android, creates an AndroidAssetManager with the
-		 * provided platform asset manager. On other platforms, creates a
-		 * DefaultAssetManager.
-		 *
-		 * @param platformAssetManager Platform-specific asset manager pointer.
-		 *                             On Android, this should be a pointer to
-		 * AAssetManager. On other platforms, this parameter is ignored and can
-		 * be nullptr.
-		 *
-		 * @note This function should be called during engine initialization
-		 * before any asset loading operations.
-		 * @note The global asset manager is stored in g_assetManager as a
-		 * unique_ptr.
-		 */
-		static void initializeAssetManager(void *platformAssetManager);
-
 		protected:
 		/**
 		 * The name of the engine.

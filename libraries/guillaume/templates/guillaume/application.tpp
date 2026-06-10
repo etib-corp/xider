@@ -46,7 +46,7 @@ namespace guillaume
 	{
 		_systemRegistry.registerNewSystem(
 			std::make_unique<systems::MeasureText>(_ressourceProvider,
-												   _systemIO, _engine));
+												   _engine));
 		_systemRegistry.registerNewSystem(
 			std::make_unique<systems::MouseMotion>(_eventBus, _engine));
 		_systemRegistry.registerNewSystem(
@@ -67,11 +67,11 @@ namespace guillaume
 			std::make_unique<systems::HandThumbStick>(_eventBus));
 		_systemRegistry.registerNewSystem(
 			std::make_unique<systems::HandTrigger>(_eventBus));
-		_systemRegistry.registerNewSystem(std::make_unique<systems::TextRender>(
-			_ressourceProvider, _systemIO, _engine));
+		_systemRegistry.registerNewSystem(
+			std::make_unique<systems::TextRender>(_ressourceProvider, _engine));
 		_systemRegistry.registerNewSystem(
 			std::make_unique<systems::GlyphRender>(_ressourceProvider,
-												   _systemIO, _engine));
+												   _engine));
 		_systemRegistry.registerNewSystem(
 			std::make_unique<systems::KeyboardControl>(_eventBus));
 		_systemRegistry.registerNewSystem(
@@ -81,9 +81,8 @@ namespace guillaume
 	}
 
 	template<InheritFromScene... SceneTypes>
-	Application<SceneTypes...>::Application(void)
-		: _ressourceProvider(std::make_shared<utility::RessourceProvider>())
-		, _systemIO(std::make_shared<utility::DefaultSystemIO>())
+	Application<SceneTypes...>::Application(std::shared_ptr<utility::RessourceProvider> ressourceProvider)
+		: _ressourceProvider(std::move(ressourceProvider))
 		, _engine(nullptr)
 		, _sceneManager(nullptr)
 		, _eventBus()

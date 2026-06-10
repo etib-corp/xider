@@ -61,7 +61,7 @@ struct LogRecord {
 	std::string timestamp;	///< Formatted timestamp string
 	std::string loggerName;	///< Name of the logger that emitted the record
 	std::string file;		///< Source file path
-	int line;				///< Source line number
+	int line = 0;			///< Source line number
 	std::string function;	///< Function name
 };
 
@@ -151,9 +151,11 @@ class Logger
 			record.message = _stream.str();
 			record.timestamp = Logger::getTimestamp();
 			record.loggerName = _logger->getName();
-			record.file = _location.file_name();
-			record.line = static_cast<int>(_location.line());
-			record.function = _location.function_name();
+			if (_level == LogLevel::DEBUG_LEVEL) {
+				record.file = _location.file_name();
+				record.line = static_cast<int>(_location.line());
+				record.function = _location.function_name();
+			}
 			_logger->output(record);
 		}
 	};

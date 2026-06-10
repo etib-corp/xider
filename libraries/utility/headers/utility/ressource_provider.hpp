@@ -4,6 +4,7 @@
 #include <utility/system_io/system_io.hpp>
 
 #include <utility/graphic/text/font.hpp>
+#include <utility/graphic/text/code_points.hpp>
 #include <utility/graphic/text/text_material.hpp>
 #include <utility/graphic/material.hpp>
 #include <utility/graphic/texture.hpp>
@@ -37,9 +38,14 @@ namespace utility
 		enum class ShaderType { TEXT_SHADER, MESH_SHADER };
 
 		/**
-		 * @brief Constructs a RessourceProvider object.
+		 * @brief Constructs a RessourceProvider object with a reference to a SystemIO
+		 * instance.
+		 * @param systemInterface A reference to the SystemIO instance used for loading
+		 * assets from file paths. The RessourceProvider relies on the SystemIO interface
+		 * to load resources from the filesystem, and this constructor initializes the
+		 * RessourceProvider with the provided SystemIO instance for asset loading operations.
 		 */
-		RessourceProvider() = default;
+		RessourceProvider(SystemIO &systemInterface);
 
 		/**
 		 * @brief Destructs the RessourceProvider object.
@@ -79,6 +85,14 @@ namespace utility
 		[[nodiscard]] std::map<uint32_t, std::shared_ptr<graphic::Shader>> getShaders() const;
 
 		/**
+		 * @brief Retrieves a map of loaded code points resources.
+		 *
+		 * @return A map where the keys are code points IDs (uint32_t) and the values
+		 * are shared pointers to the corresponding CodePoints objects.
+		 */
+		[[nodiscard]] std::map<uint32_t, std::shared_ptr<graphic::CodePoints>> getCodePoints() const;
+
+		/**
 		 * @brief Retrieves the unique shader ID associated with a given shader name.
 		 *
 		 * This method looks up the shader name in an internal map and returns the
@@ -107,13 +121,10 @@ namespace utility
 		 * @brief Loads a font resource from a specified file path.
 		 *
 		 * @param path The file path to the font resource to be loaded.
-		 * @param systemInterface A reference to the SystemIO instance used to
-		 * load the font asset.
 		 *
 		 * @return A shared pointer to the loaded Font object.
 		 */
-		std::shared_ptr<graphic::Font> loadFont(const std::string &path,
-												SystemIO &systemInterface);
+		std::shared_ptr<graphic::Font> loadFont(const std::string &path);
 
 		/**
 		 * @brief Loads a font resource from a specified asset.
@@ -152,14 +163,11 @@ namespace utility
 		 * @param path The file path to the material resource to be loaded.
 		 * @param shaderType The type of shader to be associated with the loaded
 		 * material.
-		 * @param systemInterface A reference to the SystemIO instance used to
-		 * load the material asset.
 		 *
 		 * @return A shared pointer to the loaded Material object.
 		 */
 		std::shared_ptr<graphic::Material>
-			loadMaterial(const std::string &path, ShaderType shaderType,
-						 SystemIO &systemInterface);
+			loadMaterial(const std::string &path, ShaderType shaderType);
 
 		/**
 		 * @brief Loads a material resource from a specified asset.
@@ -179,13 +187,9 @@ namespace utility
 		 * @brief Loads a texture resource from a specified file path.
 		 *
 		 * @param path The file path to the texture resource to be loaded.
-		 * @param systemInterface A reference to the SystemIO instance used to
-		 * load the texture asset
-		 *
 		 * @return A shared pointer to the loaded Texture object.
 		 */
-		std::shared_ptr<graphic::Texture>
-			loadTexture(const std::string &path, SystemIO &systemInterface);
+		std::shared_ptr<graphic::Texture> loadTexture(const std::string &path);
 
 		/**
 		 * @brief Loads a texture resource from a specified asset.
@@ -206,13 +210,10 @@ namespace utility
 		 * @brief Loads a model resource from a specified file path.
 		 *
 		 * @param path The file path to the model resource to be loaded.
-		 * @param systemInterface A reference to the SystemIO instance used to
-		 * load the model asset.
 		 *
 		 * @return A shared pointer to the loaded Model object.
 		 */
-		std::shared_ptr<graphic::Model> loadModel(const std::string &path,
-												SystemIO &systemInterface);
+		std::shared_ptr<graphic::Model> loadModel(const std::string &path);
 
 		/**
 		 * @brief Loads a model resource from a specified asset.
@@ -237,11 +238,9 @@ namespace utility
 		 * @brief Loads an OBJ model resource from a specified file path.
 		 *
 		 * @param path The file path to the OBJ model resource to be loaded.
-		 * @param systemInterface A reference to the SystemIO instance used to load the model asset
-		 *
 		 * @return A shared pointer to the loaded Model object representing the OBJ model.
 		 */
-		std::shared_ptr<graphic::Model> loadObj(const std::string &path, SystemIO &systemInterface);
+		std::shared_ptr<graphic::Model> loadObj(const std::string &path);
 
 		/**
 		 * @brief Loads an OBJ model resource from a specified asset.
@@ -257,11 +256,10 @@ namespace utility
 		 *
 		 * @param vertexPath The file path to the vertex shader resource to be loaded.
 		 * @param fragmentPath The file path to the fragment shader resource to be loaded.
-		 * @param systemInterface A reference to the SystemIO instance used to load the shader assets
 		 *
 		 * @return A shared pointer to the loaded Shader object.
 		 */
-		std::shared_ptr<graphic::Shader> loadShader(const std::string &vertexPath, const std::string &fragmentPath, SystemIO &systemInterface);
+		std::shared_ptr<graphic::Shader> loadShader(const std::string &vertexPath, const std::string &fragmentPath);
 
 		/**
 		 * @brief Loads a shader resource from specified vertex and fragment shader assets.
@@ -272,6 +270,23 @@ namespace utility
 		 * @return A shared pointer to the loaded Shader object.
 		 */
 		std::shared_ptr<graphic::Shader> loadShaderFromAssets(std::shared_ptr<utility::File> vertexAsset, std::shared_ptr<utility::File> fragmentAsset);
+
+		/**
+		 * @brief Loads a code points resource from a specified file path.
+		 *
+		 * @param path The file path to the `.codepoints` file to be loaded.
+		 * @return A shared pointer to the loaded CodePoints object.
+		 */
+		std::shared_ptr<graphic::CodePoints> loadCodePoints(const std::string &path);
+
+		/**
+		 * @brief Loads a code points resource from a specified asset.
+		 *
+		 * @param codePointsAsset A shared pointer to the File object
+		 * containing the `.codepoints` data to be loaded.
+		 * @return A shared pointer to the loaded CodePoints object.
+		 */
+		std::shared_ptr<graphic::CodePoints> loadCodePointsFromAsset(std::shared_ptr<utility::File> codePointsAsset);
 
 		protected:
 		/**
@@ -337,9 +352,21 @@ namespace utility
 		std::map<uint32_t, std::shared_ptr<graphic::Shader>> _shaders;
 
 		/**
+		 * @brief Internal map to store loaded code points resources for efficient retrieval.
+		 */
+		std::map<uint32_t, std::shared_ptr<graphic::CodePoints>> _codePoints;
+
+		/**
 		 * @brief Internal map to store resource IDs for efficient lookup based on file paths.
 		 */
 		std::unordered_map<std::string, uint32_t> _elementsIDs;
+
+		/**
+		 * @brief Reference to the SystemIO instance used for loading assets from file paths.
+		 *
+		 * The RessourceProvider relies on the SystemIO interface to load resources from the filesystem, and this member variable holds a reference to the SystemIO instance that is used for asset loading operations. It allows the RessourceProvider to access the necessary functionality of the SystemIO interface to read files and load resources based on file paths provided in the loading methods.
+		 */
+		SystemIO &_systemInterface;
 
 	};
 }	 // namespace utility

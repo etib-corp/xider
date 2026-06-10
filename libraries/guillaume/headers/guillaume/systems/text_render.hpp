@@ -58,8 +58,6 @@ namespace guillaume::systems
 		std::shared_ptr<utility::RessourceProvider>
 			_ressourceProvider;	   ///< Shared resource provider for loading
 								   ///< fonts and glyphs
-		std::shared_ptr<utility::SystemIO>
-			_systemIO;	  ///< Shared system IO for file operations
 		std::unique_ptr<Engine> &_renderer;	 ///< Engine instance
 		std::string _defaultFontPath;	 ///< Default font for text rendering
 		std::map<ecs::Entity::Identifier, CacheEntry> _cache;
@@ -69,12 +67,10 @@ namespace guillaume::systems
 		 * @brief Construct a text rendering system.
 		 * @param ressourceProvider Shared resource provider for loading fonts
 		 * and glyphs.
-		 * @param systemIO Shared system IO for file operations.
 		 * @param engine The engine used to draw text.
 		 */
 		TextRender(
 			std::shared_ptr<utility::RessourceProvider> ressourceProvider,
-			std::shared_ptr<utility::SystemIO> systemIO,
 			std::unique_ptr<Engine> &engine);
 
 		/**

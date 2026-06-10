@@ -48,90 +48,14 @@ namespace utility::graphic
 	template<CanBeFieldOfViewComponent Type> class FieldOfView
 	{
 		private:
-		Type _upDegrees;	   ///< Vertical FOV above the forward direction in
-							   ///< degrees
-		Type _upRadians;	   ///< Vertical FOV above the forward direction in
-							   ///< radians
-		Type _downDegrees;	   ///< Vertical FOV below the forward direction in
-							   ///< degrees
-		Type _downRadians;	   ///< Vertical FOV below the forward direction in
-							   ///< radians
-		Type _leftDegrees;	   ///< Horizontal FOV to the left of the forward
-							   ///< direction in degrees
-		Type _leftRadians;	   ///< Horizontal FOV to the left of the forward
-							   ///< direction in radians
-		Type _rightDegrees;	   ///< Horizontal FOV to the right of the forward
-							   ///< direction in degrees
-		Type _rightRadians;	   ///< Horizontal FOV to the right of the forward
-							   ///< direction in radians
-
-		/**
-		 * @brief Validate a field-of-view angle value.
-		 * @param value Angle value to validate.
-		 * @param name Angle name used in error messages.
-		 * @throws std::invalid_argument if angle is negative or not finite.
-		 */
-		static void validateAngle(const Type value, const char *name)
-		{
-			if (!std::isfinite(value)) {
-				throw std::invalid_argument(std::string(name)
-											+ " angle must be finite");
-			}
-			if (value < Type { 0 }) {
-				throw std::invalid_argument(std::string(name)
-											+ " angle must be >= 0");
-			}
-		}
-
-		/**
-		 * @brief Convert degrees to radians.
-		 * @param degrees Angle in degrees.
-		 * @return Angle in radians.
-		 */
-		static Type toRadians(const Type degrees)
-		{
-			return degrees * std::numbers::pi_v<Type> / Type { 180 };
-		}
-
-		/**
-		 * @brief Convert radians to degrees.
-		 * @param radians Angle in radians.
-		 * @return Angle in degrees.
-		 */
-		static Type toDegrees(const Type radians)
-		{
-			return radians * Type { 180 } / std::numbers::pi_v<Type>;
-		}
-
-		/**
-		 * @brief Set one angle from degrees and update radians cache.
-		 * @param degrees Storage slot for degrees.
-		 * @param radians Storage slot for radians.
-		 * @param value Value in degrees.
-		 * @param name Angle name used in validation errors.
-		 */
-		static void setFromDegrees(Type &degrees, Type &radians,
-								   const Type value, const char *name)
-		{
-			validateAngle(value, name);
-			degrees = value;
-			radians = toRadians(value);
-		}
-
-		/**
-		 * @brief Set one angle from radians and update degrees cache.
-		 * @param degrees Storage slot for degrees.
-		 * @param radians Storage slot for radians.
-		 * @param value Value in radians.
-		 * @param name Angle name used in validation errors.
-		 */
-		static void setFromRadians(Type &degrees, Type &radians,
-								   const Type value, const char *name)
-		{
-			validateAngle(value, name);
-			radians = value;
-			degrees = toDegrees(value);
-		}
+		Type _up;	 ///< Vertical FOV above the forward direction in
+					 ///< radians
+		Type _down;	   ///< Vertical FOV below the forward direction in
+					   ///< radians
+		Type _left;	   ///< Horizontal FOV to the left of the forward
+					   ///< direction in radians
+		Type _right;	///< Horizontal FOV to the right of the forward
+						///< direction in radians
 
 		public:
 		/**
@@ -143,26 +67,20 @@ namespace utility::graphic
 		}
 
 		/**
-		 * @brief Constructor to initialize field of view angles in degrees.
-		 * @param upDegrees Vertical FOV above the forward direction in degrees.
-		 * @param downDegrees Vertical FOV below the forward direction in
-		 * degrees.
-		 * @param leftDegrees Horizontal FOV to the left of the forward
-		 * direction in degrees.
-		 * @param rightDegrees Horizontal FOV to the right of the forward
-		 * direction in degrees.
+		 * @brief Constructor to initialize field of view angles in radians.
+		 * @param up Vertical FOV above the forward direction in radians.
+		 * @param down Vertical FOV below the forward direction in radians.
+		 * @param left Horizontal FOV to the left of the forward direction in
+		 * radians.
+		 * @param right Horizontal FOV to the right of the forward direction in
+		 * radians.
 		 */
-		FieldOfView(Type upDegrees, Type downDegrees, Type leftDegrees,
-					Type rightDegrees)
-			: _upDegrees(upDegrees)
-			, _downDegrees(downDegrees)
-			, _leftDegrees(leftDegrees)
-			, _rightDegrees(rightDegrees)
+		FieldOfView(Type up, Type down, Type left, Type right)
+			: _up(up)
+			, _down(down)
+			, _left(left)
+			, _right(right)
 		{
-			setFromDegrees(_upDegrees, _upRadians, upDegrees, "up");
-			setFromDegrees(_downDegrees, _downRadians, downDegrees, "down");
-			setFromDegrees(_leftDegrees, _leftRadians, leftDegrees, "left");
-			setFromDegrees(_rightDegrees, _rightRadians, rightDegrees, "right");
 		}
 
 		/**
@@ -197,33 +115,13 @@ namespace utility::graphic
 		~FieldOfView(void) = default;
 
 		/**
-		 * @brief Set up field-of-view in degrees.
-		 * @param upDegrees Up angle in degrees.
-		 * @return Reference to this FieldOfView.
-		 */
-		FieldOfView &setUpDegrees(const Type upDegrees)
-		{
-			setFromDegrees(_upDegrees, _upRadians, upDegrees, "up");
-			return *this;
-		}
-
-		/**
-		 * @brief Get up field-of-view in degrees.
-		 * @return Up angle in degrees.
-		 */
-		Type getUpDegrees(void) const noexcept
-		{
-			return _upDegrees;
-		}
-
-		/**
 		 * @brief Set up field-of-view in radians.
-		 * @param upRadians Up angle in radians.
+		 * @param up Up angle in radians.
 		 * @return Reference to this FieldOfView.
 		 */
-		FieldOfView &setUpRadians(const Type upRadians)
+		FieldOfView &setUp(const Type up)
 		{
-			setFromRadians(_upDegrees, _upRadians, upRadians, "up");
+			_up = up;
 			return *this;
 		}
 
@@ -231,39 +129,19 @@ namespace utility::graphic
 		 * @brief Get up field-of-view in radians.
 		 * @return Up angle in radians.
 		 */
-		Type getUpRadians(void) const noexcept
+		Type getUp(void) const noexcept
 		{
-			return _upRadians;
-		}
-
-		/**
-		 * @brief Set down field-of-view in degrees.
-		 * @param downDegrees Down angle in degrees.
-		 * @return Reference to this FieldOfView.
-		 */
-		FieldOfView &setDownDegrees(const Type downDegrees)
-		{
-			setFromDegrees(_downDegrees, _downRadians, downDegrees, "down");
-			return *this;
-		}
-
-		/**
-		 * @brief Get down field-of-view in degrees.
-		 * @return Down angle in degrees.
-		 */
-		Type getDownDegrees(void) const noexcept
-		{
-			return _downDegrees;
+			return _up;
 		}
 
 		/**
 		 * @brief Set down field-of-view in radians.
-		 * @param downRadians Down angle in radians.
+		 * @param down Down angle in radians.
 		 * @return Reference to this FieldOfView.
 		 */
-		FieldOfView &setDownRadians(const Type downRadians)
+		FieldOfView &setDown(const Type down)
 		{
-			setFromRadians(_downDegrees, _downRadians, downRadians, "down");
+			_down = down;
 			return *this;
 		}
 
@@ -271,39 +149,19 @@ namespace utility::graphic
 		 * @brief Get down field-of-view in radians.
 		 * @return Down angle in radians.
 		 */
-		Type getDownRadians(void) const noexcept
+		Type getDown(void) const noexcept
 		{
-			return _downRadians;
-		}
-
-		/**
-		 * @brief Set left field-of-view in degrees.
-		 * @param leftDegrees Left angle in degrees.
-		 * @return Reference to this FieldOfView.
-		 */
-		FieldOfView &setLeftDegrees(const Type leftDegrees)
-		{
-			setFromDegrees(_leftDegrees, _leftRadians, leftDegrees, "left");
-			return *this;
-		}
-
-		/**
-		 * @brief Get left field-of-view in degrees.
-		 * @return Left angle in degrees.
-		 */
-		Type getLeftDegrees(void) const noexcept
-		{
-			return _leftDegrees;
+			return _down;
 		}
 
 		/**
 		 * @brief Set left field-of-view in radians.
-		 * @param leftRadians Left angle in radians.
+		 * @param left Left angle in radians.
 		 * @return Reference to this FieldOfView.
 		 */
-		FieldOfView &setLeftRadians(const Type leftRadians)
+		FieldOfView &setLeft(const Type left)
 		{
-			setFromRadians(_leftDegrees, _leftRadians, leftRadians, "left");
+			_left = left;
 			return *this;
 		}
 
@@ -311,39 +169,19 @@ namespace utility::graphic
 		 * @brief Get left field-of-view in radians.
 		 * @return Left angle in radians.
 		 */
-		Type getLeftRadians(void) const noexcept
+		Type getLeft(void) const noexcept
 		{
-			return _leftRadians;
-		}
-
-		/**
-		 * @brief Set right field-of-view in degrees.
-		 * @param rightDegrees Right angle in degrees.
-		 * @return Reference to this FieldOfView.
-		 */
-		FieldOfView &setRightDegrees(const Type rightDegrees)
-		{
-			setFromDegrees(_rightDegrees, _rightRadians, rightDegrees, "right");
-			return *this;
-		}
-
-		/**
-		 * @brief Get right field-of-view in degrees.
-		 * @return Right angle in degrees.
-		 */
-		Type getRightDegrees(void) const noexcept
-		{
-			return _rightDegrees;
+			return _left;
 		}
 
 		/**
 		 * @brief Set right field-of-view in radians.
-		 * @param rightRadians Right angle in radians.
+		 * @param right Right angle in radians.
 		 * @return Reference to this FieldOfView.
 		 */
-		FieldOfView &setRightRadians(const Type rightRadians)
+		FieldOfView &setRight(const Type right)
 		{
-			setFromRadians(_rightDegrees, _rightRadians, rightRadians, "right");
+			_right = right;
 			return *this;
 		}
 
@@ -351,81 +189,9 @@ namespace utility::graphic
 		 * @brief Get right field-of-view in radians.
 		 * @return Right angle in radians.
 		 */
-		Type getRightRadians(void) const noexcept
+		Type getRight(void) const noexcept
 		{
-			return _rightRadians;
-		}
-
-		/**
-		 * @brief Set all directions from degrees.
-		 * @param upDegrees Up angle in degrees.
-		 * @param downDegrees Down angle in degrees.
-		 * @param leftDegrees Left angle in degrees.
-		 * @param rightDegrees Right angle in degrees.
-		 * @return Reference to this FieldOfView.
-		 */
-		FieldOfView &setDegrees(const Type upDegrees, const Type downDegrees,
-								const Type leftDegrees, const Type rightDegrees)
-		{
-			setUpDegrees(upDegrees);
-			setDownDegrees(downDegrees);
-			setLeftDegrees(leftDegrees);
-			setRightDegrees(rightDegrees);
-			return *this;
-		}
-
-		/**
-		 * @brief Set all directions from radians.
-		 * @param upRadians Up angle in radians.
-		 * @param downRadians Down angle in radians.
-		 * @param leftRadians Left angle in radians.
-		 * @param rightRadians Right angle in radians.
-		 * @return Reference to this FieldOfView.
-		 */
-		FieldOfView &setRadians(const Type upRadians, const Type downRadians,
-								const Type leftRadians, const Type rightRadians)
-		{
-			setUpRadians(upRadians);
-			setDownRadians(downRadians);
-			setLeftRadians(leftRadians);
-			setRightRadians(rightRadians);
-			return *this;
-		}
-
-		/**
-		 * @brief Get total vertical field-of-view in degrees.
-		 * @return Sum of up and down angles in degrees.
-		 */
-		Type getVerticalDegrees(void) const noexcept
-		{
-			return _upDegrees + _downDegrees;
-		}
-
-		/**
-		 * @brief Get total horizontal field-of-view in degrees.
-		 * @return Sum of left and right angles in degrees.
-		 */
-		Type getHorizontalDegrees(void) const noexcept
-		{
-			return _leftDegrees + _rightDegrees;
-		}
-
-		/**
-		 * @brief Get total vertical field-of-view in radians.
-		 * @return Sum of up and down angles in radians.
-		 */
-		Type getVerticalRadians(void) const noexcept
-		{
-			return _upRadians + _downRadians;
-		}
-
-		/**
-		 * @brief Get total horizontal field-of-view in radians.
-		 * @return Sum of left and right angles in radians.
-		 */
-		Type getHorizontalRadians(void) const noexcept
-		{
-			return _leftRadians + _rightRadians;
+			return _right;
 		}
 
 		/**
@@ -436,8 +202,8 @@ namespace utility::graphic
 		 */
 		bool isSymmetric(Type epsilon = Type { 1e-6 }) const noexcept
 		{
-			return std::abs(_upDegrees - _downDegrees) <= epsilon
-				&& std::abs(_leftDegrees - _rightDegrees) <= epsilon;
+			return std::abs(_up - _down) <= epsilon
+				&& std::abs(_left - _right) <= epsilon;
 		}
 	};
 

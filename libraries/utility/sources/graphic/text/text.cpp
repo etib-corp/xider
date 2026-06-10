@@ -24,13 +24,13 @@
 
 namespace utility::graphic
 {
-	Text::Text(std::shared_ptr<RessourceProvider> ressourceProvider, std::shared_ptr<SystemIO> systemInterface,
+	Text::Text(std::shared_ptr<RessourceProvider> ressourceProvider,
 			   const std::string &content, uint32_t fontSize,
 			   const std::string &font)
 	{
 		_content  = content;
 		_fontSize = fontSize;
-		_font	  = ressourceProvider->loadFont(font, *systemInterface);
+		_font	  = ressourceProvider->loadFont(font);
 		_fontPath = font;
 		_meshes	  = {std::make_shared<Mesh>(std::vector<VertexD> {},
 										   std::vector<uint32_t> {})};

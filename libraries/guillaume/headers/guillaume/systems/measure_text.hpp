@@ -48,8 +48,6 @@ namespace guillaume::systems
 		std::shared_ptr<utility::RessourceProvider>
 			_ressourceProvider;	   ///< Shared resource provider for loading
 								   ///< fonts and glyphs
-		std::shared_ptr<utility::SystemIO>
-			_systemIO;	  ///< Shared system IO for file operations
 		std::unique_ptr<Engine>
 			&_renderer;	   ///< Engine instance for text measurement
 		std::string
@@ -60,12 +58,10 @@ namespace guillaume::systems
 		 * @brief Construct a text measuring system.
 		 * @param ressourceProvider Shared resource provider for loading fonts
 		 * and glyphs.
-		 * @param systemIO Shared system IO for file operations.
 		 * @param engine The engine used to measure text.
 		 */
 		MeasureText(
 			std::shared_ptr<utility::RessourceProvider> ressourceProvider,
-			std::shared_ptr<utility::SystemIO> systemIO,
 			std::unique_ptr<Engine> &engine);
 
 		/**

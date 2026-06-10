@@ -9,21 +9,6 @@
 
 #include "evan/Engine.hpp"
 
-#ifdef __ANDROID__
-std::unique_ptr<utility::AndroidSystemIO> g_systemIO;
-#else
-std::unique_ptr<utility::SystemIO> g_systemIO;
-#endif
-
-void evan::Engine::initializeAssetManager(void *platformAssetManager)
-{
-#ifdef __ANDROID__
-	g_systemIO = std::make_unique<utility::AndroidSystemIO>(
-		static_cast<AAssetManager *>(platformAssetManager));
-#else
-	g_systemIO = std::make_unique<utility::DefaultSystemIO>();
-#endif
-}
 
 evan::Engine::Engine(
 	std::shared_ptr<utility::RessourceProvider> ressourceProvider,
@@ -31,27 +16,34 @@ evan::Engine::Engine(
 	: _platform(platform)
 	, _ressourceProvider(ressourceProvider)
 {
-	if (!g_systemIO) {
-#ifdef __ANDROID__
-		this->getLogger().error() << "Android system I/O not provided! Cannot initialize system I/O.";
-		return;
-#else
-		this->getLogger().warning() << "No platform-specific system I/O provided. "
-								  "Initializing default system I/O.";
-		initializeAssetManager(nullptr);
-#endif
-	}
-
 	this->getLogger().info() << "Loading text shader...";
 
 	ressourceProvider->loadShader("assets/shaders/text.vert.spv",
-								  "assets/shaders/text.frag.spv", *g_systemIO);
+								  "assets/shaders/text.frag.spv");
+
+	/**
+	 * We load shaders from both "assets/shaders/" and "shaders/" directories to
+	 * accommodate different platforms and build configurations. On Android, assets
+	 * are typically stored in the "assets/" directory, while on other platforms,
+	 * shaders may be stored in a "shaders/" directory within the project.
+	 */
+	ressourceProvider->loadShader("shaders/text.vert.spv",
+								"shaders/text.frag.spv");
+
 
 	this->getLogger().info() << "Loading default shader...";
 
 	ressourceProvider->loadShader("assets/shaders/default.vert.spv",
-								  "assets/shaders/default.frag.spv",
-								  *g_systemIO);
+								  "assets/shaders/default.frag.spv");
+
+	/**
+	 * We load shaders from both "assets/shaders/" and "shaders/" directories to
+	 * accommodate different platforms and build configurations. On Android, assets
+	 * are typically stored in the "assets/" directory, while on other platforms,
+	 * shaders may be stored in a "shaders/" directory within the project.
+	 */
+	ressourceProvider->loadShader("shaders/default.vert.spv",
+								  "shaders/default.frag.spv");
 
 	_deviceContext	  = std::make_shared<DeviceContext>(*platform);
 	_swapchainContext = platform->createSwapchainContext(*_deviceContext);

@@ -53,9 +53,13 @@ void AndroidLogger::output(const LogRecord &record)
 	}
 
 	std::string tag = record.loggerName;
-	std::string msg = "[" + record.timestamp + "] [" + record.file + ":"
-					  + std::to_string(record.line) + " " + record.function
-					  + "] " + record.message;
+	std::string msg = "[" + record.timestamp + "] ";
+	if (record.level == LogLevel::DEBUG_LEVEL) {
+		msg += "[" + record.file + ":"
+			   + std::to_string(record.line) + " " + record.function
+			   + "] ";
+	}
+	msg += record.message;
 
 	__android_log_print(priority, tag.c_str(), "%s", msg.c_str());
 }

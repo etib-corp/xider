@@ -44,7 +44,7 @@ namespace evan
 		 * extensions for the OpenXR platform.
 		 */
 		virtual std::vector<std::string>
-			getRequiredInstanceExtensions() const = 0;
+			getRequiredInstanceExtensions() const override = 0;
 
 		/**
 		 * @brief Check if the OpenXR platform should close.

@@ -20,36 +20,6 @@ TEST_F(TestView, RejectInvalidPerspective)
 	EXPECT_THROW(view.setPerspective(90.0f, 0.0f), std::invalid_argument);
 }
 
-TEST_F(TestView, RejectInvalidFieldOfView)
-{
-	ViewF view;
-	EXPECT_THROW(view.setFieldOfView(FieldOfViewF(100.0f, 90.0f, 45.0f, 45.0f)),
-				 std::invalid_argument);
-}
-
-TEST_F(TestView, FovDegreeAggregates)
-{
-	ViewF view;
-	FieldOfViewF fov(60.0f, 80.0f, 45.0f, 35.0f);
-	view.setFieldOfView(fov);
-
-	EXPECT_NEAR(view.getVerticalFovDegrees(), 60.0f + 80.0f, 1e-4f);
-	EXPECT_NEAR(view.getHorizontalFovDegrees(), 45.0f + 35.0f, 1e-4f);
-}
-
-TEST_F(TestView, IsFieldOfViewSymmetric)
-{
-	ViewF view;
-
-	FieldOfViewF symmetric(45.0f, 45.0f, 60.0f, 60.0f);
-	view.setFieldOfView(symmetric);
-	EXPECT_TRUE(view.isFieldOfViewSymmetric());
-
-	FieldOfViewF asymmetric(45.0f, 50.0f, 60.0f, 70.0f);
-	view.setFieldOfView(asymmetric);
-	EXPECT_FALSE(view.isFieldOfViewSymmetric());
-}
-
 TEST_F(TestView, ComparisonOperators)
 {
 	ViewF view1;

@@ -385,15 +385,14 @@ namespace utility::graphic
 		 */
 		ViewComponentType getAspectRatio(void) const
 		{
-			const ViewComponentType vertical =
-				std::tan(_fieldOfView.getUpRadians())
-				+ std::tan(_fieldOfView.getDownRadians());
+			const ViewComponentType vertical = std::tan(_fieldOfView.getUp())
+				+ std::tan(_fieldOfView.getDown());
 			if (vertical == ViewComponentType {}) {
 				return ViewComponentType {};
 			}
 			const ViewComponentType horizontal =
-				std::tan(_fieldOfView.getLeftRadians())
-				+ std::tan(_fieldOfView.getRightRadians());
+				std::tan(_fieldOfView.getLeft())
+				+ std::tan(_fieldOfView.getRight());
 			return horizontal / vertical;
 		}
 
@@ -403,13 +402,6 @@ namespace utility::graphic
 		 */
 		void setFieldOfView(const FieldOfView<ViewComponentType> &fieldOfView)
 		{
-			const ViewComponentType vertical =
-				fieldOfView.getUpDegrees() + fieldOfView.getDownDegrees();
-			if (vertical <= ViewComponentType {}
-				|| vertical >= ViewComponentType { 180 }) {
-				throw std::invalid_argument(
-					"View vertical FOV must be in range (0, 180)");
-			}
 			_fieldOfView = fieldOfView;
 		}
 
@@ -489,12 +481,12 @@ namespace utility::graphic
 		{
 			const ViewComponentType horizontalOffset =
 				ndcX >= ViewComponentType {}
-				? ndcX * std::tan(_fieldOfView.getRightRadians())
-				: ndcX * std::tan(_fieldOfView.getLeftRadians());
+				? ndcX * std::tan(_fieldOfView.getRight())
+				: ndcX * std::tan(_fieldOfView.getLeft());
 			const ViewComponentType verticalOffset =
 				ndcY >= ViewComponentType {}
-				? ndcY * std::tan(_fieldOfView.getUpRadians())
-				: ndcY * std::tan(_fieldOfView.getDownRadians());
+				? ndcY * std::tan(_fieldOfView.getUp())
+				: ndcY * std::tan(_fieldOfView.getDown());
 
 			const auto rayDirection = (getForward() + right() * horizontalOffset
 									   + getUp() * verticalOffset);

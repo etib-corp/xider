@@ -51,7 +51,11 @@ void android_main(struct android_app *android_app)
 	android_app->onAppCmd = [](struct android_app *app, int32_t cmd) {
 		static_cast<CommandHandler *>(app->userData)->handle(app, cmd);
 	};
-	evan::Engine::initializeAssetManager(android_app->activity->assetManager);
+
+	utility::AndroidSystemIO androidSystemIO(
+		android_app->activity->assetManager);
+	std::shared_ptr<utility::RessourceProvider> ressourceProvider =
+		std::make_shared<utility::RessourceProvider>(androidSystemIO);
 
 	// Initialize XR platform data
 	evan::AndroidXrPlatform::AndroidPlatformData platformData {
@@ -67,7 +71,7 @@ void android_main(struct android_app *android_app)
 	android_app->userData = &commandHandler;
 
 	// Initialize XIDER application with Evan engine
-	xider::XIDER app(xrPlatform);
+	xider::XIDER app(xrPlatform, ressourceProvider);
 
 	std::cout << "XIDER Application initialized successfully" << std::endl;
 	std::cout << "Entering main application loop..." << std::endl;
@@ -98,7 +102,7 @@ void android_main(struct android_app *android_app)
 
 		// Application lifecycle
 		app.pollEvents();
-		if (app.gotNewEvents())
+		if (!app.gotNewEvents())
 			continue;
 		app.clear();
 		app.routine();

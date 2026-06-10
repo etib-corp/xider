@@ -49,12 +49,17 @@ namespace xider
 		/**
 		 * @brief Constructs a XIDER application with an Evan graphics engine.
 		 * @param platform The Evan platform to use for rendering.
+		 * @param ressourceProvider Shared pointer to the resource provider for
+		 * loading assets. This allows the application to access resources such
+		 * as textures, models, and shaders through a centralized resource
+		 * management system.
 		 *
 		 * This constructor initializes the XIDER application and configures the
 		 * renderer to use the provided Evan platform for all graphics
 		 * operations.
 		 */
-		XIDER(std::shared_ptr<evan::IPlatform> platform);
+		XIDER(std::shared_ptr<evan::IPlatform> platform,
+			  std::shared_ptr<utility::RessourceProvider> ressourceProvider);
 
 		/**
 		 * @brief Default destructor.

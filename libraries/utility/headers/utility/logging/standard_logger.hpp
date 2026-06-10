@@ -41,7 +41,7 @@ namespace utility::logging
  *
  * Logs DEBUG_LEVEL and INFO_LEVEL messages to stdout, WARNING_LEVEL and
  * ERROR_LEVEL to stderr. Adds ANSI color per level and includes source
- * file, line, and function name in the output.
+ * file, line, and function name in the output only for DEBUG_LEVEL.
  */
 class StandardLogger: public Logger
 {

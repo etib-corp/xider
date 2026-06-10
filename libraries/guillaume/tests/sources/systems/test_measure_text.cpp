@@ -93,10 +93,8 @@ namespace
 		std::unique_ptr<guillaume::Engine> engine { std::move(engineStub) };
 		std::shared_ptr<utility::RessourceProvider> ressourceProvider =
 			std::make_shared<utility::RessourceProvider>();
-		std::shared_ptr<utility::SystemIO> systemIO =
-			std::make_shared<utility::DefaultSystemIO>();
 		guillaume::systems::MeasureText measureTextSystem {
-			ressourceProvider, systemIO, engine
+			ressourceProvider, engine
 		};
 		guillaume::ecs::ComponentRegistry componentRegistry;
 		guillaume::ecs::EntityRegistryContainer entityRegistry;
