@@ -97,16 +97,19 @@ namespace xider
 		_evanEngine->addScene(sceneIndex);
 	}
 
-	void Engine::pollEvents(void)
-	{
-		auto events	  = _evanEngine->pollEvents();
-		auto callback = this->getEventCallback();
+    void Engine::pollEvents(void)
+    {
+        auto events      = _evanEngine->pollEvents();
+        auto callback = this->getEventCallback();
 
-		if (!callback) {
-			return;
-		}
-		for (auto &event: events) {
-			callback(event);
-		}
-	}
+        if (!callback) {
+            return;
+        }
+        if (events.empty()) {
+            this->setGotNewEvents(true);
+        }
+        for (auto &event: events) {
+            callback(event);
+        }
+    }
 }	 // namespace xider

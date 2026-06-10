@@ -54,7 +54,7 @@ namespace xider
 		 * renderer to use the provided Evan platform for all graphics
 		 * operations.
 		 */
-		XIDER(std::shared_ptr<evan::IPlatform> platform);
+		XIDER(std::shared_ptr<evan::IPlatform> platform, std::shared_ptr<utility::RessourceProvider> ressourceProvider);
 
 		/**
 		 * @brief Default destructor.

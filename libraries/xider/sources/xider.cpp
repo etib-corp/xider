@@ -26,8 +26,8 @@
 
 namespace xider
 {
-	XIDER::XIDER(std::shared_ptr<evan::IPlatform> platform)
-		: guillaume::Application<scenes::Main, scenes::Settings>()
+	XIDER::XIDER(std::shared_ptr<evan::IPlatform> platform, std::shared_ptr<utility::RessourceProvider> ressourceProvider)
+		: guillaume::Application<scenes::Main, scenes::Settings>(ressourceProvider)
 	{
 		getLogger().info() << "XIDER application initialized with Evan engine";
 
