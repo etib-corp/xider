@@ -34,8 +34,13 @@ int main(void)
 	auto linuxDesktopPlatform =
 		std::make_shared<evan::LinuxDesktopPlatform>("XIDER", 1280, 720);
 
+	// Create a resource provider using the default system IO implementation
+	utility::DefaultSystemIO defaultSystemIO;
+	auto ressourceProvider = std::make_shared<utility::RessourceProvider>(defaultSystemIO);
+
+
 	// Initialize XIDER application with Evan engine
-	xider::XIDER app(linuxDesktopPlatform);
+	xider::XIDER app(linuxDesktopPlatform, ressourceProvider);
 
 	return app.run();
 }
