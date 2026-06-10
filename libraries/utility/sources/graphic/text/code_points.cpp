@@ -65,4 +65,4 @@ namespace utility::graphic
 		}
 		return result;
 	}
-} // namespace utility::graphic
+}	 // namespace utility::graphic

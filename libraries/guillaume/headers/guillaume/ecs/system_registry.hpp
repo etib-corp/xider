@@ -83,7 +83,8 @@ namespace guillaume::ecs
 	 * @see System
 	 */
 	class SystemRegistry:
-		public utility::logging::Loggable<SystemRegistry, utility::logging::DefaultLogger>
+		public utility::logging::Loggable<SystemRegistry,
+										  utility::logging::DefaultLogger>
 	{
 		public:
 		private:

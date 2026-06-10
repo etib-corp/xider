@@ -59,7 +59,6 @@ namespace guillaume::ecs
 		return _signature;
 	}
 
-
 	void System::routine(ecs::ComponentRegistry &componentRegistry,
 						 ecs::EntityRegistry &entityRegistry,
 						 const ecs::EntityTreeTraveler &traveler)
@@ -81,7 +80,7 @@ namespace guillaume::ecs
 		if (hasPendingChanges) {
 			componentRegistry.resetChangedFlags();
 			getLogger().debug() << "System routine applied pending component "
-							  "changes";
+								   "changes";
 		}
 
 		std::size_t matchingEntities = 0;
@@ -99,7 +98,9 @@ namespace guillaume::ecs
 		// Per-frame cleanup
 		cleanup();
 
-		getLogger().debug() << "System routine finished. Visited entities: " << traversedEntities.size() << ", matching entities: " << matchingEntities;
+		getLogger().debug() << "System routine finished. Visited entities: "
+							<< traversedEntities.size()
+							<< ", matching entities: " << matchingEntities;
 
 		_activeComponentRegistry = nullptr;
 	}

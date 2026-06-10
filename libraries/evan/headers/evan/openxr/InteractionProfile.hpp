@@ -20,16 +20,18 @@
 namespace evan
 {
 	/**
-	 * @brief A utility class for managing OpenXR interaction profiles, including
-	 * retrieving runtime and system information, converting between strings and
-	 * paths, and enumerating bound sources for actions.
+	 * @brief A utility class for managing OpenXR interaction profiles,
+	 * including retrieving runtime and system information, converting between
+	 * strings and paths, and enumerating bound sources for actions.
 	 */
-	class InteractionProfile : protected utility::logging::Loggable<InteractionProfile, utility::logging::DefaultLogger>
+	class InteractionProfile:
+		protected utility::logging::Loggable<InteractionProfile,
+											 utility::logging::DefaultLogger>
 	{
 		public:
-
 		/**
-		 * @brief Deleted default constructor to prevent instantiation of this utility class.
+		 * @brief Deleted default constructor to prevent instantiation of this
+		 * utility class.
 		 */
 		InteractionProfile() = delete;
 
@@ -37,7 +39,8 @@ namespace evan
 		 * @brief Retrieves the name of the OpenXR runtime in use.
 		 *
 		 * @param instance The OpenXR instance handle.
-		 * @return The name of the OpenXR runtime, or an empty string on failure.
+		 * @return The name of the OpenXR runtime, or an empty string on
+		 * failure.
 		 */
 		static std::string getRuntimeName(XrInstance instance);
 
@@ -65,18 +68,21 @@ namespace evan
 		 * @brief Converts an OpenXR path to a string.
 		 * @param instance The OpenXR instance handle.
 		 * @param path The OpenXR path to convert.
-		 * @return The string representation of the OpenXR path, or an empty string on failure.
+		 * @return The string representation of the OpenXR path, or an empty
+		 * string on failure.
 		 */
 		static std::string pathToString(XrInstance instance, XrPath path);
 
 		/**
-		 * @brief Retrieves the current interaction profile path for a given user path.
+		 * @brief Retrieves the current interaction profile path for a given
+		 * user path.
 		 *
 		 * @param instance The OpenXR instance handle.
 		 * @param session The OpenXR session handle.
-		 * @param userPathString The string representation of the user path (e.g., "/user/hand/left").
-		 * @return The string representation of the current interaction profile path,
-		 * or an empty string on failure.
+		 * @param userPathString The string representation of the user path
+		 * (e.g., "/user/hand/left").
+		 * @return The string representation of the current interaction profile
+		 * path, or an empty string on failure.
 		 */
 		static std::string
 			getCurrentInteractionProfilePath(XrInstance instance,
@@ -89,7 +95,8 @@ namespace evan
 		 * @param instance The OpenXR instance handle.
 		 * @param session The OpenXR session handle.
 		 * @param action The OpenXR action handle.
-		 * @return A vector of OpenXR paths representing the bound sources for the action.
+		 * @return A vector of OpenXR paths representing the bound sources for
+		 * the action.
 		 */
 		static std::vector<XrPath>
 			enumerateBoundSourcesForAction(XrInstance instance,
@@ -101,12 +108,12 @@ namespace evan
 		 * @param instance The OpenXR instance handle.
 		 * @param session The OpenXR session handle.
 		 * @param action The OpenXR action handle.
-		 * @return A vector of strings representing the bound source paths for the action.
+		 * @return A vector of strings representing the bound source paths for
+		 * the action.
 		 */
 		static std::vector<std::string>
 			enumerateBoundSourcePathStringsForAction(XrInstance instance,
 													 XrSession session,
 													 XrAction action);
-
 	};
 }	 // namespace evan

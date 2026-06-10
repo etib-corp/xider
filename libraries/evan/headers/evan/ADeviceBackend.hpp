@@ -41,7 +41,9 @@ namespace evan
 	 * device backends, which will implement the pure virtual functions defined
 	 * here.
 	 */
-	class ADeviceBackend : protected utility::logging::Loggable<ADeviceBackend, utility::logging::DefaultLogger>
+	class ADeviceBackend:
+		protected utility::logging::Loggable<ADeviceBackend,
+											 utility::logging::DefaultLogger>
 	{
 		public:
 		/**

@@ -46,9 +46,17 @@ namespace guillaume
 	/**
 	 * @brief Scene manager class responsible for managing scenes in the
 	 * application.
+	 * @tparam DefaultSceneType The default scene type to activate when the
+	 * application starts. Must be one of the registered SceneTypes.
+	 * @tparam SceneTypes Variadic template parameter pack for scene types used
+	 * in the application. Each scene type must inherit from the Scene class.
 	 */
+	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
+		requires IsOneOf<DefaultSceneType, SceneTypes...>
 	class SceneManager:
-		public utility::logging::Loggable<SceneManager, utility::logging::DefaultLogger>
+		public utility::logging::Loggable<
+			SceneManager<DefaultSceneType, SceneTypes...>,
+			utility::logging::DefaultLogger>
 	{
 		private:
 		std::map<std::type_index, std::unique_ptr<Scene>>
@@ -95,6 +103,15 @@ namespace guillaume
 		 * @return True when the active scene points to a registered scene.
 		 */
 		bool hasActiveScene(void) const noexcept;
+
+		/**
+		 * @brief Process a pending scene transition request from the active
+		 * scene. Calls onExit() on the current scene, switches the active
+		 * scene, and calls onEnter() on the new scene.
+		 * @throws std::runtime_error if the requested next scene type is not
+		 * registered.
+		 */
+		void processSceneTransition(void);
 
 		/**
 		 * @brief Switch to a different scene.

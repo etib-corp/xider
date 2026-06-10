@@ -32,40 +32,40 @@
 
 #ifdef __ANDROID__
 
-#include <android/log.h>
-#include <string>
+	#include <android/log.h>
+	#include <string>
 
-#include "utility/logging/logger.hpp"
+	#include "utility/logging/logger.hpp"
 
 namespace utility::logging
 {
 
-/**
- * @brief Android logcat logger implementation.
- *
- * Routes all messages to Android logcat with appropriate priorities.
- */
-class AndroidLogger: public Logger
-{
-	public:
 	/**
-	 * @brief Constructor with logger name.
-	 * @param name The name of the logger (used as logcat tag).
+	 * @brief Android logcat logger implementation.
+	 *
+	 * Routes all messages to Android logcat with appropriate priorities.
 	 */
-	AndroidLogger(const std::string &name);
+	class AndroidLogger: public Logger
+	{
+		public:
+		/**
+		 * @brief Constructor with logger name.
+		 * @param name The name of the logger (used as logcat tag).
+		 */
+		AndroidLogger(const std::string &name);
 
-	/**
-	 * @brief Destructor.
-	 */
-	~AndroidLogger(void) override;
+		/**
+		 * @brief Destructor.
+		 */
+		~AndroidLogger(void) override;
 
-	/**
-	 * @brief Output a log record to Android logcat.
-	 * @param record The log record to output.
-	 */
-	void output(const LogRecord &record) override;
-};
+		/**
+		 * @brief Output a log record to Android logcat.
+		 * @param record The log record to output.
+		 */
+		void output(const LogRecord &record) override;
+	};
 
 }	 // namespace utility::logging
 
-#endif // __ANDROID__
+#endif	  // __ANDROID__

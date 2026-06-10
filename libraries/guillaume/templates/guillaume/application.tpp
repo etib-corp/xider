@@ -27,22 +27,28 @@
 namespace guillaume
 {
 
-	template<InheritFromScene... SceneTypes> template<typename PhaseType>
-	void Application<SceneTypes...>::runPhase(PhaseType &phaseDefinition)
+	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
+	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+	    template<typename PhaseType>
+	void Application<DefaultSceneType, SceneTypes...>::runPhase(
+		PhaseType &phaseDefinition)
 	{
 		const ecs::Phase phase					= phaseDefinition.getPhase();
 		const ecs::EntityTreeTraveler &traveler = phaseDefinition.getTraveler();
 
-		this->getLogger().debug() << "Running systems for phase: " << static_cast<int>(phase);
+		this->getLogger().debug()
+			<< "Running systems for phase: " << static_cast<int>(phase);
 		for (const auto &system: _systemRegistry.getSystemsByPhase(phase)) {
 			system->routine(_sceneManager->getActiveComponentRegistry(),
 							_sceneManager->getActiveEntityRegistry(), traveler);
 		}
-		this->getLogger().debug() << "Finished systems for phase: " << static_cast<int>(phase);
+		this->getLogger().debug()
+			<< "Finished systems for phase: " << static_cast<int>(phase);
 	}
 
-	template<InheritFromScene... SceneTypes>
-	void Application<SceneTypes...>::registerCoreSystems()
+	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
+	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+	void Application<DefaultSceneType, SceneTypes...>::registerCoreSystems()
 	{
 		_systemRegistry.registerNewSystem(
 			std::make_unique<systems::MeasureText>(_ressourceProvider,
@@ -80,8 +86,10 @@ namespace guillaume
 			std::make_unique<systems::RectangleRender>(_engine));
 	}
 
-	template<InheritFromScene... SceneTypes>
-	Application<SceneTypes...>::Application(std::shared_ptr<utility::RessourceProvider> ressourceProvider)
+	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
+	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+	Application<DefaultSceneType, SceneTypes...>::Application(
+		std::shared_ptr<utility::RessourceProvider> ressourceProvider)
 		: _ressourceProvider(std::move(ressourceProvider))
 		, _engine(nullptr)
 		, _sceneManager(nullptr)
@@ -91,16 +99,20 @@ namespace guillaume
 		, _systemPhases()
 	{
 		registerCoreSystems();
-		_sceneManager = std::make_unique<SceneManagerFiller<SceneTypes...>>();
+		_sceneManager =
+			std::make_unique<SceneManager<DefaultSceneType, SceneTypes...>>();
 	}
 
-	template<InheritFromScene... SceneTypes>
-	Application<SceneTypes...>::~Application(void)
+	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
+	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+	Application<DefaultSceneType, SceneTypes...>::~Application(void)
 	{
 	}
 
-	template<InheritFromScene... SceneTypes>
-	void Application<SceneTypes...>::setEngine(std::unique_ptr<Engine> engine)
+	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
+	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+	void Application<DefaultSceneType, SceneTypes...>::setEngine(
+		std::unique_ptr<Engine> engine)
 	{
 		_engine = std::move(engine);
 		_engine->setEventCallback(
@@ -114,8 +126,9 @@ namespace guillaume
 		}
 	}
 
-	template<InheritFromScene... SceneTypes>
-	void Application<SceneTypes...>::routine(void)
+	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
+	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+	void Application<DefaultSceneType, SceneTypes...>::routine(void)
 	{
 		std::apply(
 			[this](auto &...phaseDefinition) {
@@ -124,32 +137,37 @@ namespace guillaume
 			_systemPhases);
 	}
 
-	template<InheritFromScene... SceneTypes>
-	void Application<SceneTypes...>::pollEvents(void)
+	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
+	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+	void Application<DefaultSceneType, SceneTypes...>::pollEvents(void)
 	{
 		_engine->pollEvents();
 	}
 
-	template<InheritFromScene... SceneTypes>
-	void Application<SceneTypes...>::clear(void)
+	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
+	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+	void Application<DefaultSceneType, SceneTypes...>::clear(void)
 	{
 		_engine->clear();
 	}
 
-	template<InheritFromScene... SceneTypes>
-	void Application<SceneTypes...>::present(void)
+	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
+	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+	void Application<DefaultSceneType, SceneTypes...>::present(void)
 	{
 		_engine->present();
 	}
 
-	template<InheritFromScene... SceneTypes>
-	bool Application<SceneTypes...>::gotNewEvents(void) const
+	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
+	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+	bool Application<DefaultSceneType, SceneTypes...>::gotNewEvents(void) const
 	{
 		return _engine->gotNewEvents();
 	}
 
-	template<InheritFromScene... SceneTypes>
-	bool Application<SceneTypes...>::shouldQuit(void)
+	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
+	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+	bool Application<DefaultSceneType, SceneTypes...>::shouldQuit(void)
 	{
 		if (_quitEventSubscriber.hasPendingEvents()) {
 			_quitEventSubscriber.getNextEvent();
@@ -158,8 +176,9 @@ namespace guillaume
 		return false;
 	}
 
-	template<InheritFromScene... SceneTypes>
-	int Application<SceneTypes...>::run(void)
+	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
+	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+	int Application<DefaultSceneType, SceneTypes...>::run(void)
 	{
 		this->getLogger().info() << "Entering main loop";
 		while (!shouldQuit()) {
@@ -170,13 +189,15 @@ namespace guillaume
 				}
 				_engine->clear();
 				routine();
+				_sceneManager->processSceneTransition();
 				_engine->present();
 			} catch (const std::exception &exception) {
-				this->getLogger().error() << std::string("Application error: ") << exception.what();
+				this->getLogger().error()
+					<< std::string("Application error: ") << exception.what();
 				return EXIT_FAILURE;
 			}
 		}
 		this->getLogger().info() << "Exiting main loop";
 		return EXIT_SUCCESS;
 	}
-}	 // namespace guillaume
+}  // namespace guillaume

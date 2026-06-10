@@ -55,17 +55,19 @@ namespace evan
 		/**
 		 * @brief Prepares the current frame for rendering in an OpenXR session.
 		 *
-		 * This method performs frame synchronization and view localization for OpenXR rendering.
-		 * It waits for the next frame, begins frame processing, and retrieves the current view
-		 * configurations. If the runtime indicates rendering should be skipped, the frame is
-		 * properly concluded without processing.
+		 * This method performs frame synchronization and view localization for
+		 * OpenXR rendering. It waits for the next frame, begins frame
+		 * processing, and retrieves the current view configurations. If the
+		 * runtime indicates rendering should be skipped, the frame is properly
+		 * concluded without processing.
 		 *
-		 * @param[in,out] swapchainContext Reference to the swapchain context that will be
-		 *                                   populated with view information for rendering.
+		 * @param[in,out] swapchainContext Reference to the swapchain context
+		 * that will be populated with view information for rendering.
 		 *
-		 * @return true if frame preprocessing completed successfully and rendering should proceed,
-		 *         false if the session is not running, if any OpenXR calls fail, or if the
-		 *         runtime indicates rendering should be skipped for this frame.
+		 * @return true if frame preprocessing completed successfully and
+		 * rendering should proceed, false if the session is not running, if any
+		 * OpenXR calls fail, or if the runtime indicates rendering should be
+		 * skipped for this frame.
 		 *
 		 * @details
 		 * The method performs the following operations:
@@ -77,9 +79,10 @@ namespace evan
 		 * - If rendering is skipped, ends the frame with empty layer data
 		 * - Locates and stores the current view poses and positions
 		 *
-		 * @note The swapchainContext must be castable to evan::XrSwapchainContext.
-		 * @note On early return (false), the frame may still be submitted to the runtime
-		 *       with empty content if shouldRender is false.
+		 * @note The swapchainContext must be castable to
+		 * evan::XrSwapchainContext.
+		 * @note On early return (false), the frame may still be submitted to
+		 * the runtime with empty content if shouldRender is false.
 		 *
 		 * @see xrWaitFrame, xrBeginFrame, xrEndFrame, xrLocateViews
 		 */
@@ -88,18 +91,20 @@ namespace evan
 		/**
 		 * @brief Processes a frame by releasing the OpenXR swapchain image.
 		 *
-		 * This function releases the swapchain image associated with the given presentation
-		 * information back to the OpenXR runtime for reuse.
+		 * This function releases the swapchain image associated with the given
+		 * presentation information back to the OpenXR runtime for reuse.
 		 *
-		 * @param presentInfo The Vulkan present information for the frame (currently unused).
-		 * @param swapchainImage Reference to the swapchain image to be released. Must be
-		 *                       castable to evan::XrSwapchainImage.
+		 * @param presentInfo The Vulkan present information for the frame
+		 * (currently unused).
+		 * @param swapchainImage Reference to the swapchain image to be
+		 * released. Must be castable to evan::XrSwapchainImage.
 		 *
-		 * @return true if the swapchain image was successfully released, false otherwise.
+		 * @return true if the swapchain image was successfully released, false
+		 * otherwise.
 		 *
 		 * @retval true The OpenXR swapchain image was released successfully.
-		 * @retval false The xrReleaseSwapchainImage call failed. Error details are logged
-		 *               to stderr.
+		 * @retval false The xrReleaseSwapchainImage call failed. Error details
+		 * are logged to stderr.
 		 *
 		 * @see XrSwapchainImageReleaseInfo
 		 * @see xrReleaseSwapchainImage
@@ -110,25 +115,28 @@ namespace evan
 		/**
 		 * @brief Postprocesses a frame and submits it to the OpenXR compositor.
 		 *
-		 * This method updates the projection layer views for the given swapchain context,
-		 * constructs a composition layer with the updated views, and submits the frame
-		 * to the OpenXR runtime via xrEndFrame().
+		 * This method updates the projection layer views for the given
+		 * swapchain context, constructs a composition layer with the updated
+		 * views, and submits the frame to the OpenXR runtime via xrEndFrame().
 		 *
-		 * @param swapchainContext Reference to the swapchain context to postprocess.
-		 *                         Must be a valid evan::XrSwapchainContext instance.
+		 * @param swapchainContext Reference to the swapchain context to
+		 * postprocess. Must be a valid evan::XrSwapchainContext instance.
 		 *
-		 * @return true if the frame was successfully submitted to the OpenXR runtime,
-		 *         false if xrEndFrame() failed or returned XR_SUCCESS was not achieved.
+		 * @return true if the frame was successfully submitted to the OpenXR
+		 * runtime, false if xrEndFrame() failed or returned XR_SUCCESS was not
+		 * achieved.
 		 *
 		 * @details
 		 * - Updates projection layer views in the swapchain context
 		 * - Constructs an XrCompositionLayerProjection with the updated views
-		 * - Sets the frame end info with predicted display time and opaque blend mode
+		 * - Sets the frame end info with predicted display time and opaque
+		 * blend mode
 		 * - Submits the frame to the OpenXR session
 		 * - Logs errors to stderr if frame submission fails
 		 *
-		 * @note The swapchain context is cast to evan::XrSwapchainContext during processing.
-		 *       Ensure the provided context is of the correct derived type.
+		 * @note The swapchain context is cast to evan::XrSwapchainContext
+		 * during processing. Ensure the provided context is of the correct
+		 * derived type.
 		 */
 		bool postprocessFrame(ASwapchainContext &swapchainContext) override;
 
@@ -212,14 +220,14 @@ namespace evan
 		 * environment. Polling actions is essential for enabling responsive and
 		 * interactive experiences in the XR application.
 		 *
-		 * @note The implementation of this method may involve querying the action
-		 * manager for the state of various input actions and generating events based
-		 * on the retrieved state, which can then be processed by the application to
-		 * respond to user input in the XR environment.
+		 * @note The implementation of this method may involve querying the
+		 * action manager for the state of various input actions and generating
+		 * events based on the retrieved state, which can then be processed by
+		 * the application to respond to user input in the XR environment.
 		 *
-		 * @return A vector of unique pointers to events representing the current state
-		 * of all managed actions, which can be used by the application to respond to
-		 * user input in the XR environment.
+		 * @return A vector of unique pointers to events representing the
+		 * current state of all managed actions, which can be used by the
+		 * application to respond to user input in the XR environment.
 		 */
 		std::vector<std::unique_ptr<utility::event::Event>> pollActions();
 
@@ -297,8 +305,7 @@ namespace evan
 		 * manage rendering for multiple views, such as for stereo rendering in
 		 * VR applications.
 		 */
-		const static size_t _handCount =
-			2;
+		const static size_t _handCount = 2;
 
 		/**
 		 * Subaction paths for hand input actions, used to differentiate

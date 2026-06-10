@@ -13,38 +13,47 @@ evan::RenderObject::RenderObject(
 	const std::string &pipelineLayer)
 	: _pipelineLayer(pipelineLayer)
 {
-	this->getLogger().info() << "Creating RenderObject with pipeline layer: " << pipelineLayer;
+	this->getLogger().info()
+		<< "Creating RenderObject with pipeline layer: " << pipelineLayer;
 
-	this->getLogger().info() << "Processing raw mesh data to create GPU meshes...";
+	this->getLogger().info()
+		<< "Processing raw mesh data to create GPU meshes...";
 	for (const auto &[id, mesh]: rawObjects) {
-		this->getLogger().info() << "Processing mesh with ID: " << id << " and vertex count: " << mesh.getVertices().size() << " and index count: " << mesh.getIndices().size();
+		this->getLogger().info()
+			<< "Processing mesh with ID: " << id
+			<< " and vertex count: " << mesh.getVertices().size()
+			<< " and index count: " << mesh.getIndices().size();
 		std::vector<GPUVertex> gpuVertices;
 
-		this->getLogger().info() << "Converting vertices to GPUVertex format...";
+		this->getLogger().info()
+			<< "Converting vertices to GPUVertex format...";
 		for (const auto &vertex: mesh.getVertices()) {
 			this->getLogger().info() << "Converting vertex with position: ("
-				+ std::to_string(vertex.getPosition().getX()) + ", "
-				+ std::to_string(vertex.getPosition().getY()) + ", "
-				+ std::to_string(vertex.getPosition().getZ())
-				+ ") and normal: (" + std::to_string(vertex.getNormal().x)
-				+ ", " + std::to_string(vertex.getNormal().y) + ", "
-				+ std::to_string(vertex.getNormal().z) + ") and texCoord: ("
-				+ std::to_string(vertex.getTextureCoordinates().x) + ", "
-				+ std::to_string(vertex.getTextureCoordinates().y) + ")";
+					+ std::to_string(vertex.getPosition().getX()) + ", "
+					+ std::to_string(vertex.getPosition().getY()) + ", "
+					+ std::to_string(vertex.getPosition().getZ())
+					+ ") and normal: (" + std::to_string(vertex.getNormal().x)
+					+ ", " + std::to_string(vertex.getNormal().y) + ", "
+					+ std::to_string(vertex.getNormal().z) + ") and texCoord: ("
+					+ std::to_string(vertex.getTextureCoordinates().x) + ", "
+					+ std::to_string(vertex.getTextureCoordinates().y) + ")";
 			GPUVertex gpuVertex = GPUVertex::createFromVertexD(vertex);
 			gpuVertices.push_back(gpuVertex);
 		}
 
-        this->getLogger().info() << "Creating GPUMesh for mesh ID: " << id;
+		this->getLogger().info() << "Creating GPUMesh for mesh ID: " << id;
 
-		_meshes.emplace_back(std::make_shared<GPUMesh>(deviceContext, gpuVertices, mesh.getIndices(), id));
+		_meshes.emplace_back(std::make_shared<GPUMesh>(
+			deviceContext, gpuVertices, mesh.getIndices(), id));
 	}
-    this->getLogger().info() << "All meshes processed and GPU meshes created successfully.";
+	this->getLogger().info()
+		<< "All meshes processed and GPU meshes created successfully.";
 }
 
 evan::RenderObject::~RenderObject()
 {
-    this->getLogger().info() << "Destroying RenderObject with pipeline layer: " << _pipelineLayer;
+	this->getLogger().info()
+		<< "Destroying RenderObject with pipeline layer: " << _pipelineLayer;
 }
 
 ////////////////////
@@ -53,7 +62,9 @@ evan::RenderObject::~RenderObject()
 
 void evan::RenderObject::destroy(VkDevice device)
 {
-    this->getLogger().info() << "Destroying RenderObject resources for pipeline layer: " << _pipelineLayer;
+	this->getLogger().info()
+		<< "Destroying RenderObject resources for pipeline layer: "
+		<< _pipelineLayer;
 	for (const auto &mesh: _meshes) {
 		mesh->destroy(device);
 	}
@@ -63,7 +74,8 @@ void evan::RenderObject::destroy(VkDevice device)
 // Getters //
 /////////////
 
-const std::vector<std::shared_ptr<evan::GPUMesh>> &evan::RenderObject::getMeshes() const
+const std::vector<std::shared_ptr<evan::GPUMesh>> &
+	evan::RenderObject::getMeshes() const
 {
 	return _meshes;
 }

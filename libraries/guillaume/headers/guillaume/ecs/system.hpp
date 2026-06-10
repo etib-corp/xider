@@ -51,7 +51,8 @@ namespace guillaume::ecs
 	 * @see SystemFiller
 	 */
 	class System:
-		protected utility::logging::Loggable<System, utility::logging::DefaultLogger>
+		protected utility::logging::Loggable<System,
+											 utility::logging::DefaultLogger>
 	{
 		private:
 		Phase _phase;					 ///< Update phase of the system
@@ -67,7 +68,8 @@ namespace guillaume::ecs
 		 * @tparam ComponentTypes The component types that define the system's
 		 * signature.
 		 */
-		template<InheritFromComponent... ComponentTypes> void setSignature(void);
+		template<InheritFromComponent... ComponentTypes>
+		void setSignature(void);
 
 		/**
 		 * @brief Get the active component registry for the current update
@@ -89,8 +91,8 @@ namespace guillaume::ecs
 		 * @param entityIdentifier The target entity.
 		 * @return True if the component exists, false otherwise.
 		 */
-		template<InheritFromComponent ComponentType>
-		bool hasComponent(const ecs::Entity::Identifier &entityIdentifier) const;
+		template<InheritFromComponent ComponentType> bool
+			hasComponent(const ecs::Entity::Identifier &entityIdentifier) const;
 
 		/**
 		 * @brief Get a mutable component from the active component registry.

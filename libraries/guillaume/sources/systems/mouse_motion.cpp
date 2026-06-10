@@ -24,7 +24,8 @@
 
 namespace guillaume::systems
 {
-	MouseMotion::MouseMotion(event::EventBus &eventBus, std::unique_ptr<Engine> &engine)
+	MouseMotion::MouseMotion(event::EventBus &eventBus,
+							 std::unique_ptr<Engine> &engine)
 		: ecs::SystemFiller<components::MouseHoverInteraction,
 							components::Transform, components::Bound>(
 			  ecs::Phase::Event)

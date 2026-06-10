@@ -111,19 +111,20 @@ namespace utility::event
 			Semicolon  = 51, /**< Semicolon key */
 			Apostrophe = 52, /**< Apostrophe key */
 			Grave =
-				53, /**< Grave key (grave accent). Located in the top left corner
-					   (on both ANSI and ISO keyboards). Produces GRAVE ACCENT and
-					   TILDE in a US Windows layout and in US and UK Mac layouts
-					   on ANSI keyboards, GRAVE ACCENT and NOT SIGN in a UK
-					   Windows layout, SECTION SIGN and PLUS-MINUS SIGN in US and
-					   UK Mac layouts on ISO keyboards, SECTION SIGN and DEGREE
-					   SIGN in a Swiss German layout (Mac: only on ISO
-					   keyboards), CIRCUMFLEX ACCENT and DEGREE SIGN in a German
-					   layout (Mac: only on ISO keyboards), SUPERSCRIPT TWO and
-					   TILDE in a French Windows layout, COMMERCIAL AT and NUMBER
-					   SIGN in a French Mac layout on ISO keyboards, and LESS-THAN
-					   SIGN and GREATER-THAN SIGN in a Swiss German, German, or
-					   French Mac layout on ANSI keyboards. */
+				53,		 /**< Grave key (grave accent). Located in the top left
+							corner	  (on both ANSI and ISO keyboards). Produces GRAVE
+							ACCENT and	  TILDE in a US Windows layout and in US and UK
+							Mac layouts	  on ANSI keyboards, GRAVE ACCENT and NOT SIGN
+							in a UK	  Windows layout, SECTION SIGN and PLUS-MINUS SIGN
+							in US and	  UK Mac layouts on ISO keyboards, SECTION SIGN
+							and DEGREE	  SIGN in a Swiss German layout (Mac: only on
+							ISO	  keyboards), CIRCUMFLEX ACCENT and DEGREE SIGN in a
+							German	  layout (Mac: only on ISO keyboards), SUPERSCRIPT
+							TWO and	  TILDE in a French Windows layout, COMMERCIAL AT
+							and NUMBER	  SIGN in a French Mac layout on ISO keyboards,
+							and LESS-THAN	  SIGN and GREATER-THAN SIGN in a Swiss
+							German, German, or	  French Mac layout on ANSI keyboards.
+						  */
 			Comma  = 54, /**< Comma key */
 			Period = 55, /**< Period key */
 			Slash  = 56, /**< Slash key */
@@ -360,124 +361,124 @@ namespace utility::event
 		 * Virtual key codes represent actual keys pressed on the keyboard,
 		 * including printable characters and special function keys.
 		 */
-		enum class				 KeyCode : std::int32_t {
-			Unknown				 = -0x00000001, /**< Unknown key */
-			Space			 = 0x00000020u, /**< Space key (' ') */
-			Apostrophe		 = 0x00000027u, /**< Apostrophe key (apostrophe) */
-			Comma			 = 0x0000002Cu, /**< Comma key (',') */
-			Minus				 = 0x0000002Du, /**< Minus key ('-') */
-			Period				 = 0x0000002Eu, /**< Period key ('.') */
-			Slash				 = 0x0000002Fu, /**< Slash key ('/') */
-			Num0				 = 0x00000030u, /**< 0 key ('0') */
-			Num1				 = 0x00000031u, /**< 1 key ('1') */
-			Num2				 = 0x00000032u, /**< 2 key ('2') */
-			Num3				 = 0x00000033u, /**< 3 key ('3') */
-			Num4				 = 0x00000034u, /**< 4 key ('4') */
-			Num5				 = 0x00000035u, /**< 5 key ('5') */
-			Num6				 = 0x00000036u, /**< 6 key ('6') */
-			Num7				 = 0x00000037u, /**< 7 key ('7') */
-			Num8				 = 0x00000038u, /**< 8 key ('8') */
-			Num9				 = 0x00000039u, /**< 9 key ('9') */
-			Semicolon		 = 0x0000003Bu, /**< Semicolon key (';') */
-			Equals			 = 0x0000003Du, /**< Equals key ('=') */
-			A				 = 0x00000041u, /**< A key ('a') */
-			B				 = 0x00000042u, /**< B key ('b') */
-			C				 = 0x00000043u, /**< C key ('c') */
-			D				 = 0x00000044u, /**< D key ('d') */
-			E				 = 0x00000045u, /**< E key ('e') */
-			F				 = 0x00000046u, /**< F key ('f') */
-			G				 = 0x00000047u, /**< G key ('g') */
-			H				 = 0x00000048u, /**< H key ('h') */
-			I				 = 0x00000049u, /**< I key ('i') */
-			J				 = 0x0000004Au, /**< J key ('j') */
-			K				 = 0x0000004Bu, /**< K key ('k') */
-			L				 = 0x0000004Cu, /**< L key ('l') */
-			M				 = 0x0000004Du, /**< M key ('m') */
-			N				 = 0x0000004Eu, /**< N key ('n') */
-			O				 = 0x0000004Fu, /**< O key ('o') */
-			P				 = 0x00000050u, /**< P key ('p') */
-			Q				 = 0x00000051u, /**< Q key ('q') */
-			R				 = 0x00000052u, /**< R key ('r') */
-			S				 = 0x00000053u, /**< S key ('s') */
-			T				 = 0x00000054u, /**< T key ('t') */
-			U				 = 0x00000055u, /**< U key ('u') */
-			V				 = 0x00000056u, /**< V key ('v') */
-			W				 = 0x00000057u, /**< W key ('w') */
-			X				 = 0x00000058u, /**< X key ('x') */
-			Y				 = 0x00000059u, /**< Y key ('y') */
-			Z				 = 0x0000005Au, /**< Z key ('z') */
-			LeftBracket			= 0x0000005Bu, /**< Left bracket key ('[') */
-			Backslash			= 0x0000005Cu, /**< Backslash key (backslash) */
-			RightBracket		= 0x0000005Du, /**< Right bracket key (']') */
-			Grave			    = 0x00000060u, /**< Grave key (grave accent) */
-			Escape			    = 0x00000100u, /**< Escape key (0x1B) */
-			Enter			    = 0x00000101u, /**< Return key (CR, 0x0D) */
-			Tab			        = 0x00000102u, /**< Tab key (TAB, 0x09) */
-			Backspace			= 0x00000103u, /**< Backspace key (BS, 0x08) */
-			Insert			    = 0x00000104u, /**< Insert key */
-			Delete		    = 0x00000105u, /**< Delete key (0x7F) */
-			Right				 	= 0x00000106u, /**< Right arrow key */
-			Left				  	= 0x00000107u, /**< Left arrow key */
-			Down				  	= 0x00000108u, /**< Down arrow key */
-			Up				    	= 0x00000109u, /**< Up arrow key */
-			PageUp				   	= 0x0000010Au, /**< Page Up key */
-			PageDown				= 0x0000010Bu, /**< Page Down key */
-			Home				    = 0x0000010Cu, /**< Home key */
-			End				      	= 0x0000010Du, /**< End key */
-			CapsLock				= 0x00000118u, /**< Caps Lock key */
-			ScrollLock				= 0x00000119u, /**< Scroll Lock key */
-			NumLockClear			= 0x0000011Au, /**< Num Lock key */
-			PrintScreen				= 0x0000011Bu, /**< Print Screen key */
-			Pause				    = 0x0000011Cu, /**< Pause key */
-			F1				  		= 0x00000122u, /**< F1 key */
-			F2				  		= 0x00000123u, /**< F2 key */
-			F3				  		= 0x00000124u, /**< F3 key */
-			F4				  		= 0x00000125u, /**< F4 key */
-			F5				  		= 0x00000126u, /**< F5 key */
-			F6				  		= 0x00000127u, /**< F6 key */
-			F7				  		= 0x00000128u, /**< F7 key */
-			F8				  		= 0x00000129u, /**< F8 key */
-			F9				  		= 0x0000012Au, /**< F9 key */
-			F10				 		= 0x0000012Bu, /**< F10 key */
-			F11				 		= 0x0000012Cu, /**< F11 key */
-			F12				 		= 0x0000012Du, /**< F12 key */
-			F13				 		= 0x0000012Eu, /**< F13 key */
-			F14				 		= 0x0000012Fu, /**< F14 key */
-			F15				 		= 0x00000130u, /**< F15 key */
-			F16				 		= 0x00000131u, /**< F16 key */
-			F17				 		= 0x00000132u, /**< F17 key */
-			F18				 		= 0x00000133u, /**< F18 key */
-			F19				 		= 0x00000134u, /**< F19 key */
-			F20				 		= 0x00000135u, /**< F20 key */
-			F21				 		= 0x00000136u, /**< F21 key */
-			F22				 		= 0x00000137u, /**< F22 key */
-			F23				 		= 0x00000138u, /**< F23 key */
-			F24				 		= 0x00000139u, /**< F24 key */
-			KeyPad0				 	= 0x00000140u, /**< Keypad 0 key */
-			KeyPad1				 	= 0x00000141u, /**< Keypad 1 key */
-			KeyPad2				 	= 0x00000142u, /**< Keypad 2 key */
-			KeyPad3				 	= 0x00000143u, /**< Keypad 3 key */
-			KeyPad4				 	= 0x00000144u, /**< Keypad 4 key */
-			KeyPad5				 	= 0x00000145u, /**< Keypad 5 key */
-			KeyPad6				 	= 0x00000146u, /**< Keypad 6 key */
-			KeyPad7				 	= 0x00000147u, /**< Keypad 7 key */
-			KeyPad8				 	= 0x00000148u, /**< Keypad 8 key */
-			KeyPad9				 	= 0x00000149u, /**< Keypad 9 key */
-			KeyPadPeriod			= 0x0000014Au, /**< Keypad period key */
-			KeyPadDivide			= 0x0000014Bu, /**< Keypad divide key */
-			KeyPadMultiply			= 0x0000014Cu, /**< Keypad multiply key */
-			KeyPadMinus				= 0x0000014Du, /**< Keypad minus key */
-			KeyPadPlus				= 0x0000014Eu, /**< Keypad plus key */
-			KeyPadEnter				= 0x0000014Fu, /**< Keypad enter key */
-			KeyPadEquals			= 0x00000150u, /**< Keypad equals key */
-			LeftShift				= 0x00000154u, /**< Left shift key */
-			LeftControl				= 0x00000155u, /**< Left control key */
-			LeftAlt				    = 0x00000156u, /**< Left alt key */
-			LeftGui				    = 0x00000157u, /**< Left GUI key */
-			RightShift				= 0x00000158u, /**< Right shift key */
-			RightControl			= 0x00000159u, /**< Right control key */
-			RightAlt				= 0x0000015Au, /**< Right alt key */
-			RightGui				= 0x0000015Bu, /**< Right GUI key */
+		enum class KeyCode : std::int32_t {
+			Unknown		   = -0x00000001, /**< Unknown key */
+			Space		   = 0x00000020u, /**< Space key (' ') */
+			Apostrophe	   = 0x00000027u, /**< Apostrophe key (apostrophe) */
+			Comma		   = 0x0000002Cu, /**< Comma key (',') */
+			Minus		   = 0x0000002Du, /**< Minus key ('-') */
+			Period		   = 0x0000002Eu, /**< Period key ('.') */
+			Slash		   = 0x0000002Fu, /**< Slash key ('/') */
+			Num0		   = 0x00000030u, /**< 0 key ('0') */
+			Num1		   = 0x00000031u, /**< 1 key ('1') */
+			Num2		   = 0x00000032u, /**< 2 key ('2') */
+			Num3		   = 0x00000033u, /**< 3 key ('3') */
+			Num4		   = 0x00000034u, /**< 4 key ('4') */
+			Num5		   = 0x00000035u, /**< 5 key ('5') */
+			Num6		   = 0x00000036u, /**< 6 key ('6') */
+			Num7		   = 0x00000037u, /**< 7 key ('7') */
+			Num8		   = 0x00000038u, /**< 8 key ('8') */
+			Num9		   = 0x00000039u, /**< 9 key ('9') */
+			Semicolon	   = 0x0000003Bu, /**< Semicolon key (';') */
+			Equals		   = 0x0000003Du, /**< Equals key ('=') */
+			A			   = 0x00000041u, /**< A key ('a') */
+			B			   = 0x00000042u, /**< B key ('b') */
+			C			   = 0x00000043u, /**< C key ('c') */
+			D			   = 0x00000044u, /**< D key ('d') */
+			E			   = 0x00000045u, /**< E key ('e') */
+			F			   = 0x00000046u, /**< F key ('f') */
+			G			   = 0x00000047u, /**< G key ('g') */
+			H			   = 0x00000048u, /**< H key ('h') */
+			I			   = 0x00000049u, /**< I key ('i') */
+			J			   = 0x0000004Au, /**< J key ('j') */
+			K			   = 0x0000004Bu, /**< K key ('k') */
+			L			   = 0x0000004Cu, /**< L key ('l') */
+			M			   = 0x0000004Du, /**< M key ('m') */
+			N			   = 0x0000004Eu, /**< N key ('n') */
+			O			   = 0x0000004Fu, /**< O key ('o') */
+			P			   = 0x00000050u, /**< P key ('p') */
+			Q			   = 0x00000051u, /**< Q key ('q') */
+			R			   = 0x00000052u, /**< R key ('r') */
+			S			   = 0x00000053u, /**< S key ('s') */
+			T			   = 0x00000054u, /**< T key ('t') */
+			U			   = 0x00000055u, /**< U key ('u') */
+			V			   = 0x00000056u, /**< V key ('v') */
+			W			   = 0x00000057u, /**< W key ('w') */
+			X			   = 0x00000058u, /**< X key ('x') */
+			Y			   = 0x00000059u, /**< Y key ('y') */
+			Z			   = 0x0000005Au, /**< Z key ('z') */
+			LeftBracket	   = 0x0000005Bu, /**< Left bracket key ('[') */
+			Backslash	   = 0x0000005Cu, /**< Backslash key (backslash) */
+			RightBracket   = 0x0000005Du, /**< Right bracket key (']') */
+			Grave		   = 0x00000060u, /**< Grave key (grave accent) */
+			Escape		   = 0x00000100u, /**< Escape key (0x1B) */
+			Enter		   = 0x00000101u, /**< Return key (CR, 0x0D) */
+			Tab			   = 0x00000102u, /**< Tab key (TAB, 0x09) */
+			Backspace	   = 0x00000103u, /**< Backspace key (BS, 0x08) */
+			Insert		   = 0x00000104u, /**< Insert key */
+			Delete		   = 0x00000105u, /**< Delete key (0x7F) */
+			Right		   = 0x00000106u, /**< Right arrow key */
+			Left		   = 0x00000107u, /**< Left arrow key */
+			Down		   = 0x00000108u, /**< Down arrow key */
+			Up			   = 0x00000109u, /**< Up arrow key */
+			PageUp		   = 0x0000010Au, /**< Page Up key */
+			PageDown	   = 0x0000010Bu, /**< Page Down key */
+			Home		   = 0x0000010Cu, /**< Home key */
+			End			   = 0x0000010Du, /**< End key */
+			CapsLock	   = 0x00000118u, /**< Caps Lock key */
+			ScrollLock	   = 0x00000119u, /**< Scroll Lock key */
+			NumLockClear   = 0x0000011Au, /**< Num Lock key */
+			PrintScreen	   = 0x0000011Bu, /**< Print Screen key */
+			Pause		   = 0x0000011Cu, /**< Pause key */
+			F1			   = 0x00000122u, /**< F1 key */
+			F2			   = 0x00000123u, /**< F2 key */
+			F3			   = 0x00000124u, /**< F3 key */
+			F4			   = 0x00000125u, /**< F4 key */
+			F5			   = 0x00000126u, /**< F5 key */
+			F6			   = 0x00000127u, /**< F6 key */
+			F7			   = 0x00000128u, /**< F7 key */
+			F8			   = 0x00000129u, /**< F8 key */
+			F9			   = 0x0000012Au, /**< F9 key */
+			F10			   = 0x0000012Bu, /**< F10 key */
+			F11			   = 0x0000012Cu, /**< F11 key */
+			F12			   = 0x0000012Du, /**< F12 key */
+			F13			   = 0x0000012Eu, /**< F13 key */
+			F14			   = 0x0000012Fu, /**< F14 key */
+			F15			   = 0x00000130u, /**< F15 key */
+			F16			   = 0x00000131u, /**< F16 key */
+			F17			   = 0x00000132u, /**< F17 key */
+			F18			   = 0x00000133u, /**< F18 key */
+			F19			   = 0x00000134u, /**< F19 key */
+			F20			   = 0x00000135u, /**< F20 key */
+			F21			   = 0x00000136u, /**< F21 key */
+			F22			   = 0x00000137u, /**< F22 key */
+			F23			   = 0x00000138u, /**< F23 key */
+			F24			   = 0x00000139u, /**< F24 key */
+			KeyPad0		   = 0x00000140u, /**< Keypad 0 key */
+			KeyPad1		   = 0x00000141u, /**< Keypad 1 key */
+			KeyPad2		   = 0x00000142u, /**< Keypad 2 key */
+			KeyPad3		   = 0x00000143u, /**< Keypad 3 key */
+			KeyPad4		   = 0x00000144u, /**< Keypad 4 key */
+			KeyPad5		   = 0x00000145u, /**< Keypad 5 key */
+			KeyPad6		   = 0x00000146u, /**< Keypad 6 key */
+			KeyPad7		   = 0x00000147u, /**< Keypad 7 key */
+			KeyPad8		   = 0x00000148u, /**< Keypad 8 key */
+			KeyPad9		   = 0x00000149u, /**< Keypad 9 key */
+			KeyPadPeriod   = 0x0000014Au, /**< Keypad period key */
+			KeyPadDivide   = 0x0000014Bu, /**< Keypad divide key */
+			KeyPadMultiply = 0x0000014Cu, /**< Keypad multiply key */
+			KeyPadMinus	   = 0x0000014Du, /**< Keypad minus key */
+			KeyPadPlus	   = 0x0000014Eu, /**< Keypad plus key */
+			KeyPadEnter	   = 0x0000014Fu, /**< Keypad enter key */
+			KeyPadEquals   = 0x00000150u, /**< Keypad equals key */
+			LeftShift	   = 0x00000154u, /**< Left shift key */
+			LeftControl	   = 0x00000155u, /**< Left control key */
+			LeftAlt		   = 0x00000156u, /**< Left alt key */
+			LeftGui		   = 0x00000157u, /**< Left GUI key */
+			RightShift	   = 0x00000158u, /**< Right shift key */
+			RightControl   = 0x00000159u, /**< Right control key */
+			RightAlt	   = 0x0000015Au, /**< Right alt key */
+			RightGui	   = 0x0000015Bu, /**< Right GUI key */
 		};
 
 		/**

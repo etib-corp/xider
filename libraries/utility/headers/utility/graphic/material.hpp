@@ -58,7 +58,8 @@ namespace utility::graphic
 		 * are loaded using the stb_image library, and the pixel data is stored
 		 * in Texture objects for later use in rendering operations.
 		 *
-		 * @param ressourceProvider A reference to the RessourceProvider instance.
+		 * @param ressourceProvider A reference to the RessourceProvider
+		 * instance.
 		 * @param shaderName The name of the shader associated with this
 		 * material.
 		 * @param textureAssets A vector of File objects representing the
@@ -106,12 +107,13 @@ namespace utility::graphic
 		/**
 		 * @brief Retrieves the shader name associated with this material.
 		 *
-		 * This method returns the name of the shader that is associated with this
-		 * material. The shader name is used to identify which shader program should
-		 * be used when rendering objects that use this material, allowing for proper
-		 * rendering of the material's visual properties.
+		 * This method returns the name of the shader that is associated with
+		 * this material. The shader name is used to identify which shader
+		 * program should be used when rendering objects that use this material,
+		 * allowing for proper rendering of the material's visual properties.
 		 *
-		 * @return A const reference to a string representing the shader name associated with this material.
+		 * @return A const reference to a string representing the shader name
+		 * associated with this material.
 		 */
 		const std::string &getShaderName() const;
 

@@ -43,13 +43,13 @@ void CommandHandler::handle(struct android_app * /*android_app*/, int32_t cmd)
 		case APP_CMD_RESUME: {
 			this->getLogger().debug() << "APP_CMD_RESUME onResume()";
 			_appState->_resumed = true;
-			_appState->_paused  = false;
+			_appState->_paused	= false;
 			break;
 		}
 		case APP_CMD_PAUSE: {
 			this->getLogger().debug() << "APP_CMD_PAUSE onPause()";
 			_appState->_resumed = false;
-			_appState->_paused  = true;
+			_appState->_paused	= true;
 			break;
 		}
 		case APP_CMD_STOP: {
@@ -65,7 +65,8 @@ void CommandHandler::handle(struct android_app * /*android_app*/, int32_t cmd)
 			break;
 		}
 		case APP_CMD_TERM_WINDOW: {
-			this->getLogger().debug() << "APP_CMD_TERM_WINDOW surfaceDestroyed()";
+			this->getLogger().debug()
+				<< "APP_CMD_TERM_WINDOW surfaceDestroyed()";
 			break;
 		}
 	}

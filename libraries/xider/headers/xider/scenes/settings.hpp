@@ -34,14 +34,14 @@ namespace xider::scenes
 	 */
 	class Settings: public guillaume::Scene
 	{
-	public:
+		public:
 		/**
 		 * @brief Construct a new Settings scene
 		 * @param localStorage Reference to persistent local storage
 		 * @param sessionStorage Reference to per-session storage
 		 */
 		Settings(guillaume::LocalStorage &localStorage,
-		         guillaume::SessionStorage &sessionStorage);
+				 guillaume::SessionStorage &sessionStorage);
 
 		/**
 		 * @brief Destroy the Settings scene

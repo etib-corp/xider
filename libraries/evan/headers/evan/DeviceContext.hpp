@@ -31,7 +31,9 @@ namespace evan
 	 * It provides a structured way to manage these resources and perform
 	 * operations related to Vulkan rendering.
 	 */
-	class DeviceContext : protected utility::logging::Loggable<DeviceContext, utility::logging::DefaultLogger>
+	class DeviceContext:
+		protected utility::logging::Loggable<DeviceContext,
+											 utility::logging::DefaultLogger>
 	{
 		public:
 		/**

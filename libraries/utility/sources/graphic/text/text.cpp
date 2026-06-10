@@ -32,8 +32,8 @@ namespace utility::graphic
 		_fontSize = fontSize;
 		_font	  = ressourceProvider->loadFont(font);
 		_fontPath = font;
-		_meshes	  = {std::make_shared<Mesh>(std::vector<VertexD> {},
-										   std::vector<uint32_t> {})};
+		_meshes	  = { std::make_shared<Mesh>(std::vector<VertexD> {},
+											 std::vector<uint32_t> {}) };
 		updateMesh();
 	}
 
@@ -82,7 +82,7 @@ namespace utility::graphic
 	void Text::updateMesh(void)
 	{
 		_meshes.front() = std::make_shared<Mesh>(std::vector<VertexD> {},
-												std::vector<uint32_t> {});
+												 std::vector<uint32_t> {});
 
 		float x	 = 0;
 		double y = 0;

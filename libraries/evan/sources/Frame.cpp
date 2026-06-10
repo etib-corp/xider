@@ -10,7 +10,8 @@
 evan::Frame::Frame(VkCommandPool commandPool,
 				   const ADeviceBackend &deviceBackend)
 {
-	this->getLogger().info() << "Creating frame with command pool and device backend...";
+	this->getLogger().info()
+		<< "Creating frame with command pool and device backend...";
 
 	this->createCommandBuffer(deviceBackend._device, commandPool);
 	this->createSyncObjects(deviceBackend._device);
@@ -32,7 +33,8 @@ void evan::Frame::destroy(VkDevice device)
 {
 	this->getLogger().info() << "Destroying Vulkan resources for frame...";
 
-	this->getLogger().info() << "Destroying uniform buffer and freeing memory...";
+	this->getLogger().info()
+		<< "Destroying uniform buffer and freeing memory...";
 	vkDestroyBuffer(device, _uniformBuffer, nullptr);
 
 	this->getLogger().info() << "Freeing uniform buffer memory...";
@@ -78,12 +80,14 @@ void evan::Frame::createCommandBuffer(VkDevice device,
 	allocInfo.level		  = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
 	allocInfo.commandBufferCount = 1;
 
-	this->getLogger().info() << "Allocating command buffer from command pool...";
+	this->getLogger().info()
+		<< "Allocating command buffer from command pool...";
 
 	if (vkAllocateCommandBuffers(device, &allocInfo, &_commandBuffer)
 		!= VK_SUCCESS) {
-			this->getLogger().error() << "Failed to allocate command buffer for frame!";
-			return;
+		this->getLogger().error()
+			<< "Failed to allocate command buffer for frame!";
+		return;
 	}
 	this->getLogger().info() << "Command buffer allocated successfully.";
 }
@@ -106,7 +110,8 @@ void evan::Frame::createSyncObjects(VkDevice device)
 			!= VK_SUCCESS
 		|| vkCreateFence(device, &fenceInfo, nullptr, &_inFlight)
 			!= VK_SUCCESS) {
-		this->getLogger().error() << "Failed to create synchronization objects for frame!";
+		this->getLogger().error()
+			<< "Failed to create synchronization objects for frame!";
 		return;
 	}
 	this->getLogger().info() << "Synchronization objects created successfully.";
@@ -117,7 +122,8 @@ void evan::Frame::createUniformBuffer(const ADeviceBackend &deviceBackend)
 	this->getLogger().info() << "Creating uniform buffer for frame...";
 	VkDeviceSize bufferSize = sizeof(UniformBufferObject);
 
-	this->getLogger().info() << "Setting up buffer properties for uniform buffer...";
+	this->getLogger().info()
+		<< "Setting up buffer properties for uniform buffer...";
 	ADeviceBackend::CreateBufferProperties bufferProperties = {
 		._size		 = bufferSize,
 		._usage		 = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
@@ -127,11 +133,16 @@ void evan::Frame::createUniformBuffer(const ADeviceBackend &deviceBackend)
 		._bufferMemory = _uniformBufferMemory
 	};
 
-	this->getLogger().info() << "Creating uniform buffer and allocating memory with properties: " << bufferProperties._size << " bytes, usage flags: " << bufferProperties._usage << ", memory properties: " << bufferProperties._properties << "...";
+	this->getLogger().info()
+		<< "Creating uniform buffer and allocating memory with properties: "
+		<< bufferProperties._size
+		<< " bytes, usage flags: " << bufferProperties._usage
+		<< ", memory properties: " << bufferProperties._properties << "...";
 
 	deviceBackend.createBuffer(bufferProperties);
 
-	this->getLogger().info() << "Uniform buffer created and memory allocated successfully. Mapping memory...";
+	this->getLogger().info() << "Uniform buffer created and memory allocated "
+								"successfully. Mapping memory...";
 	vkMapMemory(deviceBackend._device, _uniformBufferMemory, 0, bufferSize, 0,
 				&_uniformBufferMapped);
 }

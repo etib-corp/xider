@@ -26,8 +26,8 @@ namespace guillaume::systems
 {
 	HandTrigger::HandTrigger(event::EventBus &eventBus)
 		: ecs::SystemFiller<components::HandTriggerInteraction,
-						  components::Transform, components::Bound>(
-				ecs::Phase::Event)
+							components::Transform, components::Bound>(
+			  ecs::Phase::Event)
 		, event::EventManager<utility::event::HandTriggerEvent>(eventBus)
 	{
 	}
@@ -40,4 +40,4 @@ namespace guillaume::systems
 	{
 	}
 
-} 	// namespace guillaume::systems
+}	 // namespace guillaume::systems

@@ -33,7 +33,8 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL defaultDebugCallback(
 	(void)messageSeverity;
 	(void)messageType;
 	(void)pUserData;
-	std::cerr << "[VULKAN] Validation layer: " << pCallbackData->pMessage << std::endl;
+	std::cerr << "[VULKAN] Validation layer: " << pCallbackData->pMessage
+			  << std::endl;
 
 	return VK_FALSE;
 }
@@ -90,7 +91,8 @@ VkQueue evan::DeviceContext::getGraphicsQueue() const
 
 void evan::DeviceContext::getMaxUsableSampleCount()
 {
-	this->getLogger().info() << "Determining maximum usable sample count for MSAA...";
+	this->getLogger().info()
+		<< "Determining maximum usable sample count for MSAA...";
 
 	VkPhysicalDeviceProperties physicalDeviceProperties;
 	vkGetPhysicalDeviceProperties(_deviceBackend->_physicalDevice,
@@ -99,7 +101,8 @@ void evan::DeviceContext::getMaxUsableSampleCount()
 		physicalDeviceProperties.limits.framebufferColorSampleCounts
 		& physicalDeviceProperties.limits.framebufferDepthSampleCounts;
 
-	this->getLogger().info() << "Supported sample counts: " << counts << " bits";
+	this->getLogger().info()
+		<< "Supported sample counts: " << counts << " bits";
 
 	if (counts & VK_SAMPLE_COUNT_64_BIT) {
 		this->getLogger().info() << "Using 64 samples for MSAA.";
@@ -153,13 +156,16 @@ void evan::DeviceContext::createCommandPool()
 	commandPoolCreateInfo.flags =
 		VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 
-	this->getLogger().info() << "Command poolCreateInfo initialized with queue family index: " << queueFamilyIndices.graphicsFamily.value();
+	this->getLogger().info()
+		<< "Command poolCreateInfo initialized with queue family index: "
+		<< queueFamilyIndices.graphicsFamily.value();
 
 	VkResult result =
 		vkCreateCommandPool(_deviceBackend->_device, &commandPoolCreateInfo,
 							nullptr, &_commandPool);
 	if (result != VK_SUCCESS) {
-		this->getLogger().error() << "Failed to create command pool: " << result;
+		this->getLogger().error()
+			<< "Failed to create command pool: " << result;
 		return;
 	}
 }
@@ -170,7 +176,8 @@ void evan::DeviceContext::createGraphicsQueue()
 
 	QueueFamilyIndices indices = _deviceBackend->findQueueFamilies();
 
-	this->getLogger().info() << "Graphics queue family index: " << indices.graphicsFamily.value();
+	this->getLogger().info()
+		<< "Graphics queue family index: " << indices.graphicsFamily.value();
 	vkGetDeviceQueue(_deviceBackend->_device, indices.graphicsFamily.value(), 0,
 					 &_graphicsQueue);
 }
@@ -188,7 +195,8 @@ bool evan::DeviceContext::checkDebugUtilsSupport(VkInstance instance)
 	this->getLogger().info() << "Available instance extensions:";
 
 	for (const auto &extension: extensions) {
-		this->getLogger().info() << "  " << std::string(extension.extensionName);
+		this->getLogger().info()
+			<< "  " << std::string(extension.extensionName);
 		if (strcmp(extension.extensionName, VK_EXT_DEBUG_UTILS_EXTENSION_NAME)
 			== 0) {
 			this->getLogger().info() << "VK_EXT_debug_utils is supported!";
@@ -203,11 +211,13 @@ void evan::DeviceContext::setupDebugMessenger()
 {
 	this->getLogger().info() << "Setting up Vulkan debug messenger...";
 	if (!enableValidationLayers)
-		this->getLogger().warning() << "Validation layers are disabled, skipping debug messenger setup.";
-		return;
+		this->getLogger().warning() << "Validation layers are disabled, "
+									   "skipping debug messenger setup.";
+	return;
 
 	if (!checkDebugUtilsSupport(_deviceBackend->_VkInstance)) {
-		this->getLogger().warning() << "Debug utils extension not supported, skipping debug messenger setup.";
+		this->getLogger().warning() << "Debug utils extension not supported, "
+									   "skipping debug messenger setup.";
 		return;
 	}
 
@@ -239,7 +249,11 @@ void evan::DeviceContext::populateDebugMessengerCreateInfo(
 		| VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
 	createInfo.pfnUserCallback = debugCallback;
 
-	this->getLogger().info() << "Debug messenger create info populated with callback: " << reinterpret_cast<uintptr_t>(debugCallback) << " and message severity: " << createInfo.messageSeverity << " and message type: " << createInfo.messageType;
+	this->getLogger().info()
+		<< "Debug messenger create info populated with callback: "
+		<< reinterpret_cast<uintptr_t>(debugCallback)
+		<< " and message severity: " << createInfo.messageSeverity
+		<< " and message type: " << createInfo.messageType;
 }
 
 VkResult evan::DeviceContext::createDebugUtilsMessengerEXT(
@@ -252,12 +266,16 @@ VkResult evan::DeviceContext::createDebugUtilsMessengerEXT(
 	auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(
 		instance, "vkCreateDebugUtilsMessengerEXT");
 
-	this->getLogger().info() << "vkGetInstanceProcAddr returned function pointer: " << reinterpret_cast<uintptr_t>(func);
+	this->getLogger().info()
+		<< "vkGetInstanceProcAddr returned function pointer: "
+		<< reinterpret_cast<uintptr_t>(func);
 	if (func != nullptr) {
-		this->getLogger().info() << "Creating debug messenger using vkCreateDebugUtilsMessengerEXT...";
+		this->getLogger().info() << "Creating debug messenger using "
+									"vkCreateDebugUtilsMessengerEXT...";
 		return func(instance, pCreateInfo, pAllocator, pDebugMessenger);
 	} else {
-		this->getLogger().error() << "vkCreateDebugUtilsMessengerEXT not found, cannot create debug messenger.";
+		this->getLogger().error() << "vkCreateDebugUtilsMessengerEXT not "
+									 "found, cannot create debug messenger.";
 		return VK_ERROR_EXTENSION_NOT_PRESENT;
 	}
 }

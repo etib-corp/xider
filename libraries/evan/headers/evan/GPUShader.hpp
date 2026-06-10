@@ -20,20 +20,23 @@ namespace evan
 	 * @class GPUShader
 	 * @brief The GPUShader class represents a shader used in rendering.
 	 *
-	 * The GPUShader class encapsulates the vertex and fragment shader modules, as
-	 * well as the SPIR-V code for both shaders. It provides methods to retrieve
-	 * the shader modules and to destroy the shader modules when they are no
-	 * longer needed.
+	 * The GPUShader class encapsulates the vertex and fragment shader modules,
+	 * as well as the SPIR-V code for both shaders. It provides methods to
+	 * retrieve the shader modules and to destroy the shader modules when they
+	 * are no longer needed.
 	 */
-	class GPUShader : protected utility::logging::Loggable<GPUShader, utility::logging::DefaultLogger>
+	class GPUShader:
+		protected utility::logging::Loggable<GPUShader,
+											 utility::logging::DefaultLogger>
 	{
 		public:
 		/**
-		 * @brief Constructs a GPUShader object with the given vertex and fragment
-		 * shader code.
+		 * @brief Constructs a GPUShader object with the given vertex and
+		 * fragment shader code.
 		 *
 		 * @param device The Vulkan device used to create the shader modules.
-		 * @param shader A reference to the utility::graphic::Shader object containing the shader data.
+		 * @param shader A reference to the utility::graphic::Shader object
+		 * containing the shader data.
 		 */
 		GPUShader(VkDevice device, const utility::graphic::Shader &shader);
 

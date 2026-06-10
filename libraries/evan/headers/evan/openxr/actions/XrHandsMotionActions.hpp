@@ -36,7 +36,9 @@ namespace evan
 	 * application, allowing developers to create immersive experiences that
 	 * utilize hand gestures and movements.
 	 */
-	class XrHandsMotionActions : protected utility::logging::Loggable<XrHandsMotionActions, utility::logging::DefaultLogger>
+	class XrHandsMotionActions:
+		protected utility::logging::Loggable<XrHandsMotionActions,
+											 utility::logging::DefaultLogger>
 	{
 		public:
 		/** @brief Constructs an XrHandsMotionActions instance with the

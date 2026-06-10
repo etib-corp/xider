@@ -49,8 +49,7 @@ namespace guillaume::systems
 								 components::Color, components::Borders>
 	{
 		private:
-		struct CacheEntry
-		{
+		struct CacheEntry {
 			std::optional<utility::graphic::Mesh> mesh;
 			size_t objectId { 0 };
 			bool used { false };

@@ -86,7 +86,8 @@ void evan::XrManageActions::createActionSet(XrDeviceBackend &deviceBackend)
 		this->getLogger().error() << "Failed to create action set: " << result;
 		return;
 	}
-	this->getLogger().info() << "Successfully created main action set for XrManageActions";
+	this->getLogger().info()
+		<< "Successfully created main action set for XrManageActions";
 }
 
 void evan::XrManageActions::attachSessionActionSet(
@@ -106,12 +107,14 @@ void evan::XrManageActions::attachSessionActionSet(
 		this->getLogger().error() << "Failed to attach action sets: " << result;
 		return;
 	}
-	this->getLogger().info() << "Successfully attached action set to OpenXR session";
+	this->getLogger().info()
+		<< "Successfully attached action set to OpenXR session";
 }
 
 void evan::XrManageActions::bindActionSets(XrDeviceBackend &deviceBackend)
 {
-	this->getLogger().info() << "Binding action sets to OpenXR interaction profile";
+	this->getLogger().info()
+		<< "Binding action sets to OpenXR interaction profile";
 
 	std::vector<XrActionSuggestedBinding> bindings {
 		{ _handsMotionActions->_handAimAction,
@@ -170,8 +173,10 @@ void evan::XrManageActions::bindActionSets(XrDeviceBackend &deviceBackend)
 	XrResult result						= xrSuggestInteractionProfileBindings(
 		deviceBackend._XrInstance, &suggestedBindings);
 	if (result != XR_SUCCESS) {
-		this->getLogger().error() << "Failed to suggest interaction profile bindings: " << result;
+		this->getLogger().error()
+			<< "Failed to suggest interaction profile bindings: " << result;
 		return;
 	}
-	this->getLogger().info() << "Successfully suggested interaction profile bindings";
+	this->getLogger().info()
+		<< "Successfully suggested interaction profile bindings";
 }

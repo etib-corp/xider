@@ -11,11 +11,12 @@ evan::MacOsDesktopPlatform::MacOsDesktopPlatform(const std::string &name,
 												 const uint32_t width,
 												 const uint32_t height)
 {
-	this->getLogger().info() << "Initializing MacOsDesktopPlatform with window name: " << name << ", width: " << width << ", height: " << height;
+	this->getLogger().info()
+		<< "Initializing MacOsDesktopPlatform with window name: " << name
+		<< ", width: " << width << ", height: " << height;
 	if (!glfwInit()) {
 		this->getLogger().error() << "Failed to initialize GLFW";
 		return;
-
 	}
 
 	this->getLogger().info() << "GLFW initialized successfully";
@@ -54,7 +55,8 @@ std::vector<std::string>
 VkSurfaceKHR
 	evan::MacOsDesktopPlatform::createSurface(VkInstance instance) const
 {
-	this->getLogger().info() << "Creating Vulkan surface for MacOsDesktopPlatform";
+	this->getLogger().info()
+		<< "Creating Vulkan surface for MacOsDesktopPlatform";
 
 	VkSurfaceKHR surface;
 	if (glfwCreateWindowSurface(instance, _window, nullptr, &surface)

@@ -45,7 +45,9 @@ namespace evan
 	 * encapsulates the rendering logic and resource management for a
 	 * Vulkan-based rendering system.
 	 */
-	class Renderer: protected utility::logging::Loggable<Renderer, utility::logging::DefaultLogger>
+	class Renderer:
+		protected utility::logging::Loggable<Renderer,
+											 utility::logging::DefaultLogger>
 	{
 		public:
 		/**
@@ -64,7 +66,12 @@ namespace evan
 		 * of the rendering operations.
 		 * @param msaaSamples The MSAA sample count to be used for multisample
 		 * anti aliasing operations in the graphics pipeline.
-		 * @param ressourceManager A shared pointer to the RessourceManager, which is responsible for managing materials, textures, and other resources used in rendering. The Renderer interacts with the RessourceManager to access the necessary resources for rendering scenes, such as materials and textures associated with render objects.
+		 * @param ressourceManager A shared pointer to the RessourceManager,
+		 * which is responsible for managing materials, textures, and other
+		 * resources used in rendering. The Renderer interacts with the
+		 * RessourceManager to access the necessary resources for rendering
+		 * scenes, such as materials and textures associated with render
+		 * objects.
 		 *
 		 * @note The constructor may throw exceptions if resource creation
 		 * fails, such as if the graphics pipeline or descriptor pool cannot be
@@ -73,7 +80,8 @@ namespace evan
 		 * the Renderer.
 		 */
 		Renderer(DeviceContext &deviceContext, VkRenderPass renderPass,
-				 VkSampleCountFlagBits msaaSamples, std::shared_ptr<RessourceManager> ressourceManager);
+				 VkSampleCountFlagBits msaaSamples,
+				 std::shared_ptr<RessourceManager> ressourceManager);
 
 		~Renderer();
 
@@ -204,9 +212,30 @@ namespace evan
 		VkDescriptorSetLayout getDescriptorSetLayout() const;
 
 		protected:
-		std::map<uint32_t, VkPipeline> _pipelines;					///< A map of pipeline layer identifiers to Vulkan pipeline objects. This map is used to manage different graphics pipelines for rendering operations based on the pipeline layer associated with render objects. Each entry in the map corresponds to a specific pipeline layer and its associated Vulkan pipeline, which can be used for rendering objects that belong to that layer.
+		std::map<uint32_t, VkPipeline>
+			_pipelines;	   ///< A map of pipeline layer identifiers to Vulkan
+						   ///< pipeline objects. This map is used to manage
+						   ///< different graphics pipelines for rendering
+						   ///< operations based on the pipeline layer
+						   ///< associated with render objects. Each entry in
+						   ///< the map corresponds to a specific pipeline layer
+						   ///< and its associated Vulkan pipeline, which can be
+						   ///< used for rendering objects that belong to that
+						   ///< layer.
 
-		std::map<uint32_t, VkPipelineLayout> _pipelineLayouts;		///< A map of pipeline layer identifiers to Vulkan pipeline layout objects. This map is used to manage different pipeline layouts for rendering operations based on the pipeline layer associated with render objects. Each entry in the map corresponds to a specific pipeline layer and its associated Vulkan pipeline layout, which defines the interface between shader stages and the resources bound to the graphics pipeline for rendering objects that belong to that layer.
+		std::map<uint32_t, VkPipelineLayout>
+			_pipelineLayouts;	 ///< A map of pipeline layer identifiers to
+								 ///< Vulkan pipeline layout objects. This map
+								 ///< is used to manage different pipeline
+								 ///< layouts for rendering operations based on
+								 ///< the pipeline layer associated with render
+								 ///< objects. Each entry in the map corresponds
+								 ///< to a specific pipeline layer and its
+								 ///< associated Vulkan pipeline layout, which
+								 ///< defines the interface between shader
+								 ///< stages and the resources bound to the
+								 ///< graphics pipeline for rendering objects
+								 ///< that belong to that layer.
 
 		/**
 		 * @brief A collection of frames used for rendering.
@@ -331,7 +360,7 @@ namespace evan
 		 * render pass and MSAA settings.
 		 */
 		void createGraphicsPipelines(VkDevice device, VkRenderPass renderPass,
-									VkSampleCountFlagBits msaaSamples);
+									 VkSampleCountFlagBits msaaSamples);
 
 		/**
 		 * @brief Creates the Vulkan descriptor pool for allocating descriptor
@@ -349,6 +378,17 @@ namespace evan
 		 */
 		void createDescriptorPool(VkDevice device, uint32_t materialCount);
 
-		std::shared_ptr<RessourceManager> _ressourceManager;		///< A shared pointer to the RessourceManager, which is responsible for managing materials, textures, and other resources used in rendering. The Renderer interacts with the RessourceManager to access the necessary resources for rendering scenes, such as materials and textures associated with render objects. This member variable allows the Renderer to efficiently manage and utilize resources during the rendering process.
+		std::shared_ptr<RessourceManager>
+			_ressourceManager;	  ///< A shared pointer to the RessourceManager,
+								  ///< which is responsible for managing
+								  ///< materials, textures, and other resources
+								  ///< used in rendering. The Renderer interacts
+								  ///< with the RessourceManager to access the
+								  ///< necessary resources for rendering scenes,
+								  ///< such as materials and textures associated
+								  ///< with render objects. This member variable
+								  ///< allows the Renderer to efficiently manage
+								  ///< and utilize resources during the
+								  ///< rendering process.
 	};
 }	 // namespace evan

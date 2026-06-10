@@ -74,7 +74,8 @@ namespace evan
 		 * events that were polled from the Desktop platform. Each Event object
 		 * contains information about the type of event, such as input events.
 		 */
-		virtual std::vector<std::unique_ptr<utility::event::Event>> pollEvents(ADeviceBackend &deviceBackend) override;
+		virtual std::vector<std::unique_ptr<utility::event::Event>>
+			pollEvents(ADeviceBackend &deviceBackend) override;
 
 		/**
 		 * @brief Create a Vulkan surface for the Desktop platform.
@@ -124,27 +125,34 @@ namespace evan
 		 *
 		 * @param glfwKey The GLFW key code to convert.
 		 *
-		 * @return The corresponding KeyboardEvent::KeyCode for the given GLFW key code.
+		 * @return The corresponding KeyboardEvent::KeyCode for the given GLFW
+		 * key code.
 		 */
-		utility::event::KeyboardEvent::KeyCode convertGlfwKeyToKeyCode(int glfwKey) const;
+		utility::event::KeyboardEvent::KeyCode
+			convertGlfwKeyToKeyCode(int glfwKey) const;
 
 		/**
-		 * @brief Convert a GLFW mouse button code to a MouseButtonEvent::Button.
+		 * @brief Convert a GLFW mouse button code to a
+		 * MouseButtonEvent::Button.
 		 *
 		 * @param glfwMouseButton The GLFW mouse button code to convert.
 		 *
-		 * @return The corresponding MouseButtonEvent::Button for the given GLFW mouse button code.
+		 * @return The corresponding MouseButtonEvent::Button for the given GLFW
+		 * mouse button code.
 		 */
-		utility::event::MouseButtonEvent::Button convertGlfwMouseButtonToButton(int glfwMouseButton) const;
+		utility::event::MouseButtonEvent::Button
+			convertGlfwMouseButtonToButton(int glfwMouseButton) const;
 
 		/**
 		 * @brief Convert GLFW modifier flags to KeyModifiers.
 		 *
 		 * @param glfwMods The GLFW modifier flags to convert.
 		 *
-		 * @return The corresponding KeyModifiers for the given GLFW modifier flags.
+		 * @return The corresponding KeyModifiers for the given GLFW modifier
+		 * flags.
 		 */
-		utility::event::KeyboardEvent::KeyModifiers convertGlfwModsToKeyModifiers(int glfwMods) const;
+		utility::event::KeyboardEvent::KeyModifiers
+			convertGlfwModsToKeyModifiers(int glfwMods) const;
 
 		/**
 		 * @brief Get the current mouse position.
@@ -155,7 +163,8 @@ namespace evan
 		 * screen, which can be used for handling mouse motion events and
 		 * interactions within the application.
 		 */
-		utility::event::MouseMotionEvent::MousePosition getMousePosition() const;
+		utility::event::MouseMotionEvent::MousePosition
+			getMousePosition() const;
 
 		/**
 		 * @brief Currently active GLFW window for the Desktop platform.
@@ -165,36 +174,44 @@ namespace evan
 		/**
 		 * @brief Vector to store keyboard events.
 		 *
-		 * This vector holds unique pointers to KeyboardEvent objects, which represent
-		 * keyboard input events that have been polled from the GLFW event system. Each
-		 * KeyboardEvent contains information about the key that was pressed or released, as well
-		 * as any modifier keys that were active at the time of the event. This allows the application
-		 * to process keyboard input in a structured way, responding to user interactions effectively.
+		 * This vector holds unique pointers to KeyboardEvent objects, which
+		 * represent keyboard input events that have been polled from the GLFW
+		 * event system. Each KeyboardEvent contains information about the key
+		 * that was pressed or released, as well as any modifier keys that were
+		 * active at the time of the event. This allows the application to
+		 * process keyboard input in a structured way, responding to user
+		 * interactions effectively.
 		 */
-		std::vector<std::unique_ptr<utility::event::KeyboardEvent>> _keyboardEvents;
+		std::vector<std::unique_ptr<utility::event::KeyboardEvent>>
+			_keyboardEvents;
 
 		/**
 		 * @brief Vector to store mouse button events.
 		 *
-		 * This vector holds unique pointers to MouseButtonEvent objects, which represent
-		 * mouse button input events that have been polled from the GLFW event system. Each
-		 * MouseButtonEvent contains information about which mouse button was pressed or released,
-		 * as well as the current state of all mouse buttons and the position of the mouse cursor at the time of the event.
-		 * This allows the application to process mouse button input in a structured way, responding to user interactions effectively.
+		 * This vector holds unique pointers to MouseButtonEvent objects, which
+		 * represent mouse button input events that have been polled from the
+		 * GLFW event system. Each MouseButtonEvent contains information about
+		 * which mouse button was pressed or released, as well as the current
+		 * state of all mouse buttons and the position of the mouse cursor at
+		 * the time of the event. This allows the application to process mouse
+		 * button input in a structured way, responding to user interactions
+		 * effectively.
 		 */
-		std::vector<std::unique_ptr<utility::event::MouseButtonEvent>> _mouseButtonEvents;
+		std::vector<std::unique_ptr<utility::event::MouseButtonEvent>>
+			_mouseButtonEvents;
 
 		/**
 		 * @brief Vector to store mouse motion events.
 		 *
-		 * This vector holds unique pointers to MouseMotionEvent objects, which represent
-		 * mouse motion events that have been polled from the GLFW event system. Each
-		 * MouseMotionEvent contains information about the current position of the mouse cursor, allowing the application
-		 * to respond to mouse movement and interactions effectively.
+		 * This vector holds unique pointers to MouseMotionEvent objects, which
+		 * represent mouse motion events that have been polled from the GLFW
+		 * event system. Each MouseMotionEvent contains information about the
+		 * current position of the mouse cursor, allowing the application to
+		 * respond to mouse movement and interactions effectively.
 		 */
-		std::vector<std::unique_ptr<utility::event::MouseMotionEvent>> _mouseMotionEvents;
+		std::vector<std::unique_ptr<utility::event::MouseMotionEvent>>
+			_mouseMotionEvents;
 
 		private:
-
 	};
 }	 // namespace evan

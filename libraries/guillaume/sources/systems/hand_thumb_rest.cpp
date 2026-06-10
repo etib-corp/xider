@@ -26,8 +26,8 @@ namespace guillaume::systems
 {
 	HandThumbRest::HandThumbRest(event::EventBus &eventBus)
 		: ecs::SystemFiller<components::HandThumbRestInteraction,
-						  components::Transform, components::Bound>(
-				ecs::Phase::Event)
+							components::Transform, components::Bound>(
+			  ecs::Phase::Event)
 		, event::EventManager<utility::event::HandThumbRestEvent>(eventBus)
 	{
 	}
@@ -40,4 +40,4 @@ namespace guillaume::systems
 	{
 	}
 
-} 	// namespace guillaume::systems
+}	 // namespace guillaume::systems

@@ -31,23 +31,20 @@
 namespace guillaume::components
 {
 
-	inline constexpr std::array<
-		utility::event::MouseButtonEvent::Button, 5> MouseButtons = {
-		utility::event::MouseButtonEvent::Button::Left,
-		utility::event::MouseButtonEvent::Button::Middle,
-		utility::event::MouseButtonEvent::Button::Right,
-		utility::event::MouseButtonEvent::Button::X1,
-		utility::event::MouseButtonEvent::Button::X2
-	};
+	inline constexpr std::array<utility::event::MouseButtonEvent::Button, 5>
+		MouseButtons = { utility::event::MouseButtonEvent::Button::Left,
+						 utility::event::MouseButtonEvent::Button::Middle,
+						 utility::event::MouseButtonEvent::Button::Right,
+						 utility::event::MouseButtonEvent::Button::X1,
+						 utility::event::MouseButtonEvent::Button::X2 };
 
 	/**
 	 * @brief Component handling mouse button interactions.
 	 * @see systems::MouseButton
 	 */
-	using MouseButtonInteraction = ButtonInteraction<
-		utility::event::MouseButtonEvent,
-		utility::event::MouseButtonEvent::Button,
-		MouseButtons.size(),
-		MouseButtons>;
+	using MouseButtonInteraction =
+		ButtonInteraction<utility::event::MouseButtonEvent,
+						  utility::event::MouseButtonEvent::Button,
+						  MouseButtons.size(), MouseButtons>;
 
-} // namespace guillaume::components
+}	 // namespace guillaume::components

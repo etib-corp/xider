@@ -14,4 +14,4 @@ namespace tests::utility::graphic
 		{
 		}
 	};
-} // namespace tests::utility::graphic
+}	 // namespace tests::utility::graphic

@@ -25,8 +25,7 @@
 #include <algorithm>
 #include <limits>
 
-utility::File::File(const std::string &path,
-							  const std::string &content)
+utility::File::File(const std::string &path, const std::string &content)
 	: _content(content)
 	, _path(path)
 {

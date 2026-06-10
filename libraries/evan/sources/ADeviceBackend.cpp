@@ -24,11 +24,15 @@ void evan::ADeviceBackend::createBuffer(
 	bufferInfo.usage	   = properties._usage;
 	bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
-	this->getLogger().info() << "Creating buffer with size: " << properties._size << " and usage flags: " << properties._usage;
+	this->getLogger().info()
+		<< "Creating buffer with size: " << properties._size
+		<< " and usage flags: " << properties._usage;
 	if (vkCreateBuffer(_device, &bufferInfo, nullptr, &properties._buffer)
 		!= VK_SUCCESS) {
-			this->getLogger().error() << "Failed to create buffer with size: " << properties._size << " and usage flags: " << properties._usage;
-			return;
+		this->getLogger().error()
+			<< "Failed to create buffer with size: " << properties._size
+			<< " and usage flags: " << properties._usage;
+		return;
 	}
 
 	VkMemoryRequirements memRequirements;
@@ -41,7 +45,9 @@ void evan::ADeviceBackend::createBuffer(
 	allocInfo.memoryTypeIndex = this->findMemoryType(
 		memRequirements.memoryTypeBits, properties._properties);
 
-	this->getLogger().info() << "Allocating buffer memory with size: " << memRequirements.size << " and memory type index: " << allocInfo.memoryTypeIndex;
+	this->getLogger().info()
+		<< "Allocating buffer memory with size: " << memRequirements.size
+		<< " and memory type index: " << allocInfo.memoryTypeIndex;
 	if (vkAllocateMemory(_device, &allocInfo, nullptr,
 						 &properties._bufferMemory)
 		!= VK_SUCCESS) {
@@ -59,7 +65,9 @@ void evan::ADeviceBackend::createBuffer(
 void evan::ADeviceBackend::transitionImageLayout(
 	const TransitionImageLayoutProperties &properties) const
 {
-	this->getLogger().info() << "Transitioning image layout from " << properties._oldLayout << " to " << properties._newLayout;
+	this->getLogger().info()
+		<< "Transitioning image layout from " << properties._oldLayout << " to "
+		<< properties._newLayout;
 	VkCommandBuffer commandBuffer =
 		this->beginSingleTimeCommands(properties._commandPool);
 
@@ -77,15 +85,25 @@ void evan::ADeviceBackend::transitionImageLayout(
 	barrier.subresourceRange.layerCount		= 1;
 	barrier.subresourceRange.levelCount		= properties._mipLevels;
 
-	this->getLogger().info() << "Setting up image memory barrier for layout transition...";
-	this->getLogger().info() << "Old layout: " << barrier.oldLayout << ", new layout: " << barrier.newLayout << ", image: " << (uintptr_t)barrier.image << ", aspect mask: " << barrier.subresourceRange.aspectMask << ", base mip level: " << barrier.subresourceRange.baseMipLevel << ", level count: " << barrier.subresourceRange.levelCount << ", base array layer: " << barrier.subresourceRange.baseArrayLayer << ", layer count: " << barrier.subresourceRange.layerCount;
+	this->getLogger().info()
+		<< "Setting up image memory barrier for layout transition...";
+	this->getLogger().info()
+		<< "Old layout: " << barrier.oldLayout
+		<< ", new layout: " << barrier.newLayout
+		<< ", image: " << (uintptr_t)barrier.image
+		<< ", aspect mask: " << barrier.subresourceRange.aspectMask
+		<< ", base mip level: " << barrier.subresourceRange.baseMipLevel
+		<< ", level count: " << barrier.subresourceRange.levelCount
+		<< ", base array layer: " << barrier.subresourceRange.baseArrayLayer
+		<< ", layer count: " << barrier.subresourceRange.layerCount;
 
 	VkPipelineStageFlags sourceStage;
 	VkPipelineStageFlags destinationStage;
 
 	if (properties._oldLayout == VK_IMAGE_LAYOUT_UNDEFINED
 		&& properties._newLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL) {
-		this->getLogger().info() << "Transitioning from undefined layout to transfer destination optimal layout...";
+		this->getLogger().info() << "Transitioning from undefined layout to "
+									"transfer destination optimal layout...";
 		barrier.srcAccessMask = 0;
 		barrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
 
@@ -94,7 +112,9 @@ void evan::ADeviceBackend::transitionImageLayout(
 	} else if (properties._oldLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
 			   && properties._newLayout
 				   == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL) {
-		this->getLogger().info() << "Transitioning from transfer destination optimal layout to shader read-only optimal layout...";
+		this->getLogger().info()
+			<< "Transitioning from transfer destination optimal layout to "
+			   "shader read-only optimal layout...";
 		barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
 		barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
 
@@ -103,7 +123,9 @@ void evan::ADeviceBackend::transitionImageLayout(
 	} else if (properties._oldLayout == VK_IMAGE_LAYOUT_UNDEFINED
 			   && properties._newLayout
 				   == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL) {
-		this->getLogger().info() << "Transitioning from undefined layout to depth-stencil attachment optimal layout...";
+		this->getLogger().info()
+			<< "Transitioning from undefined layout to depth-stencil "
+			   "attachment optimal layout...";
 		barrier.srcAccessMask = 0;
 		barrier.dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT
 			| VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
@@ -117,12 +139,15 @@ void evan::ADeviceBackend::transitionImageLayout(
 
 	if (properties._newLayout
 		== VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL) {
-		this->getLogger().info() << "Setting aspect mask for depth-stencil image...";
+		this->getLogger().info()
+			<< "Setting aspect mask for depth-stencil image...";
 
 		barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
 
 		if (this->hasStencilComponent(properties._format)) {
-			this->getLogger().info() << "Image format has stencil component, adding stencil aspect to aspect mask...";
+			this->getLogger().info()
+				<< "Image format has stencil component, adding stencil aspect "
+				   "to aspect mask...";
 			barrier.subresourceRange.aspectMask |= VK_IMAGE_ASPECT_STENCIL_BIT;
 		}
 	} else {
@@ -153,7 +178,9 @@ VkCommandBuffer evan::ADeviceBackend::beginSingleTimeCommands(
 	allocInfo.commandBufferCount = 1;
 	VkCommandBuffer commandBuffer;
 
-	this->getLogger().info() << "Allocating command buffer with " << allocInfo.commandBufferCount << " command buffer(s) from command pool: " << (uintptr_t)commandPool;
+	this->getLogger().info()
+		<< "Allocating command buffer with " << allocInfo.commandBufferCount
+		<< " command buffer(s) from command pool: " << (uintptr_t)commandPool;
 
 	if (vkAllocateCommandBuffers(_device, &allocInfo, &commandBuffer)
 		!= VK_SUCCESS) {
@@ -165,7 +192,8 @@ VkCommandBuffer evan::ADeviceBackend::beginSingleTimeCommands(
 	beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
 	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 
-	this->getLogger().info() << "Beginning command buffer recording using one-time submit flag...";
+	this->getLogger().info()
+		<< "Beginning command buffer recording using one-time submit flag...";
 
 	vkBeginCommandBuffer(commandBuffer, &beginInfo);
 
@@ -198,13 +226,22 @@ void evan::ADeviceBackend::endSingleTimeCommands(
 
 	vkFreeCommandBuffers(_device, commandPool, 1, &commandBuffer);
 
-	this->getLogger().info() << "Successfully ended single time command buffer!";
+	this->getLogger().info()
+		<< "Successfully ended single time command buffer!";
 }
 
 void evan::ADeviceBackend::createImage(
 	const CreateImageProperties &properties) const
 {
-	this->getLogger().info() << "Creating image with:\n width: " << properties._width << ",\n height: " << properties._height << ",\n mip levels: " << properties._mipLevels << ",\n num samples: " << properties._numSamples << ",\n format: " << properties._format << ",\n tiling: " << properties._tiling << ",\n usage flags: " << properties._usage << ",\n memory properties: " << properties._properties;
+	this->getLogger().info()
+		<< "Creating image with:\n width: " << properties._width
+		<< ",\n height: " << properties._height
+		<< ",\n mip levels: " << properties._mipLevels
+		<< ",\n num samples: " << properties._numSamples
+		<< ",\n format: " << properties._format
+		<< ",\n tiling: " << properties._tiling
+		<< ",\n usage flags: " << properties._usage
+		<< ",\n memory properties: " << properties._properties;
 
 	VkImageCreateInfo imageInfo {};
 	imageInfo.sType			= VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -222,7 +259,15 @@ void evan::ADeviceBackend::createImage(
 	imageInfo.mipLevels		= properties._mipLevels;
 	imageInfo.samples		= properties._numSamples;
 
-	this->getLogger().info() << "Image creation info:\n width: " << imageInfo.extent.width << ",\n height: " << imageInfo.extent.height << ",\n mip levels: " << imageInfo.mipLevels << ",\n num samples: " << imageInfo.samples << ",\n format: " << imageInfo.format << ",\n tiling: " << imageInfo.tiling << ",\n usage flags: " << imageInfo.usage << ",\n memory properties: " << properties._properties;
+	this->getLogger().info()
+		<< "Image creation info:\n width: " << imageInfo.extent.width
+		<< ",\n height: " << imageInfo.extent.height
+		<< ",\n mip levels: " << imageInfo.mipLevels
+		<< ",\n num samples: " << imageInfo.samples
+		<< ",\n format: " << imageInfo.format
+		<< ",\n tiling: " << imageInfo.tiling
+		<< ",\n usage flags: " << imageInfo.usage
+		<< ",\n memory properties: " << properties._properties;
 
 	this->getLogger().info() << "Creating image...";
 
@@ -243,7 +288,9 @@ void evan::ADeviceBackend::createImage(
 	allocInfo.memoryTypeIndex = this->findMemoryType(
 		memRequirements.memoryTypeBits, properties._properties);
 
-	this->getLogger().info() << "Allocating image memory with size: " << memRequirements.size << " and memory type index: " << allocInfo.memoryTypeIndex;
+	this->getLogger().info()
+		<< "Allocating image memory with size: " << memRequirements.size
+		<< " and memory type index: " << allocInfo.memoryTypeIndex;
 
 	this->getLogger().info() << "Allocating image memory...";
 
@@ -264,7 +311,9 @@ void evan::ADeviceBackend::createImage(
 void evan::ADeviceBackend::copyBufferToImage(
 	const CopyBufferToImageProperties &properties) const
 {
-	this->getLogger().info() << "Copying buffer to image with:\n width: " << properties._width << ",\n height: " << properties._height;
+	this->getLogger().info()
+		<< "Copying buffer to image with:\n width: " << properties._width
+		<< ",\n height: " << properties._height;
 
 	VkCommandBuffer commandBuffer =
 		this->beginSingleTimeCommands(properties._commandPool);
@@ -280,11 +329,22 @@ void evan::ADeviceBackend::copyBufferToImage(
 	region.imageOffset					   = { 0, 0, 0 };
 	region.imageExtent = { properties._width, properties._height, 1 };
 
-	this->getLogger().info() << "Region for buffer to image copy:\n buffer offset: " << region.bufferOffset << ",\n buffer row length: " << region.bufferRowLength << ",\n buffer image height: " << region.bufferImageHeight << ",\n image aspect mask: " << region.imageSubresource.aspectMask << ",\n image mip level: " << region.imageSubresource.mipLevel << ",\n image base array layer: " << region.imageSubresource.baseArrayLayer << ",\n image layer count: " << region.imageSubresource.layerCount << ",\n image offset: (" + std::to_string(region.imageOffset.x) + ", "
-						 + std::to_string(region.imageOffset.y) + ", "
-						 + std::to_string(region.imageOffset.z) + ")" << ",\n image extent: (" + std::to_string(region.imageExtent.width) + ", "
-						 + std::to_string(region.imageExtent.height) + ", "
-						 + std::to_string(region.imageExtent.depth) + ")";
+	this->getLogger().info()
+		<< "Region for buffer to image copy:\n buffer offset: "
+		<< region.bufferOffset
+		<< ",\n buffer row length: " << region.bufferRowLength
+		<< ",\n buffer image height: " << region.bufferImageHeight
+		<< ",\n image aspect mask: " << region.imageSubresource.aspectMask
+		<< ",\n image mip level: " << region.imageSubresource.mipLevel
+		<< ",\n image base array layer: "
+		<< region.imageSubresource.baseArrayLayer
+		<< ",\n image layer count: " << region.imageSubresource.layerCount
+		<< ",\n image offset: (" + std::to_string(region.imageOffset.x) + ", "
+			+ std::to_string(region.imageOffset.y) + ", "
+			+ std::to_string(region.imageOffset.z) + ")"
+		<< ",\n image extent: (" + std::to_string(region.imageExtent.width)
+			+ ", " + std::to_string(region.imageExtent.height) + ", "
+			+ std::to_string(region.imageExtent.depth) + ")";
 	this->getLogger().info() << "Copying buffer to image...";
 
 	vkCmdCopyBufferToImage(commandBuffer, properties._buffer, properties._image,
@@ -299,7 +359,8 @@ void evan::ADeviceBackend::copyBufferToImage(
 void evan::ADeviceBackend::copyBuffer(
 	const CopyBufferProperties &properties) const
 {
-	this->getLogger().info() << "Copying buffer with size: " << properties._size;
+	this->getLogger().info()
+		<< "Copying buffer with size: " << properties._size;
 	VkCommandBuffer commandBuffer =
 		this->beginSingleTimeCommands(properties._commandPool);
 
@@ -319,7 +380,9 @@ VkImageView
 										  VkImageAspectFlags aspectFlags,
 										  uint32_t mipLevels) const
 {
-	this->getLogger().info() << "Creating image view with format: " << format << ", aspect flags: " << aspectFlags << ", and mip levels: " << mipLevels;
+	this->getLogger().info() << "Creating image view with format: " << format
+							 << ", aspect flags: " << aspectFlags
+							 << ", and mip levels: " << mipLevels;
 
 	VkImageViewCreateInfo viewInfo {};
 	viewInfo.sType	  = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -334,7 +397,13 @@ VkImageView
 	viewInfo.subresourceRange.levelCount	 = mipLevels;
 	VkImageView imageView;
 
-	this->getLogger().info() << "Image view creation info:\n format: " << viewInfo.format << ", aspect flags: " << viewInfo.subresourceRange.aspectMask << ", mip levels: " << viewInfo.subresourceRange.levelCount << ", base mip level: " << viewInfo.subresourceRange.baseMipLevel << ", layer count: " << viewInfo.subresourceRange.layerCount << ", base array layer: " << viewInfo.subresourceRange.baseArrayLayer;
+	this->getLogger().info()
+		<< "Image view creation info:\n format: " << viewInfo.format
+		<< ", aspect flags: " << viewInfo.subresourceRange.aspectMask
+		<< ", mip levels: " << viewInfo.subresourceRange.levelCount
+		<< ", base mip level: " << viewInfo.subresourceRange.baseMipLevel
+		<< ", layer count: " << viewInfo.subresourceRange.layerCount
+		<< ", base array layer: " << viewInfo.subresourceRange.baseArrayLayer;
 	this->getLogger().info() << "Creating image view...";
 
 	if (vkCreateImageView(_device, &viewInfo, nullptr, &imageView)
@@ -359,12 +428,14 @@ std::vector<VkLayerProperties> evan::ADeviceBackend::getAvailableLayers()
 	uint32_t layerCount;
 	vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
 
-	this->getLogger().info() << "Found " << layerCount << " available Vulkan layer(s).";
+	this->getLogger().info()
+		<< "Found " << layerCount << " available Vulkan layer(s).";
 
 	std::vector<VkLayerProperties> availableLayers(layerCount);
 	vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
 
-	this->getLogger().info() << "Successfully enumerated available Vulkan layers.";
+	this->getLogger().info()
+		<< "Successfully enumerated available Vulkan layers.";
 
 	return availableLayers;
 }
@@ -375,7 +446,8 @@ std::vector<VkLayerProperties> evan::ADeviceBackend::getAvailableLayers()
 
 bool evan::ADeviceBackend::hasStencilComponent(VkFormat format) const
 {
-	this->getLogger().info() << "Checking if format " << format << " has stencil component...";
+	this->getLogger().info()
+		<< "Checking if format " << format << " has stencil component...";
 	return format == VK_FORMAT_D32_SFLOAT_S8_UINT
 		|| format == VK_FORMAT_D24_UNORM_S8_UINT;
 }
@@ -384,7 +456,9 @@ uint32_t
 	evan::ADeviceBackend::findMemoryType(uint32_t typeFilter,
 										 VkMemoryPropertyFlags properties) const
 {
-	this->getLogger().info() << "Finding suitable memory type for type filter: " << typeFilter << " and memory property flags: " << properties;
+	this->getLogger().info()
+		<< "Finding suitable memory type for type filter: " << typeFilter
+		<< " and memory property flags: " << properties;
 
 	VkPhysicalDeviceMemoryProperties memProperties;
 
@@ -393,12 +467,14 @@ uint32_t
 		if ((typeFilter & (1 << i))
 			&& (memProperties.memoryTypes[i].propertyFlags & properties)
 				== properties) {
-			this->getLogger().info() << "Found suitable memory type at index: " << i;
+			this->getLogger().info()
+				<< "Found suitable memory type at index: " << i;
 			return i;
 		}
 	}
 
 	this->getLogger().error() << "Failed to find suitable memory type!";
-	this->getLogger().warning() << "Returning 0 as fallback, but this may lead to undefined behavior!";
+	this->getLogger().warning()
+		<< "Returning 0 as fallback, but this may lead to undefined behavior!";
 	return 0;
 }

@@ -100,7 +100,9 @@ namespace evan
 	 * application, allowing developers to create immersive experiences that
 	 * utilize thumb stick gestures and movements from hand tracking devices.
 	 */
-	class XrManageThumbStickActions : protected utility::logging::Loggable<XrManageThumbStickActions, utility::logging::DefaultLogger>
+	class XrManageThumbStickActions:
+		protected utility::logging::Loggable<XrManageThumbStickActions,
+											 utility::logging::DefaultLogger>
 	{
 		public:
 		/** @brief Constructs an XrManageThumbStickActions instance with the

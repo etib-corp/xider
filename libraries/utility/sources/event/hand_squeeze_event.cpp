@@ -77,7 +77,8 @@ namespace utility::event
 		return _isTouched;
 	}
 
-	HandSqueezeEvent &HandSqueezeEvent::setButtonPressed(const bool clicked) noexcept
+	HandSqueezeEvent &
+		HandSqueezeEvent::setButtonPressed(const bool clicked) noexcept
 	{
 		_isClicked = clicked;
 		return *this;

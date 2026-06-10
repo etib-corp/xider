@@ -24,22 +24,23 @@
 
 namespace guillaume::ecs
 {
-    bool ComponentRegistry::hasChanged(const Entity::Identifier &entityIdentifier) const
-    {
-        for (const auto &[typeIndex, storage]: _storages) {
-            (void)typeIndex;
-            if (storage->hasChanged(entityIdentifier)) {
-                return true;
-            }
-        }
-        return false;
-    }
+	bool ComponentRegistry::hasChanged(
+		const Entity::Identifier &entityIdentifier) const
+	{
+		for (const auto &[typeIndex, storage]: _storages) {
+			(void)typeIndex;
+			if (storage->hasChanged(entityIdentifier)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
-    void ComponentRegistry::resetChangedFlags(void)
-    {
-        for (auto &[typeIndex, storage]: _storages) {
-            (void)typeIndex;
-            storage->resetChangedFlags();
-        }
-    }
+	void ComponentRegistry::resetChangedFlags(void)
+	{
+		for (auto &[typeIndex, storage]: _storages) {
+			(void)typeIndex;
+			storage->resetChangedFlags();
+		}
+	}
 }	 // namespace guillaume::ecs

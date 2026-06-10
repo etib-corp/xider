@@ -24,6 +24,7 @@
 
 #include <memory>
 #include <stdexcept>
+#include <typeindex>
 
 #include <utility/logging/loggable.hpp>
 #include <utility/logging/default_logger.hpp>
@@ -45,21 +46,24 @@ namespace guillaume
 	 */
 	class Scene:
 		public ecs::EntityRegistryContainer,
-		public utility::logging::Loggable<Scene, utility::logging::DefaultLogger>
+		public utility::logging::Loggable<Scene,
+									  utility::logging::DefaultLogger>
 	{
 		private:
 		LocalStorage &
 			_localStorage;	  ///< Reference to the local storage for this scene
-		SessionStorage &_sessionStorage;	///< Reference to the session
-											///< storage for this scene
+		SessionStorage &_sessionStorage;  ///< Reference to the session
+																///< storage for this scene
 		ecs::ComponentRegistry
 			_componentRegistry;	   ///< Component registry for the scene
 		std::unique_ptr<ecs::EntityBuilderManager>
 			_entityBuilderManager;	  ///< Manager for entity builders
 		std::unique_ptr<ecs::EntityDirectorManager>
 			_entityDirectorManager;	   ///< Manager for entity directors
+		std::type_index
+			_nextSceneType;  ///< Type of the next scene to switch to at end of frame
 
-		protected:
+	protected:
 		/**
 		 * @brief Get the entity builder manager for this scene.
 		 * @return Reference to the entity builder manager.
@@ -72,7 +76,14 @@ namespace guillaume
 		 */
 		ecs::EntityDirectorManager &getDirectorManager(void);
 
-		public:
+	public:
+		/**
+		 * @brief Request a switch to another scene at the end of the current
+		 * frame.
+		 * @tparam NextScene The type of the scene to switch to. Must inherit
+		 * from Scene.
+		 */
+		template<typename NextScene> void goToScene(void);
 		/**
 		 * @brief Default constructor for Scene.
 		 * @param localStorage Reference to the local storage for this scene.
@@ -97,6 +108,35 @@ namespace guillaume
 		 * @return Reference to the entity registry.
 		 */
 		ecs::EntityRegistry &getEntityRegistry(void);
+
+		/**
+		 * @brief Check if the scene wants to switch to another scene.
+		 * @return True if a scene switch has been requested, false otherwise.
+		 */
+		bool wantsToSwitch(void) const noexcept;
+
+		/**
+		 * @brief Get the type of the next scene to switch to.
+		 * @return std::type_index of the next scene, or typeid(void) if none.
+		 */
+		std::type_index getNextSceneType(void) const noexcept;
+
+		/**
+		 * @brief Clear the pending scene transition request.
+		 */
+		void clearNextScene(void) noexcept;
+
+		/**
+		 * @brief Called when the scene becomes the active scene.
+		 * Override to perform initialization logic.
+		 */
+		virtual void onEnter(void);
+
+		/**
+		 * @brief Called when the scene is leaving the active state.
+		 * Override to perform cleanup logic.
+		 */
+		virtual void onExit(void);
 	};
 
 	/**
@@ -106,4 +146,15 @@ namespace guillaume
 	template<typename Type>
 	concept InheritFromScene = std::is_base_of_v<Scene, Type>;
 
-}	 // namespace guillaume
+	/**
+	 * @brief Concept to ensure a type is present in a parameter pack.
+	 * @tparam Type The type to check.
+	 * @tparam Types The parameter pack to check against.
+	 */
+	template<typename Type, typename... Types>
+	concept IsOneOf = (std::is_same_v<Type, Types> || ...);
+
+}  // namespace guillaume
+
+// Include the goToScene template implementation
+#include "guillaume/scene.tpp"

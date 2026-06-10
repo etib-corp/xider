@@ -23,8 +23,9 @@ namespace evan
 	 *
 	 */
 	struct GPUVertex {
-		glm::vec3 pos;	  	///< Position of the vertex
-		glm::vec3 color;	///< Color of the vertex    (TODO: change to vec4 for alpha)
+		glm::vec3 pos;		///< Position of the vertex
+		glm::vec3 color;	///< Color of the vertex    (TODO: change to vec4
+							///< for alpha)
 
 		/**
 		 * @brief Texture coordinates of the vertex.
@@ -89,11 +90,14 @@ namespace evan
 		/**
 		 * @brief Equality operator for GPUVertex.
 		 *
-		 * This operator checks if two GPUVertex instances are equal by comparing their position, color, and texture coordinates. It returns true if all attributes are equal, and false otherwise.
+		 * This operator checks if two GPUVertex instances are equal by
+		 * comparing their position, color, and texture coordinates. It returns
+		 * true if all attributes are equal, and false otherwise.
 		 *
 		 * @param other The other GPUVertex instance to compare with.
 		 *
-		 * @return true if the two GPUVertex instances are equal, false otherwise.
+		 * @return true if the two GPUVertex instances are equal, false
+		 * otherwise.
 		 */
 		bool operator==(const GPUVertex &other) const
 		{
@@ -104,25 +108,32 @@ namespace evan
 		/**
 		 * @brief Create a GPUVertex from a utility::graphic::VertexD object.
 		 *
-		 * This static function takes a utility::graphic::VertexD object as input and converts it into a GPUVertex object. It extracts the position, color, and texture coordinates from the VertexD object and maps them to the corresponding attributes of the GPUVertex. The color is converted from a Color32Bit format (with components in the range [0, 255]) to a normalized RGB format (with components in the range [0.0, 1.0]) suitable for use in shaders.
+		 * This static function takes a utility::graphic::VertexD object as
+		 * input and converts it into a GPUVertex object. It extracts the
+		 * position, color, and texture coordinates from the VertexD object and
+		 * maps them to the corresponding attributes of the GPUVertex. The color
+		 * is converted from a Color32Bit format (with components in the range
+		 * [0, 255]) to a normalized RGB format (with components in the range
+		 * [0.0, 1.0]) suitable for use in shaders.
 		 *
 		 * @param vertex The utility::graphic::VertexD object to convert.
-		 * @return GPUVertex The resulting GPUVertex object with the converted attributes.
+		 * @return GPUVertex The resulting GPUVertex object with the converted
+		 * attributes.
 		 */
-		static GPUVertex createFromVertexD(const utility::graphic::VertexD &vertex)
+		static GPUVertex
+			createFromVertexD(const utility::graphic::VertexD &vertex)
 		{
 			auto color32Bit = vertex.getColor();
-			auto red 	= color32Bit.getRed() / 255.0f;
-			auto green = color32Bit.getGreen() / 255.0f;
-			auto blue 	= color32Bit.getBlue() / 255.0f;
+			auto red		= color32Bit.getRed() / 255.0f;
+			auto green		= color32Bit.getGreen() / 255.0f;
+			auto blue		= color32Bit.getBlue() / 255.0f;
 
-			return GPUVertex {
-				glm::vec3(vertex.getPosition().x, vertex.getPosition().y,
-						  vertex.getPosition().z),
-				glm::vec3(red, green, blue),
-				glm::vec2(vertex.getTextureCoordinates().x,
-						  vertex.getTextureCoordinates().y)
-			};
+			return GPUVertex { glm::vec3(vertex.getPosition().x,
+										 vertex.getPosition().y,
+										 vertex.getPosition().z),
+							   glm::vec3(red, green, blue),
+							   glm::vec2(vertex.getTextureCoordinates().x,
+										 vertex.getTextureCoordinates().y) };
 		}
 	};
 }	 // namespace evan

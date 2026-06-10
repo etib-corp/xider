@@ -28,7 +28,8 @@ void evan::ASwapchainContext::createRenderPass(
 	colorAttachment.samples		   = msaaSamples;
 	colorAttachment.finalLayout	   = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
-	this->getLogger().info() << "Selected swapchain format: " << swapchainFormat;
+	this->getLogger().info()
+		<< "Selected swapchain format: " << swapchainFormat;
 
 	VkAttachmentDescription depthAttachment {};
 	depthAttachment.format =
@@ -42,20 +43,27 @@ void evan::ASwapchainContext::createRenderPass(
 		VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 	depthAttachment.samples = msaaSamples;
 
-	this->getLogger().info() << "Selected depth format: " << depthAttachment.format;
+	this->getLogger().info()
+		<< "Selected depth format: " << depthAttachment.format;
 
 	VkAttachmentReference colorAttachmentRef {};
 	colorAttachmentRef.attachment = 0;
 	colorAttachmentRef.layout	  = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
-	this->getLogger().info() << "Configured color attachment reference with attachment index: " << colorAttachmentRef.attachment << " and layout: " << colorAttachmentRef.layout;
+	this->getLogger().info()
+		<< "Configured color attachment reference with attachment index: "
+		<< colorAttachmentRef.attachment
+		<< " and layout: " << colorAttachmentRef.layout;
 
 	VkAttachmentReference depthAttachmentRef {};
 	depthAttachmentRef.attachment = 1;
 	depthAttachmentRef.layout =
 		VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
-	this->getLogger().info() << "Configured depth attachment reference with attachment index: " << depthAttachmentRef.attachment << " and layout: " << depthAttachmentRef.layout;
+	this->getLogger().info()
+		<< "Configured depth attachment reference with attachment index: "
+		<< depthAttachmentRef.attachment
+		<< " and layout: " << depthAttachmentRef.layout;
 
 	VkAttachmentDescription colorAttachmentResolve {};
 	colorAttachmentResolve.format		  = swapchainFormat;
@@ -67,13 +75,27 @@ void evan::ASwapchainContext::createRenderPass(
 	colorAttachmentResolve.initialLayout  = VK_IMAGE_LAYOUT_UNDEFINED;
 	colorAttachmentResolve.finalLayout	  = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
-	this->getLogger().info() << "Configured color attachment resolve with format: " << colorAttachmentResolve.format << ", samples: " << colorAttachmentResolve.samples << ", load operation: " << colorAttachmentResolve.loadOp << ", store operation: " << colorAttachmentResolve.storeOp << ", stencil load operation: " << colorAttachmentResolve.stencilLoadOp << ", stencil store operation: " << colorAttachmentResolve.stencilStoreOp << ", initial layout: " << colorAttachmentResolve.initialLayout << ", final layout: " << colorAttachmentResolve.finalLayout;
+	this->getLogger().info()
+		<< "Configured color attachment resolve with format: "
+		<< colorAttachmentResolve.format
+		<< ", samples: " << colorAttachmentResolve.samples
+		<< ", load operation: " << colorAttachmentResolve.loadOp
+		<< ", store operation: " << colorAttachmentResolve.storeOp
+		<< ", stencil load operation: " << colorAttachmentResolve.stencilLoadOp
+		<< ", stencil store operation: "
+		<< colorAttachmentResolve.stencilStoreOp
+		<< ", initial layout: " << colorAttachmentResolve.initialLayout
+		<< ", final layout: " << colorAttachmentResolve.finalLayout;
 
 	VkAttachmentReference colorAttachmentResolveRef {};
 	colorAttachmentResolveRef.attachment = 2;
 	colorAttachmentResolveRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
-	this->getLogger().info() << "Configured color attachment resolve reference with attachment index: " << colorAttachmentResolveRef.attachment << " and layout: " << colorAttachmentResolveRef.layout;
+	this->getLogger().info()
+		<< "Configured color attachment resolve reference with attachment "
+		   "index: "
+		<< colorAttachmentResolveRef.attachment
+		<< " and layout: " << colorAttachmentResolveRef.layout;
 
 	VkSubpassDescription subpass {};
 	subpass.pipelineBindPoint		= VK_PIPELINE_BIND_POINT_GRAPHICS;
@@ -82,7 +104,15 @@ void evan::ASwapchainContext::createRenderPass(
 	subpass.pDepthStencilAttachment = &depthAttachmentRef;
 	subpass.pResolveAttachments		= &colorAttachmentResolveRef;
 
-	this->getLogger().info() << "Configured subpass with pipeline bind point: " << subpass.pipelineBindPoint << ", color attachment count: " << subpass.colorAttachmentCount << ", depth-stencil attachment reference: " << depthAttachmentRef.attachment << ", resolve attachment reference: " << colorAttachmentResolveRef.attachment << ", and color attachment reference: " << colorAttachmentRef.attachment;
+	this->getLogger().info()
+		<< "Configured subpass with pipeline bind point: "
+		<< subpass.pipelineBindPoint
+		<< ", color attachment count: " << subpass.colorAttachmentCount
+		<< ", depth-stencil attachment reference: "
+		<< depthAttachmentRef.attachment << ", resolve attachment reference: "
+		<< colorAttachmentResolveRef.attachment
+		<< ", and color attachment reference: "
+		<< colorAttachmentRef.attachment;
 
 	VkSubpassDependency dependency {};
 	dependency.srcSubpass	= VK_SUBPASS_EXTERNAL;
@@ -95,9 +125,17 @@ void evan::ASwapchainContext::createRenderPass(
 	dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT
 		| VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
 
-	this->getLogger().info() << "Configured subpass dependency with source subpass: " << dependency.srcSubpass << ", destination subpass: " << dependency.dstSubpass << ", source stage mask: " << dependency.srcStageMask << ", source access mask: " << dependency.srcAccessMask << ", destination stage mask: " << dependency.dstStageMask << ", and destination access mask: " << dependency.dstAccessMask;
+	this->getLogger().info()
+		<< "Configured subpass dependency with source subpass: "
+		<< dependency.srcSubpass
+		<< ", destination subpass: " << dependency.dstSubpass
+		<< ", source stage mask: " << dependency.srcStageMask
+		<< ", source access mask: " << dependency.srcAccessMask
+		<< ", destination stage mask: " << dependency.dstStageMask
+		<< ", and destination access mask: " << dependency.dstAccessMask;
 
-	this->getLogger().info() << "Selected swapchain format: " << swapchainFormat;
+	this->getLogger().info()
+		<< "Selected swapchain format: " << swapchainFormat;
 
 	std::array<VkAttachmentDescription, 3> attachments = {
 		colorAttachment, depthAttachment, colorAttachmentResolve
@@ -111,16 +149,21 @@ void evan::ASwapchainContext::createRenderPass(
 	renderPassInfo.dependencyCount = 1;
 	renderPassInfo.pDependencies   = &dependency;
 
-	this->getLogger().info() << "Creating render pass with " << renderPassInfo.attachmentCount << " attachments, " << renderPassInfo.subpassCount << " subpass, and " << renderPassInfo.dependencyCount << " dependency.";
+	this->getLogger().info()
+		<< "Creating render pass with " << renderPassInfo.attachmentCount
+		<< " attachments, " << renderPassInfo.subpassCount << " subpass, and "
+		<< renderPassInfo.dependencyCount << " dependency.";
 
 	if (vkCreateRenderPass(deviceBackend->_device, &renderPassInfo, nullptr,
 						   &_renderPass)
 		!= VK_SUCCESS) {
-		this->getLogger().error() << "Failed to create render pass for swapchain context.";
+		this->getLogger().error()
+			<< "Failed to create render pass for swapchain context.";
 		return;
 	}
 
-	this->getLogger().info() << "Successfully created render pass for swapchain context.";
+	this->getLogger().info()
+		<< "Successfully created render pass for swapchain context.";
 }
 
 VkRenderPass evan::ASwapchainContext::getRenderPass() const
@@ -131,7 +174,9 @@ VkRenderPass evan::ASwapchainContext::getRenderPass() const
 VkFormat evan::ASwapchainContext::selectSwapchainFormat(
 	const std::vector<int64_t> &swapchainFormats)
 {
-	this->getLogger().info() << "Selecting swapchain format from " << swapchainFormats.size() << " available formats...";
+	this->getLogger().info()
+		<< "Selecting swapchain format from " << swapchainFormats.size()
+		<< " available formats...";
 
 	constexpr VkFormat kPreferredSwapchainFormats[] = {
 		VK_FORMAT_R8G8B8A8_SRGB, VK_FORMAT_R8G8B8A8_UNORM,
@@ -139,7 +184,8 @@ VkFormat evan::ASwapchainContext::selectSwapchainFormat(
 	};
 
 	for (size_t i = 0; i < swapchainFormats.size(); ++i) {
-		this->getLogger().info() << "Available swapchain format " << i << ": " << swapchainFormats[i];
+		this->getLogger().info() << "Available swapchain format " << i << ": "
+								 << swapchainFormats[i];
 	}
 
 	auto swapchainFormatIt =
@@ -148,11 +194,13 @@ VkFormat evan::ASwapchainContext::selectSwapchainFormat(
 						   std::end(kPreferredSwapchainFormats));
 
 	if (swapchainFormatIt == swapchainFormats.end()) {
-		this->getLogger().info() << "No preferred swapchain format found, using first available format.";
+		this->getLogger().info() << "No preferred swapchain format found, "
+									"using first available format.";
 		return static_cast<VkFormat>(swapchainFormats[0]);
 	}
 
-	this->getLogger().info() << "Selected preferred swapchain format: " << *swapchainFormatIt;
+	this->getLogger().info()
+		<< "Selected preferred swapchain format: " << *swapchainFormatIt;
 
 	return static_cast<VkFormat>(*swapchainFormatIt);
 }
@@ -161,7 +209,10 @@ VkFormat evan::ASwapchainContext::findSupportedFormat(
 	VkPhysicalDevice physicalDevice, const std::vector<VkFormat> &candidates,
 	VkImageTiling tiling, VkFormatFeatureFlags features)
 {
-	this->getLogger().info() << "Finding supported format from " << candidates.size() << " candidates with tiling: " << tiling << " and features: " << features << "...";
+	this->getLogger().info()
+		<< "Finding supported format from " << candidates.size()
+		<< " candidates with tiling: " << tiling
+		<< " and features: " << features << "...";
 
 	for (VkFormat format: candidates) {
 		this->getLogger().info() << "Checking candidate format: " << format;
@@ -171,17 +222,25 @@ VkFormat evan::ASwapchainContext::findSupportedFormat(
 
 		if (tiling == VK_IMAGE_TILING_LINEAR
 			&& (props.linearTilingFeatures & features) == features) {
-			this->getLogger().info() << "Selected supported format: " << format << " with linear tiling.";
+			this->getLogger().info() << "Selected supported format: " << format
+									 << " with linear tiling.";
 			return format;
 		} else if (tiling == VK_IMAGE_TILING_OPTIMAL
 				   && (props.optimalTilingFeatures & features) == features) {
-			this->getLogger().info() << "Selected supported format: " << format << " with optimal tiling.";
+			this->getLogger().info() << "Selected supported format: " << format
+									 << " with optimal tiling.";
 			return format;
 		}
 	}
 
-	this->getLogger().error() << "Failed to find supported format from candidates with tiling: " << tiling << " and features: " << features << ".";
-	this->getLogger().warning() << "Returning VK_FORMAT_UNDEFINED to indicate failure to find a supported format. Ensure that the candidates provided are compatible with the physical device and meet the required tiling and feature criteria.";
+	this->getLogger().error()
+		<< "Failed to find supported format from candidates with tiling: "
+		<< tiling << " and features: " << features << ".";
+	this->getLogger().warning()
+		<< "Returning VK_FORMAT_UNDEFINED to indicate failure to find a "
+		   "supported format. Ensure that the candidates provided are "
+		   "compatible with the physical device and meet the required tiling "
+		   "and feature criteria.";
 	return VK_FORMAT_UNDEFINED;
 }
 

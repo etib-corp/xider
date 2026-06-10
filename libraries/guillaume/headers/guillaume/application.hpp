@@ -46,7 +46,7 @@
 
 #include "guillaume/metadata.hpp"
 #include "guillaume/engine.hpp"
-#include "guillaume/scene_manager_filler.hpp"
+#include "guillaume/scene_manager.hpp"
 
 #include "guillaume/event/event_bus.hpp"
 #include "guillaume/event/event_subscriber.hpp"
@@ -73,12 +73,14 @@ namespace guillaume
 	/**
 	 * @brief Application base class.
 	 *
+	 * @tparam DefaultSceneType The default scene type to activate when the
+	 * application starts. Must be one of the registered SceneTypes.
 	 * @tparam SceneTypes Variadic template parameter pack for scene types used
 	 * in the application. Each scene type must inherit from the Scene class.
 	 *
 	 * @code
 	 * class MyEngine : public Engine { ... };
-	 * Application<MyEngine> app;
+	 * Application<DefaultScene, Scene1, Scene2> app;
 	 * return app.run();
 	 * @endcode
 	 *
@@ -86,25 +88,29 @@ namespace guillaume
 	 * @see event::EventBus
 	 * @see Engine
 	 */
-	template<InheritFromScene... SceneTypes> class Application:
-		protected utility::logging::Loggable<Application<SceneTypes...>, utility::logging::DefaultLogger>
+	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
+		requires IsOneOf<DefaultSceneType, SceneTypes...>
+	class Application:
+		protected utility::logging::Loggable<
+			Application<DefaultSceneType, SceneTypes...>,
+			utility::logging::DefaultLogger>
 	{
 		private:
 		std::unique_ptr<Engine>
 			_engine;	///< Unique pointer to the application engine
-		std::unique_ptr<SceneManager>
+		std::unique_ptr<SceneManager<DefaultSceneType, SceneTypes...>>
 			_sceneManager;			  ///< Manager for application scenes
 		event::EventBus _eventBus;	  ///< Event bus dispatching to systems
 		event::EventSubscriber<utility::event::QuitEvent>
-			_quitEventSubscriber;	 ///< Subscriber for quit events
+			_quitEventSubscriber;				///< Subscriber for quit events
 		ecs::SystemRegistry _systemRegistry;	///< Shared system registry
 		ecs::SystemPhaseList _systemPhases;		///< Ordered list of phases and
 												///< traversal strategies
-						///< OS-level interactions
+		///< OS-level interactions
 		std::shared_ptr<utility::RessourceProvider>
-			_ressourceProvider;   ///< Shared
-								  ///< ressource
-								  ///< provider
+			_ressourceProvider;	   ///< Shared
+								   ///< ressource
+								   ///< provider
 
 		template<typename PhaseType> void runPhase(PhaseType &phaseDefinition);
 
@@ -126,12 +132,13 @@ namespace guillaume
 		public:
 		/**
 		 * @brief Construct an application with a shared resource provider.
-		 * @param ressourceProvider Shared pointer to the resource provider to be
-		 * used by the application. This allows for sharing resources across
+		 * @param ressourceProvider Shared pointer to the resource provider to
+		 * be used by the application. This allows for sharing resources across
 		 * different parts of the application, such as systems and scenes, while
 		 * maintaining a single source of truth for resource management.
 		 */
-		Application(std::shared_ptr<utility::RessourceProvider> ressourceProvider);
+		Application(
+			std::shared_ptr<utility::RessourceProvider> ressourceProvider);
 
 		/**
 		 * @brief Default destructor

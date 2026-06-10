@@ -24,6 +24,7 @@
 #include <guillaume/entities/panel.hpp>
 
 #include "xider/scenes/main.hpp"
+#include "xider/scenes/settings.hpp"
 
 namespace xider::scenes
 {
@@ -50,7 +51,7 @@ namespace xider::scenes
 
 		buttonDirector.makeIconTextButton(
 			buttonBuilder, "settings", "Settings", [this]() {
-				this->getLogger().info() << "Button icon text clicked!";
+				this->goToScene<Settings>();
 			});
 	}
 
@@ -58,4 +59,4 @@ namespace xider::scenes
 	{
 	}
 
-}	 // namespace xider::scenes
+}  // namespace xider::scenes

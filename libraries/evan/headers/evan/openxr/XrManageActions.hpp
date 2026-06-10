@@ -34,7 +34,9 @@ namespace evan
 	 * integrating input handling into an OpenXR application, allowing
 	 * developers to focus on creating immersive experiences.
 	 */
-	class XrManageActions : protected utility::logging::Loggable<XrManageActions, utility::logging::DefaultLogger>
+	class XrManageActions:
+		protected utility::logging::Loggable<XrManageActions,
+											 utility::logging::DefaultLogger>
 	{
 		public:
 		/**

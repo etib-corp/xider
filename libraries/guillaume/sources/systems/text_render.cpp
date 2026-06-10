@@ -54,8 +54,7 @@ namespace guillaume::systems
 							components::Color>(ecs::Phase::Render)
 		, _ressourceProvider(ressourceProvider)
 		, _renderer(engine)
-		, _defaultFontPath(
-			  "fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf")
+		, _defaultFontPath("fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf")
 	{
 	}
 
@@ -65,7 +64,8 @@ namespace guillaume::systems
 
 	void TextRender::update(const ecs::Entity::Identifier &entityIdentifier)
 	{
-		getLogger().debug() << "Updating TextRender system for entity " << entityIdentifier;
+		getLogger().debug()
+			<< "Updating TextRender system for entity " << entityIdentifier;
 		if (!requireComponent<components::Transform>(entityIdentifier)
 			|| !requireComponent<components::Text>(entityIdentifier)
 			|| !requireComponent<components::Color>(entityIdentifier)) {
@@ -80,7 +80,7 @@ namespace guillaume::systems
 			getComponent<components::Color>(entityIdentifier);
 
 		auto &cacheEntry = _cache[entityIdentifier];
-		cacheEntry.used = true;
+		cacheEntry.used	 = true;
 
 		utility::graphic::Text text(
 			_ressourceProvider, textComponent.getContent(),
@@ -89,8 +89,7 @@ namespace guillaume::systems
 		const auto pose = transformComponent.getPose();
 
 		if (cacheEntry.objectId != 0 && cacheEntry.text.has_value()
-			&& *cacheEntry.text == text
-			&& cacheEntry.pose == pose) {
+			&& *cacheEntry.text == text && cacheEntry.pose == pose) {
 			return;
 		}
 
@@ -99,9 +98,8 @@ namespace guillaume::systems
 		}
 
 		cacheEntry.objectId = _renderer->addText(text, pose);
-		cacheEntry.text = text;
-		cacheEntry.pose = pose;
-
+		cacheEntry.text		= text;
+		cacheEntry.pose		= pose;
 	}
 
 }	 // namespace guillaume::systems

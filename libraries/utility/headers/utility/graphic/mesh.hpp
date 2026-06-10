@@ -88,9 +88,9 @@ namespace utility::graphic
 		/**
 		 * @brief Reset the mesh by clearing all vertices and indices.
 		 *
-		 * This method removes all vertex and index data from the mesh, effectively
-		 * resetting it to an empty state. This can be useful for reusing a Mesh
-		 * object without needing to create a new instance.
+		 * This method removes all vertex and index data from the mesh,
+		 * effectively resetting it to an empty state. This can be useful for
+		 * reusing a Mesh object without needing to create a new instance.
 		 */
 		void reset(void);
 

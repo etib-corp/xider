@@ -20,6 +20,9 @@
  SOFTWARE.
  */
 
+#include <guillaume/entities/button.hpp>
+
+#include "xider/scenes/main.hpp"
 #include "xider/scenes/settings.hpp"
 
 namespace xider::scenes
@@ -30,10 +33,22 @@ namespace xider::scenes
 		: guillaume::Scene(localStorage, sessionStorage)
 	{
 		getLogger().info() << "Settings scene created";
+
+		auto &buttonBuilder =
+			getBuilderManager()
+				.getBuilder<guillaume::entities::Button::Builder>();
+		auto &buttonDirector =
+			getDirectorManager()
+				.getDirector<guillaume::entities::Button::Director>();
+
+		buttonDirector.makeTextButton(
+			buttonBuilder, "Back to Main", [this]() {
+				this->goToScene<Main>();
+			});
 	}
 
 	Settings::~Settings(void)
 	{
 	}
 
-}	 // namespace xider::scenes
+} // namespace xider::scenes

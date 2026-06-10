@@ -31,10 +31,12 @@ namespace evan
 	 *
 	 * @note The GPUMesh class relies on the DeviceContext for Vulkan device
 	 * management and assumes that the vertex data is provided in a specific
-	 * format defined by the GPUVertex structure. It also assumes that the material
-	 * ID is used to reference material properties for rendering.
+	 * format defined by the GPUVertex structure. It also assumes that the
+	 * material ID is used to reference material properties for rendering.
 	 */
-	class GPUMesh : protected utility::logging::Loggable<GPUMesh, utility::logging::DefaultLogger>
+	class GPUMesh:
+		protected utility::logging::Loggable<GPUMesh,
+											 utility::logging::DefaultLogger>
 	{
 		public:
 		/**
@@ -44,16 +46,16 @@ namespace evan
 		 *
 		 * This constructor initializes the GPUMesh by creating vertex and index
 		 * buffers on the GPU using the provided device context. It takes in a
-		 * vector of GPUVertex structures representing the vertex data, a vector of
-		 * uint32_t representing the index data, and a uint32_t representing the
-		 * material ID associated with the mesh. The constructor is responsible
-		 * for allocating GPU resources and uploading the vertex and index data
-		 * to the GPU for efficient rendering.
+		 * vector of GPUVertex structures representing the vertex data, a vector
+		 * of uint32_t representing the index data, and a uint32_t representing
+		 * the material ID associated with the mesh. The constructor is
+		 * responsible for allocating GPU resources and uploading the vertex and
+		 * index data to the GPU for efficient rendering.
 		 *
 		 * @param deviceContext A reference to the DeviceContext instance used
 		 * for Vulkan device management and resource creation.
-		 * @param vertices A vector of GPUVertex structures containing the vertex
-		 * data for the mesh.
+		 * @param vertices A vector of GPUVertex structures containing the
+		 * vertex data for the mesh.
 		 * @param indices A vector of uint32_t containing the index data for the
 		 * mesh.
 		 * @param materialID A uint32_t representing the material ID associated
@@ -61,8 +63,8 @@ namespace evan
 		 * rendering.
 		 *
 		 * @note The constructor assumes that the vertex data is provided in a
-		 * specific format defined by the GPUVertex structure and that the material
-		 * ID is used for rendering purposes. It also assumes that the
+		 * specific format defined by the GPUVertex structure and that the
+		 * material ID is used for rendering purposes. It also assumes that the
 		 * DeviceContext is properly initialized and can be used to create GPU
 		 * resources.
 		 */

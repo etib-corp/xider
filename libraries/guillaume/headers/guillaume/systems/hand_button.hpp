@@ -36,8 +36,7 @@ namespace guillaume::systems
 	 */
 	class HandButton:
 		public ButtonInteractionSystem<
-			utility::event::HandButtonEvent,
-			components::HandButtonInteraction,
+			utility::event::HandButtonEvent, components::HandButtonInteraction,
 			std::function<utility::graphic::RayF(
 				const utility::event::HandButtonEvent &)>>
 	{
@@ -53,8 +52,7 @@ namespace guillaume::systems
 				  components::HandButtonInteraction,
 				  std::function<utility::graphic::RayF(
 					  const utility::event::HandButtonEvent &)>>(
-				  eventBus,
-				  [](const utility::event::HandButtonEvent &event) {
+				  eventBus, [](const utility::event::HandButtonEvent &event) {
 					  return event.getPose().toForwardRay();
 				  })
 		{
@@ -66,4 +64,4 @@ namespace guillaume::systems
 		~HandButton(void) = default;
 	};
 
-} // namespace guillaume::systems
+}	 // namespace guillaume::systems

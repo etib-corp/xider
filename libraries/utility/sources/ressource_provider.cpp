@@ -22,27 +22,32 @@ namespace utility
 	// Getters //
 	/////////////
 
-	std::map<uint32_t, std::shared_ptr<graphic::Material>> RessourceProvider::getMaterials() const
+	std::map<uint32_t, std::shared_ptr<graphic::Material>>
+		RessourceProvider::getMaterials() const
 	{
 		return _materials;
 	}
 
-	std::map<uint32_t, std::shared_ptr<graphic::Texture>> RessourceProvider::getTextures() const
+	std::map<uint32_t, std::shared_ptr<graphic::Texture>>
+		RessourceProvider::getTextures() const
 	{
 		return _textures;
 	}
 
-	std::map<uint32_t, std::shared_ptr<graphic::Model>> RessourceProvider::getModels() const
+	std::map<uint32_t, std::shared_ptr<graphic::Model>>
+		RessourceProvider::getModels() const
 	{
 		return _models;
 	}
 
-	std::map<uint32_t, std::shared_ptr<graphic::Shader>> RessourceProvider::getShaders() const
+	std::map<uint32_t, std::shared_ptr<graphic::Shader>>
+		RessourceProvider::getShaders() const
 	{
 		return _shaders;
 	}
 
-	std::map<uint32_t, std::shared_ptr<graphic::CodePoints>> RessourceProvider::getCodePoints() const
+	std::map<uint32_t, std::shared_ptr<graphic::CodePoints>>
+		RessourceProvider::getCodePoints() const
 	{
 		return _codePoints;
 	}
@@ -54,10 +59,11 @@ namespace utility
 				return id;
 			}
 		}
-		return 0;  // Return 0 if the shader name is not found
+		return 0;	 // Return 0 if the shader name is not found
 	}
 
-	uint32_t RessourceProvider::getMaterialID(const std::string &materialName) const
+	uint32_t
+		RessourceProvider::getMaterialID(const std::string &materialName) const
 	{
 		auto it = _elementsIDs.find(materialName);
 
@@ -107,43 +113,46 @@ namespace utility
 		}
 
 		auto font = std::make_shared<graphic::Font>(std::vector { *fontAsset });
-		auto fontID = getNextID();
+		auto fontID		 = getNextID();
 		auto materialKey = fontAsset->path() + "_material";
 
-		_fonts[fontID] = font;
+		_fonts[fontID]					= font;
 		_elementsIDs[fontAsset->path()] = fontID;
 
 		auto textMaterial = std::make_shared<graphic::TextMaterial>();
-		auto materialID = getNextID();
+		auto materialID	  = getNextID();
 
-		_materials[materialID] = textMaterial;
+		_materials[materialID]	  = textMaterial;
 		_elementsIDs[materialKey] = materialID;
 
 		font->onNewTextureCreated =
 			[this, materialKey](std::string name,
-							   std::shared_ptr<graphic::Texture> atlas) {
+								std::shared_ptr<graphic::Texture> atlas) {
 				auto textureID = getNextID();
 
 				_textures[textureID] = atlas;
-				_elementsIDs[name] = textureID;
+				_elementsIDs[name]	 = textureID;
 
 				auto materialKeyIt = _elementsIDs.find(materialKey);
 
 				if (materialKeyIt == _elementsIDs.end()) {
-					std::cerr << "Missing text material entry for font atlas: " << name
-							  << std::endl;
+					std::cerr << "Missing text material entry for font atlas: "
+							  << name << std::endl;
 					return;
 				}
 
 				auto materialIt = _materials.find(materialKeyIt->second);
 
 				if (materialIt == _materials.end()) {
-					std::cerr << "Missing text material for font atlas: " << name << std::endl;
+					std::cerr
+						<< "Missing text material for font atlas: " << name
+						<< std::endl;
 					return;
 				}
 
-				auto atlasMaterial = std::dynamic_pointer_cast<graphic::TextMaterial>(
-					materialIt->second);
+				auto atlasMaterial =
+					std::dynamic_pointer_cast<graphic::TextMaterial>(
+						materialIt->second);
 
 				if (!atlasMaterial) {
 					std::cerr << "Misconfigured material for font: " << name
@@ -191,44 +200,47 @@ namespace utility
 			}
 		}
 
-		auto font = std::make_shared<graphic::Font>(assets);
-		auto fontID = getNextID();
+		auto font		 = std::make_shared<graphic::Font>(assets);
+		auto fontID		 = getNextID();
 		auto materialKey = familyName + "_material";
 
-		_fonts[fontID] = font;
+		_fonts[fontID]			 = font;
 		_elementsIDs[familyName] = fontID;
 
 		auto textMaterial = std::make_shared<graphic::TextMaterial>();
-		auto materialID = getNextID();
+		auto materialID	  = getNextID();
 
-		_materials[materialID] = textMaterial;
+		_materials[materialID]	  = textMaterial;
 		_elementsIDs[materialKey] = materialID;
 
 		font->onNewTextureCreated =
 			[this, materialKey](std::string name,
-							   std::shared_ptr<graphic::Texture> atlas) {
+								std::shared_ptr<graphic::Texture> atlas) {
 				auto textureID = getNextID();
 
 				_textures[textureID] = atlas;
-				_elementsIDs[name] = textureID;
+				_elementsIDs[name]	 = textureID;
 
 				auto materialKeyIt = _elementsIDs.find(materialKey);
 
 				if (materialKeyIt == _elementsIDs.end()) {
-					std::cerr << "Missing text material entry for font atlas: " << name
-							  << std::endl;
+					std::cerr << "Missing text material entry for font atlas: "
+							  << name << std::endl;
 					return;
 				}
 
 				auto materialIt = _materials.find(materialKeyIt->second);
 
 				if (materialIt == _materials.end()) {
-					std::cerr << "Missing text material for font atlas: " << name << std::endl;
+					std::cerr
+						<< "Missing text material for font atlas: " << name
+						<< std::endl;
 					return;
 				}
 
-				auto atlasMaterial = std::dynamic_pointer_cast<graphic::TextMaterial>(
-					materialIt->second);
+				auto atlasMaterial =
+					std::dynamic_pointer_cast<graphic::TextMaterial>(
+						materialIt->second);
 
 				if (!atlasMaterial) {
 					std::cerr << "Misconfigured material for font: " << name
@@ -244,7 +256,7 @@ namespace utility
 
 	std::shared_ptr<graphic::Material>
 		RessourceProvider::loadMaterial(const std::string &path,
-									   ShaderType shaderType)
+										ShaderType shaderType)
 	{
 		auto it = _elementsIDs.find(path);
 
@@ -267,8 +279,7 @@ namespace utility
 	}
 
 	std::shared_ptr<graphic::Material> RessourceProvider::loadMaterialFromAsset(
-		ShaderType shaderType,
-		std::shared_ptr<utility::File> materialAsset)
+		ShaderType shaderType, std::shared_ptr<utility::File> materialAsset)
 	{
 		auto it = _elementsIDs.find(materialAsset->path());
 
@@ -278,13 +289,12 @@ namespace utility
 			}
 		}
 
-		std::string shaderName = (shaderType == ShaderType::TEXT_SHADER)
-			? "text"
-			: "mesh";
+		std::string shaderName =
+			(shaderType == ShaderType::TEXT_SHADER) ? "text" : "mesh";
 		std::vector<File> textureAssets = { *materialAsset };
 		auto material = std::make_shared<graphic::Material>(*this, shaderName,
 															textureAssets);
-		auto id = getNextID();
+		auto id		  = getNextID();
 
 		// TODO: we should discuss about the format of the material file to be
 		// able to load the textures from the material file and store them in
@@ -338,21 +348,22 @@ namespace utility
 			STBI_rgb_alpha);
 
 		if (!pixels) {
-			std::cerr << "Failed to load texture: " << textureAsset->path() << std::endl;
+			std::cerr << "Failed to load texture: " << textureAsset->path()
+					  << std::endl;
 			return nullptr;
 		}
 
 		auto id = getNextID();
 
-		_textures[id] =
-			std::make_shared<graphic::Texture>(texWidth, texHeight);
+		_textures[id] = std::make_shared<graphic::Texture>(texWidth, texHeight);
 		std::copy(pixels, pixels + (texWidth * texHeight * 4),
 				  _textures[id]->_pixels.data());
 
 		return _textures[id];
 	}
 
-	std::shared_ptr<graphic::Model> RessourceProvider::loadModel(const std::string &path)
+	std::shared_ptr<graphic::Model>
+		RessourceProvider::loadModel(const std::string &path)
 	{
 		auto it = _elementsIDs.find(path);
 
@@ -388,7 +399,7 @@ namespace utility
 		}
 
 		auto model = std::make_shared<graphic::Model>(modelAsset);
-		auto id = getNextID();
+		auto id	   = getNextID();
 
 		_models[id] = model;
 
@@ -396,7 +407,8 @@ namespace utility
 	}
 
 	std::shared_ptr<graphic::Model> RessourceProvider::loadModelFromAsset(
-		std::shared_ptr<utility::File> modelAsset, graphic::Model::ModelType type)
+		std::shared_ptr<utility::File> modelAsset,
+		graphic::Model::ModelType type)
 	{
 		auto it = _elementsIDs.find(modelAsset->path());
 
@@ -407,14 +419,15 @@ namespace utility
 		}
 
 		auto model = std::make_shared<graphic::Model>(modelAsset, type);
-		auto id = getNextID();
+		auto id	   = getNextID();
 
 		_models[id] = model;
 
 		return _models[id];
 	}
 
-	std::shared_ptr<graphic::Model> RessourceProvider::loadObj(const std::string &path)
+	std::shared_ptr<graphic::Model>
+		RessourceProvider::loadObj(const std::string &path)
 	{
 		auto it = _elementsIDs.find(path);
 
@@ -431,8 +444,8 @@ namespace utility
 			return nullptr;
 		}
 
-		auto model = std::make_shared<graphic::Model>(modelAsset,
-													   graphic::Model::ModelType::OBJ);
+		auto model = std::make_shared<graphic::Model>(
+			modelAsset, graphic::Model::ModelType::OBJ);
 		auto id = getNextID();
 
 		_models[id] = model;
@@ -440,7 +453,8 @@ namespace utility
 		return _models[id];
 	}
 
-	std::shared_ptr<graphic::Model> RessourceProvider::loadObjFromAsset(std::shared_ptr<utility::File> modelAsset)
+	std::shared_ptr<graphic::Model> RessourceProvider::loadObjFromAsset(
+		std::shared_ptr<utility::File> modelAsset)
 	{
 		auto it = _elementsIDs.find(modelAsset->path());
 
@@ -450,8 +464,8 @@ namespace utility
 			}
 		}
 
-		auto model = std::make_shared<graphic::Model>(modelAsset,
-													   graphic::Model::ModelType::OBJ);
+		auto model = std::make_shared<graphic::Model>(
+			modelAsset, graphic::Model::ModelType::OBJ);
 		auto id = getNextID();
 
 		_models[id] = model;
@@ -459,10 +473,12 @@ namespace utility
 		return _models[id];
 	}
 
-	std::shared_ptr<graphic::Shader> RessourceProvider::loadShader(const std::string &vertexPath, const std::string &fragmentPath)
+	std::shared_ptr<graphic::Shader>
+		RessourceProvider::loadShader(const std::string &vertexPath,
+									  const std::string &fragmentPath)
 	{
 		auto path = buildShaderPath(vertexPath, fragmentPath);
-		auto it = _elementsIDs.find(path);
+		auto it	  = _elementsIDs.find(path);
 
 		if (it != _elementsIDs.end()) {
 			if (_shaders.find(it->second) != _shaders.end()) {
@@ -470,32 +486,37 @@ namespace utility
 			}
 		}
 
-		auto vertex = _systemInterface.add(vertexPath);
+		auto vertex	  = _systemInterface.add(vertexPath);
 		auto fragment = _systemInterface.add(fragmentPath);
 
 		if (!vertex) {
-			std::cerr << "Failed to load shader asset: " << vertexPath << std::endl;
+			std::cerr << "Failed to load shader asset: " << vertexPath
+					  << std::endl;
 			return nullptr;
 		}
 
 		if (!fragment) {
-			std::cerr << "Failed to load shader asset: " << fragmentPath << std::endl;
+			std::cerr << "Failed to load shader asset: " << fragmentPath
+					  << std::endl;
 			return nullptr;
 		}
 
-		auto shader = std::make_shared<graphic::Shader>(vertex->content(), fragment->content());
-		auto id = getNextID();
+		auto shader = std::make_shared<graphic::Shader>(vertex->content(),
+														fragment->content());
+		auto id		= getNextID();
 
-		_shaders[id] = shader;
+		_shaders[id]	   = shader;
 		_elementsIDs[path] = id;
 
 		return _shaders[id];
 	}
 
-	std::shared_ptr<graphic::Shader> RessourceProvider::loadShaderFromAssets(std::shared_ptr<utility::File> vertexAsset, std::shared_ptr<utility::File> fragmentAsset)
+	std::shared_ptr<graphic::Shader> RessourceProvider::loadShaderFromAssets(
+		std::shared_ptr<utility::File> vertexAsset,
+		std::shared_ptr<utility::File> fragmentAsset)
 	{
 		auto path = buildShaderPath(vertexAsset->path(), fragmentAsset->path());
-		auto it = _elementsIDs.find(path);
+		auto it	  = _elementsIDs.find(path);
 
 		if (it != _elementsIDs.end()) {
 			if (_shaders.find(it->second) != _shaders.end()) {
@@ -503,16 +524,18 @@ namespace utility
 			}
 		}
 
-		auto shader = std::make_shared<graphic::Shader>(vertexAsset->content(), fragmentAsset->content());
+		auto shader = std::make_shared<graphic::Shader>(
+			vertexAsset->content(), fragmentAsset->content());
 		auto id = getNextID();
 
-		_shaders[id] = shader;
+		_shaders[id]	   = shader;
 		_elementsIDs[path] = id;
 
 		return _shaders[id];
 	}
 
-	std::shared_ptr<graphic::CodePoints> RessourceProvider::loadCodePoints(const std::string &path)
+	std::shared_ptr<graphic::CodePoints>
+		RessourceProvider::loadCodePoints(const std::string &path)
 	{
 		auto it = _elementsIDs.find(path);
 
@@ -525,7 +548,8 @@ namespace utility
 		auto codePointsAsset = _systemInterface.add(path);
 
 		if (!codePointsAsset) {
-			std::cerr << "Failed to load codepoints asset: " << path << std::endl;
+			std::cerr << "Failed to load codepoints asset: " << path
+					  << std::endl;
 			return nullptr;
 		}
 
@@ -534,7 +558,9 @@ namespace utility
 		return codePoints;
 	}
 
-	std::shared_ptr<graphic::CodePoints> RessourceProvider::loadCodePointsFromAsset(std::shared_ptr<utility::File> codePointsAsset)
+	std::shared_ptr<graphic::CodePoints>
+		RessourceProvider::loadCodePointsFromAsset(
+			std::shared_ptr<utility::File> codePointsAsset)
 	{
 		auto it = _elementsIDs.find(codePointsAsset->path());
 
@@ -544,10 +570,11 @@ namespace utility
 			}
 		}
 
-		auto codePoints = std::make_shared<graphic::CodePoints>(codePointsAsset->content());
+		auto codePoints =
+			std::make_shared<graphic::CodePoints>(codePointsAsset->content());
 		auto id = getNextID();
 
-		_codePoints[id] = codePoints;
+		_codePoints[id]						  = codePoints;
 		_elementsIDs[codePointsAsset->path()] = id;
 
 		return _codePoints[id];
@@ -557,10 +584,13 @@ namespace utility
 	// Protected Methods //
 	///////////////////////
 
-	std::string RessourceProvider::buildShaderPath(const std::string &vertexPath, const std::string &fragmentPath) const
+	std::string RessourceProvider::buildShaderPath(
+		const std::string &vertexPath, const std::string &fragmentPath) const
 	{
-		std::string pureVertexName = vertexPath.substr(vertexPath.find_last_of("/\\") + 1);
-		std::string pureFragmentName = fragmentPath.substr(fragmentPath.find_last_of("/\\") + 1);
+		std::string pureVertexName =
+			vertexPath.substr(vertexPath.find_last_of("/\\") + 1);
+		std::string pureFragmentName =
+			fragmentPath.substr(fragmentPath.find_last_of("/\\") + 1);
 		std::string path = pureVertexName + "_with_" + pureFragmentName;
 
 		return path;
@@ -571,4 +601,4 @@ namespace utility
 		return _currentID++;
 	}
 
-}  	 // namespace utility
+}	 // namespace utility

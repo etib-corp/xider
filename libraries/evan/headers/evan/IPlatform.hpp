@@ -28,7 +28,9 @@ namespace evan
 	 * Defines a common interface for platform implementations. Derived classes
 	 * must implement platform-specific behavior.
 	 */
-	class IPlatform: protected utility::logging::Loggable<IPlatform, utility::logging::DefaultLogger>
+	class IPlatform:
+		protected utility::logging::Loggable<IPlatform,
+											 utility::logging::DefaultLogger>
 	{
 		public:
 		/**
@@ -59,14 +61,14 @@ namespace evan
 		 *
 		 * This method should be called regularly to process platform events.
 		 *
-		 * @param deviceBackend The device backend to use for event processing, if
-		 * needed.
+		 * @param deviceBackend The device backend to use for event processing,
+		 * if needed.
 		 * @return A vector of unique pointers to Event objects representing the
 		 * events that were polled from the platform. Each Event object contains
 		 * information about the type of event, such as input events.
 		 */
 		virtual std::vector<std::unique_ptr<utility::event::Event>>
-				pollEvents(ADeviceBackend &deviceBackend) = 0;
+			pollEvents(ADeviceBackend &deviceBackend) = 0;
 
 		/**
 		 * @brief Create a device context for the platform.

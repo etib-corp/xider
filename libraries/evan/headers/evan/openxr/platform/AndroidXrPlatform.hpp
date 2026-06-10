@@ -118,36 +118,44 @@ namespace evan
 		~AndroidXrPlatform() override = default;
 
 		/**
-		 * @brief Retrieves the list of required OpenXR instance extensions for Android platform.
+		 * @brief Retrieves the list of required OpenXR instance extensions for
+		 * Android platform.
 		 *
-		 * This function returns a vector of extension name strings that must be enabled
-		 * when creating an OpenXR instance on Android. The extensions include Vulkan2
-		 * support and Android-specific instance creation extensions.
+		 * This function returns a vector of extension name strings that must be
+		 * enabled when creating an OpenXR instance on Android. The extensions
+		 * include Vulkan2 support and Android-specific instance creation
+		 * extensions.
 		 *
-		 * @return std::vector<std::string> A vector containing the required OpenXR instance
-		 *         extension names for the Android platform, including:
-		 *         - XR_KHR_VULKAN_ENABLE2_EXTENSION_NAME: For Vulkan 2 graphics support
-		 *         - XR_KHR_ANDROID_CREATE_INSTANCE_EXTENSION_NAME: For Android-specific
-		 *           instance creation (when XR_USE_PLATFORM_ANDROID is defined)
+		 * @return std::vector<std::string> A vector containing the required
+		 * OpenXR instance extension names for the Android platform, including:
+		 *         - XR_KHR_VULKAN_ENABLE2_EXTENSION_NAME: For Vulkan 2 graphics
+		 * support
+		 *         - XR_KHR_ANDROID_CREATE_INSTANCE_EXTENSION_NAME: For
+		 * Android-specific instance creation (when XR_USE_PLATFORM_ANDROID is
+		 * defined)
 		 *
-		 * @note These extensions should be validated and enabled during OpenXR instance
-		 *       creation to ensure proper functionality on Android platforms.
+		 * @note These extensions should be validated and enabled during OpenXR
+		 * instance creation to ensure proper functionality on Android
+		 * platforms.
 		 *
 		 * @see XrInstanceCreateInfo
 		 */
 		std::vector<std::string> getRequiredInstanceExtensions() const override;
 
 		/**
-		 * @brief Retrieves the Android-specific XR instance creation information.
+		 * @brief Retrieves the Android-specific XR instance creation
+		 * information.
 		 *
-		 * This function returns a pointer to the platform-specific instance creation
-		 * information structure used for OpenXR initialization on Android platforms.
+		 * This function returns a pointer to the platform-specific instance
+		 * creation information structure used for OpenXR initialization on
+		 * Android platforms.
 		 *
-		 * @return A const pointer to the XrBaseInStructure containing Android XR instance
-		 *         creation parameters when compiled for Android; nullptr otherwise.
+		 * @return A const pointer to the XrBaseInStructure containing Android
+		 * XR instance creation parameters when compiled for Android; nullptr
+		 * otherwise.
 		 *
-		 * @note This function is only functional on Android platforms. On other platforms,
-		 *       it returns nullptr.
+		 * @note This function is only functional on Android platforms. On other
+		 * platforms, it returns nullptr.
 		 *
 		 * @see _instanceCreateInfoAndroid
 		 */

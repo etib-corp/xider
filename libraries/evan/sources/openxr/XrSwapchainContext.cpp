@@ -52,8 +52,10 @@ evan::XrSwapchainContext::XrSwapchainContext(const DeviceContext &deviceContext)
 		XrResult result =
 			xrCreateSwapchain(session, &swapchainCreateInfo, &swapchain);
 		if (result != XR_SUCCESS) {
-			this->getLogger().error() << "Failed to create swapchain for view configuration "
-									 "with error code: " << result;
+			this->getLogger().error()
+				<< "Failed to create swapchain for view configuration "
+				   "with error code: "
+				<< result;
 			continue;
 		}
 		evan::XrSwapchainImage::CreateXrSwapchainImageProperties properties {
@@ -73,10 +75,12 @@ evan::XrSwapchainContext::XrSwapchainContext(const DeviceContext &deviceContext)
 
 void evan::XrSwapchainContext::destroy(VkDevice device)
 {
-	this->getLogger().info() << "Destroying XrSwapchainContext and releasing resources";
+	this->getLogger().info()
+		<< "Destroying XrSwapchainContext and releasing resources";
 
 	for (const auto &swapchainImage: _swapchainImages) {
-		this->getLogger().info() << "Destroying swapchain image and releasing resources";
+		this->getLogger().info()
+			<< "Destroying swapchain image and releasing resources";
 		swapchainImage->destroy(device);
 	}
 	_swapchainImages.clear();
@@ -96,7 +100,8 @@ VkResult evan::XrSwapchainContext::aquireImage(
 	XrResult result =
 		xrAcquireSwapchainImage(swapchain, &acquire_info, &imageIndex);
 	if (result != XR_SUCCESS) {
-		this->getLogger().error() << "Failed to acquire swapchain image with error code: " << result;
+		this->getLogger().error()
+			<< "Failed to acquire swapchain image with error code: " << result;
 		return VK_ERROR_OUT_OF_DATE_KHR;
 	}
 	return VK_SUCCESS;
@@ -114,7 +119,8 @@ void evan::XrSwapchainContext::waitForImage(uint32_t index)
 	wait_info.timeout = XR_INFINITE_DURATION;
 	XrResult result	  = xrWaitSwapchainImage(swapchain, &wait_info);
 	if (result != XR_SUCCESS) {
-		this->getLogger().error() << "Failed to wait for swapchain image with error code: " << result;
+		this->getLogger().error()
+			<< "Failed to wait for swapchain image with error code: " << result;
 		return;
 	}
 	this->getLogger().info() << "Successfully waited for swapchain image";
@@ -122,13 +128,16 @@ void evan::XrSwapchainContext::waitForImage(uint32_t index)
 
 void evan::XrSwapchainContext::updateProjectionLayerViews()
 {
-	this->getLogger().info() << "Updating projection layer views based on current swapchain images and view configurations";
+	this->getLogger().info()
+		<< "Updating projection layer views based on current swapchain images "
+		   "and view configurations";
 
 	const size_t count = std::min(_views.size(), _swapchainImages.size());
 
 	_projectionLayerViews.resize(count);
 	for (size_t i = 0; i < count; ++i) {
-		this->getLogger().info() << "Updating projection layer view for index: " << i;
+		this->getLogger().info()
+			<< "Updating projection layer view for index: " << i;
 		auto *viewSwapchain =
 			dynamic_cast<XrSwapchainImage *>(_swapchainImages[i].get());
 

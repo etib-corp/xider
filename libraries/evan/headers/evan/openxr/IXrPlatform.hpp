@@ -80,7 +80,8 @@ namespace evan
 		 * events that were polled from the OpenXR platform. Each Event object
 		 * contains information about the type of event, such as input events.
 		 */
-		virtual std::vector<std::unique_ptr<utility::event::Event>> pollEvents(ADeviceBackend &deviceBackend) override;
+		virtual std::vector<std::unique_ptr<utility::event::Event>>
+			pollEvents(ADeviceBackend &deviceBackend) override;
 
 		/**
 		 * @brief Create a device context for the OpenXR platform.

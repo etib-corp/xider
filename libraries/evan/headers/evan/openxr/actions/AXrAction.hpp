@@ -32,7 +32,9 @@ namespace evan
 	 * action based on specified properties. The class also ensures proper
 	 * cleanup of the OpenXR resources when the object is destroyed.
 	 */
-	class AXrAction : protected utility::logging::Loggable<AXrAction, utility::logging::DefaultLogger>
+	class AXrAction:
+		protected utility::logging::Loggable<AXrAction,
+											 utility::logging::DefaultLogger>
 	{
 		public:
 		/**

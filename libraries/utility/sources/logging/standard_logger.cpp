@@ -29,71 +29,71 @@
 namespace utility::logging
 {
 
-StandardLogger::StandardLogger(const std::string &name)
-	: Logger(name)
-{
-}
-
-StandardLogger::~StandardLogger()
-{
-	std::cout.flush();
-	std::cerr.flush();
-}
-
-static bool useColor()
-{
-	const char *noColor = std::getenv("NO_COLOR");
-	return noColor == nullptr || noColor[0] == '\0';
-}
-
-static const char *levelColor(LogLevel level)
-{
-	switch (level) {
-		case LogLevel::DEBUG_LEVEL:
-			return "\033[36m";
-		case LogLevel::INFO_LEVEL:
-			return "\033[32m";
-		case LogLevel::WARNING_LEVEL:
-			return "\033[33m";
-		case LogLevel::ERROR_LEVEL:
-			return "\033[31m";
-		default:
-			return "\033[0m";
-	}
-}
-
-static const char *resetColor()
-{
-	return "\033[0m";
-}
-
-void StandardLogger::output(const LogRecord &record)
-{
-	std::stringstream ss;
-	ss << "[" << record.timestamp << "] ";
-	ss << "[" << record.loggerName << "] ";
-
-	bool color = useColor();
-	if (color) {
-		ss << levelColor(record.level);
-	}
-	ss << "[" << levelToString(record.level) << "]";
-	if (color) {
-		ss << resetColor();
+	StandardLogger::StandardLogger(const std::string &name)
+		: Logger(name)
+	{
 	}
 
-	if (record.level == LogLevel::DEBUG_LEVEL) {
-		ss << " [" << record.file << ":" << record.line << " "
-		   << record.function << "] ";
+	StandardLogger::~StandardLogger()
+	{
+		std::cout.flush();
+		std::cerr.flush();
 	}
-	ss << record.message;
 
-	if (record.level == LogLevel::WARNING_LEVEL
-		|| record.level == LogLevel::ERROR_LEVEL) {
-		std::cerr << ss.str() << std::endl;
-	} else {
-		std::cout << ss.str() << std::endl;
+	static bool useColor()
+	{
+		const char *noColor = std::getenv("NO_COLOR");
+		return noColor == nullptr || noColor[0] == '\0';
 	}
-}
+
+	static const char *levelColor(LogLevel level)
+	{
+		switch (level) {
+			case LogLevel::DEBUG_LEVEL:
+				return "\033[36m";
+			case LogLevel::INFO_LEVEL:
+				return "\033[32m";
+			case LogLevel::WARNING_LEVEL:
+				return "\033[33m";
+			case LogLevel::ERROR_LEVEL:
+				return "\033[31m";
+			default:
+				return "\033[0m";
+		}
+	}
+
+	static const char *resetColor()
+	{
+		return "\033[0m";
+	}
+
+	void StandardLogger::output(const LogRecord &record)
+	{
+		std::stringstream ss;
+		ss << "[" << record.timestamp << "] ";
+		ss << "[" << record.loggerName << "] ";
+
+		bool color = useColor();
+		if (color) {
+			ss << levelColor(record.level);
+		}
+		ss << "[" << levelToString(record.level) << "]";
+		if (color) {
+			ss << resetColor();
+		}
+
+		if (record.level == LogLevel::DEBUG_LEVEL) {
+			ss << " [" << record.file << ":" << record.line << " "
+			   << record.function << "] ";
+		}
+		ss << record.message;
+
+		if (record.level == LogLevel::WARNING_LEVEL
+			|| record.level == LogLevel::ERROR_LEVEL) {
+			std::cerr << ss.str() << std::endl;
+		} else {
+			std::cout << ss.str() << std::endl;
+		}
+	}
 
 }	 // namespace utility::logging

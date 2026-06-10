@@ -29,65 +29,65 @@
 namespace utility::logging
 {
 
-std::string Logger::levelToString(LogLevel level)
-{
-	switch (level) {
-		case LogLevel::DEBUG_LEVEL:
-			return "Debug";
-		case LogLevel::INFO_LEVEL:
-			return "Info";
-		case LogLevel::WARNING_LEVEL:
-			return "Warning";
-		case LogLevel::ERROR_LEVEL:
-			return "Error";
-		default:
-			return "Unknown";
+	std::string Logger::levelToString(LogLevel level)
+	{
+		switch (level) {
+			case LogLevel::DEBUG_LEVEL:
+				return "Debug";
+			case LogLevel::INFO_LEVEL:
+				return "Info";
+			case LogLevel::WARNING_LEVEL:
+				return "Warning";
+			case LogLevel::ERROR_LEVEL:
+				return "Error";
+			default:
+				return "Unknown";
+		}
 	}
-}
 
-int Logger::levelValue(LogLevel level)
-{
-	switch (level) {
-		case LogLevel::DEBUG_LEVEL:
-			return 0;
-		case LogLevel::INFO_LEVEL:
-			return 1;
-		case LogLevel::WARNING_LEVEL:
-			return 2;
-		case LogLevel::ERROR_LEVEL:
-			return 3;
-		default:
-			return -1;
+	int Logger::levelValue(LogLevel level)
+	{
+		switch (level) {
+			case LogLevel::DEBUG_LEVEL:
+				return 0;
+			case LogLevel::INFO_LEVEL:
+				return 1;
+			case LogLevel::WARNING_LEVEL:
+				return 2;
+			case LogLevel::ERROR_LEVEL:
+				return 3;
+			default:
+				return -1;
+		}
 	}
-}
 
-std::string Logger::getTimestamp()
-{
-	auto now = std::chrono::system_clock::now();
-	auto time = std::chrono::system_clock::to_time_t(now);
-	auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
-				  now.time_since_epoch())
-			  % 1000;
+	std::string Logger::getTimestamp()
+	{
+		auto now  = std::chrono::system_clock::now();
+		auto time = std::chrono::system_clock::to_time_t(now);
+		auto ms	  = std::chrono::duration_cast<std::chrono::milliseconds>(
+						now.time_since_epoch())
+			% 1000;
 
-	std::stringstream ss;
-	ss << std::put_time(std::localtime(&time), "%Y-%m-%d %H:%M:%S");
-	ss << '.' << std::setfill('0') << std::setw(3) << ms.count();
-	return ss.str();
-}
+		std::stringstream ss;
+		ss << std::put_time(std::localtime(&time), "%Y-%m-%d %H:%M:%S");
+		ss << '.' << std::setfill('0') << std::setw(3) << ms.count();
+		return ss.str();
+	}
 
-Logger::Logger(const std::string &name)
-	: _name(name)
-{
-}
+	Logger::Logger(const std::string &name)
+		: _name(name)
+	{
+	}
 
-void Logger::setMinLevel(LogLevel level)
-{
-	_minLevel = level;
-}
+	void Logger::setMinLevel(LogLevel level)
+	{
+		_minLevel = level;
+	}
 
-LogLevel Logger::getMinLevel() const
-{
-	return _minLevel;
-}
+	LogLevel Logger::getMinLevel() const
+	{
+		return _minLevel;
+	}
 
 }	 // namespace utility::logging

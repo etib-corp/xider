@@ -7,17 +7,22 @@
 
 #include "evan/GPUShader.hpp"
 
-evan::GPUShader::GPUShader(VkDevice device, const utility::graphic::Shader &shader)
+evan::GPUShader::GPUShader(VkDevice device,
+						   const utility::graphic::Shader &shader)
 {
 	this->getLogger().info() << "Initializing GPUShader...";
 
 	VkShaderModuleCreateInfo createInfo {};
 
-	auto vertexCode   = shader.getVertexCode();
+	auto vertexCode	  = shader.getVertexCode();
 	auto fragmentCode = shader.getFragmentCode();
 
-	this->getLogger().info() << "Vertex shader code size: " << vertexCode.size() * sizeof(uint32_t) << " bytes";
-	this->getLogger().info() << "Fragment shader code size: " << fragmentCode.size() * sizeof(uint32_t) << " bytes";
+	this->getLogger().info()
+		<< "Vertex shader code size: " << vertexCode.size() * sizeof(uint32_t)
+		<< " bytes";
+	this->getLogger().info()
+		<< "Fragment shader code size: "
+		<< fragmentCode.size() * sizeof(uint32_t) << " bytes";
 
 	createInfo.sType	= VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
 	createInfo.codeSize = vertexCode.size() * sizeof(uint32_t);

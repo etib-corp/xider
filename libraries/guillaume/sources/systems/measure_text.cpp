@@ -34,8 +34,7 @@ namespace guillaume::systems
 			  ecs::Phase::Measure)
 		, _ressourceProvider(ressourceProvider)
 		, _renderer(engine)
-		, _defaultFontPath(
-			  "fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf")
+		, _defaultFontPath("fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf")
 	{
 	}
 
@@ -45,7 +44,8 @@ namespace guillaume::systems
 
 	void MeasureText::update(const ecs::Entity::Identifier &entityIdentifier)
 	{
-		getLogger().debug() << "Updating MeasureText system for entity " << entityIdentifier;
+		getLogger().debug()
+			<< "Updating MeasureText system for entity " << entityIdentifier;
 		if (!requireComponent<components::Text>(entityIdentifier)
 			|| !requireComponent<components::Bound>(entityIdentifier)) {
 			return;

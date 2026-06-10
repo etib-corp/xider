@@ -72,7 +72,9 @@ namespace evan
 	 * establishing the core structure and functionality of the engine, with
 	 * plans for further enhancements and optimizations in the future.
 	 */
-	class Engine : protected utility::logging::Loggable<Engine, utility::logging::DefaultLogger>
+	class Engine:
+		protected utility::logging::Loggable<Engine,
+											 utility::logging::DefaultLogger>
 	{
 		public:
 		/**
@@ -134,7 +136,8 @@ namespace evan
 		size_t addText(std::shared_ptr<utility::graphic::Text> text);
 
 		/**
-		 * @brief Removes a previously added render object from the current scene.
+		 * @brief Removes a previously added render object from the current
+		 * scene.
 		 * @param objectID The identifier returned by addText or addMesh.
 		 * @return True when the object was removed from the scene.
 		 */

@@ -56,7 +56,7 @@ namespace utility::graphic
 				int pixelIndex = (_penY + y) * _atlasWidth + (_penX + x);
 				int atlasIndex = pixelIndex * 4;
 				uint8_t value  = static_cast<uint8_t>(
-					 g->bitmap.buffer[y * g->bitmap.pitch + x]);
+					g->bitmap.buffer[y * g->bitmap.pitch + x]);
 
 				_generatedAtlas->_pixels[atlasIndex + 0] = 255;
 				_generatedAtlas->_pixels[atlasIndex + 1] = 255;

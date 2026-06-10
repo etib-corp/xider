@@ -43,8 +43,11 @@ void evan::AXrAction::createAction(const PropertiesXrActions &properties)
 	XrResult result =
 		xrCreateAction(properties.actionSet, &actionCreateInfo, &_action);
 	if (result != XR_SUCCESS) {
-		this->getLogger().error() << "Failed to create action: " << properties.actionName << " with error code: " << result;
+		this->getLogger().error()
+			<< "Failed to create action: " << properties.actionName
+			<< " with error code: " << result;
 		return;
 	}
-	this->getLogger().info() << "Successfully created action: " << properties.actionName;
+	this->getLogger().info()
+		<< "Successfully created action: " << properties.actionName;
 }

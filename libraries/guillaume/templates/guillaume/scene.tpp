@@ -20,9 +20,18 @@
  SOFTWARE.
  */
 
-#include "guillaume/scene_manager_filler.hpp"
+#pragma once
+
+#include "guillaume/scene.hpp"
 
 namespace guillaume
 {
-
-}	 // namespace guillaume
+	template<typename NextScene>
+	void Scene::goToScene(void)
+	{
+		_nextSceneType = typeid(NextScene);
+		this->getLogger().info()
+			<< "Requested scene transition to: "
+			<< utility::demangle<NextScene>();
+	}
+}  // namespace guillaume

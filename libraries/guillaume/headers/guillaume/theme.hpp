@@ -405,10 +405,13 @@ namespace guillaume
 	class Theme
 	{
 		private:
-		std::string _name;										///< Theme name for identification
-		std::string _description;								///< Optional theme description for documentation
-		std::array<Scheme, ThemeSchemeRole::ThemeSchemeCount> _schemes;	///< Schemes indexed by ThemeSchemeRole
-		std::array<Palette, ThemePaletteRole::ThemePaletteCount> _palettes;	///< Palettes indexed by ThemePaletteRole
+		std::string _name;	  ///< Theme name for identification
+		std::string
+			_description;	 ///< Optional theme description for documentation
+		std::array<Scheme, ThemeSchemeRole::ThemeSchemeCount>
+			_schemes;	 ///< Schemes indexed by ThemeSchemeRole
+		std::array<Palette, ThemePaletteRole::ThemePaletteCount>
+			_palettes;	  ///< Palettes indexed by ThemePaletteRole
 
 		public:
 		/**
