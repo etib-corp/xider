@@ -20,35 +20,18 @@
  SOFTWARE.
  */
 
-#include <guillaume/entities/button.hpp>
+#pragma once
 
-#include "xider/scenes/main.hpp"
-#include "xider/scenes/settings.hpp"
+#include "guillaume/scene.hpp"
 
-namespace xider::scenes
+namespace guillaume
 {
-
-	Settings::Settings(guillaume::LocalStorage &localStorage,
-					   guillaume::SessionStorage &sessionStorage)
-		: guillaume::Scene(localStorage, sessionStorage)
+	template<typename NextScene>
+	void Scene::goToScene(void)
 	{
-		getLogger().info() << "Settings scene created";
-
-		auto &buttonBuilder =
-			getBuilderManager()
-				.getBuilder<guillaume::entities::Button::Builder>();
-		auto &buttonDirector =
-			getDirectorManager()
-				.getDirector<guillaume::entities::Button::Director>();
-
-		buttonDirector.makeTextButton(
-			buttonBuilder, "Back to Main", [this]() {
-				this->goToScene<Main>();
-			});
+		_nextSceneType = typeid(NextScene);
+		this->getLogger().info()
+			<< "Requested scene transition to: "
+			<< utility::demangle<NextScene>();
 	}
-
-	Settings::~Settings(void)
-	{
-	}
-
-} // namespace xider::scenes
+}  // namespace guillaume

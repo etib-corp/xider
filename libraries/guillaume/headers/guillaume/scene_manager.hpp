@@ -105,6 +105,15 @@ namespace guillaume
 		bool hasActiveScene(void) const noexcept;
 
 		/**
+		 * @brief Process a pending scene transition request from the active
+		 * scene. Calls onExit() on the current scene, switches the active
+		 * scene, and calls onEnter() on the new scene.
+		 * @throws std::runtime_error if the requested next scene type is not
+		 * registered.
+		 */
+		void processSceneTransition(void);
+
+		/**
 		 * @brief Switch to a different scene.
 		 * @tparam SceneType The type of the scene to switch to.
 		 * @throws std::runtime_error if the specified scene type is not found

@@ -189,6 +189,7 @@ namespace guillaume
 				}
 				_engine->clear();
 				routine();
+				_sceneManager->processSceneTransition();
 				_engine->present();
 			} catch (const std::exception &exception) {
 				this->getLogger().error()

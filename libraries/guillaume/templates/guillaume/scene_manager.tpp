@@ -129,6 +129,38 @@ namespace guillaume
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
 	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+	void SceneManager<DefaultSceneType, SceneTypes...>::processSceneTransition(
+		void)
+	{
+		std::unique_ptr<Scene> &activeScene = getActiveScene();
+
+		if (!activeScene->wantsToSwitch()) {
+			return;
+		}
+
+		std::type_index nextType = activeScene->getNextSceneType();
+
+		if (_scenes.find(nextType) == _scenes.end()) {
+			this->getLogger().error()
+				<< "Scene transition failed. Target scene type is not "
+				   "registered: "
+				<< utility::demangle(nextType.name());
+			activeScene->clearNextScene();
+			throw std::runtime_error(
+				"Scene transition failed: target scene not found in scene manager");
+		}
+
+		this->getLogger().info() << "Transitioning from active scene to type: "
+								 << utility::demangle(nextType.name());
+
+		activeScene->onExit();
+		activeScene->clearNextScene();
+		_activeSceneType = nextType;
+		_scenes[_activeSceneType]->onEnter();
+	}
+
+	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
+	    requires IsOneOf<DefaultSceneType, SceneTypes...>
 	template<InheritFromScene SceneType>
 	void SceneManager<DefaultSceneType, SceneTypes...>::switchToScene(void)
 	{

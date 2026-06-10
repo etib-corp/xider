@@ -42,6 +42,7 @@ namespace guillaume
 			  std::make_unique<ecs::EntityDirectorManagerFiller<
 				  entities::Panel::Director, entities::Text::Director,
 				  entities::Button::Director, entities::Icon::Director>>())
+		, _nextSceneType(typeid(void))
 	{
 		getLogger().info()
 			<< "Scene initialized with default entity builders and "
@@ -75,4 +76,29 @@ namespace guillaume
 		return *this;
 	}
 
-}	 // namespace guillaume
+	bool Scene::wantsToSwitch(void) const noexcept
+	{
+		return _nextSceneType != typeid(void);
+	}
+
+	std::type_index Scene::getNextSceneType(void) const noexcept
+	{
+		return _nextSceneType;
+	}
+
+	void Scene::clearNextScene(void) noexcept
+	{
+		_nextSceneType = typeid(void);
+	}
+
+	void Scene::onEnter(void)
+	{
+		getLogger().info() << "Scene entered";
+	}
+
+	void Scene::onExit(void)
+	{
+		getLogger().info() << "Scene exited";
+	}
+
+}  // namespace guillaume
