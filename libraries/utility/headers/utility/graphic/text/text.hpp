@@ -119,8 +119,6 @@ namespace utility::graphic
 		 *
 		 * @param ressourceProvider A reference to the RessourceProvider instance
 		 * used to load font resources.
-		 * @param systemInterface A reference to the SystemIO instance used to
-		 * load font assets.
 		 * @param content The text content to be displayed.
 		 * @param fontSize The font size in points for rendering the text.
 		 * @param font The file path to the font resource to be used for
