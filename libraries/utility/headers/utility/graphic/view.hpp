@@ -385,8 +385,7 @@ namespace utility::graphic
 		 */
 		ViewComponentType getAspectRatio(void) const
 		{
-			const ViewComponentType vertical =
-				std::tan(_fieldOfView.getUp())
+			const ViewComponentType vertical = std::tan(_fieldOfView.getUp())
 				+ std::tan(_fieldOfView.getDown());
 			if (vertical == ViewComponentType {}) {
 				return ViewComponentType {};
@@ -403,13 +402,6 @@ namespace utility::graphic
 		 */
 		void setFieldOfView(const FieldOfView<ViewComponentType> &fieldOfView)
 		{
-			const ViewComponentType vertical =
-				fieldOfView.getUpDegrees() + fieldOfView.getDownDegrees();
-			if (vertical <= ViewComponentType {}
-				|| vertical >= ViewComponentType { 180 }) {
-				throw std::invalid_argument(
-					"View vertical FOV must be in range (0, 180)");
-			}
 			_fieldOfView = fieldOfView;
 		}
 
