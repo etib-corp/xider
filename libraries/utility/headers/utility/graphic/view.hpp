@@ -386,14 +386,14 @@ namespace utility::graphic
 		ViewComponentType getAspectRatio(void) const
 		{
 			const ViewComponentType vertical =
-				std::tan(_fieldOfView.getUpRadians())
-				+ std::tan(_fieldOfView.getDownRadians());
+				std::tan(_fieldOfView.getUp())
+				+ std::tan(_fieldOfView.getDown());
 			if (vertical == ViewComponentType {}) {
 				return ViewComponentType {};
 			}
 			const ViewComponentType horizontal =
-				std::tan(_fieldOfView.getLeftRadians())
-				+ std::tan(_fieldOfView.getRightRadians());
+				std::tan(_fieldOfView.getLeft())
+				+ std::tan(_fieldOfView.getRight());
 			return horizontal / vertical;
 		}
 
@@ -489,12 +489,12 @@ namespace utility::graphic
 		{
 			const ViewComponentType horizontalOffset =
 				ndcX >= ViewComponentType {}
-				? ndcX * std::tan(_fieldOfView.getRightRadians())
-				: ndcX * std::tan(_fieldOfView.getLeftRadians());
+				? ndcX * std::tan(_fieldOfView.getRight())
+				: ndcX * std::tan(_fieldOfView.getLeft());
 			const ViewComponentType verticalOffset =
 				ndcY >= ViewComponentType {}
-				? ndcY * std::tan(_fieldOfView.getUpRadians())
-				: ndcY * std::tan(_fieldOfView.getDownRadians());
+				? ndcY * std::tan(_fieldOfView.getUp())
+				: ndcY * std::tan(_fieldOfView.getDown());
 
 			const auto rayDirection = (getForward() + right() * horizontalOffset
 									   + getUp() * verticalOffset);
