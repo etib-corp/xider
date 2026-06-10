@@ -26,8 +26,8 @@ namespace guillaume::systems
 {
 	HandPoke::HandPoke(event::EventBus &eventBus)
 		: ecs::SystemFiller<components::HandPokeInteraction,
-						components::Transform, components::Bound>(
-			ecs::Phase::Event)
+							components::Transform, components::Bound>(
+			  ecs::Phase::Event)
 		, event::EventManager<utility::event::HandPokeEvent>(eventBus)
 	{
 	}

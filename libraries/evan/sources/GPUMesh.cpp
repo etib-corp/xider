@@ -11,13 +11,16 @@ evan::GPUMesh::GPUMesh(std::shared_ptr<DeviceContext> deviceContext,
 					   std::vector<GPUVertex> vertices,
 					   std::vector<uint32_t> indices, uint32_t materialID)
 {
-	this->getLogger().info() << "Initializing GPUMesh with material ID: " << materialID << "...";
+	this->getLogger().info()
+		<< "Initializing GPUMesh with material ID: " << materialID << "...";
 
 	auto deviceBackend = deviceContext->getDeviceBackend();
 	_indexCount		   = indices.size();
 	_materialID		   = materialID;
 
-	this->getLogger().info() << "GPUMesh set up with " << vertices.size() << " vertices and " << indices.size() << " indices. Creating vertex buffer...";
+	this->getLogger().info()
+		<< "GPUMesh set up with " << vertices.size() << " vertices and "
+		<< indices.size() << " indices. Creating vertex buffer...";
 
 	VkDeviceSize bufferSize = sizeof(vertices[0]) * vertices.size();
 	VkBuffer stagingBuffer;
@@ -42,7 +45,8 @@ evan::GPUMesh::GPUMesh(std::shared_ptr<DeviceContext> deviceContext,
 
 	deviceBackend->createBuffer(stagingBufferProperties);
 
-	this->getLogger().info() << "Mapping staging buffer memory and copying vertex data...";
+	this->getLogger().info()
+		<< "Mapping staging buffer memory and copying vertex data...";
 
 	void *data = nullptr;
 	vkMapMemory(deviceBackend->_device, stagingBufferMemory, 0, bufferSize, 0,
@@ -73,7 +77,8 @@ evan::GPUMesh::GPUMesh(std::shared_ptr<DeviceContext> deviceContext,
 	};
 	deviceBackend->copyBuffer(copyBufferProperties);
 
-	this->getLogger().info() << "Vertex buffer created and data copied successfully. Cleaning up staging buffer...";
+	this->getLogger().info() << "Vertex buffer created and data copied "
+								"successfully. Cleaning up staging buffer...";
 
 	vkDestroyBuffer(deviceBackend->_device, stagingBuffer, nullptr);
 	vkFreeMemory(deviceBackend->_device, stagingBufferMemory, nullptr);
@@ -85,7 +90,9 @@ evan::GPUMesh::GPUMesh(std::shared_ptr<DeviceContext> deviceContext,
 
 evan::GPUMesh::~GPUMesh()
 {
-	this->getLogger().info() << "GPUMesh destructor called. GPU resources should be cleaned up using the destroy() method with the appropriate Vulkan device.";
+	this->getLogger().info()
+		<< "GPUMesh destructor called. GPU resources should be cleaned up "
+		   "using the destroy() method with the appropriate Vulkan device.";
 }
 
 ////////////////////
@@ -96,7 +103,8 @@ void evan::GPUMesh::destroy(VkDevice device)
 {
 	this->getLogger().info() << "Destroying GPUMesh resources...";
 
-	this->getLogger().info() << "Destroying vertex buffer and freeing memory...";
+	this->getLogger().info()
+		<< "Destroying vertex buffer and freeing memory...";
 	vkDestroyBuffer(device, _vertexBuffer, nullptr);
 
 	this->getLogger().info() << "Freeing vertex buffer memory...";
@@ -137,10 +145,11 @@ uint32_t evan::GPUMesh::getMaterialID() const
 // Protected methods //
 ///////////////////////
 
-void evan::GPUMesh::createIndexBuffer(std::shared_ptr<DeviceContext> deviceContext,
-									  std::vector<uint32_t> indices)
+void evan::GPUMesh::createIndexBuffer(
+	std::shared_ptr<DeviceContext> deviceContext, std::vector<uint32_t> indices)
 {
-	this->getLogger().info() << "Creating index buffer with " << indices.size() << " indices...";
+	this->getLogger().info()
+		<< "Creating index buffer with " << indices.size() << " indices...";
 
 	auto deviceBackend = deviceContext->getDeviceBackend();
 
@@ -149,7 +158,8 @@ void evan::GPUMesh::createIndexBuffer(std::shared_ptr<DeviceContext> deviceConte
 	this->getLogger().info() << "Index buffer size: " << bufferSize;
 
 	if (bufferSize == 0) {
-		this->getLogger().warning() << "Index buffer size is zero. Skipping index buffer creation.";
+		this->getLogger().warning()
+			<< "Index buffer size is zero. Skipping index buffer creation.";
 		return;
 	}
 
@@ -170,7 +180,8 @@ void evan::GPUMesh::createIndexBuffer(std::shared_ptr<DeviceContext> deviceConte
 
 	void *data;
 
-	this->getLogger().info() << "Mapping staging buffer memory and copying index data...";
+	this->getLogger().info()
+		<< "Mapping staging buffer memory and copying index data...";
 	vkMapMemory(deviceBackend->_device, stagingBufferMemory, 0, bufferSize, 0,
 				&data);
 	memcpy(data, indices.data(), (size_t)bufferSize);
@@ -198,7 +209,8 @@ void evan::GPUMesh::createIndexBuffer(std::shared_ptr<DeviceContext> deviceConte
 	};
 	deviceBackend->copyBuffer(copyBufferProperties);
 
-	this->getLogger().info() << "Destroying staging buffer and freeing memory...";
+	this->getLogger().info()
+		<< "Destroying staging buffer and freeing memory...";
 	vkDestroyBuffer(deviceBackend->_device, stagingBuffer, nullptr);
 	this->getLogger().info() << "Freeing staging buffer memory...";
 	vkFreeMemory(deviceBackend->_device, stagingBufferMemory, nullptr);

@@ -194,12 +194,10 @@ namespace guillaume::systems
 	}
 
 	void RectangleRender::buildTriangleFanVertices(
-		utility::graphic::Mesh &mesh,
-		const utility::graphic::PositionD &center,
+		utility::graphic::Mesh &mesh, const utility::graphic::PositionD &center,
 		const std::vector<utility::graphic::PositionD> &outline,
 		const utility::graphic::Color32Bit &color)
 	{
-
 		// OpenGL triangle fan expects the first vertex to be the fan anchor.
 		mesh.addVertex(createVertex(center, color));
 		for (const auto &outlineVertex: outline) {
@@ -236,7 +234,8 @@ namespace guillaume::systems
 	void
 		RectangleRender::update(const ecs::Entity::Identifier &entityIdentifier)
 	{
-		getLogger().debug() << "Updating RectangleRender system for entity " << entityIdentifier;
+		getLogger().debug() << "Updating RectangleRender system for entity "
+							<< entityIdentifier;
 
 		if (!requireComponent<components::Bound>(entityIdentifier)
 			|| !requireComponent<components::Transform>(entityIdentifier)
@@ -261,8 +260,8 @@ namespace guillaume::systems
 		const auto height	   = boundComponent.getHeight();
 		const auto color	   = colorComponent.getColor();
 		const float radius	   = extractAverageRadius(bordersComponent);
-		auto &cacheEntry = _cache[entityIdentifier];
-		cacheEntry.used = true;
+		auto &cacheEntry	   = _cache[entityIdentifier];
+		cacheEntry.used		   = true;
 
 		const utility::graphic::PositionD center(
 			position[0], position[1] - (height / 2.0f), position[2]);
@@ -271,7 +270,7 @@ namespace guillaume::systems
 			utility::math::Vector2F({ (float)width, (float)height }), radius);
 
 		utility::graphic::Mesh mesh(std::vector<utility::graphic::VertexD> {},
-								std::vector<uint32_t> {});
+									std::vector<uint32_t> {});
 		buildTriangleFanVertices(mesh, center, roundedVertices, color);
 
 		if (cacheEntry.mesh.has_value() && *cacheEntry.mesh == mesh) {
@@ -283,7 +282,7 @@ namespace guillaume::systems
 		}
 
 		cacheEntry.objectId = _engine->addMesh(mesh);
-		cacheEntry.mesh = mesh;
+		cacheEntry.mesh		= mesh;
 	}
 
 }	 // namespace guillaume::systems

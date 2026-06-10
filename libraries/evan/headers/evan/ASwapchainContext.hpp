@@ -36,7 +36,9 @@ namespace evan
 	 * swapchain-related operations in the engine.
 	 *
 	 */
-	class ASwapchainContext : protected utility::logging::Loggable<ASwapchainContext, utility::logging::DefaultLogger>
+	class ASwapchainContext:
+		protected utility::logging::Loggable<ASwapchainContext,
+											 utility::logging::DefaultLogger>
 	{
 		public:
 		virtual ~ASwapchainContext() = default;
@@ -202,8 +204,8 @@ namespace evan
 		 * using a utility::graphic::ViewF object. The view state includes
 		 * parameters such as the camera position, orientation, and field of
 		 * view, which are essential for rendering operations. Implement this
-		 * function to enable users to configure the view state for the swapchain
-		 * context according to their rendering needs.
+		 * function to enable users to configure the view state for the
+		 * swapchain context according to their rendering needs.
 		 *
 		 * @param view A utility::graphic::ViewF object representing the view
 		 * state to be set for the swapchain context.
@@ -213,8 +215,8 @@ namespace evan
 		/**
 		 * @brief Retrieves the current view state for the swapchain context.
 		 *
-		 * This function returns the current view state for the swapchain context
-		 * as a utility::graphic::ViewF object. The view state includes
+		 * This function returns the current view state for the swapchain
+		 * context as a utility::graphic::ViewF object. The view state includes
 		 * parameters such as the camera position, orientation, and field of
 		 * view, which are essential for rendering operations. Implement this
 		 * function to allow users to access the current view state of the

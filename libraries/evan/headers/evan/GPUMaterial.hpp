@@ -38,7 +38,9 @@ namespace evan
 	 * renderer instances. The class also includes functionality for cleaning up
 	 * Vulkan resources when they are no longer needed.
 	 */
-	class GPUMaterial : protected utility::logging::Loggable<GPUMaterial, utility::logging::DefaultLogger>
+	class GPUMaterial:
+		protected utility::logging::Loggable<GPUMaterial,
+											 utility::logging::DefaultLogger>
 	{
 		public:
 		/**
@@ -58,10 +60,12 @@ namespace evan
 		 * @param renderer A reference to the Renderer instance, which may be
 		 * used to access rendering configurations or resources needed for
 		 * material initialization.
-		 * @param material A reference to the utility::graphic::Material instance,
-		 * which contains information about the material's shader and textures,
-		 * used to initialize the Vulkan resources for this material.
-		 * @param shaderID The unique ID of the shader associated with this material, used to identify which shader program should be used when rendering objects that utilize this material.
+		 * @param material A reference to the utility::graphic::Material
+		 * instance, which contains information about the material's shader and
+		 * textures, used to initialize the Vulkan resources for this material.
+		 * @param shaderID The unique ID of the shader associated with this
+		 * material, used to identify which shader program should be used when
+		 * rendering objects that utilize this material.
 		 *
 		 * @note The constructor performs several Vulkan operations, including:
 		 * - Creating a Vulkan image from the specified texture file.
@@ -71,7 +75,10 @@ namespace evan
 		 * - Setting up descriptor sets for shader access to the material's
 		 * texture data.
 		 */
-		GPUMaterial(std::shared_ptr<DeviceContext> deviceContext, const Renderer &renderer, const utility::graphic::Material &material, uint32_t shaderID);
+		GPUMaterial(std::shared_ptr<DeviceContext> deviceContext,
+					const Renderer &renderer,
+					const utility::graphic::Material &material,
+					uint32_t shaderID);
 
 		~GPUMaterial();
 
@@ -116,14 +123,15 @@ namespace evan
 		/**
 		 * @brief Retrieves the unique shader ID associated with this material.
 		 *
-		 * This method returns the unique ID of the shader that is associated with
-		 * this material. The shader ID is used to identify which shader program
-		 * should be used when rendering objects that utilize this material, allowing for
-		 * proper rendering of the material's visual properties based on the shader's
-		 * functionality and characteristics.
+		 * This method returns the unique ID of the shader that is associated
+		 * with this material. The shader ID is used to identify which shader
+		 * program should be used when rendering objects that utilize this
+		 * material, allowing for proper rendering of the material's visual
+		 * properties based on the shader's functionality and characteristics.
 		 *
-		 * @return uint32_t The unique shader ID associated with this material, used to
-		 * identify the shader program for rendering objects that use this material.
+		 * @return uint32_t The unique shader ID associated with this material,
+		 * used to identify the shader program for rendering objects that use
+		 * this material.
 		 */
 		uint32_t getShaderID() const;
 
@@ -169,7 +177,8 @@ namespace evan
 								  const std::vector<VkBuffer> &uniformBuffers);
 
 		/**
-		 * Textures associated with the material, categorized by their intended use in the rendering pipeline.
+		 * Textures associated with the material, categorized by their intended
+		 * use in the rendering pipeline.
 		 */
 		std::vector<GPUTexture> _textures;
 

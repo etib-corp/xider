@@ -63,7 +63,8 @@ namespace guillaume
 	 * @see EventBus
 	 */
 	class Engine:
-		protected utility::logging::Loggable<Engine, utility::logging::DefaultLogger>
+		protected utility::logging::Loggable<Engine,
+											 utility::logging::DefaultLogger>
 	{
 		public:
 		/**

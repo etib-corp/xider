@@ -26,8 +26,8 @@ namespace guillaume::systems
 {
 	HandMotion::HandMotion(event::EventBus &eventBus)
 		: ecs::SystemFiller<components::HandHoverInteraction,
-						components::Transform, components::Bound>(
-			ecs::Phase::Event)
+							components::Transform, components::Bound>(
+			  ecs::Phase::Event)
 		, event::EventManager<utility::event::HandMotionEvent>(eventBus)
 	{
 	}

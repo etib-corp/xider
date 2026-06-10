@@ -26,8 +26,8 @@ namespace guillaume::systems
 {
 	HandSqueeze::HandSqueeze(event::EventBus &eventBus)
 		: ecs::SystemFiller<components::HandSqueezeInteraction,
-						  components::Transform, components::Bound>(
-				ecs::Phase::Event)
+							components::Transform, components::Bound>(
+			  ecs::Phase::Event)
 		, event::EventManager<utility::event::HandSqueezeEvent>(eventBus)
 	{
 	}
@@ -40,4 +40,4 @@ namespace guillaume::systems
 	{
 	}
 
-} 	// namespace guillaume::systems
+}	 // namespace guillaume::systems

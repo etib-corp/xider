@@ -26,8 +26,8 @@ namespace guillaume::systems
 {
 	HandPinch::HandPinch(event::EventBus &eventBus)
 		: ecs::SystemFiller<components::HandPinchInteraction,
-						components::Transform, components::Bound>(
-			ecs::Phase::Event)
+							components::Transform, components::Bound>(
+			  ecs::Phase::Event)
 		, event::EventManager<utility::event::HandPinchEvent>(eventBus)
 	{
 	}

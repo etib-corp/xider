@@ -67,16 +67,18 @@ namespace evan
 		XrSwapchainContext(const DeviceContext &deviceContext);
 
 		/**
-		 * @brief Destroys all swapchain images and clears the swapchain image collection.
+		 * @brief Destroys all swapchain images and clears the swapchain image
+		 * collection.
 		 *
-		 * This function iterates through all swapchain images stored in the context,
-		 * destroys each image using the provided Vulkan device, and then clears the
-		 * swapchain image collection.
+		 * This function iterates through all swapchain images stored in the
+		 * context, destroys each image using the provided Vulkan device, and
+		 * then clears the swapchain image collection.
 		 *
-		 * @param device The Vulkan device handle used to destroy the swapchain images.
+		 * @param device The Vulkan device handle used to destroy the swapchain
+		 * images.
 		 *
-		 * @note This function should be called during cleanup to ensure proper resource
-		 *       deallocation of all swapchain images.
+		 * @note This function should be called during cleanup to ensure proper
+		 * resource deallocation of all swapchain images.
 		 *
 		 * @see evan::XrSwapchainContext
 		 */
@@ -113,38 +115,43 @@ namespace evan
 							 VkFence inFlightFence,
 							 uint32_t &imageIndex) override;
 
-
 		/**
 		 * @brief Waits for a swapchain image to become available.
 		 *
-		 * Blocks until the swapchain image at the specified index is ready for rendering.
-		 * Uses an infinite timeout duration to wait indefinitely for the image to be available.
+		 * Blocks until the swapchain image at the specified index is ready for
+		 * rendering. Uses an infinite timeout duration to wait indefinitely for
+		 * the image to be available.
 		 *
 		 * @param index The index of the swapchain image to wait for.
 		 *
-		 * @note If the wait operation fails, an error message is printed to stderr.
-		 *       The function does not throw exceptions on failure.
+		 * @note If the wait operation fails, an error message is printed to
+		 * stderr. The function does not throw exceptions on failure.
 		 *
 		 * @see xrWaitSwapchainImage
 		 */
 		void waitForImage(uint32_t index) override;
 
 		/**
-		 * @brief Updates the projection layer views based on current swapchain images and view data.
+		 * @brief Updates the projection layer views based on current swapchain
+		 * images and view data.
 		 *
-		 * This function synchronizes the projection layer views with the available swapchain images
-		 * and view information. It resizes the projection layer views container to match the smaller
-		 * of the two collections (views or swapchain images) and populates each view with:
+		 * This function synchronizes the projection layer views with the
+		 * available swapchain images and view information. It resizes the
+		 * projection layer views container to match the smaller of the two
+		 * collections (views or swapchain images) and populates each view with:
 		 * - Composition layer type information
 		 * - View pose and field of view from the corresponding view
-		 * - Swapchain reference and image rectangle dimensions from the corresponding swapchain image
+		 * - Swapchain reference and image rectangle dimensions from the
+		 * corresponding swapchain image
 		 *
-		 * Each projection layer view is initialized with zero extent and offset (0, 0), and the
-		 * image rectangle extent is set to the swapchain image dimensions. Dynamic cast is used
-		 * to safely retrieve XrSwapchainImage instances; if a cast fails, that index is skipped.
+		 * Each projection layer view is initialized with zero extent and offset
+		 * (0, 0), and the image rectangle extent is set to the swapchain image
+		 * dimensions. Dynamic cast is used to safely retrieve XrSwapchainImage
+		 * instances; if a cast fails, that index is skipped.
 		 *
-		 * @note This function should be called whenever the swapchain images or view data changes
-		 * to ensure the projection layer views remain synchronized.
+		 * @note This function should be called whenever the swapchain images or
+		 * view data changes to ensure the projection layer views remain
+		 * synchronized.
 		 *
 		 * @see XrSwapchainImage
 		 * @see XR_TYPE_COMPOSITION_LAYER_PROJECTION_VIEW

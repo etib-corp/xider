@@ -14,9 +14,9 @@
 namespace utility
 {
 	/**
-	 * @brief The RessourceProvider class is responsible for managing and loading
-	 * various resources such as fonts, materials, and textures in a graphics
-	 * application.
+	 * @brief The RessourceProvider class is responsible for managing and
+	 * loading various resources such as fonts, materials, and textures in a
+	 * graphics application.
 	 *
 	 * The RessourceProvider provides methods to load resources from file paths
 	 * or from asset objects, and it maintains internal maps to store loaded
@@ -38,12 +38,13 @@ namespace utility
 		enum class ShaderType { TEXT_SHADER, MESH_SHADER };
 
 		/**
-		 * @brief Constructs a RessourceProvider object with a reference to a SystemIO
-		 * instance.
-		 * @param systemInterface A reference to the SystemIO instance used for loading
-		 * assets from file paths. The RessourceProvider relies on the SystemIO interface
-		 * to load resources from the filesystem, and this constructor initializes the
-		 * RessourceProvider with the provided SystemIO instance for asset loading operations.
+		 * @brief Constructs a RessourceProvider object with a reference to a
+		 * SystemIO instance.
+		 * @param systemInterface A reference to the SystemIO instance used for
+		 * loading assets from file paths. The RessourceProvider relies on the
+		 * SystemIO interface to load resources from the filesystem, and this
+		 * constructor initializes the RessourceProvider with the provided
+		 * SystemIO instance for asset loading operations.
 		 */
 		RessourceProvider(SystemIO &systemInterface);
 
@@ -55,18 +56,20 @@ namespace utility
 		/**
 		 * @brief Retrieves a map of loaded materials.
 		 *
-		 * @return A map where the keys are material IDs (uint32_t) and the values
-		 * are shared pointers to the corresponding Material objects.
+		 * @return A map where the keys are material IDs (uint32_t) and the
+		 * values are shared pointers to the corresponding Material objects.
 		 */
-		[[nodiscard]] std::map<uint32_t, std::shared_ptr<graphic::Material>> getMaterials() const;
+		[[nodiscard]] std::map<uint32_t, std::shared_ptr<graphic::Material>>
+			getMaterials() const;
 
 		/**
 		 * @brief Retrieves a map of loaded textures.
 		 *
-		 * @return A map where the keys are texture IDs (uint32_t) and the values
-		 * are shared pointers to the corresponding Texture objects.
+		 * @return A map where the keys are texture IDs (uint32_t) and the
+		 * values are shared pointers to the corresponding Texture objects.
 		 */
-		[[nodiscard]] std::map<uint32_t, std::shared_ptr<graphic::Texture>> getTextures() const;
+		[[nodiscard]] std::map<uint32_t, std::shared_ptr<graphic::Texture>>
+			getTextures() const;
 
 		/**
 		 * @brief Retrieves a map of loaded models.
@@ -74,7 +77,8 @@ namespace utility
 		 * @return A map where the keys are model IDs (uint32_t) and the values
 		 * are shared pointers to the corresponding Model objects.
 		 */
-		[[nodiscard]] std::map<uint32_t, std::shared_ptr<graphic::Model>> getModels() const;
+		[[nodiscard]] std::map<uint32_t, std::shared_ptr<graphic::Model>>
+			getModels() const;
 
 		/**
 		 * @brief Retrieves a map of loaded shaders.
@@ -82,40 +86,47 @@ namespace utility
 		 * @return A map where the keys are shader IDs (uint32_t) and the values
 		 * are shared pointers to the corresponding Shader objects.
 		 */
-		[[nodiscard]] std::map<uint32_t, std::shared_ptr<graphic::Shader>> getShaders() const;
+		[[nodiscard]] std::map<uint32_t, std::shared_ptr<graphic::Shader>>
+			getShaders() const;
 
 		/**
 		 * @brief Retrieves a map of loaded code points resources.
 		 *
-		 * @return A map where the keys are code points IDs (uint32_t) and the values
-		 * are shared pointers to the corresponding CodePoints objects.
+		 * @return A map where the keys are code points IDs (uint32_t) and the
+		 * values are shared pointers to the corresponding CodePoints objects.
 		 */
-		[[nodiscard]] std::map<uint32_t, std::shared_ptr<graphic::CodePoints>> getCodePoints() const;
+		[[nodiscard]] std::map<uint32_t, std::shared_ptr<graphic::CodePoints>>
+			getCodePoints() const;
 
 		/**
-		 * @brief Retrieves the unique shader ID associated with a given shader name.
+		 * @brief Retrieves the unique shader ID associated with a given shader
+		 * name.
 		 *
-		 * This method looks up the shader name in an internal map and returns the
-		 * corresponding shader ID if found. If the shader name is not found, it
-		 * returns 0, indicating that the shader does not exist in the resource
-		 * provider.
+		 * This method looks up the shader name in an internal map and returns
+		 * the corresponding shader ID if found. If the shader name is not
+		 * found, it returns 0, indicating that the shader does not exist in the
+		 * resource provider.
 		 *
-		 * @param shaderName The name of the shader for which to retrieve the ID.
+		 * @param shaderName The name of the shader for which to retrieve the
+		 * ID.
 		 *
-		 * @return The unique shader ID associated with the given shader name, or
-		 * 0 if the shader name is not found.
+		 * @return The unique shader ID associated with the given shader name,
+		 * or 0 if the shader name is not found.
 		 */
 		[[nodiscard]] uint32_t getShaderID(const std::string &shaderName) const;
 
 		/**
-		 * @brief Retrieves the unique material ID associated with a given material name.
+		 * @brief Retrieves the unique material ID associated with a given
+		 * material name.
 		 *
-		 * @param materialName The name of the material for which to retrieve the ID.
+		 * @param materialName The name of the material for which to retrieve
+		 * the ID.
 		 *
-		 * @return The unique material ID associated with the given material name, or
-		 * 0 if the material name is not found.
+		 * @return The unique material ID associated with the given material
+		 * name, or 0 if the material name is not found.
 		 */
-		[[nodiscard]] uint32_t getMaterialID(const std::string &materialName) const;
+		[[nodiscard]] uint32_t
+			getMaterialID(const std::string &materialName) const;
 
 		/**
 		 * @brief Loads a font resource from a specified file path.
@@ -166,8 +177,8 @@ namespace utility
 		 *
 		 * @return A shared pointer to the loaded Material object.
 		 */
-		std::shared_ptr<graphic::Material>
-			loadMaterial(const std::string &path, ShaderType shaderType);
+		std::shared_ptr<graphic::Material> loadMaterial(const std::string &path,
+														ShaderType shaderType);
 
 		/**
 		 * @brief Loads a material resource from a specified asset.
@@ -179,9 +190,9 @@ namespace utility
 		 *
 		 * @return A shared pointer to the loaded Material object.
 		 */
-		std::shared_ptr<graphic::Material> loadMaterialFromAsset(
-			ShaderType shaderType,
-			std::shared_ptr<utility::File> materialAsset);
+		std::shared_ptr<graphic::Material>
+			loadMaterialFromAsset(ShaderType shaderType,
+								  std::shared_ptr<utility::File> materialAsset);
 
 		/**
 		 * @brief Loads a texture resource from a specified file path.
@@ -199,8 +210,8 @@ namespace utility
 		 *
 		 * @return A shared pointer to the loaded Texture object.
 		 */
-		std::shared_ptr<graphic::Texture> loadTextureFromAsset(
-			std::shared_ptr<utility::File> textureAsset);
+		std::shared_ptr<graphic::Texture>
+			loadTextureFromAsset(std::shared_ptr<utility::File> textureAsset);
 
 		// TODO: add loadTexturesFromDirectory method to load all textures from
 		// a directory But needs to be implemented in the SystemIO first to
@@ -218,58 +229,79 @@ namespace utility
 		/**
 		 * @brief Loads a model resource from a specified asset.
 		 *
-		 * @param modelAsset A shared pointer to the File object containing the model data to be loaded.
+		 * @param modelAsset A shared pointer to the File object containing the
+		 * model data to be loaded.
 		 *
 		 * @return A shared pointer to the loaded Model object.
 		 */
-		std::shared_ptr<graphic::Model> loadModelFromAsset(std::shared_ptr<utility::File> modelAsset);
+		std::shared_ptr<graphic::Model>
+			loadModelFromAsset(std::shared_ptr<utility::File> modelAsset);
 
 		/**
-		 * @brief Loads a model resource from a specified file path and model type.
+		 * @brief Loads a model resource from a specified file path and model
+		 * type.
 		 *
-		 * @param modelAsset A shared pointer to the File object containing the model data to be loaded.
-		 * @param type The type of the model (e.g., OBJ, FBX, GLTF) to be loaded.
+		 * @param modelAsset A shared pointer to the File object containing the
+		 * model data to be loaded.
+		 * @param type The type of the model (e.g., OBJ, FBX, GLTF) to be
+		 * loaded.
 		 *
 		 * @return A shared pointer to the loaded Model object.
 		 */
-		std::shared_ptr<graphic::Model> loadModelFromAsset(std::shared_ptr<utility::File> modelAsset, graphic::Model::ModelType type);
+		std::shared_ptr<graphic::Model>
+			loadModelFromAsset(std::shared_ptr<utility::File> modelAsset,
+							   graphic::Model::ModelType type);
 
 		/**
 		 * @brief Loads an OBJ model resource from a specified file path.
 		 *
 		 * @param path The file path to the OBJ model resource to be loaded.
-		 * @return A shared pointer to the loaded Model object representing the OBJ model.
+		 * @return A shared pointer to the loaded Model object representing the
+		 * OBJ model.
 		 */
 		std::shared_ptr<graphic::Model> loadObj(const std::string &path);
 
 		/**
 		 * @brief Loads an OBJ model resource from a specified asset.
 		 *
-		 * @param modelAsset A shared pointer to the File object containing the OBJ model data to be loaded.
+		 * @param modelAsset A shared pointer to the File object containing the
+		 * OBJ model data to be loaded.
 		 *
-		 * @return A shared pointer to the loaded Model object representing the OBJ model.
+		 * @return A shared pointer to the loaded Model object representing the
+		 * OBJ model.
 		 */
-		std::shared_ptr<graphic::Model> loadObjFromAsset(std::shared_ptr<utility::File> modelAsset);
+		std::shared_ptr<graphic::Model>
+			loadObjFromAsset(std::shared_ptr<utility::File> modelAsset);
 
 		/**
-		 * @brief Loads a shader resource from specified vertex and fragment shader file paths.
+		 * @brief Loads a shader resource from specified vertex and fragment
+		 * shader file paths.
 		 *
-		 * @param vertexPath The file path to the vertex shader resource to be loaded.
-		 * @param fragmentPath The file path to the fragment shader resource to be loaded.
+		 * @param vertexPath The file path to the vertex shader resource to be
+		 * loaded.
+		 * @param fragmentPath The file path to the fragment shader resource to
+		 * be loaded.
 		 *
 		 * @return A shared pointer to the loaded Shader object.
 		 */
-		std::shared_ptr<graphic::Shader> loadShader(const std::string &vertexPath, const std::string &fragmentPath);
+		std::shared_ptr<graphic::Shader>
+			loadShader(const std::string &vertexPath,
+					   const std::string &fragmentPath);
 
 		/**
-		 * @brief Loads a shader resource from specified vertex and fragment shader assets.
+		 * @brief Loads a shader resource from specified vertex and fragment
+		 * shader assets.
 		 *
-		 * @param vertexAsset A shared pointer to the File object containing the vertex shader data to be loaded.
-		 * @param fragmentAsset A shared pointer to the File object containing the fragment shader data to be loaded.
+		 * @param vertexAsset A shared pointer to the File object containing the
+		 * vertex shader data to be loaded.
+		 * @param fragmentAsset A shared pointer to the File object containing
+		 * the fragment shader data to be loaded.
 		 *
 		 * @return A shared pointer to the loaded Shader object.
 		 */
-		std::shared_ptr<graphic::Shader> loadShaderFromAssets(std::shared_ptr<utility::File> vertexAsset, std::shared_ptr<utility::File> fragmentAsset);
+		std::shared_ptr<graphic::Shader>
+			loadShaderFromAssets(std::shared_ptr<utility::File> vertexAsset,
+								 std::shared_ptr<utility::File> fragmentAsset);
 
 		/**
 		 * @brief Loads a code points resource from a specified file path.
@@ -277,7 +309,8 @@ namespace utility
 		 * @param path The file path to the `.codepoints` file to be loaded.
 		 * @return A shared pointer to the loaded CodePoints object.
 		 */
-		std::shared_ptr<graphic::CodePoints> loadCodePoints(const std::string &path);
+		std::shared_ptr<graphic::CodePoints>
+			loadCodePoints(const std::string &path);
 
 		/**
 		 * @brief Loads a code points resource from a specified asset.
@@ -286,34 +319,46 @@ namespace utility
 		 * containing the `.codepoints` data to be loaded.
 		 * @return A shared pointer to the loaded CodePoints object.
 		 */
-		std::shared_ptr<graphic::CodePoints> loadCodePointsFromAsset(std::shared_ptr<utility::File> codePointsAsset);
+		std::shared_ptr<graphic::CodePoints> loadCodePointsFromAsset(
+			std::shared_ptr<utility::File> codePointsAsset);
 
 		protected:
 		/**
-		 * @brief Builds a unique shader name based on the vertex and fragment shader file paths.
+		 * @brief Builds a unique shader name based on the vertex and fragment
+		 * shader file paths.
 		 *
-		 * This method constructs a unique name for a shader by combining the vertex and fragment shader file paths.
-		 * The resulting name can be used as a key in the internal map to store and retrieve shader resources efficiently.
-		 * The method ensures that shaders with the same vertex and fragment paths will have the same name,
-		 * allowing for proper caching and reuse of shader resources.
+		 * This method constructs a unique name for a shader by combining the
+		 * vertex and fragment shader file paths. The resulting name can be used
+		 * as a key in the internal map to store and retrieve shader resources
+		 * efficiently. The method ensures that shaders with the same vertex and
+		 * fragment paths will have the same name, allowing for proper caching
+		 * and reuse of shader resources.
 		 *
 		 * @param vertexPath The file path to the vertex shader resource.
 		 * @param fragmentPath The file path to the fragment shader resource.
 		 *
-		 * @return A string representing the unique shader name constructed from the vertex and fragment shader file paths.
+		 * @return A string representing the unique shader name constructed from
+		 * the vertex and fragment shader file paths.
 		 */
-		std::string buildShaderPath(const std::string &vertexPath, const std::string &fragmentPath) const;
+		std::string buildShaderPath(const std::string &vertexPath,
+									const std::string &fragmentPath) const;
 
 		/**
 		 * @brief Retrieves the next unique ID for a resource.
 		 *
-		 * This method increments the internal `nextID` counter and returns the next unique ID for a resource.
-		 * It is used internally to assign unique IDs to loaded resources such as fonts, materials,
-		 * textures, and models. The returned ID can be used as a key in the internal maps to store and retrieve resources efficiently.
+		 * This method increments the internal `nextID` counter and returns the
+		 * next unique ID for a resource. It is used internally to assign unique
+		 * IDs to loaded resources such as fonts, materials, textures, and
+		 * models. The returned ID can be used as a key in the internal maps to
+		 * store and retrieve resources efficiently.
 		 *
-		 * @note Do not modify the internal `nextID` variable directly. Use this method to ensure that unique IDs are generated correctly and consistently for all resources.
+		 * @note Do not modify the internal `nextID` variable directly. Use this
+		 * method to ensure that unique IDs are generated correctly and
+		 * consistently for all resources.
 		 *
-		 * @return A uint32_t representing the next unique ID for a resource. Each call to this method will return a different ID, ensuring that all resources have unique identifiers.
+		 * @return A uint32_t representing the next unique ID for a resource.
+		 * Each call to this method will return a different ID, ensuring that
+		 * all resources have unique identifiers.
 		 */
 		uint32_t getNextID();
 
@@ -321,7 +366,8 @@ namespace utility
 		 * @brief Internal counter for generating unique IDs for resources
 		 *
 		 * @note Do not modify this variable directly.
-		 * Use the getNextID() method to retrieve the next unique ID for a resource.
+		 * Use the getNextID() method to retrieve the next unique ID for a
+		 * resource.
 		 */
 		uint32_t _currentID = 1;
 
@@ -352,21 +398,28 @@ namespace utility
 		std::map<uint32_t, std::shared_ptr<graphic::Shader>> _shaders;
 
 		/**
-		 * @brief Internal map to store loaded code points resources for efficient retrieval.
+		 * @brief Internal map to store loaded code points resources for
+		 * efficient retrieval.
 		 */
 		std::map<uint32_t, std::shared_ptr<graphic::CodePoints>> _codePoints;
 
 		/**
-		 * @brief Internal map to store resource IDs for efficient lookup based on file paths.
+		 * @brief Internal map to store resource IDs for efficient lookup based
+		 * on file paths.
 		 */
 		std::unordered_map<std::string, uint32_t> _elementsIDs;
 
 		/**
-		 * @brief Reference to the SystemIO instance used for loading assets from file paths.
+		 * @brief Reference to the SystemIO instance used for loading assets
+		 * from file paths.
 		 *
-		 * The RessourceProvider relies on the SystemIO interface to load resources from the filesystem, and this member variable holds a reference to the SystemIO instance that is used for asset loading operations. It allows the RessourceProvider to access the necessary functionality of the SystemIO interface to read files and load resources based on file paths provided in the loading methods.
+		 * The RessourceProvider relies on the SystemIO interface to load
+		 * resources from the filesystem, and this member variable holds a
+		 * reference to the SystemIO instance that is used for asset loading
+		 * operations. It allows the RessourceProvider to access the necessary
+		 * functionality of the SystemIO interface to read files and load
+		 * resources based on file paths provided in the loading methods.
 		 */
 		SystemIO &_systemInterface;
-
 	};
 }	 // namespace utility

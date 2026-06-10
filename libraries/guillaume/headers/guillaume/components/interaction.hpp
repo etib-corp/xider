@@ -47,10 +47,10 @@ namespace guillaume::components
 	 * @brief Base class for interaction components that handle events of a
 	 * specific type.
 	 *
-	 * This class provides common functionality for interaction components, such as
-	 * storing an event handler function that can be called when the interaction
-	 * event occurs. It is designed to be inherited by more specific interaction
-	 * component classes that handle particular types of events.
+	 * This class provides common functionality for interaction components, such
+	 * as storing an event handler function that can be called when the
+	 * interaction event occurs. It is designed to be inherited by more specific
+	 * interaction component classes that handle particular types of events.
 	 *
 	 * @tparam EventType The type of event that this interaction component will
 	 * handle. This should be a type that represents an event in the system,
@@ -94,29 +94,33 @@ namespace guillaume::components
 	 * specific type, with optional Factory type support.
 	 *
 	 * This class inherits from both the specified EventType and the
-	 * InteractionBase class, allowing it to handle events of the given type while
-	 * also providing common interaction functionality. The template parameter
-	 * HasFactory determines which constructor is used, allowing for different
-	 * initialization logic based on whether the EventType has an associated
-	 * Factory type.
+	 * InteractionBase class, allowing it to handle events of the given type
+	 * while also providing common interaction functionality. The template
+	 * parameter HasFactory determines which constructor is used, allowing for
+	 * different initialization logic based on whether the EventType has an
+	 * associated Factory type.
 	 *
 	 * @tparam EventType The type of event that this interaction component will
 	 * handle. This should be a type that represents an event in the system,
 	 * such as a user input event or a game event.
-	 * @tparam HasFactory A boolean template parameter that indicates whether the
-	 * EventType has an associated Factory type. This is determined using the
-	 * HasFactoryType concept.
+	 * @tparam HasFactory A boolean template parameter that indicates whether
+	 * the EventType has an associated Factory type. This is determined using
+	 * the HasFactoryType concept.
 	 */
 	template<typename EventType, bool HasFactory = HasFactoryType<EventType>>
 	class Interaction;
 
 	/**
-	 * @brief Specialization of the Interaction class template for EventTypes that do not have an associated Factory type.
-	 * This specialization is used when the EventType does not have a nested Factory type. It inherits from both
-	 * the EventType and the InteractionBase class, allowing it to handle events of the given type while also providing
-	 * common interaction functionality.
-	 * @tparam EventType The type of event that this interaction component will handle. This should be a
-	 * type that represents an event in the system, such as a user input event or a game event, and it should not have an associated Factory type.
+	 * @brief Specialization of the Interaction class template for EventTypes
+	 * that do not have an associated Factory type. This specialization is used
+	 * when the EventType does not have a nested Factory type. It inherits from
+	 * both the EventType and the InteractionBase class, allowing it to handle
+	 * events of the given type while also providing common interaction
+	 * functionality.
+	 * @tparam EventType The type of event that this interaction component will
+	 * handle. This should be a type that represents an event in the system,
+	 * such as a user input event or a game event, and it should not have an
+	 * associated Factory type.
 	 */
 	template<typename EventType> class Interaction<EventType, false>:
 		public EventType,
@@ -127,20 +131,26 @@ namespace guillaume::components
 		 * @brief Constructor for the Interaction class when the EventType does
 		 * not have a Factory type.
 		 *
-		 * This constructor initializes the Interaction component and ensures that
-		 * it is properly set up to handle events of the specified EventType,
-		 * which does not include an associated Factory for event creation.
+		 * This constructor initializes the Interaction component and ensures
+		 * that it is properly set up to handle events of the specified
+		 * EventType, which does not include an associated Factory for event
+		 * creation.
 		 */
 		Interaction(void);
 	};
 
 	/**
-	 * @brief Specialization of the Interaction class template for EventTypes that have an associated Factory type.
-	 * This specialization is used when the EventType has a nested Factory type. It inherits from both
-	 * the EventType and the InteractionBase class, allowing it to handle events of the given type while also providing
-	 * common interaction functionality. Additionally, it defines a type alias for the Factory type associated with the EventType.
-	 * @tparam EventType The type of event that this interaction component will handle. This should be a
-	 * type that represents an event in the system, such as a user input event or a game event, and it should have an associated Factory type.
+	 * @brief Specialization of the Interaction class template for EventTypes
+	 * that have an associated Factory type. This specialization is used when
+	 * the EventType has a nested Factory type. It inherits from both the
+	 * EventType and the InteractionBase class, allowing it to handle events of
+	 * the given type while also providing common interaction functionality.
+	 * Additionally, it defines a type alias for the Factory type associated
+	 * with the EventType.
+	 * @tparam EventType The type of event that this interaction component will
+	 * handle. This should be a type that represents an event in the system,
+	 * such as a user input event or a game event, and it should have an
+	 * associated Factory type.
 	 */
 	template<typename EventType> class Interaction<EventType, true>:
 		public EventType,
@@ -151,9 +161,10 @@ namespace guillaume::components
 		 * @brief Constructor for the Interaction class when the EventType has a
 		 * Factory type.
 		 *
-		 * This constructor initializes the Interaction component and ensures that
-		 * it is properly set up to handle events of the specified EventType,
-		 * which includes having an associated Factory for event creation.
+		 * This constructor initializes the Interaction component and ensures
+		 * that it is properly set up to handle events of the specified
+		 * EventType, which includes having an associated Factory for event
+		 * creation.
 		 */
 		Interaction(void);
 

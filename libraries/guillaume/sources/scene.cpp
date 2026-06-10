@@ -43,13 +43,16 @@ namespace guillaume
 				  entities::Panel::Director, entities::Text::Director,
 				  entities::Button::Director, entities::Icon::Director>>())
 	{
-		getLogger().info() << "Scene initialized with default entity builders and "
-						 "directors";
+		getLogger().info()
+			<< "Scene initialized with default entity builders and "
+			   "directors";
 	}
 
 	Scene::~Scene(void)
 	{
-		getLogger().info() << "Scene destroyed with " << getEntitiesBreadthFirst().size() << " entity/entities in hierarchy";
+		getLogger().info() << "Scene destroyed with "
+						   << getEntitiesBreadthFirst().size()
+						   << " entity/entities in hierarchy";
 	}
 
 	ecs::EntityBuilderManager &Scene::getBuilderManager(void)

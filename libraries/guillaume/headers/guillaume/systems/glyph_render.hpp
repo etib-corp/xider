@@ -68,7 +68,7 @@ namespace guillaume::systems
 		std::map<ecs::Entity::Identifier, CacheEntry> _cache;
 		bool _glyphCodesLoaded {
 			false
-		};  	///< Whether glyph codes have been loaded
+		};	  ///< Whether glyph codes have been loaded
 
 		public:
 		/**
@@ -98,4 +98,4 @@ namespace guillaume::systems
 		void cleanup(void) override;
 	};
 
-}   // namespace guillaume::systems
+}	 // namespace guillaume::systems

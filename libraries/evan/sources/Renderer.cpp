@@ -76,11 +76,13 @@ void evan::Renderer::drawFrame(const DeviceContext &deviceContext,
 	this->getLogger().info() << "Drawing frame...";
 
 	if (!deviceContext.getDeviceBackend()->preprocessFrame(swapchainContext)) {
-		this->getLogger().warning() << "Preprocessing frame failed. Skipping frame rendering.";
+		this->getLogger().warning()
+			<< "Preprocessing frame failed. Skipping frame rendering.";
 		return;
 	}
 
-	this->getLogger().info() << "Acquiring swapchain image and recording command buffer...";
+	this->getLogger().info()
+		<< "Acquiring swapchain image and recording command buffer...";
 	for (int i = 0; i < swapchainContext._swapchainImages.size(); i++) {
 		this->getLogger().info() << "Processing swapchain image index: " << i;
 
@@ -100,14 +102,16 @@ void evan::Renderer::drawFrame(const DeviceContext &deviceContext,
 		if (result == VK_ERROR_OUT_OF_DATE_KHR) {
 			// The swapchain is out of date (e.g. the window was resized) and
 			// must be recreated.
-			this->getLogger().warning() << "Swapchain is out of date. Continuing frame rendering. "
-				"Recreate the swapchain to fix this issue.";
+			this->getLogger().warning()
+				<< "Swapchain is out of date. Continuing frame rendering. "
+				   "Recreate the swapchain to fix this issue.";
 			continue;
 		} else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
 			this->getLogger().error() << "Failed to acquire swap chain image! "
-									"Skipping frame rendering.";
+										 "Skipping frame rendering.";
 			this->getLogger().error() << "Vulkan error code: " << result;
-			this->getLogger().warning() << "Aborting frame rendering due to image acquisition failure.";
+			this->getLogger().warning()
+				<< "Aborting frame rendering due to image acquisition failure.";
 			return;
 		}
 
@@ -144,14 +148,17 @@ void evan::Renderer::drawFrame(const DeviceContext &deviceContext,
 		// submitInfo.signalSemaphoreCount = 1;
 		// submitInfo.pSignalSemaphores = signalSemaphores;
 
-		this->getLogger().info() << "Submitting command buffer to graphics queue...";
-		this->getLogger().info() << "Current frame index: " << _currentFrameIndex;
+		this->getLogger().info()
+			<< "Submitting command buffer to graphics queue...";
+		this->getLogger().info()
+			<< "Current frame index: " << _currentFrameIndex;
 
 		if (vkQueueSubmit(deviceContext.getGraphicsQueue(), 1, &submitInfo,
 						  _frames[_currentFrameIndex]->_inFlight)
 			!= VK_SUCCESS) {
-			this->getLogger().error() << "Failed to submit draw command buffer! "
-									"Skipping frame rendering.";
+			this->getLogger().error()
+				<< "Failed to submit draw command buffer! "
+				   "Skipping frame rendering.";
 			return;
 		}
 
@@ -166,7 +173,7 @@ void evan::Renderer::drawFrame(const DeviceContext &deviceContext,
 		if (!deviceContext.getDeviceBackend()->processFrame(
 				presentInfo, *swapchainContext._swapchainImages[i].get())) {
 			this->getLogger().error() << "Failed to present swap chain image! "
-									"Skipping frame rendering.";
+										 "Skipping frame rendering.";
 			// The swapchain is out of date (e.g. the window was resized) and
 			// must be recreated.
 			continue;
@@ -225,7 +232,8 @@ void evan::Renderer::createDescriptorSetLayout(VkDevice device)
 	bindings.push_back(
 		{ 0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1,
 		  VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, nullptr });
-	this->getLogger().info() << "Added uniform buffer binding to descriptor set layout.";
+	this->getLogger().info()
+		<< "Added uniform buffer binding to descriptor set layout.";
 
 	// Textures -> TODO: Adapt this according to all the textures that will be
 	// supported by the engine (e.g. normal map, metallic roughness map, etc.)
@@ -237,7 +245,8 @@ void evan::Renderer::createDescriptorSetLayout(VkDevice device)
 		{ 3, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1,
 		  VK_SHADER_STAGE_FRAGMENT_BIT });	  // MetallicRoughness
 
-	this->getLogger().info() << "Added texture bindings to descriptor set layout.";
+	this->getLogger().info()
+		<< "Added texture bindings to descriptor set layout.";
 
 	VkDescriptorSetLayoutCreateInfo layoutInfo {};
 	layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
@@ -285,7 +294,8 @@ void evan::Renderer::createGraphicsPipelines(VkDevice device,
 		vertexInputInfo.sType =
 			VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 
-		this->getLogger().info() << "Getting vertex input descriptions for shader: " << id;
+		this->getLogger().info()
+			<< "Getting vertex input descriptions for shader: " << id;
 		auto bindingDescription	   = GPUVertex::getBindingDescription();
 		auto attributeDescriptions = GPUVertex::getAttributeDescriptions();
 
@@ -417,7 +427,8 @@ void evan::Renderer::createDescriptorPool(VkDevice device,
 
 	uint32_t descriptorCount = materialCount * MAX_FRAMES_IN_FLIGHT;
 
-	this->getLogger().info() << "Descriptor count calculated: " << descriptorCount;
+	this->getLogger().info()
+		<< "Descriptor count calculated: " << descriptorCount;
 
 	std::array<VkDescriptorPoolSize, 2> poolSizes {};
 	poolSizes[0].type			 = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -441,7 +452,9 @@ void evan::Renderer::createDescriptorPool(VkDevice device,
 
 void evan::Renderer::resetCommandBuffers()
 {
-	this->getLogger().info() << "Resetting command buffer for current frame index: " << _currentFrameIndex;
+	this->getLogger().info()
+		<< "Resetting command buffer for current frame index: "
+		<< _currentFrameIndex;
 	_frames[_currentFrameIndex]->resetCommandBuffer();
 }
 
@@ -449,7 +462,9 @@ void evan::Renderer::updateUniformBuffer(const Scene &scene,
 										 ASwapchainContext &swapchainContext,
 										 int currentIndex)
 {
-	this->getLogger().info() << "Updating uniform buffer for current frame index: " << _currentFrameIndex << " and swapchain image index: " << currentIndex;
+	this->getLogger().info()
+		<< "Updating uniform buffer for current frame index: "
+		<< _currentFrameIndex << " and swapchain image index: " << currentIndex;
 
 	Frame::UniformBufferObject ubo {};
 	ubo.model = glm::mat4(1.0f);
@@ -467,7 +482,9 @@ void evan::Renderer::recordCommandBuffer(VkRenderPass renderPass,
 										 VkExtent2D swapChainExtent,
 										 const Scene &scene)
 {
-	this->getLogger().info() << "Recording command buffer for current frame index: " << _currentFrameIndex;
+	this->getLogger().info()
+		<< "Recording command buffer for current frame index: "
+		<< _currentFrameIndex;
 
 	_ressourceManager->sync();
 
@@ -478,7 +495,8 @@ void evan::Renderer::recordCommandBuffer(VkRenderPass renderPass,
 	beginInfo.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 
 	if (vkBeginCommandBuffer(commandBuffer, &beginInfo) != VK_SUCCESS) {
-		this->getLogger().error() << "Failed to begin recording command buffer!";
+		this->getLogger().error()
+			<< "Failed to begin recording command buffer!";
 		return;
 	}
 
@@ -510,32 +528,40 @@ void evan::Renderer::recordCommandBuffer(VkRenderPass renderPass,
 	viewport.maxDepth = 1.0f;
 	vkCmdSetViewport(commandBuffer, 0, 1, &viewport);
 
-	this->getLogger().info() << "Viewport set to cover entire swapchain extent: " << swapChainExtent.width << "x" << swapChainExtent.height;
+	this->getLogger().info()
+		<< "Viewport set to cover entire swapchain extent: "
+		<< swapChainExtent.width << "x" << swapChainExtent.height;
 
 	VkRect2D scissor {};
 	scissor.offset = { 0, 0 };
 	scissor.extent = swapChainExtent;
 	vkCmdSetScissor(commandBuffer, 0, 1, &scissor);
 
-	this->getLogger().info() << "Scissor set to cover entire swapchain extent: " << swapChainExtent.width << "x" << swapChainExtent.height;
+	this->getLogger().info()
+		<< "Scissor set to cover entire swapchain extent: "
+		<< swapChainExtent.width << "x" << swapChainExtent.height;
 
 	std::map<uint32_t, bool> materialBound;
 
-	this->getLogger().info() << "Iterating over meshes in the scene to record draw commands...";
+	this->getLogger().info()
+		<< "Iterating over meshes in the scene to record draw commands...";
 
 	for (const auto &mesh: scene.getMeshes()) {
-		this->getLogger().info() << "Processing mesh with material ID: " << mesh->getMaterialID();
+		this->getLogger().info()
+			<< "Processing mesh with material ID: " << mesh->getMaterialID();
 		auto materialID = mesh->getMaterialID();
 		auto material	= _ressourceManager->getMaterial(materialID);
 
 		if (!material) {
-			this->getLogger().warning() << "Material with ID " << materialID << " not found! Skipping mesh.";
+			this->getLogger().warning() << "Material with ID " << materialID
+										<< " not found! Skipping mesh.";
 			continue;
 		}
 
 		auto correspondingPipelineID = material->getShaderID();
 
-		this->getLogger().info() << "Binding pipeline for shader ID: " << correspondingPipelineID;
+		this->getLogger().info()
+			<< "Binding pipeline for shader ID: " << correspondingPipelineID;
 
 		vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
 						  _pipelines[correspondingPipelineID]);
@@ -553,7 +579,9 @@ void evan::Renderer::recordCommandBuffer(VkRenderPass renderPass,
 							 VK_INDEX_TYPE_UINT32);
 
 		if (!materialBound[mesh->getMaterialID()]) {
-			this->getLogger().info() << "Binding descriptor set for material ID: " << mesh->getMaterialID();
+			this->getLogger().info()
+				<< "Binding descriptor set for material ID: "
+				<< mesh->getMaterialID();
 			materialBound[mesh->getMaterialID()] = true;
 			vkCmdBindDescriptorSets(
 				commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS,
@@ -561,7 +589,8 @@ void evan::Renderer::recordCommandBuffer(VkRenderPass renderPass,
 				&material->getDescriptorSets()[_currentFrameIndex], 0, nullptr);
 		}
 
-		this->getLogger().info() << "Drawing indexed mesh with index count: " << mesh->getIndexCount();
+		this->getLogger().info() << "Drawing indexed mesh with index count: "
+								 << mesh->getIndexCount();
 
 		vkCmdDrawIndexed(commandBuffer, mesh->getIndexCount(), 1, 0, 0, 0);
 	}
@@ -570,7 +599,8 @@ void evan::Renderer::recordCommandBuffer(VkRenderPass renderPass,
 
 	vkCmdEndRenderPass(commandBuffer);
 
-	this->getLogger().info() << "Render pass ended. Ending command buffer recording...";
+	this->getLogger().info()
+		<< "Render pass ended. Ending command buffer recording...";
 
 	if (vkEndCommandBuffer(commandBuffer) != VK_SUCCESS) {
 		this->getLogger().error() << "Failed to record command buffer!";

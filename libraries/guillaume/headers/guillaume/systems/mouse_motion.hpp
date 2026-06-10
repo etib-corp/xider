@@ -47,8 +47,8 @@ namespace guillaume::systems
 	{
 		private:
 		std::unique_ptr<Engine>
-			&_engine;	  ///< Reference to the engine for potential
-						  ///< visual feedback on motion interactions
+			&_engine;	 ///< Reference to the engine for potential
+						 ///< visual feedback on motion interactions
 
 		public:
 		/**

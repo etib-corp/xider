@@ -83,7 +83,8 @@ namespace guillaume::ecs
 	 * @see ComponentStorage
 	 */
 	class ComponentRegistry:
-		public utility::logging::Loggable<ComponentRegistry, utility::logging::DefaultLogger>
+		public utility::logging::Loggable<ComponentRegistry,
+										  utility::logging::DefaultLogger>
 	{
 		private:
 		std::map<std::type_index, std::unique_ptr<IComponentStorage>>

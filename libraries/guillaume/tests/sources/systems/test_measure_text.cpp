@@ -89,13 +89,12 @@ namespace
 	{
 		protected:
 		std::unique_ptr<EngineStub> engineStub = std::make_unique<EngineStub>();
-		EngineStub *enginePtr = engineStub.get();
+		EngineStub *enginePtr				   = engineStub.get();
 		std::unique_ptr<guillaume::Engine> engine { std::move(engineStub) };
 		std::shared_ptr<utility::RessourceProvider> ressourceProvider =
 			std::make_shared<utility::RessourceProvider>();
-		guillaume::systems::MeasureText measureTextSystem {
-			ressourceProvider, engine
-		};
+		guillaume::systems::MeasureText measureTextSystem { ressourceProvider,
+															engine };
 		guillaume::ecs::ComponentRegistry componentRegistry;
 		guillaume::ecs::EntityRegistryContainer entityRegistry;
 		guillaume::ecs::Entity::Identifier entityIdentifier {

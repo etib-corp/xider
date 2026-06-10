@@ -33,8 +33,8 @@ namespace guillaume::ecs
 		return _message.c_str();
 	}
 
-	template<InheritFromSystem SystemType>
-	std::type_index SystemNotFoundException<SystemType>::getSystemTypeIndex(void) const
+	template<InheritFromSystem SystemType> std::type_index
+		SystemNotFoundException<SystemType>::getSystemTypeIndex(void) const
 	{
 		return _systemIndex;
 	}

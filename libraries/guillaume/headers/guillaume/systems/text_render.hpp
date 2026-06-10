@@ -46,8 +46,7 @@ namespace guillaume::systems
 								 components::Color>
 	{
 		private:
-		struct CacheEntry
-		{
+		struct CacheEntry {
 			std::optional<utility::graphic::Text> text;
 			utility::graphic::PoseF pose;
 			size_t objectId { 0 };
@@ -58,7 +57,7 @@ namespace guillaume::systems
 		std::shared_ptr<utility::RessourceProvider>
 			_ressourceProvider;	   ///< Shared resource provider for loading
 								   ///< fonts and glyphs
-		std::unique_ptr<Engine> &_renderer;	 ///< Engine instance
+		std::unique_ptr<Engine> &_renderer;	   ///< Engine instance
 		std::string _defaultFontPath;	 ///< Default font for text rendering
 		std::map<ecs::Entity::Identifier, CacheEntry> _cache;
 

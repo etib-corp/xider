@@ -36,32 +36,32 @@
 namespace utility::logging
 {
 
-/**
- * @brief Standard output/error logger implementation.
- *
- * Logs DEBUG_LEVEL and INFO_LEVEL messages to stdout, WARNING_LEVEL and
- * ERROR_LEVEL to stderr. Adds ANSI color per level and includes source
- * file, line, and function name in the output only for DEBUG_LEVEL.
- */
-class StandardLogger: public Logger
-{
-	public:
 	/**
-	 * @brief Constructor with logger name.
-	 * @param name The name of the logger.
+	 * @brief Standard output/error logger implementation.
+	 *
+	 * Logs DEBUG_LEVEL and INFO_LEVEL messages to stdout, WARNING_LEVEL and
+	 * ERROR_LEVEL to stderr. Adds ANSI color per level and includes source
+	 * file, line, and function name in the output only for DEBUG_LEVEL.
 	 */
-	StandardLogger(const std::string &name);
+	class StandardLogger: public Logger
+	{
+		public:
+		/**
+		 * @brief Constructor with logger name.
+		 * @param name The name of the logger.
+		 */
+		StandardLogger(const std::string &name);
 
-	/**
-	 * @brief Destructor ensuring output streams are flushed.
-	 */
-	~StandardLogger(void) override;
+		/**
+		 * @brief Destructor ensuring output streams are flushed.
+		 */
+		~StandardLogger(void) override;
 
-	/**
-	 * @brief Output a formatted log record to the appropriate stream.
-	 * @param record The log record to output.
-	 */
-	void output(const LogRecord &record) override;
-};
+		/**
+		 * @brief Output a formatted log record to the appropriate stream.
+		 * @param record The log record to output.
+		 */
+		void output(const LogRecord &record) override;
+	};
 
 }	 // namespace utility::logging

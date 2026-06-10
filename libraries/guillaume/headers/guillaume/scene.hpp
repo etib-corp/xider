@@ -45,7 +45,8 @@ namespace guillaume
 	 */
 	class Scene:
 		public ecs::EntityRegistryContainer,
-		public utility::logging::Loggable<Scene, utility::logging::DefaultLogger>
+		public utility::logging::Loggable<Scene,
+										  utility::logging::DefaultLogger>
 	{
 		private:
 		LocalStorage &
@@ -105,5 +106,13 @@ namespace guillaume
 	 */
 	template<typename Type>
 	concept InheritFromScene = std::is_base_of_v<Scene, Type>;
+
+	/**
+	 * @brief Concept to ensure a type is present in a parameter pack.
+	 * @tparam Type The type to check.
+	 * @tparam Types The parameter pack to check against.
+	 */
+	template<typename Type, typename... Types>
+	concept IsOneOf = (std::is_same_v<Type, Types> || ...);
 
 }	 // namespace guillaume

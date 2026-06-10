@@ -45,13 +45,11 @@ namespace guillaume::ecs
 		/**
 		 * @brief Type alias for entity identifiers.
 		 */
-		using Identifier =
-			std::size_t;
+		using Identifier = std::size_t;
 		/**
 		 * @brief Type alias for entity signatures (64-bit component bitmask).
 		 */
-		using Signature =
-			std::bitset<64>;
+		using Signature = std::bitset<64>;
 
 		constexpr static Identifier InvalidIdentifier =
 			0;	  ///< Invalid identifier

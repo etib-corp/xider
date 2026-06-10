@@ -26,32 +26,32 @@
 #include "utility/logging/standard_logger.hpp"
 #include "utility/logging/default_logger.hpp"
 
+using utility::logging::DefaultLogger;
+using utility::logging::Logger;
 using utility::logging::LogLevel;
 using utility::logging::LogRecord;
-using utility::logging::Logger;
 using utility::logging::StandardLogger;
-using utility::logging::DefaultLogger;
 
 namespace
 {
 
-class TestLogger: public Logger
-{
-	public:
-	LogRecord lastRecord;
-	bool called = false;
-
-	TestLogger(const std::string &name)
-		: Logger(name)
+	class TestLogger: public Logger
 	{
-	}
+		public:
+		LogRecord lastRecord;
+		bool called = false;
 
-	void output(const LogRecord &record) override
-	{
-		lastRecord = record;
-		called = true;
-	}
-};
+		TestLogger(const std::string &name)
+			: Logger(name)
+		{
+		}
+
+		void output(const LogRecord &record) override
+		{
+			lastRecord = record;
+			called	   = true;
+		}
+	};
 
 }	 // namespace
 
@@ -79,7 +79,8 @@ TEST(LoggerTest, SourceLocationCaptured)
 	TestLogger logger("Test");
 	logger.debug() << "loc test";
 	EXPECT_TRUE(logger.called);
-	EXPECT_NE(logger.lastRecord.file.find("test_logger.cpp"), std::string::npos);
+	EXPECT_NE(logger.lastRecord.file.find("test_logger.cpp"),
+			  std::string::npos);
 	EXPECT_GT(logger.lastRecord.line, 0);
 	EXPECT_FALSE(logger.lastRecord.function.empty());
 }
@@ -142,8 +143,9 @@ TEST(LoggerTest, LogLevelValueOrder)
 
 TEST(LoggerTest, DefaultLoggerIsStandardLogger)
 {
-	static_assert(std::is_same_v<DefaultLogger, StandardLogger>,
-				  "DefaultLogger should be StandardLogger on non-Android platforms");
+	static_assert(
+		std::is_same_v<DefaultLogger, StandardLogger>,
+		"DefaultLogger should be StandardLogger on non-Android platforms");
 }
 
 TEST(StandardLoggerTest, LevelToString)

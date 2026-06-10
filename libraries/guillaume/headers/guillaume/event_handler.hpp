@@ -54,7 +54,8 @@ namespace guillaume
 	 * @see EventBus
 	 */
 	class EventHandler:
-		protected utility::logging::Loggable<EventHandler, utility::logging::DefaultLogger>
+		protected utility::logging::Loggable<EventHandler,
+											 utility::logging::DefaultLogger>
 	{
 		public:
 		/**

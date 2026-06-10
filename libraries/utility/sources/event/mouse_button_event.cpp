@@ -55,21 +55,18 @@ namespace utility::event
 		return _position;
 	}
 
-	MouseButtonEvent &
-		MouseButtonEvent::setButton(const Button button) noexcept
+	MouseButtonEvent &MouseButtonEvent::setButton(const Button button) noexcept
 	{
 		_button = button;
 		return *this;
 	}
 
-	MouseButtonEvent::Button
-		MouseButtonEvent::getButton(void) const noexcept
+	MouseButtonEvent::Button MouseButtonEvent::getButton(void) const noexcept
 	{
 		return _button;
 	}
 
-	MouseButtonEvent &
-		MouseButtonEvent::setPressed(const bool pressed) noexcept
+	MouseButtonEvent &MouseButtonEvent::setPressed(const bool pressed) noexcept
 	{
 		_pressed = pressed;
 		return *this;

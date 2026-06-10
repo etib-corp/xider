@@ -36,7 +36,8 @@ namespace guillaume
 			std::filesystem::create_directories(parentPath);
 		}
 
-		if (sqlite3_open_v2(_storageFilePath.string().c_str(), &_database, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, nullptr)
+		if (sqlite3_open_v2(_storageFilePath.string().c_str(), &_database,
+							SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, nullptr)
 			!= SQLITE_OK) {
 			if (_database) {
 				sqlite3_close(_database);
@@ -48,7 +49,11 @@ namespace guillaume
 					sqlite3_close(_database);
 					_database = nullptr;
 				}
-				throw std::runtime_error("Failed to open local storage database (file and in-memory fallback): " + _storageFilePath.string() + " - reason: " + sqlite3_errmsg(_database));
+				throw std::runtime_error(
+					"Failed to open local storage database (file and in-memory "
+					"fallback): "
+					+ _storageFilePath.string()
+					+ " - reason: " + sqlite3_errmsg(_database));
 			}
 		}
 
@@ -73,7 +78,9 @@ namespace guillaume
 	{
 		std::lock_guard<std::mutex> lock(_mutex);
 		if (!_database) {
-			throw std::runtime_error("Failed to set item in local storage: " + _storageFilePath.string() + " - reason: " + sqlite3_errmsg(_database));
+			throw std::runtime_error("Failed to set item in local storage: "
+									 + _storageFilePath.string() + " - reason: "
+									 + sqlite3_errmsg(_database));
 		}
 
 		static constexpr const char *statement =
@@ -83,7 +90,8 @@ namespace guillaume
 		sqlite3_stmt *query = nullptr;
 		if (sqlite3_prepare_v2(_database, statement, -1, &query, nullptr)
 			!= SQLITE_OK) {
-			throw std::runtime_error("Failed to prepare statement: " + std::string(sqlite3_errmsg(_database)));
+			throw std::runtime_error("Failed to prepare statement: "
+									 + std::string(sqlite3_errmsg(_database)));
 		}
 
 		sqlite3_bind_text(query, 1, key.c_str(), -1, SQLITE_TRANSIENT);
@@ -95,8 +103,10 @@ namespace guillaume
 	std::optional<std::string> LocalStorage::getItem(const std::string &key)
 	{
 		std::lock_guard<std::mutex> lock(_mutex);
-		 if (!_database) {
-			throw std::runtime_error("Failed to get item from local storage: " + _storageFilePath.string() + " - reason: " + sqlite3_errmsg(_database));
+		if (!_database) {
+			throw std::runtime_error("Failed to get item from local storage: "
+									 + _storageFilePath.string() + " - reason: "
+									 + sqlite3_errmsg(_database));
 		}
 
 		static constexpr const char *statement =
@@ -105,7 +115,8 @@ namespace guillaume
 		sqlite3_stmt *query = nullptr;
 		if (sqlite3_prepare_v2(_database, statement, -1, &query, nullptr)
 			!= SQLITE_OK) {
-			throw std::runtime_error("Failed to prepare statement: " + std::string(sqlite3_errmsg(_database)));
+			throw std::runtime_error("Failed to prepare statement: "
+									 + std::string(sqlite3_errmsg(_database)));
 		}
 
 		sqlite3_bind_text(query, 1, key.c_str(), -1, SQLITE_TRANSIENT);
@@ -126,7 +137,10 @@ namespace guillaume
 	{
 		std::lock_guard<std::mutex> lock(_mutex);
 		if (!_database) {
-			throw std::runtime_error("Failed to remove item from local storage: " + _storageFilePath.string() + " - reason: " + sqlite3_errmsg(_database));
+			throw std::runtime_error(
+				"Failed to remove item from local storage: "
+				+ _storageFilePath.string()
+				+ " - reason: " + sqlite3_errmsg(_database));
 		}
 
 		static constexpr const char *statement =
@@ -135,7 +149,8 @@ namespace guillaume
 		sqlite3_stmt *query = nullptr;
 		if (sqlite3_prepare_v2(_database, statement, -1, &query, nullptr)
 			!= SQLITE_OK) {
-			throw std::runtime_error("Failed to prepare statement: " + std::string(sqlite3_errmsg(_database)));
+			throw std::runtime_error("Failed to prepare statement: "
+									 + std::string(sqlite3_errmsg(_database)));
 		}
 
 		sqlite3_bind_text(query, 1, key.c_str(), -1, SQLITE_TRANSIENT);
@@ -147,21 +162,26 @@ namespace guillaume
 	{
 		std::lock_guard<std::mutex> lock(_mutex);
 		if (!_database) {
-			throw std::runtime_error("Failed to clear local storage: " + _storageFilePath.string() + " - reason: " + sqlite3_errmsg(_database));
+			throw std::runtime_error(
+				"Failed to clear local storage: " + _storageFilePath.string()
+				+ " - reason: " + sqlite3_errmsg(_database));
 		}
 
 		if (!executeStatement("DELETE FROM local_storage;")) {
-			throw std::runtime_error("Failed to clear local storage: " + _storageFilePath.string());
+			throw std::runtime_error("Failed to clear local storage: "
+									 + _storageFilePath.string());
 		}
 	}
 
 	void LocalStorage::initializeSchema(void)
 	{
 		if (!executeStatement("CREATE TABLE IF NOT EXISTS local_storage ("
-						 "key TEXT PRIMARY KEY, "
-						 "value TEXT NOT NULL"
-						 ");")) {
-			throw std::runtime_error("Failed to initialize local storage schema: " + _storageFilePath.string());
+							  "key TEXT PRIMARY KEY, "
+							  "value TEXT NOT NULL"
+							  ");")) {
+			throw std::runtime_error(
+				"Failed to initialize local storage schema: "
+				+ _storageFilePath.string());
 		}
 	}
 

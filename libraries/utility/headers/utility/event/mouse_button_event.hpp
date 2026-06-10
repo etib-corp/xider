@@ -80,8 +80,10 @@ namespace utility::event
 
 		private:
 		MousePosition _position { 0, 0 }; /**< Current mouse position (x, y) */
-		Button _button { Button::Unknown };	 /**< Currently active mouse button */
-		bool _pressed { false };			 /**< True when the button is pressed */
+		Button _button {
+			Button::Unknown
+		};						 /**< Currently active mouse button */
+		bool _pressed { false }; /**< True when the button is pressed */
 
 		public:
 		/**

@@ -88,7 +88,9 @@ namespace evan
 	 * actions as needed, allowing for flexible management of various input
 	 * actions in an OpenXR application.
 	 */
-	class XrManageButtonsActions : protected utility::logging::Loggable<XrManageButtonsActions, utility::logging::DefaultLogger>
+	class XrManageButtonsActions:
+		protected utility::logging::Loggable<XrManageButtonsActions,
+											 utility::logging::DefaultLogger>
 	{
 		public:
 		/** @brief Constructs an XrManageButtonsActions instance with the

@@ -63,4 +63,4 @@ namespace guillaume::systems
 			update(const ecs::Entity::Identifier &entityIdentifier) override;
 	};
 
-} 	// namespace guillaume::systems
+}	 // namespace guillaume::systems

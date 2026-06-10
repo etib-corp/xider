@@ -10,7 +10,8 @@
 evan::Version::Version(unsigned int major, unsigned int minor,
 					   unsigned int patch)
 {
-	this->getLogger().info() << "Constructing Version object with version " << major << "." << minor << "." << patch;
+	this->getLogger().info() << "Constructing Version object with version "
+							 << major << "." << minor << "." << patch;
 
 	this->_major = major;
 	this->_minor = minor;

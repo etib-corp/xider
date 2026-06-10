@@ -11,7 +11,9 @@ evan::LinuxDesktopPlatform::LinuxDesktopPlatform(const std::string &name,
 												 const uint32_t width,
 												 const uint32_t height)
 {
-	this->getLogger().info() << "Initializing LinuxDesktopPlatform with window name: " << name << ", width: " << width << ", height: " << height;
+	this->getLogger().info()
+		<< "Initializing LinuxDesktopPlatform with window name: " << name
+		<< ", width: " << width << ", height: " << height;
 
 	if (!glfwInit()) {
 		this->getLogger().error() << "Failed to initialize GLFW";
@@ -54,7 +56,8 @@ std::vector<std::string>
 VkSurfaceKHR
 	evan::LinuxDesktopPlatform::createSurface(VkInstance instance) const
 {
-	this->getLogger().info() << "Creating Vulkan surface for LinuxDesktopPlatform";
+	this->getLogger().info()
+		<< "Creating Vulkan surface for LinuxDesktopPlatform";
 
 	VkSurfaceKHR surface;
 	if (glfwCreateWindowSurface(instance, _window, nullptr, &surface)

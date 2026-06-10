@@ -9,7 +9,6 @@
 
 #include "evan/Engine.hpp"
 
-
 evan::Engine::Engine(
 	std::shared_ptr<utility::RessourceProvider> ressourceProvider,
 	std::shared_ptr<IPlatform> platform)
@@ -23,13 +22,13 @@ evan::Engine::Engine(
 
 	/**
 	 * We load shaders from both "assets/shaders/" and "shaders/" directories to
-	 * accommodate different platforms and build configurations. On Android, assets
-	 * are typically stored in the "assets/" directory, while on other platforms,
-	 * shaders may be stored in a "shaders/" directory within the project.
+	 * accommodate different platforms and build configurations. On Android,
+	 * assets are typically stored in the "assets/" directory, while on other
+	 * platforms, shaders may be stored in a "shaders/" directory within the
+	 * project.
 	 */
 	ressourceProvider->loadShader("shaders/text.vert.spv",
-								"shaders/text.frag.spv");
-
+								  "shaders/text.frag.spv");
 
 	this->getLogger().info() << "Loading default shader...";
 
@@ -38,9 +37,10 @@ evan::Engine::Engine(
 
 	/**
 	 * We load shaders from both "assets/shaders/" and "shaders/" directories to
-	 * accommodate different platforms and build configurations. On Android, assets
-	 * are typically stored in the "assets/" directory, while on other platforms,
-	 * shaders may be stored in a "shaders/" directory within the project.
+	 * accommodate different platforms and build configurations. On Android,
+	 * assets are typically stored in the "assets/" directory, while on other
+	 * platforms, shaders may be stored in a "shaders/" directory within the
+	 * project.
 	 */
 	ressourceProvider->loadShader("shaders/default.vert.spv",
 								  "shaders/default.frag.spv");
@@ -66,12 +66,14 @@ evan::Engine::Engine(
 
 evan::Engine::~Engine()
 {
-	this->getLogger().info() << "Destroying engine and cleaning up resources...";
+	this->getLogger().info()
+		<< "Destroying engine and cleaning up resources...";
 
 	auto deviceBackend = _deviceContext->getDeviceBackend();
 	auto device		   = deviceBackend->_device;
 
-	this->getLogger().info() << "Waiting for device to be idle before cleanup...";
+	this->getLogger().info()
+		<< "Waiting for device to be idle before cleanup...";
 	vkDeviceWaitIdle(device);
 
 	_renderer->destroy(device);
@@ -80,7 +82,8 @@ evan::Engine::~Engine()
 		scene->destroy(device);
 	}
 	_deviceContext.reset();
-	this->getLogger().info() << "Engine destroyed and resources cleaned up successfully.";
+	this->getLogger().info()
+		<< "Engine destroyed and resources cleaned up successfully.";
 }
 
 ////////////////////
@@ -103,9 +106,12 @@ size_t evan::Engine::addText(std::shared_ptr<utility::graphic::Text> text)
 		return 0;	 // Skip rendering this text if its material is not found
 	}
 
-	this->getLogger().info() << "Converting text meshes to raw objects for rendering...";
+	this->getLogger().info()
+		<< "Converting text meshes to raw objects for rendering...";
 	for (const auto &mesh: text->getMeshes()) {
-		this->getLogger().debug() << "Processing mesh with " << mesh->getVertices().size() << " vertices and " << mesh->getIndices().size() << " indices.";
+		this->getLogger().debug()
+			<< "Processing mesh with " << mesh->getVertices().size()
+			<< " vertices and " << mesh->getIndices().size() << " indices.";
 		rawObjects.emplace(material_id, *mesh);
 	}
 
@@ -113,7 +119,8 @@ size_t evan::Engine::addText(std::shared_ptr<utility::graphic::Text> text)
 	std::shared_ptr<RenderObject> textObject =
 		std::make_shared<RenderObject>(_deviceContext, rawObjects, "text");
 
-	this->getLogger().info() << "Adding text RenderObject to current scene: " << _currentScene;
+	this->getLogger().info()
+		<< "Adding text RenderObject to current scene: " << _currentScene;
 	auto objectID =
 		_scenes[_currentScene]->addObject(_nextObjectID++, textObject);
 	_ressourceManager->sync();
@@ -123,9 +130,11 @@ size_t evan::Engine::addText(std::shared_ptr<utility::graphic::Text> text)
 size_t evan::Engine::addPrimitive(
 	std::shared_ptr<utility::graphic::Primitive> primitive)
 {
-	this->getLogger().info() << "Drawing primitive with " << primitive->getMeshes().size() << " meshes.";
-	this->getLogger().warning() << "drawPrimitive is not fully implemented yet. "
-							  "This is a placeholder implementation.";
+	this->getLogger().info() << "Drawing primitive with "
+							 << primitive->getMeshes().size() << " meshes.";
+	this->getLogger().warning()
+		<< "drawPrimitive is not fully implemented yet. "
+		   "This is a placeholder implementation.";
 	return 0;	 // Placeholder implementation - replace with actual primitive
 				 // addition logic
 }
@@ -137,8 +146,9 @@ size_t evan::Engine::addModel(std::shared_ptr<utility::graphic::Model> model)
 																 : "Unknown");
 
 	this->getLogger().info() << "Drawing model of type: " << modelTypeStr;
-	this->getLogger().warning() << "drawModel is not fully implemented yet. This is "
-							  "a placeholder implementation.";
+	this->getLogger().warning()
+		<< "drawModel is not fully implemented yet. This is "
+		   "a placeholder implementation.";
 
 	return 0;	 // Placeholder implementation - replace with actual model
 				 // addition logic
@@ -171,7 +181,8 @@ bool evan::Engine::removeObject(size_t objectID)
 	if (currentSceneIt == _scenes.end()) {
 		return false;
 	}
-	return currentSceneIt->second->removeObject(static_cast<uint32_t>(objectID));
+	return currentSceneIt->second->removeObject(
+		static_cast<uint32_t>(objectID));
 }
 
 void evan::Engine::setView(const utility::graphic::ViewF &view)
@@ -207,14 +218,17 @@ void evan::Engine::render()
 	this->getLogger().info() << "Starting render process...";
 
 	if (_scenes.empty()) {
-		this->getLogger().warning() << "No scenes available to render. Skipping render process.";
+		this->getLogger().warning()
+			<< "No scenes available to render. Skipping render process.";
 		return;
 	}
 
-	this->getLogger().info() << "Rendering current scene with index: " << _currentScene;
+	this->getLogger().info()
+		<< "Rendering current scene with index: " << _currentScene;
 	auto currentSceneIt = _scenes.find(_currentScene);
 	if (currentSceneIt == _scenes.end()) {
-		this->getLogger().warning() << "Current scene not found. Skipping render process.";
+		this->getLogger().warning()
+			<< "Current scene not found. Skipping render process.";
 		return;
 	}
 
@@ -238,9 +252,11 @@ void evan::Engine::switchScene(size_t sceneIndex)
 {
 	this->getLogger().info() << "Switching to scene with index: " << sceneIndex;
 	if (_scenes.find(sceneIndex) != _scenes.end()) {
-		this->getLogger().info() << "Scene found. Switching current scene to index: " << sceneIndex;
+		this->getLogger().info()
+			<< "Scene found. Switching current scene to index: " << sceneIndex;
 		_currentScene = sceneIndex;
 	} else {
-		this->getLogger().warning() << "Scene index " << sceneIndex << " does not exist.";
+		this->getLogger().warning()
+			<< "Scene index " << sceneIndex << " does not exist.";
 	}
 }

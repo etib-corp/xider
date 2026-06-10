@@ -28,4 +28,4 @@ namespace guillaume::components
 		: Interaction()
 	{
 	}
-} 	// namespace guillaume::components
+}	 // namespace guillaume::components

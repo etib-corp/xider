@@ -78,7 +78,8 @@ namespace guillaume::components
 		 * @param handler The function to call when an unhover event occurs.
 		 * @return Reference to this HandHoverInteraction for method chaining.
 		 */
-		HandHoverInteraction &setOnUnhoverHandler(const UnhoverHandler &handler);
+		HandHoverInteraction &
+			setOnUnhoverHandler(const UnhoverHandler &handler);
 
 		/**
 		 * @brief Get the handler for hover events.

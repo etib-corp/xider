@@ -58,9 +58,8 @@ namespace guillaume
 			components::HandSqueezeInteraction,
 			components::HandThumbRestInteraction,
 			components::HandThumbStickInteraction,
-			components::HandTriggerInteraction,
-			components::Text, components::Transform, components::Color,
-			components::Borders>
+			components::HandTriggerInteraction, components::Text,
+			components::Transform, components::Color, components::Borders>
 	{
 		public:
 		/**

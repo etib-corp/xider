@@ -35,7 +35,8 @@ int main(void)
 
 	// Create a resource provider using the default system IO implementation
 	utility::DefaultSystemIO defaultSystemIO;
-	auto ressourceProvider = std::make_shared<utility::RessourceProvider>(defaultSystemIO);
+	auto ressourceProvider =
+		std::make_shared<utility::RessourceProvider>(defaultSystemIO);
 
 	// Initialize XIDER application with Evan engine
 	xider::XIDER app(linuxXrPlatform, ressourceProvider);

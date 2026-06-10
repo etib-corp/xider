@@ -29,7 +29,9 @@ namespace evan
 	 * @var Version::_patch
 	 *      The patch version number.
 	 */
-	class Version: protected utility::logging::Loggable<Version, utility::logging::DefaultLogger>
+	class Version:
+		protected utility::logging::Loggable<Version,
+											 utility::logging::DefaultLogger>
 	{
 		public:
 		/**

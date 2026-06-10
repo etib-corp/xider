@@ -64,8 +64,7 @@ namespace utility
 		 * @return A shared pointer to the loaded File, or nullptr if
 		 * loading failed.
 		 */
-		std::shared_ptr<utility::File>
-			add(const std::string &path) override;
+		std::shared_ptr<utility::File> add(const std::string &path) override;
 
 		/**
 		 * @brief Removes an asset from the manager.

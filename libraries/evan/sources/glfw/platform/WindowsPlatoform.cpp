@@ -11,7 +11,9 @@ evan::WindowsDesktopPlatform::WindowsDesktopPlatform(const std::string &name,
 													 const uint32_t width,
 													 const uint32_t height)
 {
-	this->getLogger().info() << "Initializing WindowsDesktopPlatform with window name: " << name << ", width: " << width << ", height: " << height;
+	this->getLogger().info()
+		<< "Initializing WindowsDesktopPlatform with window name: " << name
+		<< ", width: " << width << ", height: " << height;
 	if (!glfwInit()) {
 		this->getLogger().error() << "Failed to initialize GLFW";
 		return;

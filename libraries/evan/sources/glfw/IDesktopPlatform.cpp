@@ -9,7 +9,8 @@
 
 evan::IDesktopPlatform::~IDesktopPlatform()
 {
-	this->getLogger().info() << "Destroying IDesktopPlatform and releasing associated resources...";
+	this->getLogger().info()
+		<< "Destroying IDesktopPlatform and releasing associated resources...";
 
 	glfwDestroyWindow(_window);
 	glfwTerminate();
@@ -22,7 +23,8 @@ evan::IDesktopPlatform::~IDesktopPlatform()
 std::shared_ptr<evan::ADeviceBackend>
 	evan::IDesktopPlatform::createDeviceBackend() const
 {
-	this->getLogger().info() << "Creating device backend for Desktop platform...";
+	this->getLogger().info()
+		<< "Creating device backend for Desktop platform...";
 	return std::make_shared<DesktopBackend>(*this);
 }
 
@@ -30,10 +32,10 @@ std::shared_ptr<evan::ASwapchainContext>
 	evan::IDesktopPlatform::createSwapchainContext(
 		const DeviceContext &deviceContext) const
 {
-	this->getLogger().info() << "Creating swapchain context for Desktop platform...";
+	this->getLogger().info()
+		<< "Creating swapchain context for Desktop platform...";
 	return std::make_shared<DesktopSwapchainContext>(deviceContext, _window);
 }
-
 
 std::vector<std::unique_ptr<utility::event::Event>>
 	evan::IDesktopPlatform::pollEvents(ADeviceBackend &deviceBackend)
@@ -43,25 +45,28 @@ std::vector<std::unique_ptr<utility::event::Event>>
 
 	std::vector<std::unique_ptr<utility::event::Event>> events;
 
-	this->getLogger().info() << "Processing keyboard events for Desktop platform...";
+	this->getLogger().info()
+		<< "Processing keyboard events for Desktop platform...";
 	events.insert(events.end(),
-			   std::make_move_iterator(_keyboardEvents.begin()),
-			   std::make_move_iterator(_keyboardEvents.end()));
+				  std::make_move_iterator(_keyboardEvents.begin()),
+				  std::make_move_iterator(_keyboardEvents.end()));
 	// Clear keyboard events after processing them
 	_keyboardEvents.clear();
 
-	this->getLogger().info() << "Processing mouse button events for Desktop platform...";
+	this->getLogger().info()
+		<< "Processing mouse button events for Desktop platform...";
 	events.insert(events.end(),
-			   std::make_move_iterator(_mouseButtonEvents.begin()),
-			   std::make_move_iterator(_mouseButtonEvents.end()));
+				  std::make_move_iterator(_mouseButtonEvents.begin()),
+				  std::make_move_iterator(_mouseButtonEvents.end()));
 
 	// Clear mouse button events after processing them
 	_mouseButtonEvents.clear();
 
-	this->getLogger().info() << "Processing mouse motion events for Desktop platform...";
+	this->getLogger().info()
+		<< "Processing mouse motion events for Desktop platform...";
 	events.insert(events.end(),
-			   std::make_move_iterator(_mouseMotionEvents.begin()),
-			   std::make_move_iterator(_mouseMotionEvents.end()));
+				  std::make_move_iterator(_mouseMotionEvents.begin()),
+				  std::make_move_iterator(_mouseMotionEvents.end()));
 
 	// Clear mouse motion events after processing them
 	_mouseMotionEvents.clear();
@@ -72,7 +77,8 @@ std::vector<std::unique_ptr<utility::event::Event>>
 std::vector<std::string>
 	evan::IDesktopPlatform::getRequiredInstanceExtensions() const
 {
-	this->getLogger().info() << "Getting required instance extensions for Desktop platform...";
+	this->getLogger().info()
+		<< "Getting required instance extensions for Desktop platform...";
 
 	uint32_t glfwExtensionCount = 0;
 	const char **glfwExtensions =
@@ -82,7 +88,9 @@ std::vector<std::string>
 
 	extensions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
 	if (enableValidationLayers == true) {
-		this->getLogger().info() << "Validation layers are enabled. Adding VK_EXT_DEBUG_UTILS_EXTENSION_NAME to required instance extensions.";
+		this->getLogger().info() << "Validation layers are enabled. Adding "
+									"VK_EXT_DEBUG_UTILS_EXTENSION_NAME to "
+									"required instance extensions.";
 		extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 	}
 	return std::vector<std::string>(extensions.begin(), extensions.end());
@@ -100,22 +108,24 @@ utility::event::KeyboardEvent::KeyCode
 	return static_cast<utility::event::KeyboardEvent::KeyCode>(glfwKey);
 }
 
-utility::event::MouseButtonEvent::Button evan::IDesktopPlatform::convertGlfwMouseButtonToButton(int glfwButton) const
+utility::event::MouseButtonEvent::Button
+	evan::IDesktopPlatform::convertGlfwMouseButtonToButton(int glfwButton) const
 {
-	this->getLogger().info() << "Converting GLFW mouse button to event button...";
+	this->getLogger().info()
+		<< "Converting GLFW mouse button to event button...";
 	switch (glfwButton) {
-	case GLFW_MOUSE_BUTTON_LEFT:
-		return utility::event::MouseButtonEvent::Button::Left;
-	case GLFW_MOUSE_BUTTON_RIGHT:
-		return utility::event::MouseButtonEvent::Button::Right;
-	case GLFW_MOUSE_BUTTON_MIDDLE:
-		return utility::event::MouseButtonEvent::Button::Middle;
-	case GLFW_MOUSE_BUTTON_4:
-		return utility::event::MouseButtonEvent::Button::X1;
-	case GLFW_MOUSE_BUTTON_5:
-		return utility::event::MouseButtonEvent::Button::X2;
-	default:
-		return utility::event::MouseButtonEvent::Button::Unknown;
+		case GLFW_MOUSE_BUTTON_LEFT:
+			return utility::event::MouseButtonEvent::Button::Left;
+		case GLFW_MOUSE_BUTTON_RIGHT:
+			return utility::event::MouseButtonEvent::Button::Right;
+		case GLFW_MOUSE_BUTTON_MIDDLE:
+			return utility::event::MouseButtonEvent::Button::Middle;
+		case GLFW_MOUSE_BUTTON_4:
+			return utility::event::MouseButtonEvent::Button::X1;
+		case GLFW_MOUSE_BUTTON_5:
+			return utility::event::MouseButtonEvent::Button::X2;
+		default:
+			return utility::event::MouseButtonEvent::Button::Unknown;
 	}
 }
 
@@ -125,16 +135,20 @@ utility::event::KeyboardEvent::KeyModifiers
 	std::uint16_t result = 0;
 
 	if (glfwMods & GLFW_MOD_SHIFT) {
-		result |= static_cast<std::uint16_t>(utility::event::KeyboardEvent::KeyModifiers::Shift);
+		result |= static_cast<std::uint16_t>(
+			utility::event::KeyboardEvent::KeyModifiers::Shift);
 	}
 	if (glfwMods & GLFW_MOD_CONTROL) {
-		result |= static_cast<std::uint16_t>(utility::event::KeyboardEvent::KeyModifiers::Ctrl);
+		result |= static_cast<std::uint16_t>(
+			utility::event::KeyboardEvent::KeyModifiers::Ctrl);
 	}
 	if (glfwMods & GLFW_MOD_ALT) {
-		result |= static_cast<std::uint16_t>(utility::event::KeyboardEvent::KeyModifiers::Alt);
+		result |= static_cast<std::uint16_t>(
+			utility::event::KeyboardEvent::KeyModifiers::Alt);
 	}
 	if (glfwMods & GLFW_MOD_SUPER) {
-		result |= static_cast<std::uint16_t>(utility::event::KeyboardEvent::KeyModifiers::Gui);
+		result |= static_cast<std::uint16_t>(
+			utility::event::KeyboardEvent::KeyModifiers::Gui);
 	}
 
 	return static_cast<utility::event::KeyboardEvent::KeyModifiers>(result);
@@ -147,6 +161,7 @@ utility::event::MouseMotionEvent::MousePosition
 	double yPos = 0.0;
 
 	glfwGetCursorPos(_window, &xPos, &yPos);
-	return utility::event::MouseMotionEvent::MousePosition{
-		static_cast<unsigned int>(xPos), static_cast<unsigned int>(yPos)};
+	return utility::event::MouseMotionEvent::MousePosition {
+		static_cast<unsigned int>(xPos), static_cast<unsigned int>(yPos)
+	};
 }

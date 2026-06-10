@@ -43,7 +43,9 @@ namespace xider
 	 * a unified interface for application lifecycle management, rendering, and
 	 * event handling across all platforms.
 	 */
-	class XIDER: public guillaume::Application<scenes::Main, scenes::Settings>
+	class XIDER:
+		public guillaume::Application<scenes::Main, scenes::Main,
+									  scenes::Settings>
 	{
 		public:
 		/**

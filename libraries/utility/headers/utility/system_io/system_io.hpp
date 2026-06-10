@@ -89,16 +89,14 @@ namespace utility
 		 * specified path by reading the file content and storing it in the
 		 * _assets map.
 		 */
-		virtual std::shared_ptr<utility::File>
-			add(const std::string &path) = 0;
+		virtual std::shared_ptr<utility::File> add(const std::string &path) = 0;
 
 		/**
 		 * @brief Adds an asset to the manager.
 		 * @param path The filesystem path to the asset.
 		 * @return A shared pointer to the File object.
 		 */
-		std::shared_ptr<utility::File>
-			add(const std::filesystem::path &path)
+		std::shared_ptr<utility::File> add(const std::filesystem::path &path)
 		{
 			return add(path.string());
 		}

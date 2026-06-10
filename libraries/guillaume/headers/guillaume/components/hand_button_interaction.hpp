@@ -31,24 +31,21 @@
 namespace guillaume::components
 {
 
-	inline constexpr std::array<
-		utility::event::HandButtonEvent::Button, 6> HandButtons = {
-		utility::event::HandButtonEvent::Button::X,
-		utility::event::HandButtonEvent::Button::Y,
-		utility::event::HandButtonEvent::Button::A,
-		utility::event::HandButtonEvent::Button::B,
-		utility::event::HandButtonEvent::Button::Menu,
-		utility::event::HandButtonEvent::Button::System
-	};
+	inline constexpr std::array<utility::event::HandButtonEvent::Button, 6>
+		HandButtons = { utility::event::HandButtonEvent::Button::X,
+						utility::event::HandButtonEvent::Button::Y,
+						utility::event::HandButtonEvent::Button::A,
+						utility::event::HandButtonEvent::Button::B,
+						utility::event::HandButtonEvent::Button::Menu,
+						utility::event::HandButtonEvent::Button::System };
 
 	/**
 	 * @brief Component handling hand button interactions.
 	 * @see systems::HandButton
 	 */
-	using HandButtonInteraction = ButtonInteraction<
-		utility::event::HandButtonEvent,
-		utility::event::HandButtonEvent::Button,
-		HandButtons.size(),
-		HandButtons>;
+	using HandButtonInteraction =
+		ButtonInteraction<utility::event::HandButtonEvent,
+						  utility::event::HandButtonEvent::Button,
+						  HandButtons.size(), HandButtons>;
 
-} // namespace guillaume::components
+}	 // namespace guillaume::components

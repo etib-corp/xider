@@ -44,8 +44,8 @@ namespace guillaume::systems
 	{
 		private:
 		std::unique_ptr<Engine>
-			&_engine;	   ///< Reference to the engine for potential
-						   ///< visual feedback on button interactions
+			&_engine;	 ///< Reference to the engine for potential
+						 ///< visual feedback on button interactions
 
 		public:
 		/**
@@ -54,8 +54,7 @@ namespace guillaume::systems
 		 * @param eventBus Reference to the event bus for subscribing to events.
 		 * @param engine Reference to the engine for visual feedback.
 		 */
-		MouseButton(event::EventBus &eventBus,
-					std::unique_ptr<Engine> &engine)
+		MouseButton(event::EventBus &eventBus, std::unique_ptr<Engine> &engine)
 			: _engine(engine)
 			, ButtonInteractionSystem<
 				  utility::event::MouseButtonEvent,

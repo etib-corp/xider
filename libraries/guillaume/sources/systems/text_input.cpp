@@ -34,7 +34,8 @@ namespace guillaume::systems
 
 	void TextInput::update(const ecs::Entity::Identifier &entityIdentifier)
 	{
-		getLogger().debug() << "Updating TextInput system for entity " << entityIdentifier;
+		getLogger().debug()
+			<< "Updating TextInput system for entity " << entityIdentifier;
 		if (!_textInputSubscriber.hasPendingEvents()) {
 			return;
 		}

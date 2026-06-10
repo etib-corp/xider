@@ -66,12 +66,12 @@ namespace utility::graphic
 	 * Encapsulates all properties needed to render text, including content,
 	 * font information and size.
 	 */
-	class Text : public Renderable
+	class Text: public Renderable
 	{
 		private:
-		std::string _content;		   ///< Text content to display
-		std::string _fontPath;		   ///< Path to the font file
-		float _fontSize;			   ///< Font size in points
+		std::string _content;	  ///< Text content to display
+		std::string _fontPath;	  ///< Path to the font file
+		float _fontSize;		  ///< Font size in points
 
 		protected:
 		std::shared_ptr<Font>
@@ -117,8 +117,8 @@ namespace utility::graphic
 		 * RessourceProvider and an SystemIO, which are used to load the
 		 * necessary font resources for rendering the text.
 		 *
-		 * @param ressourceProvider A reference to the RessourceProvider instance
-		 * used to load font resources.
+		 * @param ressourceProvider A reference to the RessourceProvider
+		 * instance used to load font resources.
 		 * @param content The text content to be displayed.
 		 * @param fontSize The font size in points for rendering the text.
 		 * @param font The file path to the font resource to be used for
