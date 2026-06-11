@@ -45,8 +45,12 @@ namespace utility
 		 * SystemIO interface to load resources from the filesystem, and this
 		 * constructor initializes the RessourceProvider with the provided
 		 * SystemIO instance for asset loading operations.
+		 * @param basePath An optional base path to prepend to resource paths when
+		 * loading resources. This can be used to specify a common directory for
+		 * all resources, allowing for more flexible resource management and
+		 * organization.
 		 */
-		RessourceProvider(SystemIO &systemInterface);
+		RessourceProvider(SystemIO &systemInterface, const std::string &basePath = "");
 
 		/**
 		 * @brief Destructs the RessourceProvider object.
@@ -421,5 +425,34 @@ namespace utility
 		 * resources based on file paths provided in the loading methods.
 		 */
 		SystemIO &_systemInterface;
+
+		/**
+		 * @brief An optional base path to prepend to resource paths when
+		 * loading resources.
+		 *
+		 * This member variable holds a base path that can be used to specify a
+		 * common directory for all resources. When loading resources, the
+		 * RessourceProvider can prepend this base path to the provided resource
+		 * paths, allowing for more flexible resource management and
+		 * organization. This is particularly useful when all resources are stored
+		 * in a specific directory, as it eliminates the need to provide the full
+		 * path for each resource when loading them.
+		 */
+		std::string _basePath;
+
+		private:
+
+		/**
+		 * @brief Resolves a resource path by prepending the base path if it is
+		 * set.
+		 * This method takes a resource path as input and checks if a base path is
+		 * set for the RessourceProvider. If a base path is set, it prepends the base path to the
+		 * provided resource path to create a full path. If no base path is set, it returns the original
+		 * resource path unchanged. This allows for flexible resource management, as it enables the use
+		 * of a common base directory for all resources while still allowing for individual resource paths to be specified.
+		 * @param path The original resource path to be resolved.
+		 * @return The resolved resource path with the base path prepended if it is set, or the original path if no base path is set.
+		 */
+		std::string resolvePath(const std::string &path) const;
 	};
 }	 // namespace utility

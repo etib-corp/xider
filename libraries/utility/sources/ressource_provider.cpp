@@ -13,8 +13,9 @@
 namespace utility
 {
 
-	RessourceProvider::RessourceProvider(SystemIO &systemInterface)
+	RessourceProvider::RessourceProvider(SystemIO &systemInterface, const std::string &basePath)
 		: _systemInterface(systemInterface)
+		, _basePath(basePath)
 	{
 	}
 
@@ -89,7 +90,7 @@ namespace utility
 			}
 		}
 
-		auto fontAsset = _systemInterface.add(path);
+		auto fontAsset = _systemInterface.add(resolvePath(path));
 
 		if (!fontAsset) {
 			std::cerr << "Failed to load font asset: " << path << std::endl;
@@ -266,7 +267,7 @@ namespace utility
 			}
 		}
 
-		auto materialAsset = _systemInterface.add(path);
+		auto materialAsset = _systemInterface.add(resolvePath(path));
 
 		if (!materialAsset) {
 			std::cerr << "Failed to load material asset: " << path << std::endl;
@@ -307,7 +308,8 @@ namespace utility
 	std::shared_ptr<graphic::Texture>
 		RessourceProvider::loadTexture(const std::string &path)
 	{
-		auto it = _elementsIDs.find(path);
+		std::string resolvedPath = resolvePath(path);
+		auto it = _elementsIDs.find(resolvedPath);
 
 		if (it != _elementsIDs.end()) {
 			if (_textures.find(it->second) != _textures.end()) {
@@ -315,7 +317,7 @@ namespace utility
 			}
 		}
 
-		auto textureAsset = _systemInterface.add(path);
+		auto textureAsset = _systemInterface.add(resolvedPath);
 
 		if (!textureAsset) {
 			std::cerr << "Failed to load texture asset: " << path << std::endl;
@@ -359,13 +361,15 @@ namespace utility
 		std::copy(pixels, pixels + (texWidth * texHeight * 4),
 				  _textures[id]->_pixels.data());
 
+		_elementsIDs[textureAsset->path()] = id;
 		return _textures[id];
 	}
 
 	std::shared_ptr<graphic::Model>
 		RessourceProvider::loadModel(const std::string &path)
 	{
-		auto it = _elementsIDs.find(path);
+		std::string resolvedPath = resolvePath(path);
+		auto it = _elementsIDs.find(resolvedPath);
 
 		if (it != _elementsIDs.end()) {
 			if (_models.find(it->second) != _models.end()) {
@@ -373,7 +377,7 @@ namespace utility
 			}
 		}
 
-		auto modelAsset = _systemInterface.add(path);
+		auto modelAsset = _systemInterface.add(resolvedPath);
 
 		if (!modelAsset) {
 			std::cerr << "Failed to load model asset: " << path << std::endl;
@@ -429,7 +433,8 @@ namespace utility
 	std::shared_ptr<graphic::Model>
 		RessourceProvider::loadObj(const std::string &path)
 	{
-		auto it = _elementsIDs.find(path);
+		std::string resolvedPath = resolvePath(path);
+		auto it = _elementsIDs.find(resolvedPath);
 
 		if (it != _elementsIDs.end()) {
 			if (_models.find(it->second) != _models.end()) {
@@ -437,7 +442,7 @@ namespace utility
 			}
 		}
 
-		auto modelAsset = _systemInterface.add(path);
+		auto modelAsset = _systemInterface.add(resolvedPath);
 
 		if (!modelAsset) {
 			std::cerr << "Failed to load model asset: " << path << std::endl;
@@ -477,7 +482,9 @@ namespace utility
 		RessourceProvider::loadShader(const std::string &vertexPath,
 									  const std::string &fragmentPath)
 	{
-		auto path = buildShaderPath(vertexPath, fragmentPath);
+		std::string resolvedVertexPath   = resolvePath(vertexPath);
+		std::string resolvedFragmentPath = resolvePath(fragmentPath);
+		auto path = buildShaderPath(resolvedVertexPath, resolvedFragmentPath);
 		auto it	  = _elementsIDs.find(path);
 
 		if (it != _elementsIDs.end()) {
@@ -486,8 +493,8 @@ namespace utility
 			}
 		}
 
-		auto vertex	  = _systemInterface.add(vertexPath);
-		auto fragment = _systemInterface.add(fragmentPath);
+		auto vertex	  = _systemInterface.add(resolvedVertexPath);
+		auto fragment = _systemInterface.add(resolvedFragmentPath);
 
 		if (!vertex) {
 			std::cerr << "Failed to load shader asset: " << vertexPath
@@ -537,7 +544,8 @@ namespace utility
 	std::shared_ptr<graphic::CodePoints>
 		RessourceProvider::loadCodePoints(const std::string &path)
 	{
-		auto it = _elementsIDs.find(path);
+		std::string resolvedPath = resolvePath(path);
+		auto it = _elementsIDs.find(resolvedPath);
 
 		if (it != _elementsIDs.end()) {
 			if (_codePoints.find(it->second) != _codePoints.end()) {
@@ -545,7 +553,7 @@ namespace utility
 			}
 		}
 
-		auto codePointsAsset = _systemInterface.add(path);
+		auto codePointsAsset = _systemInterface.add(resolvedPath);
 
 		if (!codePointsAsset) {
 			std::cerr << "Failed to load codepoints asset: " << path
@@ -601,4 +609,21 @@ namespace utility
 		return _currentID++;
 	}
 
+	///////////////////////
+	// Protected Private //
+	///////////////////////
+
+	std::string RessourceProvider::resolvePath(const std::string &path) const
+	{
+		if (_basePath.empty())
+			return path;
+
+		if (_basePath.back() == '/' && !path.empty() && path.front() == '/')
+			return _basePath + path.substr(1);
+
+		if (_basePath.back() != '/' && !path.empty() && path.front() != '/')
+			return _basePath + "/" + path;
+
+		return _basePath + path;
+	}
 }	 // namespace utility
