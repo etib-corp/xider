@@ -721,12 +721,6 @@ namespace guillaume::entities
 
 	void Button::update(void)
 	{
-		getComponentRegistry()
-			.getComponent<components::Transform>(getIdentifier())
-			.setPose(utility::graphic::PoseF(
-				utility::graphic::PositionF(300.0f, 300.0f, 300.0f),
-				utility::graphic::OrientationF(0.0f, 0.0f, 0.0f, 1.0f)));
-
 		setIconGlyphName(_iconGlyphName);
 		setLabelContent(_labelContent);
 		setIsToggle(_isToggle);

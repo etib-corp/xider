@@ -124,6 +124,7 @@ namespace guillaume
 		for (const auto &sceneType: sceneTypes) {
 			_engine->addScene(sceneType.hash_code());
 		}
+		_sceneManager->setEngine(_engine.get());
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
@@ -181,6 +182,7 @@ namespace guillaume
 	int Application<DefaultSceneType, SceneTypes...>::run(void)
 	{
 		this->getLogger().info() << "Entering main loop";
+		_sceneManager->enterActiveScene();
 		while (!shouldQuit()) {
 			try {
 				_engine->pollEvents();
