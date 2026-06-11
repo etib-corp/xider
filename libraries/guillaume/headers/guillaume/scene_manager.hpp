@@ -43,6 +43,9 @@
 namespace guillaume
 {
 
+	// Forward declaration
+	class Engine;
+
 	/**
 	 * @brief Scene manager class responsible for managing scenes in the
 	 * application.
@@ -66,6 +69,7 @@ namespace guillaume
 		LocalStorage _localStorage;	   ///< Local storage for persistent data
 		SessionStorage
 			_sessionStorage;	///< Session storage for temporary data
+		Engine *_engine; ///< Pointer to the application engine (non-owning)
 
 		/**
 		 * @brief Get the active scene.
@@ -103,6 +107,19 @@ namespace guillaume
 		 * @return True when the active scene points to a registered scene.
 		 */
 		bool hasActiveScene(void) const noexcept;
+
+		/**
+		 * @brief Set the engine pointer used to query the current view.
+		 * @param engine Pointer to the engine instance.
+		 */
+		void setEngine(Engine *engine);
+
+		/**
+		 * @brief Enter the currently active scene, setting its view from the
+		 * engine and calling onEnter().
+		 * @throws std::runtime_error if there is no active scene.
+		 */
+		void enterActiveScene(void);
 
 		/**
 		 * @brief Process a pending scene transition request from the active

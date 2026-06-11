@@ -158,7 +158,6 @@ namespace guillaume::entities
 
 	void Panel::update(void)
 	{
-		setPose(_pose);
 		setColor(_color);
 		setBorderRadius(_borderRadius);
 		setEntities(_entities);

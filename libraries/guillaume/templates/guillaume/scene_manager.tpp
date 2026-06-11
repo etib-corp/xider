@@ -25,6 +25,7 @@
 #include <utility/demangle.hpp>
 
 #include "guillaume/scene_manager.hpp"
+#include "guillaume/engine.hpp"
 
 namespace guillaume
 {
@@ -33,6 +34,7 @@ namespace guillaume
 	SceneManager<DefaultSceneType, SceneTypes...>::SceneManager(void)
 		: _scenes()
 		, _activeSceneType(typeid(void))
+		, _engine(nullptr)
 	{
 		if constexpr (sizeof...(SceneTypes) == 0) {
 			throw std::invalid_argument(
@@ -127,6 +129,24 @@ namespace guillaume
 						 << utility::demangle<SceneType>();
 	}
 
+		template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
+	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+	void SceneManager<DefaultSceneType, SceneTypes...>::setEngine(Engine *engine)
+	{
+		_engine = engine;
+	}
+
+	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
+	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+	void SceneManager<DefaultSceneType, SceneTypes...>::enterActiveScene(void)
+	{
+		std::unique_ptr<Scene> &activeScene = getActiveScene();
+		if (_engine != nullptr) {
+			activeScene->setView(_engine->getView());
+		}
+		activeScene->onEnter();
+	}
+
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
 	    requires IsOneOf<DefaultSceneType, SceneTypes...>
 	void SceneManager<DefaultSceneType, SceneTypes...>::processSceneTransition(
@@ -156,7 +176,7 @@ namespace guillaume
 		activeScene->onExit();
 		activeScene->clearNextScene();
 		_activeSceneType = nextType;
-		_scenes[_activeSceneType]->onEnter();
+		enterActiveScene();
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
@@ -167,11 +187,11 @@ namespace guillaume
 		std::type_index typeIndex(typeid(SceneType));
 		if (_scenes.find(typeIndex) == _scenes.end()) {
 			this->getLogger().error() << "Scene switch failed. Scene type is not "
-							  "registered: " << utility::demangle<SceneType>();
+								  "registered: " << utility::demangle<SceneType>();
 			throw std::runtime_error("Scene not found in scene manager");
 		}
 		_activeSceneType = typeIndex;
 		this->getLogger().info() << "Switched active scene to type: "
-						 << utility::demangle<SceneType>();
+							 << utility::demangle<SceneType>();
 	}
 }  // namespace guillaume
