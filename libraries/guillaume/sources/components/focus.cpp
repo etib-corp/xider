@@ -24,14 +24,25 @@
 
 namespace guillaume::components
 {
-	void Focus::setOnFocusHandler(const Handler &handler)
+	void Focus::setOnFocusGainedHandler(const Handler &handler)
 	{
-		_onFocus = handler;
+		_onFocusGained = handler;
 		setHasChanged(true);
 	}
 
-	Focus::Handler Focus::getOnFocusHandler(void) const
+	Focus::Handler Focus::getOnFocusGainedHandler(void) const
 	{
-		return _onFocus;
+		return _onFocusGained;
+	}
+
+	void Focus::setOnFocusLostHandler(const Handler &handler)
+	{
+		_onFocusLost = handler;
+		setHasChanged(true);
+	}
+
+	Focus::Handler Focus::getOnFocusLostHandler(void) const
+	{
+		return _onFocusLost;
 	}
 }	 // namespace guillaume::components

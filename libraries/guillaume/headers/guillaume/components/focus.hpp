@@ -39,7 +39,8 @@ namespace guillaume::components
 			std::function<void(void)>;	  ///< Focus event handler type
 
 		private:
-		Handler _onFocus;	 ///< Focus event handler
+		Handler _onFocusGained;	 ///< Focus gained event handler
+		Handler _onFocusLost;	   ///< Focus lost event handler
 
 		public:
 		/**
@@ -53,16 +54,28 @@ namespace guillaume::components
 		~Focus(void) = default;
 
 		/**
-		 * @brief Set the onFocus event handler.
-		 * @param handler The function to call on focus events.
+		 * @brief Set the onFocusGained event handler.
+		 * @param handler The function to call when focus is gained.
 		 */
-		void setOnFocusHandler(const Handler &handler);
+		void setOnFocusGainedHandler(const Handler &handler);
 
 		/**
-		 * @brief Get the onFocus event handler.
-		 * @return The onFocus event handler.
+		 * @brief Get the onFocusGained event handler.
+		 * @return The onFocusGained event handler.
 		 */
-		Handler getOnFocusHandler(void) const;
+		Handler getOnFocusGainedHandler(void) const;
+
+		/**
+		 * @brief Set the onFocusLost event handler.
+		 * @param handler The function to call when focus is lost.
+		 */
+		void setOnFocusLostHandler(const Handler &handler);
+
+		/**
+		 * @brief Get the onFocusLost event handler.
+		 * @return The onFocusLost event handler.
+		 */
+		Handler getOnFocusLostHandler(void) const;
 	};
 
 }	 // namespace guillaume::components

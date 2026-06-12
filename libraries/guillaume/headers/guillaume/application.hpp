@@ -67,6 +67,7 @@
 #include "guillaume/systems/text_input.hpp"
 #include "guillaume/systems/text_render.hpp"
 #include "guillaume/systems/glyph_render.hpp"
+#include "guillaume/systems/focus.hpp"
 
 namespace guillaume
 {
