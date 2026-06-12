@@ -38,6 +38,35 @@ namespace guillaume::systems
 
 	void HandPinch::update(const ecs::Entity::Identifier &entityIdentifier)
 	{
+		auto pinchEvent = this->getLastEvent();
+		if (!pinchEvent)
+			return;
+
+		auto &transform =
+			this->template getComponent<components::Transform>(entityIdentifier);
+		auto &bound =
+			this->template getComponent<components::Bound>(entityIdentifier);
+		auto &interaction =
+			this->template getComponent<components::HandPinchInteraction>(
+				entityIdentifier);
+
+		const auto size = utility::math::Vector2UI(
+			{ bound.getWidth(), bound.getHeight() });
+		const auto ray = utility::graphic::RayF(
+			utility::graphic::PositionF(pinchEvent->getPose().getPosition()),
+			pinchEvent->getPose().getOrientation().getForward());
+		const bool isIntersecting =
+			ray.intersectRectangle(transform.getPose(), size);
+
+		if (isIntersecting) {
+			interaction.setPinching(true);
+			const auto &handler = interaction.getOnEventHandler();
+			if (handler) {
+				handler();
+			}
+		} else {
+			interaction.setPinching(false);
+		}
 	}
 
 }	 // namespace guillaume::systems

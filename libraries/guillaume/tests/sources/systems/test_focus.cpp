@@ -35,27 +35,23 @@ namespace guillaume::systems::tests
 	TEST_F(TestFocus, InitialFocusState)
 	{
 		EXPECT_FALSE(_focusSystem->getFocusedEntity().has_value());
+		EXPECT_FALSE(_focusSystem->getLastFocusedEntity().has_value());
 	}
 
 	TEST_F(TestFocus, SetFocusToEntity)
 	{
 		auto entity1 = createFocusableEntity();
-		auto ray	 = utility::graphic::RayF(
-			utility::graphic::PositionF(0, 0, 0),
-			utility::math::Vector3F(0, 0, -1));
 
-		_focusSystem->setFocus(entity1, ray);
+		_focusSystem->setFocus(entity1);
 
 		EXPECT_TRUE(_focusSystem->getFocusedEntity().has_value());
 		EXPECT_EQ(_focusSystem->getFocusedEntity().value(), entity1);
+		EXPECT_FALSE(_focusSystem->getLastFocusedEntity().has_value());
 	}
 
 	TEST_F(TestFocus, SetFocusToEntityWithHandler)
 	{
 		auto entity1 = createFocusableEntity();
-		auto ray	 = utility::graphic::RayF(
-			utility::graphic::PositionF(0, 0, 0),
-			utility::math::Vector3F(0, 0, -1));
 
 		bool focusGained = false;
 		auto &focusComponent =
@@ -64,7 +60,7 @@ namespace guillaume::systems::tests
 			focusGained = true;
 		});
 
-		_focusSystem->setFocus(entity1, ray);
+		_focusSystem->setFocus(entity1);
 
 		EXPECT_TRUE(focusGained);
 	}
@@ -72,11 +68,8 @@ namespace guillaume::systems::tests
 	TEST_F(TestFocus, ClearFocus)
 	{
 		auto entity1 = createFocusableEntity();
-		auto ray	 = utility::graphic::RayF(
-			utility::graphic::PositionF(0, 0, 0),
-			utility::math::Vector3F(0, 0, -1));
 
-		_focusSystem->setFocus(entity1, ray);
+		_focusSystem->setFocus(entity1);
 		EXPECT_TRUE(_focusSystem->getFocusedEntity().has_value());
 
 		_focusSystem->clearFocus();
@@ -86,9 +79,6 @@ namespace guillaume::systems::tests
 	TEST_F(TestFocus, ClearFocusWithHandler)
 	{
 		auto entity1 = createFocusableEntity();
-		auto ray	 = utility::graphic::RayF(
-			utility::graphic::PositionF(0, 0, 0),
-			utility::math::Vector3F(0, 0, -1));
 
 		bool focusLost = false;
 		auto &focusComponent =
@@ -97,10 +87,14 @@ namespace guillaume::systems::tests
 			focusLost = true;
 		});
 
-		_focusSystem->setFocus(entity1, ray);
-		_focusSystem->clearFocus();
+		_focusSystem->setFocus(entity1);
+		EXPECT_EQ(_focusSystem->getFocusedEntity().value(), entity1);
+		EXPECT_FALSE(_focusSystem->getLastFocusedEntity().has_value());
 
+		_focusSystem->clearFocus();
 		EXPECT_TRUE(focusLost);
+		EXPECT_FALSE(_focusSystem->getFocusedEntity().has_value());
+		EXPECT_EQ(_focusSystem->getLastFocusedEntity().value(), entity1);
 	}
 
 	TEST_F(TestFocus, SwitchFocusBetweenEntities)
@@ -111,13 +105,6 @@ namespace guillaume::systems::tests
 		auto entity2 = createFocusableEntity(
 			utility::graphic::PoseF(utility::graphic::PositionF(100, 0, 0)),
 			100, 50);
-
-		auto ray1 = utility::graphic::RayF(
-			utility::graphic::PositionF(-100, 0, 0),
-			utility::math::Vector3F(0, 0, -1));
-		auto ray2 = utility::graphic::RayF(
-			utility::graphic::PositionF(100, 0, 0),
-			utility::math::Vector3F(0, 0, -1));
 
 		bool entity1Lost = false;
 		bool entity2Gained = false;
@@ -133,43 +120,104 @@ namespace guillaume::systems::tests
 		});
 
 		// Set focus to entity1
-		_focusSystem->setFocus(entity1, ray1);
+		_focusSystem->setFocus(entity1);
 		EXPECT_EQ(_focusSystem->getFocusedEntity().value(), entity1);
+		EXPECT_FALSE(_focusSystem->getLastFocusedEntity().has_value());
 
 		// Switch focus to entity2
-		_focusSystem->setFocus(entity2, ray2);
+		_focusSystem->setFocus(entity2);
 		EXPECT_EQ(_focusSystem->getFocusedEntity().value(), entity2);
+		EXPECT_EQ(_focusSystem->getLastFocusedEntity().value(), entity1);
 		EXPECT_TRUE(entity1Lost);
 		EXPECT_TRUE(entity2Gained);
 	}
 
-	TEST_F(TestFocus, SetFocusNoIntersection)
+	TEST_F(TestFocus, UpdateWithMouseClick)
 	{
 		auto entity1 = createFocusableEntity();
-		// Ray pointing away from entity
-		auto ray = utility::graphic::RayF(
-			utility::graphic::PositionF(0, 0, 1000),
-			utility::math::Vector3F(0, 0, 1));
 
-		_focusSystem->setFocus(entity1, ray);
-
-		// Focus should not be set since ray doesn't intersect
-		EXPECT_FALSE(_focusSystem->getFocusedEntity().has_value());
-	}
-
-	TEST_F(TestFocus, UpdateDoesNotChangeFocus)
-	{
-		auto entity1 = createFocusableEntity();
-		auto ray	 = utility::graphic::RayF(
-			utility::graphic::PositionF(0, 0, 0),
-			utility::math::Vector3F(0, 0, -1));
-
-		_focusSystem->setFocus(entity1, ray);
-		EXPECT_TRUE(_focusSystem->getFocusedEntity().has_value());
+		// Simulate mouse click by setting button pressed state
+		auto &mouseInteraction =
+			_componentRegistry.getComponent<components::MouseButtonInteraction>(entity1);
+		mouseInteraction.setButtonPressed(
+			utility::event::MouseButtonEvent::Button::Left, true);
 
 		_focusSystem->update(entity1);
 
-		// Focus should remain unchanged
+		EXPECT_TRUE(_focusSystem->getFocusedEntity().has_value());
+		EXPECT_EQ(_focusSystem->getFocusedEntity().value(), entity1);
+	}
+
+	TEST_F(TestFocus, UpdateWithHandClick)
+	{
+		auto entity1 = createFocusableEntity();
+
+		// Simulate hand click by setting button pressed state
+		auto &handInteraction =
+			_componentRegistry.getComponent<components::HandButtonInteraction>(entity1);
+		handInteraction.setButtonPressed(
+			utility::event::HandButtonEvent::Button::A, true);
+
+		_focusSystem->update(entity1);
+
+		EXPECT_TRUE(_focusSystem->getFocusedEntity().has_value());
+		EXPECT_EQ(_focusSystem->getFocusedEntity().value(), entity1);
+	}
+
+	TEST_F(TestFocus, UpdateWithHandPinch)
+	{
+		auto entity1 = createFocusableEntity();
+
+		// Simulate hand pinch by setting pinch state
+		auto &pinchInteraction =
+			_componentRegistry.getComponent<components::HandPinchInteraction>(entity1);
+		pinchInteraction.setPinching(true);
+
+		_focusSystem->update(entity1);
+
+		EXPECT_TRUE(_focusSystem->getFocusedEntity().has_value());
+		EXPECT_EQ(_focusSystem->getFocusedEntity().value(), entity1);
+	}
+
+	TEST_F(TestFocus, UpdateWithHandPoke)
+	{
+		auto entity1 = createFocusableEntity();
+
+		// Simulate hand poke by setting poke state
+		auto &pokeInteraction =
+			_componentRegistry.getComponent<components::HandPokeInteraction>(entity1);
+		pokeInteraction.setPoking(true);
+
+		_focusSystem->update(entity1);
+
+		EXPECT_TRUE(_focusSystem->getFocusedEntity().has_value());
+		EXPECT_EQ(_focusSystem->getFocusedEntity().value(), entity1);
+	}
+
+	TEST_F(TestFocus, UpdateNoClick)
+	{
+		auto entity1 = createFocusableEntity();
+
+		// No button pressed
+		_focusSystem->update(entity1);
+
+		// Focus should remain unchanged (nullopt initially)
+		EXPECT_FALSE(_focusSystem->getFocusedEntity().has_value());
+	}
+
+	TEST_F(TestFocus, UpdateDoesNotChangeFocusWithoutClick)
+	{
+		auto entity1 = createFocusableEntity();
+		auto entity2 = createFocusableEntity();
+
+		// Set initial focus
+		_focusSystem->setFocus(entity1);
+		EXPECT_TRUE(_focusSystem->getFocusedEntity().has_value());
+
+		// Update entity2 without click should not change focus
+		_focusSystem->update(entity2);
+
+		// Focus should remain on entity1
 		EXPECT_TRUE(_focusSystem->getFocusedEntity().has_value());
 		EXPECT_EQ(_focusSystem->getFocusedEntity().value(), entity1);
 	}
@@ -183,11 +231,7 @@ namespace guillaume::systems::tests
 			utility::graphic::PoseF(utility::graphic::PositionF(100, 0, 0)),
 			100, 50);
 
-		auto ray = utility::graphic::RayF(
-			utility::graphic::PositionF(-100, 0, 0),
-			utility::math::Vector3F(0, 0, -1));
-
-		_focusSystem->setFocus(entity1, ray);
+		_focusSystem->setFocus(entity1);
 		EXPECT_EQ(_focusSystem->getFocusedEntity().value(), entity1);
 
 		// Setting focus to same entity again should not trigger handler twice
@@ -197,7 +241,7 @@ namespace guillaume::systems::tests
 			focusCount++;
 		});
 
-		_focusSystem->setFocus(entity1, ray);
+		_focusSystem->setFocus(entity1);
 		EXPECT_EQ(focusCount, 1);
 	}
 

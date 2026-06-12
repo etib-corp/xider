@@ -4,7 +4,7 @@
  Permission is hereby granted, free of charge, to any person obtaining a copy of
  this software and associated documentation files (the "Software"), to deal in
  the Software without restriction, including without limitation the rights to
- use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ use, copy, modify, merge, distribute, sublicense, and/or sell copies
  of the Software, and to permit persons to whom the Software is furnished to do
  so, subject to the following conditions:
 
@@ -33,13 +33,18 @@
 #include "guillaume/components/focus.hpp"
 #include "guillaume/components/transform.hpp"
 #include "guillaume/components/bound.hpp"
+#include "guillaume/components/mouse_button_interaction.hpp"
+#include "guillaume/components/hand_button_interaction.hpp"
+#include "guillaume/components/hand_pinch_interaction.hpp"
+#include "guillaume/components/hand_poke_interaction.hpp"
 
 #include "guillaume/systems/focus.hpp"
 #include "guillaume/event/event_bus.hpp"
 
-#include <utility/graphic/ray.hpp>
 #include <utility/graphic/pose.hpp>
 #include <utility/math/vector.hpp>
+#include <utility/event/mouse_button_event.hpp>
+#include <utility/event/hand_button_event.hpp>
 
 namespace guillaume::systems::tests
 {
@@ -68,7 +73,7 @@ namespace guillaume::systems::tests
 		}
 
 		/**
-		 * @brief Create an entity with Focus, Transform, and Bound components.
+		 * @brief Create an entity with Focus, Transform, Bound, and interaction components.
 		 * @return The identifier of the created entity.
 		 */
 		ecs::Entity::Identifier createFocusableEntity(
@@ -82,6 +87,10 @@ namespace guillaume::systems::tests
 			_componentRegistry.addComponent<components::Focus>(id);
 			_componentRegistry.addComponent<components::Transform>(id);
 			_componentRegistry.addComponent<components::Bound>(id);
+			_componentRegistry.addComponent<components::MouseButtonInteraction>(id);
+			_componentRegistry.addComponent<components::HandButtonInteraction>(id);
+			_componentRegistry.addComponent<components::HandPinchInteraction>(id);
+			_componentRegistry.addComponent<components::HandPokeInteraction>(id);
 
 			auto &transform = _componentRegistry.getComponent<components::Transform>(id);
 			transform.setPose(pose);

@@ -30,8 +30,10 @@
 #include "guillaume/components/focus.hpp"
 #include "guillaume/components/transform.hpp"
 #include "guillaume/components/bound.hpp"
-
-#include <utility/graphic/ray.hpp>
+#include "guillaume/components/mouse_button_interaction.hpp"
+#include "guillaume/components/hand_button_interaction.hpp"
+#include "guillaume/components/hand_pinch_interaction.hpp"
+#include "guillaume/components/hand_poke_interaction.hpp"
 
 namespace guillaume::systems
 {
@@ -41,27 +43,23 @@ namespace guillaume::systems
 	 *
 	 * The Focus system tracks which entity currently has focus and manages
 	 * focus transitions between entities. It triggers focus handlers when
-	 * focus is gained or lost.
+	 * focus is gained or lost based on mouse or hand click interactions.
 	 *
 	 * @see components::Focus
 	 */
 	class Focus:
 		public ecs::SystemFiller<components::Focus, components::Transform,
-								 components::Bound>
+								 components::Bound,
+								 components::MouseButtonInteraction,
+								 components::HandButtonInteraction,
+								 components::HandPinchInteraction,
+								 components::HandPokeInteraction>
 	{
 		private:
 		std::optional<ecs::Entity::Identifier>
 			_focusedEntity;	  ///< Currently focused entity identifier
-
-		/**
-		 * @brief Check if a ray intersects with an entity's bounds.
-		 * @param entityIdentifier The entity to check.
-		 * @param ray The ray to test for intersection.
-		 * @return True if the ray intersects the entity's bounds.
-		 */
-		bool isEntityIntersecting(
-			const ecs::Entity::Identifier &entityIdentifier,
-			const utility::graphic::RayF &ray);
+		std::optional<ecs::Entity::Identifier>
+			_lastFocusedEntity; ///< Last entity that had focus
 
 		public:
 		/**
@@ -71,17 +69,10 @@ namespace guillaume::systems
 		Focus(event::EventBus &eventBus);
 
 		/**
-		 * @brief Default destructor for the Focus system.
-		 */
-		~Focus(void) = default;
-
-		/**
 		 * @brief Set focus to a specific entity.
 		 * @param entityIdentifier The entity to focus.
-		 * @param ray The ray used to determine focus (e.g., from mouse or hand).
 		 */
-		void setFocus(const ecs::Entity::Identifier &entityIdentifier,
-					  const utility::graphic::RayF &ray);
+		void setFocus(const ecs::Entity::Identifier &entityIdentifier);
 
 		/**
 		 * @brief Clear the current focus.
@@ -96,8 +87,17 @@ namespace guillaume::systems
 		std::optional<ecs::Entity::Identifier> getFocusedEntity(void) const;
 
 		/**
+		 * @brief Get the last entity that had focus.
+		 * @return The last focused entity identifier, or nullopt if no entity
+		 * has had focus yet.
+		 */
+		std::optional<ecs::Entity::Identifier> getLastFocusedEntity(void) const;
+
+		/**
 		 * @brief Update the Focus system for the specified entity.
 		 * @param entityIdentifier The identifier of the entity to update.
+		 *
+		 * Checks if the entity was clicked with mouse or hand and sets focus accordingly.
 		 */
 		virtual void
 			update(const ecs::Entity::Identifier &entityIdentifier) override;

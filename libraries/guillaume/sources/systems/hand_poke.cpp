@@ -38,6 +38,35 @@ namespace guillaume::systems
 
 	void HandPoke::update(const ecs::Entity::Identifier &entityIdentifier)
 	{
+		auto pokeEvent = this->getLastEvent();
+		if (!pokeEvent)
+			return;
+
+		auto &transform =
+			this->template getComponent<components::Transform>(entityIdentifier);
+		auto &bound =
+			this->template getComponent<components::Bound>(entityIdentifier);
+		auto &interaction =
+			this->template getComponent<components::HandPokeInteraction>(
+				entityIdentifier);
+
+		const auto size = utility::math::Vector2UI(
+			{ bound.getWidth(), bound.getHeight() });
+		const auto ray = utility::graphic::RayF(
+			utility::graphic::PositionF(pokeEvent->getPose().getPosition()),
+			pokeEvent->getPose().getOrientation().getForward());
+		const bool isIntersecting =
+			ray.intersectRectangle(transform.getPose(), size);
+
+		if (isIntersecting) {
+			interaction.setPoking(true);
+			const auto &handler = interaction.getOnEventHandler();
+			if (handler) {
+				handler();
+			}
+		} else {
+			interaction.setPoking(false);
+		}
 	}
 
 }	 // namespace guillaume::systems
