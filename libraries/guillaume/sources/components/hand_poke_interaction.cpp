@@ -24,4 +24,20 @@
 
 namespace guillaume::components
 {
+	HandPokeInteraction::HandPokeInteraction(void)
+		: Interaction()
+		, _isPoking(false)
+	{
+	}
+
+	bool HandPokeInteraction::isPoke(void) const
+	{
+		return _isPoking;
+	}
+
+	void HandPokeInteraction::setPoking(bool poking)
+	{
+		_isPoking = poking;
+		setHasChanged(true);
+	}
 }	 // namespace guillaume::components

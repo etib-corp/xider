@@ -33,20 +33,32 @@ namespace guillaume::components
 	 */
 	class HandPokeInteraction: public Interaction<utility::event::HandPokeEvent>
 	{
+		private:
+		bool _isPoking { false };  ///< Current poke state
+
 		public:
 		/**
 		 * @brief Construct a HandPokeInteraction component with default
 		 * handlers and states.
 		 */
-		HandPokeInteraction(void)
-			: Interaction()
-		{
-		}
+		HandPokeInteraction(void);
 
 		/**
 		 * @brief Destroy the HandPokeInteraction component.
 		 */
 		~HandPokeInteraction(void) = default;
+
+		/**
+		 * @brief Check if a poke gesture is currently active.
+		 * @return True if poking, false otherwise.
+		 */
+		bool isPoke(void) const;
+
+		/**
+		 * @brief Set the poke state.
+		 * @param poking True if poking, false otherwise.
+		 */
+		void setPoking(bool poking);
 	};
 
 }	 // namespace guillaume::components

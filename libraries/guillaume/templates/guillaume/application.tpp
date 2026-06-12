@@ -84,6 +84,8 @@ namespace guillaume
 			std::make_unique<systems::TextInput>(_eventBus));
 		_systemRegistry.registerNewSystem(
 			std::make_unique<systems::RectangleRender>(_engine));
+		_systemRegistry.registerNewSystem(
+			std::make_unique<systems::Focus>(_eventBus));
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>

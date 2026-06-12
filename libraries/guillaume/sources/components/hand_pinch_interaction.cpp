@@ -27,6 +27,18 @@ namespace guillaume::components
 
 	HandPinchInteraction::HandPinchInteraction(void)
 		: Interaction()
+		, _isPinching(false)
 	{
+	}
+
+	bool HandPinchInteraction::isPinch(void) const
+	{
+		return _isPinching;
+	}
+
+	void HandPinchInteraction::setPinching(bool pinching)
+	{
+		_isPinching = pinching;
+		setHasChanged(true);
 	}
 }	 // namespace guillaume::components

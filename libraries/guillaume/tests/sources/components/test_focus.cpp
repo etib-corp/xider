@@ -24,4 +24,83 @@
 
 namespace guillaume::components::tests
 {
+	TEST_F(TestFocus, Constructor)
+	{
+		EXPECT_NO_THROW({
+			Focus focus;
+		});
+	}
+
+	TEST_F(TestFocus, SetOnFocusGainedHandler)
+	{
+		Focus focus;
+		bool called = false;
+
+		focus.setOnFocusGainedHandler([&called]() {
+			called = true;
+		});
+
+		auto handler = focus.getOnFocusGainedHandler();
+		EXPECT_TRUE(handler);
+		EXPECT_FALSE(called);
+
+		handler();
+		EXPECT_TRUE(called);
+	}
+
+	TEST_F(TestFocus, SetOnFocusLostHandler)
+	{
+		Focus focus;
+		bool called = false;
+
+		focus.setOnFocusLostHandler([&called]() {
+			called = true;
+		});
+
+		auto handler = focus.getOnFocusLostHandler();
+		EXPECT_TRUE(handler);
+		EXPECT_FALSE(called);
+
+		handler();
+		EXPECT_TRUE(called);
+	}
+
+	TEST_F(TestFocus, HandlersAreIndependent)
+	{
+		Focus focus;
+		bool gainedCalled = false;
+		bool lostCalled = false;
+
+		focus.setOnFocusGainedHandler([&gainedCalled]() {
+			gainedCalled = true;
+		});
+
+		focus.setOnFocusLostHandler([&lostCalled]() {
+			lostCalled = true;
+		});
+
+		auto gainedHandler = focus.getOnFocusGainedHandler();
+		auto lostHandler = focus.getOnFocusLostHandler();
+
+		EXPECT_TRUE(gainedHandler);
+		EXPECT_TRUE(lostHandler);
+
+		gainedHandler();
+		EXPECT_TRUE(gainedCalled);
+		EXPECT_FALSE(lostCalled);
+
+		lostHandler();
+		EXPECT_TRUE(lostCalled);
+	}
+
+	TEST_F(TestFocus, DefaultHandlersAreNull)
+	{
+		Focus focus;
+
+		auto gainedHandler = focus.getOnFocusGainedHandler();
+		auto lostHandler = focus.getOnFocusLostHandler();
+
+		EXPECT_FALSE(gainedHandler);
+		EXPECT_FALSE(lostHandler);
+	}
 }	 // namespace guillaume::components::tests

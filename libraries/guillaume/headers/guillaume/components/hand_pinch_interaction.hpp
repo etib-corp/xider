@@ -34,6 +34,9 @@ namespace guillaume::components
 	class HandPinchInteraction:
 		public Interaction<utility::event::HandPinchEvent>
 	{
+		private:
+		bool _isPinching { false };  ///< Current pinch state
+
 		public:
 		/**
 		 * @brief Construct a HandPinchInteraction component with default
@@ -45,6 +48,18 @@ namespace guillaume::components
 		 * @brief Destroy the HandPinchInteraction component.
 		 */
 		~HandPinchInteraction(void) = default;
+
+		/**
+		 * @brief Check if a pinch gesture is currently active.
+		 * @return True if pinching, false otherwise.
+		 */
+		bool isPinch(void) const;
+
+		/**
+		 * @brief Set the pinch state.
+		 * @param pinching True if pinching, false otherwise.
+		 */
+		void setPinching(bool pinching);
 	};
 
 }	 // namespace guillaume::components
