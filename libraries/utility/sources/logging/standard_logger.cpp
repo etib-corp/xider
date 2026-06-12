@@ -77,13 +77,13 @@ namespace utility::logging
 		if (color) {
 			ss << levelColor(record.level);
 		}
-		ss << "[" << levelToString(record.level) << "]";
+		ss << "[" << levelToString(record.level) << "] ";
 		if (color) {
 			ss << resetColor();
 		}
 
 		if (record.level == LogLevel::DEBUG_LEVEL) {
-			ss << " [" << record.file << ":" << record.line << " "
+			ss << "[" << record.file << ":" << record.line << " "
 			   << record.function << "] ";
 		}
 		ss << record.message;
