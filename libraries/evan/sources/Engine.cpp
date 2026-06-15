@@ -17,31 +17,11 @@ evan::Engine::Engine(
 {
 	this->getLogger().info() << "Loading text shader...";
 
-	ressourceProvider->loadShader("assets/shaders/text.vert.spv",
-								  "assets/shaders/text.frag.spv");
-
-	/**
-	 * We load shaders from both "assets/shaders/" and "shaders/" directories to
-	 * accommodate different platforms and build configurations. On Android,
-	 * assets are typically stored in the "assets/" directory, while on other
-	 * platforms, shaders may be stored in a "shaders/" directory within the
-	 * project.
-	 */
 	ressourceProvider->loadShader("shaders/text.vert.spv",
 								  "shaders/text.frag.spv");
 
 	this->getLogger().info() << "Loading default shader...";
 
-	ressourceProvider->loadShader("assets/shaders/default.vert.spv",
-								  "assets/shaders/default.frag.spv");
-
-	/**
-	 * We load shaders from both "assets/shaders/" and "shaders/" directories to
-	 * accommodate different platforms and build configurations. On Android,
-	 * assets are typically stored in the "assets/" directory, while on other
-	 * platforms, shaders may be stored in a "shaders/" directory within the
-	 * project.
-	 */
 	ressourceProvider->loadShader("shaders/default.vert.spv",
 								  "shaders/default.frag.spv");
 
@@ -162,13 +142,13 @@ size_t evan::Engine::addObject(
 				 // object addition logic
 }
 
-size_t evan::Engine::addMesh(const utility::graphic::Mesh &mesh)
+size_t evan::Engine::addMesh(const utility::graphic::Mesh &mesh, const std::string &materialName, const std::string &shader)
 {
 	std::map<uint32_t, utility::graphic::Mesh> rawObjects;
-	auto material_id = _ressourceProvider->getMaterialID("default_material");
+	auto material_id = _ressourceProvider->getMaterialID(materialName);
 	rawObjects.emplace(material_id, mesh);
 	std::shared_ptr<RenderObject> meshObject =
-		std::make_shared<RenderObject>(_deviceContext, rawObjects, "mesh");
+		std::make_shared<RenderObject>(_deviceContext, rawObjects, shader);
 	auto objectID =
 		_scenes[_currentScene]->addObject(_nextObjectID++, meshObject);
 	_ressourceManager->sync();

@@ -129,8 +129,19 @@ namespace utility
 		 * @return The unique material ID associated with the given material
 		 * name, or 0 if the material name is not found.
 		 */
-		[[nodiscard]] uint32_t
-			getMaterialID(const std::string &materialName) const;
+		[[nodiscard]] uint32_t getMaterialID(const std::string &materialName);
+
+		/**
+		 * @brief Retrieves the unique ID of the default material.
+		 *
+		 * If the default material is not found,
+		 * then it creates a new default material with the default shader and returns its ID.
+		 * The default material is used as a fallback when a specific material is not found for a resource,
+		 * ensuring that the application can still render objects even if their intended materials are missing or misconfigured.
+		 *
+		 * @return The unique ID of the default material.
+		 */
+		[[nodiscard]] uint32_t getDefaultMaterialID();
 
 		/**
 		 * @brief Loads a font resource from a specified file path.

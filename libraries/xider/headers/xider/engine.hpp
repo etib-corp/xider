@@ -76,7 +76,7 @@ namespace xider
 		 * @param mesh The mesh to add to the renderer.
 		 * @return A unique identifier for the added mesh.
 		 */
-		size_t addMesh(const utility::graphic::Mesh &mesh) override;
+		size_t addMesh(const utility::graphic::Mesh &mesh, const std::string &materialName = "default_material") override;
 
 		/**
 		 * @brief Synchronizes the view across Guillaume and Evan.

@@ -48,9 +48,9 @@ namespace xider
 		}
 	}
 
-	size_t Engine::addMesh(const utility::graphic::Mesh &mesh)
+	size_t Engine::addMesh(const utility::graphic::Mesh &mesh, const std::string &materialName)
 	{
-		return _evanEngine->addMesh(mesh);
+		return _evanEngine->addMesh(mesh, materialName);
 	}
 
 	bool Engine::removeObject(size_t objectID)

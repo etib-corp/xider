@@ -244,7 +244,7 @@ namespace evan
 		 * renderer, which can be used for future reference or manipulation of
 		 * the mesh in the renderer.
 		 */
-		size_t addMesh(const utility::graphic::Mesh &mesh);
+		size_t addMesh(const utility::graphic::Mesh &mesh, const std::string &materialName = "default_material", const std::string &shader = "default");
 
 		/**
 		 * @brief Updates the state of the engine. This method is responsible
