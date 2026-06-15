@@ -106,7 +106,7 @@ namespace utility::graphic
 		 */
 		codePointString utf8ToCodepoints(
 			const std::string
-				&str);	  //< Convert UTF-8 string to Unicode code points
+				&str) const;	  //< Convert UTF-8 string to Unicode code points
 
 		public:
 		/**
@@ -210,7 +210,7 @@ namespace utility::graphic
 		 * and positioning purposes.
 		 * @return A Vector2D containing the width and height of the rendered text.
 		 */
-		math::Vector2D getTextDimensions(void);
+		math::Vector2D getTextDimensions(void) const;
 
 		/**
 		 * @brief Set the font size.

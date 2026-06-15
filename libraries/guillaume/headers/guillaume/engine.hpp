@@ -152,8 +152,8 @@ namespace guillaume
 		 * @return A 2D vector containing the width and height of the rendered
 		 * text in pixels in the form of utility::math::Vector<float, 2>.
 		 */
-		virtual utility::math::Vector2F
-			measureText(const utility::graphic::Text &text) = 0;
+		virtual utility::math::Vector2D
+			measureText(const utility::graphic::Text &text) const = 0;
 
 		/**
 		 * @brief Add a text element to the renderer at a specified pose.

@@ -74,10 +74,10 @@ namespace xider
 		return guillaume::Engine::getView();
 	}
 
-	utility::math::Vector2F
-		Engine::measureText(const utility::graphic::Text &text)
+	utility::math::Vector2D
+		Engine::measureText(const utility::graphic::Text &text) const
 	{
-		return { 0.0f, 0.0f };
+		return text.getTextDimensions();
 	}
 
 	guillaume::Engine::ViewportSize Engine::getViewportSize(void) const

@@ -66,7 +66,7 @@ namespace utility::graphic
 		return _fontSize;
 	}
 
-	math::Vector2D Text::getTextDimensions(void)
+	math::Vector2D Text::getTextDimensions(void) const
 	{
 		math::Vector2D dimensions({0.0, 0.0});
 
@@ -158,7 +158,7 @@ namespace utility::graphic
 		}
 	}
 
-	std::vector<uint32_t> Text::utf8ToCodepoints(const std::string &str)
+	std::vector<uint32_t> Text::utf8ToCodepoints(const std::string &str) const
 	{
 		std::vector<uint32_t> codepoints;
 
