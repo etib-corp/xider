@@ -66,6 +66,27 @@ namespace utility::graphic
 		return _fontSize;
 	}
 
+	math::Vector2D Text::getTextDimensions(void)
+	{
+		math::Vector2D dimensions({0.0, 0.0});
+
+		std::vector<uint32_t> codepoints = utf8ToCodepoints(_content);
+		std::vector<Glyph> glyphs =
+			_font->processCodePoints(_fontSize, codepoints);
+
+		for (const auto &g: glyphs) {
+			double w = g.size[VEC_X];
+			double h = g.size[VEC_Y];
+
+			// Freetype uses 1/64th of a pixel as its unit, so we need to shift
+			// by 6 to get the actual pixel value
+			dimensions[VEC_X] += (g.advance >> 6);
+			dimensions[VEC_Y] = std::max(dimensions[VEC_Y], h);
+		}
+
+		return dimensions;
+	}
+
 	Text &Text::setFontSize(uint32_t fontSize)
 	{
 		_fontSize = fontSize;
