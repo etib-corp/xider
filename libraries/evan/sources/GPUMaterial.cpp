@@ -23,6 +23,9 @@ evan::GPUMaterial::GPUMaterial(std::shared_ptr<DeviceContext> deviceContext,
 	auto deviceBackend = deviceContext->getDeviceBackend();
 
 	auto textures = material.getTextures();
+	for (const auto &texture: textures) {
+		_textures.emplace_back(std::make_shared<GPUTexture>(*deviceContext, *texture));
+	}
 
 	this->createDescriptorSets(
 		deviceBackend->_device, renderer.getDescriptorSetLayout(),
@@ -129,27 +132,27 @@ void evan::GPUMaterial::createDescriptorSets(
 		for (const auto &texture: _textures) {
 			this->getLogger().info()
 				<< "Configuring descriptor write for texture of type "
-				<< static_cast<int>(texture.type) << " in descriptor set " << i
+				<< static_cast<int>(texture->type) << " in descriptor set " << i
 				<< "...";
 
 			VkDescriptorImageInfo imageInfo {};
 			imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-			imageInfo.imageView	  = texture.view;
-			imageInfo.sampler	  = texture.sampler;
+			imageInfo.imageView	  = texture->view;
+			imageInfo.sampler	  = texture->sampler;
 
 			imageInfos.push_back(imageInfo);
 
 			VkWriteDescriptorSet write {};
 			write.sType			  = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 			write.dstSet		  = _descriptorSets[i];
-			write.dstBinding	  = getBinding(texture.type);
+			write.dstBinding	  = getBinding(texture->type);
 			write.descriptorType  = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
 			write.descriptorCount = 1;
 			write.pImageInfo	  = &imageInfos.back();
 
 			this->getLogger().info()
 				<< "Adding descriptor write for texture of type "
-				<< static_cast<int>(texture.type) << " in descriptor set " << i
+				<< static_cast<int>(texture->type) << " in descriptor set " << i
 				<< "...";
 			descriptorWrites.push_back(write);
 		}
