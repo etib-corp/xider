@@ -67,7 +67,7 @@ namespace utility
 
 	uint32_t RessourceProvider::getMaterialID(const std::string &materialName)
 	{
-		auto it = _elementsIDs.find(materialName);
+		auto it = _elementsIDs.find(resolvePath(materialName));
 
 		if (it != _elementsIDs.end()) {
 			return it->second;
@@ -137,7 +137,7 @@ namespace utility
 
 		auto font = std::make_shared<graphic::Font>(std::vector { *fontAsset });
 		auto fontID		 = getNextID();
-		auto materialKey = fontAsset->path() + "_material";
+		auto materialKey = fontAsset->path();
 
 		_fonts[fontID]					= font;
 		_elementsIDs[fontAsset->path()] = fontID;
@@ -225,7 +225,7 @@ namespace utility
 
 		auto font		 = std::make_shared<graphic::Font>(assets);
 		auto fontID		 = getNextID();
-		auto materialKey = familyName + "_material";
+		auto materialKey = familyName;
 
 		_fonts[fontID]			 = font;
 		_elementsIDs[familyName] = fontID;
