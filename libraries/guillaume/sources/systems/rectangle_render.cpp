@@ -198,14 +198,40 @@ namespace guillaume::systems
 		const std::vector<utility::graphic::PositionD> &outline,
 		const utility::graphic::Color32Bit &color)
 	{
-		// OpenGL triangle fan expects the first vertex to be the fan anchor.
+		// Add center vertex as the fan anchor (index 0)
 		mesh.addVertex(createVertex(center, color));
+		
+		// Add all outline vertices
 		for (const auto &outlineVertex: outline) {
 			mesh.addVertex(createVertex(outlineVertex, color));
 		}
 
-		if (!outline.empty()) {
-			mesh.addVertex(createVertex(outline.front(), color));
+		// Build indices for triangle fan
+		// Triangle fan: center vertex (0) + two consecutive outline vertices
+		// For N outline vertices, we need N triangles
+		// Indices pattern: (0,1,2), (0,2,3), (0,3,4), ..., (0,N,N+1), (0,N+1,1)
+		if (outline.size() >= 2) {
+			// First triangle: (0, 1, 2)
+			mesh.addIndex(0);
+			mesh.addIndex(1);
+			mesh.addIndex(2);
+			
+			// Remaining triangles: (0, i, i+1) for i from 2 to N
+			for (size_t i = 2; i < outline.size(); ++i) {
+				mesh.addIndex(0);
+				mesh.addIndex(static_cast<uint32_t>(i));
+				mesh.addIndex(static_cast<uint32_t>(i + 1));
+			}
+			
+			// Close the fan: connect last vertex back to first outline vertex
+			mesh.addIndex(0);
+			mesh.addIndex(static_cast<uint32_t>(outline.size()));
+			mesh.addIndex(1);
+		} else if (outline.size() == 1) {
+			// Degenerate case: single outline vertex, create a degenerate triangle
+			mesh.addIndex(0);
+			mesh.addIndex(1);
+			mesh.addIndex(1);
 		}
 	}
 
