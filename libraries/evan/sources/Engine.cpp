@@ -44,11 +44,11 @@ evan::Engine::Engine(
 	}
 
 	// Debug view setup - replace with actual camera and view configuration
-	// utility::graphic::PoseF pose(utility::graphic::PositionF(0.0f, 0.0f, -50.0f),
-	// 							  utility::graphic::OrientationF(0.0f, 0.9999846f, 0.0f, 0.0055555f));
-	// utility::math::Vector2UI viewportSize(240);
-	// utility::graphic::ViewF view(pose, 45.0f, 16.0f / 9.0f, viewportSize);
-	// setView(view);
+	utility::graphic::PoseF pose(utility::graphic::PositionF(0.0f, 0.0f, -50.0f),
+								  utility::graphic::OrientationF(0.0f, 0.9999846f, 0.0f, 0.0055555f));
+	utility::math::Vector2UI viewportSize(240);
+	utility::graphic::ViewF view(pose, 45.0f, 16.0f / 9.0f, viewportSize);
+	setView(view);
 }
 
 evan::Engine::~Engine()
