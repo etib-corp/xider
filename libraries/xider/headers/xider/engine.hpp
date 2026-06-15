@@ -110,8 +110,8 @@ namespace xider
 		 * @param text The text to measure.
 		 * @return A Vector2F containing the width and height.
 		 */
-		utility::math::Vector2F
-			measureText(const utility::graphic::Text &text) override;
+		utility::math::Vector2D
+			measureText(const utility::graphic::Text &text) const override;
 
 		/**
 		 * @brief Gets the current viewport size.
