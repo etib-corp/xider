@@ -14,6 +14,7 @@
 #include <utility/event/keyboard_event.hpp>
 #include <utility/event/mouse_button_event.hpp>
 #include <utility/event/mouse_motion_event.hpp>
+#include <utility/event/mouse_wheel_event.hpp>
 
 #include <iostream>
 
@@ -211,6 +212,18 @@ namespace evan
 		 */
 		std::vector<std::unique_ptr<utility::event::MouseMotionEvent>>
 			_mouseMotionEvents;
+
+		/**
+		 * @brief Vector to store mouse wheel events.
+		 *
+		 * This vector holds unique pointers to MouseWheelEvent objects, which
+		 * represent mouse wheel scroll events that have been polled from the
+		 * GLFW event system. Each MouseWheelEvent contains information about
+		 * the scroll offset, allowing the application to respond to mouse wheel
+		 * scrolling interactions effectively.
+		 */
+		std::vector<std::unique_ptr<utility::event::MouseWheelEvent>>
+			_mouseWheelEvents;
 
 		private:
 	};

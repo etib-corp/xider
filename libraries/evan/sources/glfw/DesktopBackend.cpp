@@ -698,4 +698,21 @@ void evan::DesktopBackend::setupCallbackEvent(const IPlatform &platform)
 				static_cast<unsigned int>(ypos) });
 			self->_mouseMotionEvents.push_back(std::move(event));
 		});
+
+	this->getLogger().info()
+		<< "Setting GLFW scroll callback for mouse wheel events...";
+	glfwSetScrollCallback(
+		glfwPlatform->_window,
+		[](GLFWwindow *window, double xoffset, double yoffset) {
+			auto *self = static_cast<evan::IDesktopPlatform *>(
+				glfwGetWindowUserPointer(window));
+
+			auto event = std::make_unique<utility::event::MouseWheelEvent>();
+			event->setOffset(utility::math::Vector2F {
+				static_cast<float>(xoffset),
+				static_cast<float>(yoffset) });
+			self->_mouseWheelEvents.push_back(std::move(event));
+			std::cout << "Mouse wheel scroll: x=" << xoffset
+					  << ", y=" << yoffset << std::endl;
+		});
 }

@@ -71,6 +71,15 @@ std::vector<std::unique_ptr<utility::event::Event>>
 	// Clear mouse motion events after processing them
 	_mouseMotionEvents.clear();
 
+	this->getLogger().info()
+		<< "Processing mouse wheel events for Desktop platform...";
+	events.insert(events.end(),
+				  std::make_move_iterator(_mouseWheelEvents.begin()),
+				  std::make_move_iterator(_mouseWheelEvents.end()));
+
+	// Clear mouse wheel events after processing them
+	_mouseWheelEvents.clear();
+
 	return events;
 }
 
