@@ -180,7 +180,7 @@ namespace evan
 		 * Textures associated with the material, categorized by their intended
 		 * use in the rendering pipeline.
 		 */
-		std::vector<GPUTexture> _textures;
+		std::vector<std::shared_ptr<GPUTexture>> _textures;
 
 		/**
 		 * The unique ID associated with the shader used by this material.
