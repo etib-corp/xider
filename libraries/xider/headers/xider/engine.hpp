@@ -74,6 +74,10 @@ namespace xider
 		/**
 		 * @brief Adds a mesh to the renderer.
 		 * @param mesh The mesh to add to the renderer.
+		 * @param materialName The name of the material to use for rendering the mesh.
+		 * This allows for flexibility in specifying the visual properties of
+		 * the mesh during rendering, such as textures, colors, and shader
+		 * parameters.
 		 * @return A unique identifier for the added mesh.
 		 */
 		size_t addMesh(const utility::graphic::Mesh &mesh, const std::string &materialName = "default_material") override;

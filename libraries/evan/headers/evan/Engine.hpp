@@ -240,6 +240,13 @@ namespace evan
 		 * camera position, and any transformations applied to the mesh.
 		 *
 		 * @param mesh The Mesh object to be added to the renderer.
+		 * @param materialName The name of the material to be used for rendering the
+		 * mesh. This parameter allows for flexibility in specifying the material
+		 * properties to be applied to the mesh during rendering.
+		 * @param shader The name of the shader to be used for rendering the mesh.
+		 * This parameter allows for flexibility in specifying the shader
+		 * program to be used for rendering the mesh, enabling different visual
+		 * effects and rendering techniques to be applied to the mesh.
 		 * @return The unique identifier (size_t) of the added mesh within the
 		 * renderer, which can be used for future reference or manipulation of
 		 * the mesh in the renderer.
