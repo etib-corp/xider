@@ -56,15 +56,16 @@ namespace utility
 	uint32_t RessourceProvider::getShaderID(const std::string &shaderName) const
 	{
 		for (const auto &[name, id]: _elementsIDs) {
-			if (name.starts_with(shaderName)) {
+			const auto &shaderIt = _shaders.find(id);
+
+			if (name.starts_with(shaderName) && shaderIt != _shaders.end()) {
 				return id;
 			}
 		}
 		return 0;	 // Return 0 if the shader name is not found
 	}
 
-	uint32_t
-		RessourceProvider::getMaterialID(const std::string &materialName) const
+	uint32_t RessourceProvider::getMaterialID(const std::string &materialName)
 	{
 		auto it = _elementsIDs.find(materialName);
 
@@ -72,7 +73,28 @@ namespace utility
 			return it->second;
 		}
 
+		if (materialName == "default_material") {
+			return getDefaultMaterialID();
+		}
+
 		return 0;
+	}
+
+	uint32_t RessourceProvider::getDefaultMaterialID()
+	{
+		auto it = _elementsIDs.find("default_material");
+
+		if (it != _elementsIDs.end()) {
+			return it->second;
+		}
+
+		auto id = getNextID();;
+		auto textureFile = _systemInterface.add(resolvePath("textures/default_texture.png"));
+
+		_materials[id] = std::make_shared<graphic::Material>(*this, std::string("default"), std::vector<File> { *textureFile });
+		_elementsIDs["default_material"] = id;
+
+		return id;
 	}
 
 	////////////////////

@@ -134,7 +134,7 @@ namespace guillaume
 		 * @param mesh The mesh to add to the renderer.
 		 * @return A unique identifier for the added mesh.
 		 */
-		virtual size_t addMesh(const utility::graphic::Mesh &mesh) = 0;
+		virtual size_t addMesh(const utility::graphic::Mesh &mesh, const std::string &materialName) = 0;
 
 		/**
 		 * @brief Remove a previously added render object.
