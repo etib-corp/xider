@@ -42,6 +42,13 @@ evan::Engine::Engine(
 		_renderer->createFrame(_deviceContext->getCommandPool(),
 							   *deviceBackend);
 	}
+
+	// Debug view setup - replace with actual camera and view configuration
+	// utility::graphic::PoseF pose(utility::graphic::PositionF(0.0f, 0.0f, -50.0f),
+	// 							  utility::graphic::OrientationF(0.0f, 0.9999846f, 0.0f, 0.0055555f));
+	// utility::math::Vector2UI viewportSize(240);
+	// utility::graphic::ViewF view(pose, 45.0f, 16.0f / 9.0f, viewportSize);
+	// setView(view);
 }
 
 evan::Engine::~Engine()
@@ -76,11 +83,11 @@ size_t evan::Engine::addText(std::shared_ptr<utility::graphic::Text> text)
 
 	std::map<uint32_t, utility::graphic::Mesh> rawObjects;
 	auto material_id =
-		_ressourceProvider->getMaterialID(text->getFontFamily() + "_material");
+		_ressourceProvider->getMaterialID(text->getFontFamily());
 
 	if (material_id == 0) {
 		std::cerr << "Warning: Material '"
-				  << text->getFontFamily() + "_material"
+				  << text->getFontFamily()
 				  << "' not found for text object. Text will not be rendered."
 				  << std::endl;
 		return 0;	 // Skip rendering this text if its material is not found
