@@ -68,6 +68,14 @@ FetchContent_Declare(stb
 )
 FetchContent_MakeAvailable(stb)
 
+FetchContent_Declare(openal
+    GIT_REPOSITORY https://github.com/kcat/openal-soft.git
+    GIT_TAG master
+    GIT_SHALLOW TRUE
+    GIT_PROGRESS TRUE
+)
+FetchContent_MakeAvailable(openal)
+
 # Set the files directories
 set(HEADERS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/headers")
 set(SOURCES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/sources")
@@ -97,6 +105,7 @@ target_link_libraries(${PROJECT_NAME}
         tinyobjloader
         glm
         freetype
+        OpenAL::OpenAL
 )
 
 if(WIN32)

@@ -610,6 +610,68 @@ namespace utility
 		return _codePoints[id];
 	}
 
+	std::shared_ptr<sound::AudioSource> RessourceProvider::loadAudioSource(
+		const std::string &path)
+	{
+		std::string resolvedPath = resolvePath(path);
+		auto it = _elementsIDs.find(resolvedPath);
+
+		if (it != _elementsIDs.end()) {
+			if (_audioSources.find(it->second) != _audioSources.end()) {
+				auto audioBuffer = _audioSources[it->second];
+				return  _audioManager.createAudioSource(audioBuffer);
+			}
+		}
+
+		auto audioAsset = _systemInterface.add(resolvedPath);
+
+		if (!audioAsset) {
+			std::cerr << "Failed to load audio asset: " << path << std::endl;
+			return nullptr;
+		}
+
+		auto audioSource = loadAudioSourceFromAsset(audioAsset);
+
+		return audioSource;
+	}
+
+	std::shared_ptr<sound::AudioSource> RessourceProvider::loadAudioSourceFromAsset(
+		std::shared_ptr<utility::File> audioAsset)
+	{
+		auto it = _elementsIDs.find(audioAsset->path());
+
+		if (it != _elementsIDs.end()) {
+			if (_audioSources.find(it->second) != _audioSources.end()) {
+				auto audioBuffer = _audioSources[it->second];
+				return _audioManager.createAudioSource(audioBuffer);
+			}
+		}
+
+		auto audioDecoder =
+			sound::DecoderRegistry::getDecoderForFile(audioAsset->path());
+
+		if (!audioDecoder) {
+			std::cerr << "Failed to get audio decoder for asset: " << audioAsset->path()
+					  << std::endl;
+			return nullptr;
+		}
+
+		auto audioBuffer = audioDecoder->decode(audioAsset);
+
+		if (!audioBuffer) {
+			std::cerr << "Failed to decode audio asset: " << audioAsset->path()
+					  << std::endl;
+			return nullptr;
+		}
+
+		auto id = getNextID();
+
+		_audioSources[id]					  = audioBuffer;
+		_elementsIDs[audioAsset->path()] = id;
+
+		return _audioManager.createAudioSource(audioBuffer);
+	}
+
 	///////////////////////
 	// Protected Methods //
 	///////////////////////
