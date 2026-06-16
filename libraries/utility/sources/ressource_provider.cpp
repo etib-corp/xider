@@ -77,6 +77,10 @@ namespace utility
 			return getDefaultMaterialID();
 		}
 
+		if (materialName == "mesh_material") {
+			return getMeshMaterialID();
+		}
+
 		return 0;
 	}
 
@@ -93,6 +97,23 @@ namespace utility
 
 		_materials[id] = std::make_shared<graphic::Material>(*this, std::string("default"), std::vector<File> { *textureFile });
 		_elementsIDs["default_material"] = id;
+
+		return id;
+	}
+
+	uint32_t RessourceProvider::getMeshMaterialID()
+	{
+		auto it = _elementsIDs.find("mesh_material");
+
+		if (it != _elementsIDs.end()) {
+			return it->second;
+		}
+
+		auto id = getNextID();;
+		auto textureFile = _systemInterface.add(resolvePath("textures/default_texture.png"));
+
+		_materials[id] = std::make_shared<graphic::Material>(*this, std::string("mesh"), std::vector<File> { *textureFile });
+		_elementsIDs["mesh_material"] = id;
 
 		return id;
 	}
