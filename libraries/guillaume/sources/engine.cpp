@@ -25,7 +25,7 @@
 namespace guillaume
 {
 	Engine::Engine(void)
-		: _gotNewEvents(false)
+
 	{
 	}
 
@@ -34,21 +34,11 @@ namespace guillaume
 		return _callback;
 	}
 
-	void Engine::setGotNewEvents(bool gotNewEvents)
-	{
-		_gotNewEvents = gotNewEvents;
-	}
-
 	void Engine::setEventCallback(const Handler &callback)
 	{
 		_callback = callback;
 	}
-
-	bool Engine::gotNewEvents(void) const
-	{
-		return _gotNewEvents;
-	}
-
+	
 	void Engine::setView(const utility::graphic::ViewF &view)
 	{
 		_view = view;

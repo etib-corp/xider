@@ -49,4 +49,10 @@ namespace guillaume::event
 		, _subscriber(std::make_unique<EventSubscriber<EventType>>(_eventBus))
 	{
 	}
+
+	template<utility::event::InheritFromEvent EventType>
+	bool EventManager<EventType>::hasPendingEvents(void) const
+	{
+		return _subscriber->hasPendingEvents();
+	}
 }	 // namespace guillaume::event

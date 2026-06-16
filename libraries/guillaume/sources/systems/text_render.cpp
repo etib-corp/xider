@@ -62,7 +62,8 @@ namespace guillaume::systems
 	{
 	}
 
-	void TextRender::update(const ecs::Entity::Identifier &entityIdentifier)
+	void TextRender::update(const ecs::Entity::Identifier &entityIdentifier,
+							float deltaTime)
 	{
 		getLogger().debug()
 			<< "Updating TextRender system for entity " << entityIdentifier;

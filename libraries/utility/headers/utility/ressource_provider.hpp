@@ -50,7 +50,8 @@ namespace utility
 		 * all resources, allowing for more flexible resource management and
 		 * organization.
 		 */
-		RessourceProvider(SystemIO &systemInterface, const std::string &basePath = "");
+		RessourceProvider(SystemIO &systemInterface,
+						  const std::string &basePath = "");
 
 		/**
 		 * @brief Destructs the RessourceProvider object.
@@ -135,9 +136,11 @@ namespace utility
 		 * @brief Retrieves the unique ID of the default material.
 		 *
 		 * If the default material is not found,
-		 * then it creates a new default material with the default shader and returns its ID.
-		 * The default material is used as a fallback when a specific material is not found for a resource,
-		 * ensuring that the application can still render objects even if their intended materials are missing or misconfigured.
+		 * then it creates a new default material with the default shader and
+		 * returns its ID. The default material is used as a fallback when a
+		 * specific material is not found for a resource, ensuring that the
+		 * application can still render objects even if their intended materials
+		 * are missing or misconfigured.
 		 *
 		 * @return The unique ID of the default material.
 		 */
@@ -445,24 +448,26 @@ namespace utility
 		 * common directory for all resources. When loading resources, the
 		 * RessourceProvider can prepend this base path to the provided resource
 		 * paths, allowing for more flexible resource management and
-		 * organization. This is particularly useful when all resources are stored
-		 * in a specific directory, as it eliminates the need to provide the full
-		 * path for each resource when loading them.
+		 * organization. This is particularly useful when all resources are
+		 * stored in a specific directory, as it eliminates the need to provide
+		 * the full path for each resource when loading them.
 		 */
 		std::string _basePath;
 
 		private:
-
 		/**
 		 * @brief Resolves a resource path by prepending the base path if it is
 		 * set.
-		 * This method takes a resource path as input and checks if a base path is
-		 * set for the RessourceProvider. If a base path is set, it prepends the base path to the
-		 * provided resource path to create a full path. If no base path is set, it returns the original
-		 * resource path unchanged. This allows for flexible resource management, as it enables the use
-		 * of a common base directory for all resources while still allowing for individual resource paths to be specified.
+		 * This method takes a resource path as input and checks if a base path
+		 * is set for the RessourceProvider. If a base path is set, it prepends
+		 * the base path to the provided resource path to create a full path. If
+		 * no base path is set, it returns the original resource path unchanged.
+		 * This allows for flexible resource management, as it enables the use
+		 * of a common base directory for all resources while still allowing for
+		 * individual resource paths to be specified.
 		 * @param path The original resource path to be resolved.
-		 * @return The resolved resource path with the base path prepended if it is set, or the original path if no base path is set.
+		 * @return The resolved resource path with the base path prepended if it
+		 * is set, or the original path if no base path is set.
 		 */
 		std::string resolvePath(const std::string &path) const;
 	};

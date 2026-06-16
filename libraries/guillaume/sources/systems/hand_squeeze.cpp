@@ -36,7 +36,8 @@ namespace guillaume::systems
 	{
 	}
 
-	void HandSqueeze::update(const ecs::Entity::Identifier &entityIdentifier)
+	void HandSqueeze::update(const ecs::Entity::Identifier &entityIdentifier,
+							 float deltaTime)
 	{
 	}
 

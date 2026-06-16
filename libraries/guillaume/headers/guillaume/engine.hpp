@@ -82,7 +82,6 @@ namespace guillaume
 
 		private:
 		Handler _callback;	   ///< Event callback function
-		bool _gotNewEvents;	   ///< Flag indicating if new events were received
 
 		protected:
 		utility::graphic::ViewF _view;	  ///< View state
@@ -92,13 +91,6 @@ namespace guillaume
 		 * @return Reference to the event callback function.
 		 */
 		Handler &getEventCallback(void);
-
-		/**
-		 * @brief Set the got new events flag.
-		 * @param gotNewEvents True if new events were received, false
-		 * otherwise.
-		 */
-		void setGotNewEvents(bool gotNewEvents);
 
 		public:
 		/**
@@ -132,10 +124,12 @@ namespace guillaume
 		 * @brief Add a mesh to the renderer.
 		 *
 		 * @param mesh The mesh to add to the renderer.
-		 * @param materialName The name of the material to use for rendering the mesh.
+		 * @param materialName The name of the material to use for rendering the
+		 * mesh.
 		 * @return A unique identifier for the added mesh.
 		 */
-		virtual size_t addMesh(const utility::graphic::Mesh &mesh, const std::string &materialName) = 0;
+		virtual size_t addMesh(const utility::graphic::Mesh &mesh,
+							   const std::string &materialName) = 0;
 
 		/**
 		 * @brief Remove a previously added render object.
@@ -192,12 +186,6 @@ namespace guillaume
 		 * @param callback Function to call when an event is received.
 		 */
 		void setEventCallback(const Handler &callback);
-
-		/**
-		 * @brief Check if new events were received in the last poll.
-		 * @return True if new events were received, false otherwise.
-		 */
-		bool gotNewEvents(void) const;
 
 		/**
 		 * @brief Poll for events and dispatch them.

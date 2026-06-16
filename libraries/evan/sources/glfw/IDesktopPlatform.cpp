@@ -80,6 +80,33 @@ std::vector<std::unique_ptr<utility::event::Event>>
 	// Clear mouse wheel events after processing them
 	_mouseWheelEvents.clear();
 
+	this->getLogger().info()
+		<< "Processing cursor enter/leave events for Desktop platform...";
+	events.insert(events.end(),
+				  std::make_move_iterator(_cursorEnterEvents.begin()),
+				  std::make_move_iterator(_cursorEnterEvents.end()));
+
+	// Clear cursor enter/leave events after processing them
+	_cursorEnterEvents.clear();
+
+	this->getLogger().info()
+		<< "Processing file drop events for Desktop platform...";
+	events.insert(events.end(),
+				  std::make_move_iterator(_fileDropEvents.begin()),
+				  std::make_move_iterator(_fileDropEvents.end()));
+
+	// Clear file drop events after processing them
+	_fileDropEvents.clear();
+
+	this->getLogger().info()
+		<< "Processing text input events for Desktop platform...";
+	events.insert(events.end(),
+				  std::make_move_iterator(_textInputEvents.begin()),
+				  std::make_move_iterator(_textInputEvents.end()));
+
+	// Clear text input events after processing them
+	_textInputEvents.clear();
+
 	return events;
 }
 

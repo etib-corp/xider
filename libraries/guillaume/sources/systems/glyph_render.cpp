@@ -80,7 +80,8 @@ namespace guillaume::systems
 	{
 	}
 
-	void GlyphRender::update(const ecs::Entity::Identifier &entityIdentifier)
+	void GlyphRender::update(const ecs::Entity::Identifier &entityIdentifier,
+							 float deltaTime)
 	{
 		getLogger().debug()
 			<< "Updating GlyphRender system for entity " << entityIdentifier;

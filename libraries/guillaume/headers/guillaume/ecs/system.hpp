@@ -23,6 +23,7 @@
 #pragma once
 
 #include <bitset>
+#include <chrono>
 #include <functional>
 #include <stdexcept>
 #include <vector>
@@ -156,17 +157,19 @@ namespace guillaume::ecs
 		 * @param entityRegistry The entity registry used to query matching
 		 * entities.
 		 * @param traveler Traversal strategy to use for hierarchy iteration.
+		 * @param deltaTime Time elapsed since last frame in seconds.
 		 */
 		void routine(ecs::ComponentRegistry &componentRegistry,
 					 ecs::EntityRegistry &entityRegistry,
-					 const ecs::EntityTreeTraveler &traveler);
+					 const ecs::EntityTreeTraveler &traveler, float deltaTime);
 
 		/**
 		 * @brief Update the system, processing relevant entities.
 		 * @param entityIdentifier The identifier of the entity to update.
+		 * @param deltaTime Time elapsed since last frame in seconds.
 		 */
-		virtual void
-			update(const ecs::Entity::Identifier &entityIdentifier) = 0;
+		virtual void update(const ecs::Entity::Identifier &entityIdentifier,
+							float deltaTime) = 0;
 
 		/**
 		 * @brief Called once per frame before entity processing begins.

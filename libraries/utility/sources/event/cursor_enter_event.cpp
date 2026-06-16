@@ -20,25 +20,45 @@
  SOFTWARE.
  */
 
-#include "guillaume/systems/hand_trigger.hpp"
+#include "utility/event/cursor_enter_event.hpp"
 
-namespace guillaume::systems
+namespace utility::event
 {
-	HandTrigger::HandTrigger(event::EventBus &eventBus)
-		: ecs::SystemFiller<components::HandTriggerInteraction,
-							components::Transform, components::Bound>(
-			  ecs::Phase::Event)
-		, event::EventManager<utility::event::HandTriggerEvent>(eventBus)
+
+	////////////////////////
+	// Factory methods //
+	////////////////
+
+	CursorEnterEvent::Factory::~Factory(void) = default;
+
+	std::unique_ptr<Event> CursorEnterEvent::Factory::create(void) const
 	{
+		return std::make_unique<CursorEnterEvent>();
 	}
 
-	HandTrigger::~HandTrigger(void)
+	std::unique_ptr<CursorEnterEvent>
+		CursorEnterEvent::Factory::createTyped(void) const
 	{
+		return std::make_unique<CursorEnterEvent>();
 	}
 
-	void HandTrigger::update(const ecs::Entity::Identifier &entityIdentifier,
-							 float deltaTime)
+	/////////////////////
+	// Public methods //
+	///////////////////
+
+	CursorEnterEvent::CursorEnterEvent(void) = default;
+
+	CursorEnterEvent::~CursorEnterEvent(void) = default;
+
+	CursorEnterEvent &CursorEnterEvent::setEntered(const bool entered) noexcept
 	{
+		_entered = entered;
+		return *this;
 	}
 
-}	 // namespace guillaume::systems
+	bool CursorEnterEvent::isEntered(void) const noexcept
+	{
+		return _entered;
+	}
+
+}	 // namespace utility::event

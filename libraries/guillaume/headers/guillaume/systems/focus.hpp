@@ -48,18 +48,17 @@ namespace guillaume::systems
 	 * @see components::Focus
 	 */
 	class Focus:
-		public ecs::SystemFiller<components::Focus, components::Transform,
-								 components::Bound,
-								 components::MouseButtonInteraction,
-								 components::HandButtonInteraction,
-								 components::HandPinchInteraction,
-								 components::HandPokeInteraction>
+		public ecs::SystemFiller<
+			components::Focus, components::Transform, components::Bound,
+			components::MouseButtonInteraction,
+			components::HandButtonInteraction, components::HandPinchInteraction,
+			components::HandPokeInteraction>
 	{
 		private:
 		std::optional<ecs::Entity::Identifier>
-			_focusedEntity;	  ///< Currently focused entity identifier
+			_focusedEntity;	   ///< Currently focused entity identifier
 		std::optional<ecs::Entity::Identifier>
-			_lastFocusedEntity; ///< Last entity that had focus
+			_lastFocusedEntity;	   ///< Last entity that had focus
 
 		public:
 		/**
@@ -97,10 +96,11 @@ namespace guillaume::systems
 		 * @brief Update the Focus system for the specified entity.
 		 * @param entityIdentifier The identifier of the entity to update.
 		 *
-		 * Checks if the entity was clicked with mouse or hand and sets focus accordingly.
+		 * Checks if the entity was clicked with mouse or hand and sets focus
+		 * accordingly.
 		 */
-		virtual void
-			update(const ecs::Entity::Identifier &entityIdentifier) override;
+		virtual void update(const ecs::Entity::Identifier &entityIdentifier,
+							float deltaTime) override;
 	};
 
 }	 // namespace guillaume::systems

@@ -68,7 +68,6 @@ namespace guillaume
 
 		private:
 		Handler _callback;	   ///< Event callback function
-		bool _gotNewEvents;	   ///< Flag indicating if new events were received
 
 		protected:
 		/**
@@ -76,13 +75,6 @@ namespace guillaume
 		 * @return Reference to the event callback function.
 		 */
 		Handler &getEventCallback(void);
-
-		/**
-		 * @brief Set the got new events flag.
-		 * @param gotNewEvents True if new events were received, false
-		 * otherwise.
-		 */
-		void setGotNewEvents(bool gotNewEvents);
 
 		public:
 		/**
@@ -104,12 +96,6 @@ namespace guillaume
 		 * @param callback Function to call when an event is received.
 		 */
 		void setEventCallback(const Handler &callback);
-
-		/**
-		 * @brief Check if new events were received in the last poll.
-		 * @return True if new events were received, false otherwise.
-		 */
-		bool gotNewEvents(void) const;
 
 		/**
 		 * @brief Poll for events and dispatch them.

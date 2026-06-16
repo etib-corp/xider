@@ -70,8 +70,8 @@ namespace guillaume::systems
 		 * states accordingly.
 		 * @param entityIdentifier Identifier of the entity being updated.
 		 */
-		virtual void
-			update(const ecs::Entity::Identifier &entityIdentifier) override;
+		virtual void update(const ecs::Entity::Identifier &entityIdentifier,
+							float deltaTime) override;
 	};
 
 }	 // namespace guillaume::systems

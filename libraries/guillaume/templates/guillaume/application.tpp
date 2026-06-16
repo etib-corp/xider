@@ -22,6 +22,9 @@
 
 #pragma once
 
+#include <chrono>
+#include <functional>
+
 #include "guillaume/application.hpp"
 
 namespace guillaume
@@ -31,7 +34,7 @@ namespace guillaume
 	    requires IsOneOf<DefaultSceneType, SceneTypes...>
 	    template<typename PhaseType>
 	void Application<DefaultSceneType, SceneTypes...>::runPhase(
-		PhaseType &phaseDefinition)
+		PhaseType &phaseDefinition, float deltaTime)
 	{
 		const ecs::Phase phase					= phaseDefinition.getPhase();
 		const ecs::EntityTreeTraveler &traveler = phaseDefinition.getTraveler();
@@ -40,7 +43,8 @@ namespace guillaume
 			<< "Running systems for phase: " << static_cast<int>(phase);
 		for (const auto &system: _systemRegistry.getSystemsByPhase(phase)) {
 			system->routine(_sceneManager->getActiveComponentRegistry(),
-							_sceneManager->getActiveEntityRegistry(), traveler);
+							_sceneManager->getActiveEntityRegistry(), traveler,
+							deltaTime);
 		}
 		this->getLogger().debug()
 			<< "Finished systems for phase: " << static_cast<int>(phase);
@@ -133,9 +137,14 @@ namespace guillaume
 	    requires IsOneOf<DefaultSceneType, SceneTypes...>
 	void Application<DefaultSceneType, SceneTypes...>::routine(void)
 	{
+		static auto lastTime = std::chrono::steady_clock::now();
+		auto currentTime = std::chrono::steady_clock::now();
+		std::chrono::duration<float> deltaTime = currentTime - lastTime;
+		lastTime = currentTime;
+
 		std::apply(
-			[this](auto &...phaseDefinition) {
-				(this->runPhase(phaseDefinition), ...);
+			[this, deltaTimeSeconds = deltaTime.count()](auto &...phaseDefinition) {
+				(this->runPhase(phaseDefinition, deltaTimeSeconds), ...);
 			},
 			_systemPhases);
 	}
@@ -163,13 +172,6 @@ namespace guillaume
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
 	    requires IsOneOf<DefaultSceneType, SceneTypes...>
-	bool Application<DefaultSceneType, SceneTypes...>::gotNewEvents(void) const
-	{
-		return _engine->gotNewEvents();
-	}
-
-	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
-	    requires IsOneOf<DefaultSceneType, SceneTypes...>
 	bool Application<DefaultSceneType, SceneTypes...>::shouldQuit(void)
 	{
 		if (_quitEventSubscriber.hasPendingEvents()) {
@@ -188,9 +190,6 @@ namespace guillaume
 		while (!shouldQuit()) {
 			try {
 				_engine->pollEvents();
-				if (!_engine->gotNewEvents()) {
-					continue;
-				}
 				_engine->clear();
 				routine();
 				_sceneManager->processSceneTransition();

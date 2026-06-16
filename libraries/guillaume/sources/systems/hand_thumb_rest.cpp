@@ -36,7 +36,8 @@ namespace guillaume::systems
 	{
 	}
 
-	void HandThumbRest::update(const ecs::Entity::Identifier &entityIdentifier)
+	void HandThumbRest::update(const ecs::Entity::Identifier &entityIdentifier,
+							   float deltaTime)
 	{
 	}
 

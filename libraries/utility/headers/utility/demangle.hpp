@@ -97,4 +97,4 @@ namespace utility
 		return std::string(mangledName);
 #endif
 	}
-}  // namespace utility
+}	 // namespace utility

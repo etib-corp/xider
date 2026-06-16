@@ -68,7 +68,7 @@ namespace guillaume::systems
 
 		// Trigger focus handler for new entity
 		if (hasComponent<components::Focus>(entityIdentifier)) {
-			auto &focus = getComponent<components::Focus>(entityIdentifier);
+			auto &focus	 = getComponent<components::Focus>(entityIdentifier);
 			auto handler = focus.getOnFocusGainedHandler();
 			if (handler) {
 				getLogger().debug()
@@ -97,7 +97,8 @@ namespace guillaume::systems
 					handler();
 				}
 			}
-			getLogger().info() << "Focus cleared from entity " << previousEntity;
+			getLogger().info()
+				<< "Focus cleared from entity " << previousEntity;
 			_focusedEntity = std::nullopt;
 		}
 	}
@@ -107,20 +108,24 @@ namespace guillaume::systems
 		return _focusedEntity;
 	}
 
-	std::optional<ecs::Entity::Identifier> Focus::getLastFocusedEntity(void) const
+	std::optional<ecs::Entity::Identifier>
+		Focus::getLastFocusedEntity(void) const
 	{
 		return _lastFocusedEntity;
 	}
 
-	void Focus::update(const ecs::Entity::Identifier &entityIdentifier)
+	void Focus::update(const ecs::Entity::Identifier &entityIdentifier,
+					   float deltaTime)
 	{
-		getLogger().debug() << "Updating Focus system for entity "
-							<< entityIdentifier;
+		getLogger().debug()
+			<< "Updating Focus system for entity " << entityIdentifier;
 
 		// Check if entity was clicked with mouse
-		if (hasComponent<components::MouseButtonInteraction>(entityIdentifier)) {
+		if (hasComponent<components::MouseButtonInteraction>(
+				entityIdentifier)) {
 			auto &mouseInteraction =
-				getComponent<components::MouseButtonInteraction>(entityIdentifier);
+				getComponent<components::MouseButtonInteraction>(
+					entityIdentifier);
 			if (mouseInteraction.isButtonPressed(
 					utility::event::MouseButtonEvent::Button::Left)) {
 				setFocus(entityIdentifier);
@@ -131,16 +136,17 @@ namespace guillaume::systems
 		// Check if entity was clicked with hand button
 		if (hasComponent<components::HandButtonInteraction>(entityIdentifier)) {
 			auto &handInteraction =
-				getComponent<components::HandButtonInteraction>(entityIdentifier);
+				getComponent<components::HandButtonInteraction>(
+					entityIdentifier);
 			// Check common hand buttons (A, B, X, Y)
 			if (handInteraction.isButtonPressed(
 					utility::event::HandButtonEvent::Button::A)
 				|| handInteraction.isButtonPressed(
-						utility::event::HandButtonEvent::Button::B)
+					utility::event::HandButtonEvent::Button::B)
 				|| handInteraction.isButtonPressed(
-						utility::event::HandButtonEvent::Button::X)
+					utility::event::HandButtonEvent::Button::X)
 				|| handInteraction.isButtonPressed(
-						utility::event::HandButtonEvent::Button::Y)) {
+					utility::event::HandButtonEvent::Button::Y)) {
 				setFocus(entityIdentifier);
 				return;
 			}
@@ -149,7 +155,8 @@ namespace guillaume::systems
 		// Check if entity was clicked with hand pinch
 		if (hasComponent<components::HandPinchInteraction>(entityIdentifier)) {
 			auto &pinchInteraction =
-				getComponent<components::HandPinchInteraction>(entityIdentifier);
+				getComponent<components::HandPinchInteraction>(
+					entityIdentifier);
 			if (pinchInteraction.isPinch()) {
 				setFocus(entityIdentifier);
 				return;

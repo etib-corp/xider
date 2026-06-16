@@ -112,18 +112,19 @@ namespace utility::event
 			Apostrophe = 52, /**< Apostrophe key */
 			Grave =
 				53,		 /**< Grave key (grave accent). Located in the top left
-							corner	  (on both ANSI and ISO keyboards). Produces GRAVE
-							ACCENT and	  TILDE in a US Windows layout and in US and UK
-							Mac layouts	  on ANSI keyboards, GRAVE ACCENT and NOT SIGN
-							in a UK	  Windows layout, SECTION SIGN and PLUS-MINUS SIGN
-							in US and	  UK Mac layouts on ISO keyboards, SECTION SIGN
-							and DEGREE	  SIGN in a Swiss German layout (Mac: only on
-							ISO	  keyboards), CIRCUMFLEX ACCENT and DEGREE SIGN in a
-							German	  layout (Mac: only on ISO keyboards), SUPERSCRIPT
-							TWO and	  TILDE in a French Windows layout, COMMERCIAL AT
-							and NUMBER	  SIGN in a French Mac layout on ISO keyboards,
-							and LESS-THAN	  SIGN and GREATER-THAN SIGN in a Swiss
-							German, German, or	  French Mac layout on ANSI keyboards.
+							corner	  (on both ANSI and ISO keyboards). Produces
+							GRAVE	  ACCENT and	  TILDE in a US Windows layout and in US
+							and UK	  Mac layouts	  on ANSI keyboards, GRAVE ACCENT
+							and NOT SIGN	  in a UK	  Windows layout, SECTION SIGN and
+							PLUS-MINUS SIGN	  in US and	  UK Mac layouts on ISO
+							keyboards, SECTION SIGN	  and DEGREE	  SIGN in a Swiss
+							German layout (Mac: only on	  ISO	  keyboards), CIRCUMFLEX
+							ACCENT and DEGREE SIGN in a	  German	  layout (Mac: only
+							on ISO keyboards), SUPERSCRIPT	  TWO and	  TILDE in a
+							French Windows layout, COMMERCIAL AT	  and NUMBER	  SIGN
+							in a French Mac layout on ISO keyboards,	  and LESS-THAN
+							SIGN and GREATER-THAN SIGN in a Swiss	  German, German, or
+							French Mac layout on ANSI keyboards.
 						  */
 			Comma  = 54, /**< Comma key */
 			Period = 55, /**< Period key */

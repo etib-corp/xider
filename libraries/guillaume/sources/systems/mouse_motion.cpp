@@ -38,7 +38,8 @@ namespace guillaume::systems
 	{
 	}
 
-	void MouseMotion::update(const ecs::Entity::Identifier &entityIdentifier)
+	void MouseMotion::update(const ecs::Entity::Identifier &entityIdentifier,
+							 float deltaTime)
 	{
 		auto mouseMotionEvent = getLastEvent();
 		if (!mouseMotionEvent)

@@ -48,7 +48,8 @@ namespace xider
 		}
 	}
 
-	size_t Engine::addMesh(const utility::graphic::Mesh &mesh, const std::string &materialName)
+	size_t Engine::addMesh(const utility::graphic::Mesh &mesh,
+						   const std::string &materialName)
 	{
 		return _evanEngine->addMesh(mesh, materialName);
 	}
@@ -103,10 +104,8 @@ namespace xider
 		auto callback = this->getEventCallback();
 
 		if (!callback) {
+			getLogger().warning() << "No event callback set, skipping event dispatch.";
 			return;
-		}
-		if (events.empty()) {
-			this->setGotNewEvents(true);
 		}
 		for (auto &event: events) {
 			callback(event);

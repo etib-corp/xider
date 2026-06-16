@@ -62,8 +62,8 @@ namespace guillaume::systems
 		 * @brief Update the TextInput system for the specified entity.
 		 * @param entityIdentifier The identifier of the entity to update.
 		 */
-		virtual void
-			update(const ecs::Entity::Identifier &entityIdentifier) override;
+		virtual void update(const ecs::Entity::Identifier &entityIdentifier,
+							float deltaTime) override;
 	};
 
 }	 // namespace guillaume::systems

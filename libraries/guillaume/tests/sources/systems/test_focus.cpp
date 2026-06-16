@@ -27,9 +27,7 @@ namespace guillaume::systems::tests
 
 	TEST_F(TestFocus, Constructor)
 	{
-		EXPECT_NO_THROW({
-			auto focusSystem = Focus(*_eventBus);
-		});
+		EXPECT_NO_THROW({ auto focusSystem = Focus(*_eventBus); });
 	}
 
 	TEST_F(TestFocus, InitialFocusState)
@@ -106,15 +104,17 @@ namespace guillaume::systems::tests
 			utility::graphic::PoseF(utility::graphic::PositionF(100, 0, 0)),
 			100, 50);
 
-		bool entity1Lost = false;
+		bool entity1Lost   = false;
 		bool entity2Gained = false;
 
-		auto &focus1 = _componentRegistry.getComponent<components::Focus>(entity1);
+		auto &focus1 =
+			_componentRegistry.getComponent<components::Focus>(entity1);
 		focus1.setOnFocusLostHandler([&entity1Lost]() {
 			entity1Lost = true;
 		});
 
-		auto &focus2 = _componentRegistry.getComponent<components::Focus>(entity2);
+		auto &focus2 =
+			_componentRegistry.getComponent<components::Focus>(entity2);
 		focus2.setOnFocusGainedHandler([&entity2Gained]() {
 			entity2Gained = true;
 		});
@@ -138,11 +138,12 @@ namespace guillaume::systems::tests
 
 		// Simulate mouse click by setting button pressed state
 		auto &mouseInteraction =
-			_componentRegistry.getComponent<components::MouseButtonInteraction>(entity1);
+			_componentRegistry.getComponent<components::MouseButtonInteraction>(
+				entity1);
 		mouseInteraction.setButtonPressed(
 			utility::event::MouseButtonEvent::Button::Left, true);
 
-		_focusSystem->update(entity1);
+		_focusSystem->update(entity1, 0.0f);
 
 		EXPECT_TRUE(_focusSystem->getFocusedEntity().has_value());
 		EXPECT_EQ(_focusSystem->getFocusedEntity().value(), entity1);
@@ -154,11 +155,12 @@ namespace guillaume::systems::tests
 
 		// Simulate hand click by setting button pressed state
 		auto &handInteraction =
-			_componentRegistry.getComponent<components::HandButtonInteraction>(entity1);
+			_componentRegistry.getComponent<components::HandButtonInteraction>(
+				entity1);
 		handInteraction.setButtonPressed(
 			utility::event::HandButtonEvent::Button::A, true);
 
-		_focusSystem->update(entity1);
+		_focusSystem->update(entity1, 0.0f);
 
 		EXPECT_TRUE(_focusSystem->getFocusedEntity().has_value());
 		EXPECT_EQ(_focusSystem->getFocusedEntity().value(), entity1);
@@ -170,10 +172,11 @@ namespace guillaume::systems::tests
 
 		// Simulate hand pinch by setting pinch state
 		auto &pinchInteraction =
-			_componentRegistry.getComponent<components::HandPinchInteraction>(entity1);
+			_componentRegistry.getComponent<components::HandPinchInteraction>(
+				entity1);
 		pinchInteraction.setPinching(true);
 
-		_focusSystem->update(entity1);
+		_focusSystem->update(entity1, 0.0f);
 
 		EXPECT_TRUE(_focusSystem->getFocusedEntity().has_value());
 		EXPECT_EQ(_focusSystem->getFocusedEntity().value(), entity1);
@@ -185,10 +188,11 @@ namespace guillaume::systems::tests
 
 		// Simulate hand poke by setting poke state
 		auto &pokeInteraction =
-			_componentRegistry.getComponent<components::HandPokeInteraction>(entity1);
+			_componentRegistry.getComponent<components::HandPokeInteraction>(
+				entity1);
 		pokeInteraction.setPoking(true);
 
-		_focusSystem->update(entity1);
+		_focusSystem->update(entity1, 0.0f);
 
 		EXPECT_TRUE(_focusSystem->getFocusedEntity().has_value());
 		EXPECT_EQ(_focusSystem->getFocusedEntity().value(), entity1);
@@ -199,7 +203,7 @@ namespace guillaume::systems::tests
 		auto entity1 = createFocusableEntity();
 
 		// No button pressed
-		_focusSystem->update(entity1);
+		_focusSystem->update(entity1, 0.0f);
 
 		// Focus should remain unchanged (nullopt initially)
 		EXPECT_FALSE(_focusSystem->getFocusedEntity().has_value());
@@ -215,7 +219,7 @@ namespace guillaume::systems::tests
 		EXPECT_TRUE(_focusSystem->getFocusedEntity().has_value());
 
 		// Update entity2 without click should not change focus
-		_focusSystem->update(entity2);
+		_focusSystem->update(entity2, 0.0f);
 
 		// Focus should remain on entity1
 		EXPECT_TRUE(_focusSystem->getFocusedEntity().has_value());
@@ -236,7 +240,8 @@ namespace guillaume::systems::tests
 
 		// Setting focus to same entity again should not trigger handler twice
 		int focusCount = 0;
-		auto &focus1   = _componentRegistry.getComponent<components::Focus>(entity1);
+		auto &focus1 =
+			_componentRegistry.getComponent<components::Focus>(entity1);
 		focus1.setOnFocusGainedHandler([&focusCount]() {
 			focusCount++;
 		});

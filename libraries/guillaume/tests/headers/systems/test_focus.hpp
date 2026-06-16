@@ -62,7 +62,7 @@ namespace guillaume::systems::tests
 
 		void SetUp(void) override
 		{
-			_eventBus	= std::make_unique<event::EventBus>();
+			_eventBus	 = std::make_unique<event::EventBus>();
 			_focusSystem = std::make_unique<Focus>(*_eventBus);
 		}
 
@@ -73,29 +73,35 @@ namespace guillaume::systems::tests
 		}
 
 		/**
-		 * @brief Create an entity with Focus, Transform, Bound, and interaction components.
+		 * @brief Create an entity with Focus, Transform, Bound, and interaction
+		 * components.
 		 * @return The identifier of the created entity.
 		 */
 		ecs::Entity::Identifier createFocusableEntity(
 			const utility::graphic::PoseF &pose = utility::graphic::PoseF(),
-			float width						  = 100.0f,
-			float height					  = 50.0f)
+			float width = 100.0f, float height = 50.0f)
 		{
 			auto &entity = _entityRegistry.createEntity();
-			auto id	   = entity.getIdentifier();
+			auto id		 = entity.getIdentifier();
 
 			_componentRegistry.addComponent<components::Focus>(id);
 			_componentRegistry.addComponent<components::Transform>(id);
 			_componentRegistry.addComponent<components::Bound>(id);
-			_componentRegistry.addComponent<components::MouseButtonInteraction>(id);
-			_componentRegistry.addComponent<components::HandButtonInteraction>(id);
-			_componentRegistry.addComponent<components::HandPinchInteraction>(id);
-			_componentRegistry.addComponent<components::HandPokeInteraction>(id);
+			_componentRegistry.addComponent<components::MouseButtonInteraction>(
+				id);
+			_componentRegistry.addComponent<components::HandButtonInteraction>(
+				id);
+			_componentRegistry.addComponent<components::HandPinchInteraction>(
+				id);
+			_componentRegistry.addComponent<components::HandPokeInteraction>(
+				id);
 
-			auto &transform = _componentRegistry.getComponent<components::Transform>(id);
+			auto &transform =
+				_componentRegistry.getComponent<components::Transform>(id);
 			transform.setPose(pose);
 
-			auto &bound = _componentRegistry.getComponent<components::Bound>(id);
+			auto &bound =
+				_componentRegistry.getComponent<components::Bound>(id);
 			bound.setWidth(static_cast<unsigned int>(width));
 			bound.setHeight(static_cast<unsigned int>(height));
 

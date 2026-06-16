@@ -15,6 +15,9 @@
 #include <utility/event/mouse_button_event.hpp>
 #include <utility/event/mouse_motion_event.hpp>
 #include <utility/event/mouse_wheel_event.hpp>
+#include <utility/event/cursor_enter_event.hpp>
+#include <utility/event/file_drop_event.hpp>
+#include <utility/event/text_input_event.hpp>
 
 #include <iostream>
 
@@ -224,6 +227,39 @@ namespace evan
 		 */
 		std::vector<std::unique_ptr<utility::event::MouseWheelEvent>>
 			_mouseWheelEvents;
+
+		/**
+		 * @brief Vector to store cursor enter/leave events.
+		 *
+		 * This vector holds unique pointers to CursorEnterEvent objects, which
+		 * represent cursor enter/leave events that have been polled from the
+		 * GLFW event system. Each CursorEnterEvent contains information about
+		 * whether the cursor entered or left the window's content area.
+		 */
+		std::vector<std::unique_ptr<utility::event::CursorEnterEvent>>
+			_cursorEnterEvents;
+
+		/**
+		 * @brief Vector to store file drop events.
+		 *
+		 * This vector holds unique pointers to FileDropEvent objects, which
+		 * represent file drop events that have been polled from the GLFW event
+		 * system. Each FileDropEvent contains information about the paths of
+		 * files and/or directories dropped on the window.
+		 */
+		std::vector<std::unique_ptr<utility::event::FileDropEvent>>
+			_fileDropEvents;
+
+		/**
+		 * @brief Vector to store text input events.
+		 *
+		 * This vector holds unique pointers to TextInputEvent objects, which
+		 * represent text input events that have been polled from the GLFW event
+		 * system. Each TextInputEvent contains committed UTF-8 text input from
+		 * the operating system's text input system.
+		 */
+		std::vector<std::unique_ptr<utility::event::TextInputEvent>>
+			_textInputEvents;
 
 		private:
 	};

@@ -20,25 +20,51 @@
  SOFTWARE.
  */
 
-#include "guillaume/systems/hand_trigger.hpp"
+#include "utility/event/file_drop_event.hpp"
 
-namespace guillaume::systems
+namespace utility::event
 {
-	HandTrigger::HandTrigger(event::EventBus &eventBus)
-		: ecs::SystemFiller<components::HandTriggerInteraction,
-							components::Transform, components::Bound>(
-			  ecs::Phase::Event)
-		, event::EventManager<utility::event::HandTriggerEvent>(eventBus)
+
+	//////////////////////
+	// Factory methods //
+	////////////////////
+
+	FileDropEvent::Factory::~Factory(void) = default;
+
+	std::unique_ptr<Event> FileDropEvent::Factory::create(void) const
 	{
+		return std::make_unique<FileDropEvent>();
 	}
 
-	HandTrigger::~HandTrigger(void)
+	std::unique_ptr<FileDropEvent>
+		FileDropEvent::Factory::createTyped(void) const
 	{
+		return std::make_unique<FileDropEvent>();
 	}
 
-	void HandTrigger::update(const ecs::Entity::Identifier &entityIdentifier,
-							 float deltaTime)
+	////////////////////
+	// Public methods //
+	//////////////////
+
+	FileDropEvent::FileDropEvent(void) = default;
+
+	FileDropEvent::~FileDropEvent(void) = default;
+
+	FileDropEvent &
+		FileDropEvent::setPaths(const std::vector<std::string> &paths)
 	{
+		_paths = paths;
+		return *this;
 	}
 
-}	 // namespace guillaume::systems
+	const std::vector<std::string> &FileDropEvent::getPaths(void) const noexcept
+	{
+		return _paths;
+	}
+
+	std::size_t FileDropEvent::getCount(void) const noexcept
+	{
+		return _paths.size();
+	}
+
+}	 // namespace utility::event

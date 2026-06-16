@@ -113,7 +113,14 @@ namespace guillaume
 								   ///< ressource
 								   ///< provider
 
-		template<typename PhaseType> void runPhase(PhaseType &phaseDefinition);
+		/**
+		 * @brief Run one system update pass for the active scene.
+		 * @param phaseDefinition The system phase definition to run.
+		 * @param deltaTime Time elapsed since the last update in
+		 * seconds.
+		 */
+		template<typename PhaseType>
+		void runPhase(PhaseType &phaseDefinition, float deltaTime);
 
 		/**
 		 * @brief Register core systems used by the application.
@@ -171,12 +178,6 @@ namespace guillaume
 		 * @brief Present the rendered frame.
 		 */
 		void present(void);
-
-		/**
-		 * @brief Check if the engine has new events.
-		 * @return True if new events were received, false otherwise.
-		 */
-		bool gotNewEvents(void) const;
 
 		/**
 		 * @brief Check if the application should quit (using engine).

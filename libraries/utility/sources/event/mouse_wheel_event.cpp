@@ -25,11 +25,9 @@
 namespace utility::event
 {
 
-	//////////////////
-	// Factory Class //
-	//////////////////
-
-	MouseWheelEvent::Factory::~Factory(void) {}
+	MouseWheelEvent::Factory::~Factory(void)
+	{
+	}
 
 	std::unique_ptr<Event> MouseWheelEvent::Factory::create(void) const
 	{
@@ -42,16 +40,16 @@ namespace utility::event
 		return std::make_unique<MouseWheelEvent>();
 	}
 
-	//////////////////////////
-	// MouseWheelEvent Class //
-	//////////////////////////
+	MouseWheelEvent::MouseWheelEvent(void)
+	{
+	}
 
-	MouseWheelEvent::MouseWheelEvent(void) {}
+	MouseWheelEvent::~MouseWheelEvent(void)
+	{
+	}
 
-	MouseWheelEvent::~MouseWheelEvent(void) {}
-
-	MouseWheelEvent &MouseWheelEvent::setOffset(
-		const math::Vector2F &offset) noexcept
+	MouseWheelEvent &
+		MouseWheelEvent::setOffset(const math::Vector2F &offset) noexcept
 	{
 		_offset = offset;
 		return *this;

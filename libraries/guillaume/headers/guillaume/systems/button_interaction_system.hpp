@@ -121,8 +121,8 @@ namespace guillaume::systems
 		 * components. Handles button interaction logic based on events.
 		 * @param entityIdentifier The identifier of the entity being updated.
 		 */
-		virtual void
-			update(const ecs::Entity::Identifier &entityIdentifier) override
+		virtual void update(const ecs::Entity::Identifier &entityIdentifier,
+							float deltaTime) override
 		{
 			auto buttonEvent = this->getLastEvent();
 			if (!buttonEvent)

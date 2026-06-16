@@ -44,8 +44,9 @@ evan::Engine::Engine(
 	}
 
 	// Debug view setup - replace with actual camera and view configuration
-	utility::graphic::PoseF pose(utility::graphic::PositionF(0.0f, 0.0f, -50.0f),
-								  utility::graphic::OrientationF(0.0f, 0.9999846f, 0.0f, 0.0055555f));
+	utility::graphic::PoseF pose(
+		utility::graphic::PositionF(0.0f, 0.0f, -50.0f),
+		utility::graphic::OrientationF(0.0f, 0.9999846f, 0.0f, 0.0055555f));
 	utility::math::Vector2UI viewportSize(240);
 	utility::graphic::ViewF view(pose, 45.0f, 16.0f / 9.0f, viewportSize);
 	setView(view);
@@ -82,12 +83,10 @@ size_t evan::Engine::addText(std::shared_ptr<utility::graphic::Text> text)
 	this->getLogger().info() << "Drawing text: " << text->getContent();
 
 	std::map<uint32_t, utility::graphic::Mesh> rawObjects;
-	auto material_id =
-		_ressourceProvider->getMaterialID(text->getFontFamily());
+	auto material_id = _ressourceProvider->getMaterialID(text->getFontFamily());
 
 	if (material_id == 0) {
-		std::cerr << "Warning: Material '"
-				  << text->getFontFamily()
+		std::cerr << "Warning: Material '" << text->getFontFamily()
 				  << "' not found for text object. Text will not be rendered."
 				  << std::endl;
 		return 0;	 // Skip rendering this text if its material is not found
@@ -149,7 +148,9 @@ size_t evan::Engine::addObject(
 				 // object addition logic
 }
 
-size_t evan::Engine::addMesh(const utility::graphic::Mesh &mesh, const std::string &materialName, const std::string &shader)
+size_t evan::Engine::addMesh(const utility::graphic::Mesh &mesh,
+							 const std::string &materialName,
+							 const std::string &shader)
 {
 	std::map<uint32_t, utility::graphic::Mesh> rawObjects;
 	auto material_id = _ressourceProvider->getMaterialID(materialName);

@@ -26,9 +26,7 @@ namespace guillaume::components::tests
 {
 	TEST_F(TestFocus, Constructor)
 	{
-		EXPECT_NO_THROW({
-			Focus focus;
-		});
+		EXPECT_NO_THROW({ Focus focus; });
 	}
 
 	TEST_F(TestFocus, SetOnFocusGainedHandler)
@@ -69,7 +67,7 @@ namespace guillaume::components::tests
 	{
 		Focus focus;
 		bool gainedCalled = false;
-		bool lostCalled = false;
+		bool lostCalled	  = false;
 
 		focus.setOnFocusGainedHandler([&gainedCalled]() {
 			gainedCalled = true;
@@ -80,7 +78,7 @@ namespace guillaume::components::tests
 		});
 
 		auto gainedHandler = focus.getOnFocusGainedHandler();
-		auto lostHandler = focus.getOnFocusLostHandler();
+		auto lostHandler   = focus.getOnFocusLostHandler();
 
 		EXPECT_TRUE(gainedHandler);
 		EXPECT_TRUE(lostHandler);
@@ -98,7 +96,7 @@ namespace guillaume::components::tests
 		Focus focus;
 
 		auto gainedHandler = focus.getOnFocusGainedHandler();
-		auto lostHandler = focus.getOnFocusLostHandler();
+		auto lostHandler   = focus.getOnFocusLostHandler();
 
 		EXPECT_FALSE(gainedHandler);
 		EXPECT_FALSE(lostHandler);
