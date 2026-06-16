@@ -307,7 +307,7 @@ namespace guillaume::systems
 			_engine->removeObject(cacheEntry.objectId);
 		}
 
-		cacheEntry.objectId = _engine->addMesh(mesh, "default_material");
+		cacheEntry.objectId = _engine->addMesh(mesh, "mesh_material");
 		cacheEntry.mesh = mesh;
 	}
 
