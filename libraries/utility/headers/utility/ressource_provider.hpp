@@ -11,6 +11,10 @@
 #include <utility/graphic/model.hpp>
 #include <utility/graphic/shader.hpp>
 
+#include <utility/sound/audio_source.hpp>
+#include <utility/sound/decoder/decoder_registry.hpp>
+#include <utility/sound/audio_manager.hpp>
+
 namespace utility
 {
 	/**
@@ -344,6 +348,11 @@ namespace utility
 		std::shared_ptr<graphic::CodePoints> loadCodePointsFromAsset(
 			std::shared_ptr<utility::File> codePointsAsset);
 
+		std::shared_ptr<sound::AudioSource> loadAudioSource(const std::string &path);
+
+		std::shared_ptr<sound::AudioSource> loadAudioSourceFromAsset(
+			std::shared_ptr<utility::File> audioAsset);
+
 		protected:
 		/**
 		 * @brief Builds a unique shader name based on the vertex and fragment
@@ -425,6 +434,8 @@ namespace utility
 		 */
 		std::map<uint32_t, std::shared_ptr<graphic::CodePoints>> _codePoints;
 
+		std::map<uint32_t, std::shared_ptr<sound::AudioBuffer>> _audioSources;
+
 		/**
 		 * @brief Internal map to store resource IDs for efficient lookup based
 		 * on file paths.
@@ -457,6 +468,8 @@ namespace utility
 		 * path for each resource when loading them.
 		 */
 		std::string _basePath;
+
+		utility::sound::AudioManager _audioManager;
 
 		private:
 
