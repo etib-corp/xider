@@ -28,17 +28,51 @@
 
 namespace utility::sound
 {
-    class AudioBuffer {
+	/**
+	 * @brief Wrapper around an OpenAL audio buffer.
+	 *
+	 * AudioBuffer manages the lifetime of an OpenAL buffer object and
+	 * provides a simple interface for uploading decoded PCM audio data.
+	 *
+	 * The buffer is automatically released when the instance is destroyed.
+	 */
+	class AudioBuffer
+	{
+		public:
+		/**
+		 * @brief Creates an empty audio buffer.
+		 *
+		 * No OpenAL resource is allocated until upload() is called.
+		 */
+		AudioBuffer();
 
-        public:
-            AudioBuffer();
-            ~AudioBuffer();
+		/**
+		 * @brief Destroys the audio buffer and releases its OpenAL resource.
+		 */
+		~AudioBuffer();
 
-            ALuint bufferID() const;
+		/**
+		 * @brief Retrieves the underlying OpenAL buffer identifier.
+		 *
+		 * @return The OpenAL buffer handle, or 0 if no buffer has been created.
+		 */
+		[[nodiscard]] ALuint bufferID() const;
 
-            void upload(const DecodedAudio &decodedAudio);
+		/**
+		 * @brief Uploads decoded audio data to the OpenAL buffer.
+		 *
+		 * If a buffer already exists, it is deleted and recreated before
+		 * uploading the new data.
+		 *
+		 * @param decodedAudio Decoded PCM audio data and associated format
+		 * information.
+		 */
+		void upload(const DecodedAudio &decodedAudio);
 
-        private:
-            ALuint _bufferID = 0;
-    };
-}
+		private:
+		/**
+		 * @brief OpenAL buffer handle.
+		 */
+		ALuint _bufferID = 0;
+	};
+}	 // namespace utility::sound
