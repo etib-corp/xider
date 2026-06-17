@@ -73,8 +73,8 @@ namespace utility::sound
         void processCommands();
 
         void executeCommand(const AudioCommand &command);
-		ALCdevice *device_;
-		ALCcontext *context_;
+		ALCdevice *_device;
+		ALCcontext *_context;
 
 		std::unordered_map<uint32_t, std::shared_ptr<AudioSource>> _sources;
 

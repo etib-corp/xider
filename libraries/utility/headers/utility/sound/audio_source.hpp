@@ -59,6 +59,8 @@ namespace utility::sound
         private:
             std::shared_ptr<AudioBuffer> _buffer;
 
+            ALuint _alId = 0;
+
             uint32_t _sourceID;
             AudioManager &_manager;
 

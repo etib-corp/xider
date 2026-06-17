@@ -27,22 +27,22 @@ utility::sound::AudioBuffer::AudioBuffer()
 
 utility::sound::AudioBuffer::~AudioBuffer()
 {
-    alDeleteBuffers(1, &_id);
+    alDeleteBuffers(1, &_bufferID);
 }
 
-ALuint utility::sound::AudioBuffer::alId() const
+ALuint utility::sound::AudioBuffer::bufferID() const
 {
-    return _id;
+    return _bufferID;
 }
 
 void utility::sound::AudioBuffer::upload(const DecodedAudio &decodedAudio)
 {
-    if (_id != 0) {
-        alDeleteBuffers(1, &_id);
+    if (_bufferID != 0) {
+        alDeleteBuffers(1, &_bufferID);
     }
 
-    alGenBuffers(1, &_id);
-    alBufferData(_id, decodedAudio.format, decodedAudio.samples.data(),
+    alGenBuffers(1, &_bufferID);
+    alBufferData(_bufferID, decodedAudio.format, decodedAudio.samples.data(),
                  static_cast<ALsizei>(decodedAudio.samples.size()),
                  decodedAudio.sampleRate);
 }

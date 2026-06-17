@@ -25,6 +25,7 @@
 utility::sound::AudioSource::AudioSource(uint32_t sourceID, AudioManager &manager)
     : _sourceID(sourceID), _manager(manager)
 {
+    alGenSources(1, &_alId);
 }
 
 utility::sound::AudioSource::~AudioSource()
@@ -52,7 +53,12 @@ void utility::sound::AudioSource::stop()
 
 void utility::sound::AudioSource::setBuffer(std::shared_ptr<AudioBuffer> buffer)
 {
-    _buffer = buffer;
+    _buffer = std::move(buffer);
+
+    alSourcei(
+        _alId,
+        AL_BUFFER,
+        static_cast<ALint>(_buffer->bufferID()));
 }
 
 void utility::sound::AudioSource::setLooping(bool loop)
@@ -86,5 +92,5 @@ uint32_t utility::sound::AudioSource::sourceID() const
 
 ALuint utility::sound::AudioSource::alId() const
 {
-    return _buffer->alId();
+    return _alId;
 }

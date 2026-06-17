@@ -23,33 +23,29 @@
 
 utility::sound::AudioManager::AudioManager()
 {
-	device_ = alcOpenDevice(nullptr);
-	if (!device_) {
+	_device = alcOpenDevice(nullptr);
+	if (!_device) {
 		throw std::runtime_error("Failed to open audio device");
 	}
 
-	context_ = alcCreateContext(device_, nullptr);
-	if (!context_) {
-		alcCloseDevice(device_);
+	_context = alcCreateContext(_device, nullptr);
+	if (!_context) {
+		alcCloseDevice(_device);
 		throw std::runtime_error("Failed to create audio context");
 	}
-
-	alcMakeContextCurrent(context_);
 
 	_audioThread = std::thread(&AudioManager::threadLoop, this);
 }
 
 utility::sound::AudioManager::~AudioManager()
 {
-	alcMakeContextCurrent(nullptr);
-	alcDestroyContext(context_);
-	alcCloseDevice(device_);
-
     stop();
 
-	if (_audioThread.joinable()) {
-		_audioThread.join();
-	}
+    if (_audioThread.joinable())
+        _audioThread.join();
+
+    alcDestroyContext(_context);
+    alcCloseDevice(_device);
 }
 
 void utility::sound::AudioManager::submitCommand(const AudioCommand &command)
@@ -78,10 +74,13 @@ void utility::sound::AudioManager::stop()
 
 void utility::sound::AudioManager::threadLoop()
 {
+    alcMakeContextCurrent(_context);
+
 	while (_running) {
-		std::this_thread::sleep_for(std::chrono::milliseconds(1));
         processCommands();
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
+    alcMakeContextCurrent(nullptr);
 }
 
 void utility::sound::AudioManager::processCommands()
