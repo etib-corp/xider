@@ -33,11 +33,8 @@ namespace guillaume::systems
 	}
 
 	void
-		KeyboardControl::update(const ecs::Entity::Identifier &entityIdentifier,
-								float deltaTime)
+		KeyboardControl::update(const ecs::Entity::Identifier &entityIdentifier)
 	{
-		(void)deltaTime;
-
 		getLogger().debug() << "Updating KeyboardControl system for entity "
 							<< entityIdentifier;
 		auto &text = getComponent<components::Text>(entityIdentifier);
@@ -71,8 +68,7 @@ namespace guillaume::systems
 
 				case utility::event::KeyboardEvent::KeyCode::Delete:
 					if (text.deleteCharacterAfter()) {
-						getLogger().debug()
-							<< "Deleted character after cursor";
+						getLogger().debug() << "Deleted character after cursor";
 					}
 					continue;
 

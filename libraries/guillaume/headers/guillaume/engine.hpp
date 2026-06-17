@@ -81,7 +81,7 @@ namespace guillaume
 			std::function<void(std::shared_ptr<utility::event::Event> &)>;
 
 		private:
-		Handler _callback;	   ///< Event callback function
+		Handler _callback;	  ///< Event callback function
 
 		protected:
 		/**

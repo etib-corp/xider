@@ -93,7 +93,8 @@ namespace xider
 		auto callback = this->getEventCallback();
 
 		if (!callback) {
-			getLogger().warning() << "No event callback set, skipping event dispatch.";
+			getLogger().warning()
+				<< "No event callback set, skipping event dispatch.";
 			return;
 		}
 		for (auto &event: events) {

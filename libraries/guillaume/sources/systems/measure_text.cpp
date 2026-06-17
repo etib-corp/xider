@@ -42,8 +42,7 @@ namespace guillaume::systems
 	{
 	}
 
-	void MeasureText::update(const ecs::Entity::Identifier &entityIdentifier,
-							 float deltaTime)
+	void MeasureText::update(const ecs::Entity::Identifier &entityIdentifier)
 	{
 		getLogger().debug()
 			<< "Updating MeasureText system for entity " << entityIdentifier;

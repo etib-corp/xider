@@ -80,7 +80,10 @@ namespace utility::event
 		 * @brief Get the event type.
 		 * @return The type of this event.
 		 */
-		virtual Type getEventType(void) const noexcept { return Type::Unknown; }
+		virtual Type getEventType(void) const noexcept
+		{
+			return Type::Unknown;
+		}
 	};
 
 	/**

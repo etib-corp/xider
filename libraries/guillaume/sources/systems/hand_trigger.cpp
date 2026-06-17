@@ -36,8 +36,7 @@ namespace guillaume::systems
 	{
 	}
 
-	void HandTrigger::update(const ecs::Entity::Identifier &entityIdentifier,
-							 float deltaTime)
+	void HandTrigger::update(const ecs::Entity::Identifier &entityIdentifier)
 	{
 	}
 

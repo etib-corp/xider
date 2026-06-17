@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include <chrono>
 #include <utility/graphic/material.hpp>
 
 #include "evan/Version.hpp"
@@ -568,7 +569,7 @@ namespace evan
 		void handleKeyboardMovement(
 			const std::shared_ptr<utility::event::KeyboardEvent> &keyboardEvent,
 			const glm::mat4 &viewMatrix, utility::graphic::PositionF &position,
-			float movementSpeed);
+			float movementSpeed, float deltaTime);
 
 		/**
 		 * @brief Processes mouse button events for rotation state.
@@ -595,7 +596,8 @@ namespace evan
 				&mouseMotionEvent,
 			bool isRightMouseButtonPressed,
 			utility::math::Vector2UI &lastMousePosition,
-			utility::graphic::OrientationF &orientation, float rotationSpeed);
+			utility::graphic::OrientationF &orientation, float rotationSpeed,
+			float deltaTime);
 
 		/**
 		 * @brief Extracts position from view matrix.
@@ -627,5 +629,31 @@ namespace evan
 		 * @brief The current view matrix.
 		 */
 		glm::mat4 _viewMatrix;
+
+		/**
+		 * @brief Tracks the last frame time for delta time calculation.
+		 */
+		std::chrono::steady_clock::time_point _lastFrameTime;
+
+		/**
+		 * @brief Stores the delta time from the last frame in seconds.
+		 */
+		float _deltaTime { 0.0f };
+
+		public:
+		/**
+		 * @brief Get the delta time from the last frame in seconds.
+		 * @return Delta time in seconds.
+		 */
+		float getDeltaTime(void) const
+		{
+			return _deltaTime;
+		}
+
+		/**
+		 * @brief Update the delta time based on current time.
+		 * Called once per frame to update the delta time value.
+		 */
+		void updateDeltaTime(void);
 	};
 }	 // namespace evan

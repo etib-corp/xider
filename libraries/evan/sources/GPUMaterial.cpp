@@ -24,7 +24,8 @@ evan::GPUMaterial::GPUMaterial(std::shared_ptr<DeviceContext> deviceContext,
 
 	auto textures = material.getTextures();
 	for (const auto &texture: textures) {
-		_textures.emplace_back(std::make_shared<GPUTexture>(*deviceContext, *texture));
+		_textures.emplace_back(
+			std::make_shared<GPUTexture>(*deviceContext, *texture));
 	}
 
 	this->createDescriptorSets(

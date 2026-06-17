@@ -99,8 +99,8 @@ namespace guillaume::systems
 		 * Checks if the entity was clicked with mouse or hand and sets focus
 		 * accordingly.
 		 */
-		virtual void update(const ecs::Entity::Identifier &entityIdentifier,
-							float deltaTime) override;
+		virtual void
+			update(const ecs::Entity::Identifier &entityIdentifier) override;
 	};
 
 }	 // namespace guillaume::systems

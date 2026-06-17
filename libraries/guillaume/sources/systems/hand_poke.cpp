@@ -36,8 +36,7 @@ namespace guillaume::systems
 	{
 	}
 
-	void HandPoke::update(const ecs::Entity::Identifier &entityIdentifier,
-						  float deltaTime)
+	void HandPoke::update(const ecs::Entity::Identifier &entityIdentifier)
 	{
 		auto pokeEvent = this->getLastEvent();
 		if (!pokeEvent)

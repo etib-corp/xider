@@ -32,8 +32,7 @@ namespace guillaume::systems
 	{
 	}
 
-	void TextInput::update(const ecs::Entity::Identifier &entityIdentifier,
-						   float deltaTime)
+	void TextInput::update(const ecs::Entity::Identifier &entityIdentifier)
 	{
 		getLogger().debug()
 			<< "Updating TextInput system for entity " << entityIdentifier;

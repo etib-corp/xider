@@ -69,8 +69,7 @@ VkResult evan::DesktopSwapchainContext::aquireImage(
 
 glm::mat4 evan::DesktopSwapchainContext::getProjection(int index) const
 {
-	return glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 0.1f,
-							500.0f);
+	return glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 0.1f, 500.0f);
 }
 
 glm::mat4 evan::DesktopSwapchainContext::getView(int index) const

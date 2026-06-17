@@ -81,7 +81,10 @@ namespace utility::event
 		 * @brief Get the event type.
 		 * @return The type of this event (MouseMotion).
 		 */
-		Type getEventType(void) const noexcept override { return Type::MouseMotion; }
+		Type getEventType(void) const noexcept override
+		{
+			return Type::MouseMotion;
+		}
 
 		/**
 		 * @brief Set the current mouse position.

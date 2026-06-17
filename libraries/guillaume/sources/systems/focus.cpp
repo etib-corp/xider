@@ -114,8 +114,7 @@ namespace guillaume::systems
 		return _lastFocusedEntity;
 	}
 
-	void Focus::update(const ecs::Entity::Identifier &entityIdentifier,
-					   float deltaTime)
+	void Focus::update(const ecs::Entity::Identifier &entityIdentifier)
 	{
 		getLogger().debug()
 			<< "Updating Focus system for entity " << entityIdentifier;

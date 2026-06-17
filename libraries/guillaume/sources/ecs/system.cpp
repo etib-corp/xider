@@ -61,8 +61,7 @@ namespace guillaume::ecs
 
 	void System::routine(ecs::ComponentRegistry &componentRegistry,
 						 ecs::EntityRegistry &entityRegistry,
-						 const ecs::EntityTreeTraveler &traveler,
-						 float deltaTime)
+						 const ecs::EntityTreeTraveler &traveler)
 	{
 		_activeComponentRegistry = &componentRegistry;
 		getLogger().debug() << "System routine started";
@@ -93,13 +92,15 @@ namespace guillaume::ecs
 				continue;
 			}
 			++matchingEntities;
-			update(entity->getIdentifier(), deltaTime);
+			update(entity->getIdentifier());
 		}
 
-		// If no entities match but system has no requirements, still call update once
+		// If no entities match but system has no requirements, still call
+		// update once
 		if (matchingEntities == 0 && getSignature().none()) {
-			getLogger().debug() << "System has no entity requirements, calling update with dummy identifier";
-			update(0, deltaTime);
+			getLogger().debug() << "System has no entity requirements, calling "
+								   "update with dummy identifier";
+			update(0);
 		}
 
 		// Per-frame cleanup

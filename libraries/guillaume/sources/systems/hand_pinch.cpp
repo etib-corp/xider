@@ -36,8 +36,7 @@ namespace guillaume::systems
 	{
 	}
 
-	void HandPinch::update(const ecs::Entity::Identifier &entityIdentifier,
-						   float deltaTime)
+	void HandPinch::update(const ecs::Entity::Identifier &entityIdentifier)
 	{
 		auto pinchEvent = this->getLastEvent();
 		if (!pinchEvent)

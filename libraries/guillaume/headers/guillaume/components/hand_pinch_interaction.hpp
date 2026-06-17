@@ -35,7 +35,7 @@ namespace guillaume::components
 		public Interaction<utility::event::HandPinchEvent>
 	{
 		private:
-		bool _isPinching { false };  ///< Current pinch state
+		bool _isPinching { false };	   ///< Current pinch state
 
 		public:
 		/**

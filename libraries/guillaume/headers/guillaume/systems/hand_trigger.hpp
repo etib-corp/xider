@@ -59,8 +59,8 @@ namespace guillaume::systems
 		 * @brief Update the system for a given entity identifier.
 		 * @param entityIdentifier The identifier of the entity to update.
 		 */
-		virtual void update(const ecs::Entity::Identifier &entityIdentifier,
-							float deltaTime) override;
+		virtual void
+			update(const ecs::Entity::Identifier &entityIdentifier) override;
 	};
 
 }	 // namespace guillaume::systems

@@ -15,11 +15,21 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
 
+void evan::Engine::updateDeltaTime(void)
+{
+	auto currentTime					   = std::chrono::steady_clock::now();
+	std::chrono::duration<float> deltaTime = currentTime - _lastFrameTime;
+	_deltaTime							   = deltaTime.count();
+	_lastFrameTime						   = currentTime;
+}
+
 evan::Engine::Engine(
 	std::shared_ptr<utility::RessourceProvider> ressourceProvider,
 	std::shared_ptr<IPlatform> platform)
 	: _platform(platform)
 	, _ressourceProvider(ressourceProvider)
+	, _lastFrameTime(std::chrono::steady_clock::now())
+	, _deltaTime(0.0f)
 {
 	this->getLogger().info() << "Loading text shader...";
 
@@ -216,6 +226,7 @@ void evan::Engine::addScene(size_t sceneIndex)
 
 void evan::Engine::update()
 {
+	updateDeltaTime();
 	this->getLogger().info() << "Updating engine state...";
 
 	// Handle viewport input if capture is enabled
@@ -294,11 +305,11 @@ void evan::Engine::handleViewportInput(
 	utility::graphic::OrientationF orientation =
 		extractOrientationFromViewMatrix(_viewMatrix);
 
-	const float movementSpeed = 1.0f;
-	const float rotationSpeed = 0.1f;
+	const float movementSpeed = 10.0f;
+	const float rotationSpeed = 0.01f;
 
 	// Use persistent state (not reset every frame)
-	bool isRightMouseButtonPressed = _isRightMouseButtonPressed;
+	bool isRightMouseButtonPressed			   = _isRightMouseButtonPressed;
 	utility::math::Vector2UI lastMousePosition = _lastMousePosition;
 
 	for (const auto &event: events) {
@@ -308,7 +319,7 @@ void evan::Engine::handleViewportInput(
 				std::dynamic_pointer_cast<utility::event::KeyboardEvent>(event);
 			if (keyboardEvent) {
 				handleKeyboardMovement(keyboardEvent, _viewMatrix, position,
-									   movementSpeed);
+									   movementSpeed, _deltaTime);
 			}
 		}
 
@@ -319,7 +330,8 @@ void evan::Engine::handleViewportInput(
 				std::dynamic_pointer_cast<utility::event::MouseButtonEvent>(
 					event);
 			if (mouseButtonEvent) {
-				handleMouseButtonEvent(mouseButtonEvent, isRightMouseButtonPressed,
+				handleMouseButtonEvent(mouseButtonEvent,
+									   isRightMouseButtonPressed,
 									   lastMousePosition);
 			}
 		}
@@ -331,9 +343,9 @@ void evan::Engine::handleViewportInput(
 				std::dynamic_pointer_cast<utility::event::MouseMotionEvent>(
 					event);
 			if (mouseMotionEvent) {
-				handleMouseMotionEvent(mouseMotionEvent, isRightMouseButtonPressed,
-									   lastMousePosition, orientation,
-									   rotationSpeed);
+				handleMouseMotionEvent(
+					mouseMotionEvent, isRightMouseButtonPressed,
+					lastMousePosition, orientation, rotationSpeed, _deltaTime);
 			}
 		}
 	}
@@ -343,7 +355,7 @@ void evan::Engine::handleViewportInput(
 
 	// Save mouse state for next frame
 	_isRightMouseButtonPressed = isRightMouseButtonPressed;
-	_lastMousePosition = lastMousePosition;
+	_lastMousePosition		   = lastMousePosition;
 
 	_swapchainContext->setView(0, _viewMatrix);
 }
@@ -351,13 +363,14 @@ void evan::Engine::handleViewportInput(
 void evan::Engine::handleKeyboardMovement(
 	const std::shared_ptr<utility::event::KeyboardEvent> &keyboardEvent,
 	const glm::mat4 &viewMatrix, utility::graphic::PositionF &position,
-	float movementSpeed)
+	float movementSpeed, float deltaTime)
 {
 	if (!keyboardEvent->getIsDownEvent()) {
 		return;
 	}
 
-	// Use keycode instead of scancode (GLFW callbacks set keycode, not scancode)
+	// Use keycode instead of scancode (GLFW callbacks set keycode, not
+	// scancode)
 	auto keycode = keyboardEvent->getKeycode();
 	utility::math::Vector3F movement { 0.0f, 0.0f, 0.0f };
 
@@ -369,31 +382,31 @@ void evan::Engine::handleKeyboardMovement(
 								   viewRotation[2].z };
 	auto right = utility::math::Vector3F { viewRotation[0].x, viewRotation[0].y,
 										   viewRotation[0].z };
-	auto up = utility::math::Vector3F { viewRotation[1].x, viewRotation[1].y,
-										viewRotation[1].z };
+	auto up	   = utility::math::Vector3F { viewRotation[1].x, viewRotation[1].y,
+										   viewRotation[1].z };
 
 	switch (keycode) {
 		case utility::event::KeyboardEvent::KeyCode::W:
 		case utility::event::KeyboardEvent::KeyCode::Up:
-			movement = forward * movementSpeed;
+			movement = forward * movementSpeed * deltaTime;
 			break;
 		case utility::event::KeyboardEvent::KeyCode::S:
 		case utility::event::KeyboardEvent::KeyCode::Down:
-			movement = -forward * movementSpeed;
+			movement = -forward * movementSpeed * deltaTime;
 			break;
 		case utility::event::KeyboardEvent::KeyCode::A:
 		case utility::event::KeyboardEvent::KeyCode::Left:
-			movement = -right * movementSpeed;
+			movement = -right * movementSpeed * deltaTime;
 			break;
 		case utility::event::KeyboardEvent::KeyCode::D:
 		case utility::event::KeyboardEvent::KeyCode::Right:
-			movement = right * movementSpeed;
+			movement = right * movementSpeed * deltaTime;
 			break;
 		case utility::event::KeyboardEvent::KeyCode::Q:
-			movement = -up * movementSpeed;
+			movement = -up * movementSpeed * deltaTime;
 			break;
 		case utility::event::KeyboardEvent::KeyCode::E:
-			movement = up * movementSpeed;
+			movement = up * movementSpeed * deltaTime;
 			break;
 		default:
 			return;
@@ -423,7 +436,8 @@ void evan::Engine::handleMouseButtonEvent(
 void evan::Engine::handleMouseMotionEvent(
 	const std::shared_ptr<utility::event::MouseMotionEvent> &mouseMotionEvent,
 	bool isRightMouseButtonPressed, utility::math::Vector2UI &lastMousePosition,
-	utility::graphic::OrientationF &orientation, float rotationSpeed)
+	utility::graphic::OrientationF &orientation, float rotationSpeed,
+	float deltaTime)
 {
 	if (!isRightMouseButtonPressed) {
 		return;
@@ -440,12 +454,12 @@ void evan::Engine::handleMouseMotionEvent(
 						  orientation.z);
 
 	// Rotate around Y axis (yaw) for horizontal movement
-	glm::quat yawRotation =
-		glm::angleAxis(deltaX * rotationSpeed, glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::quat yawRotation = glm::angleAxis(deltaX * rotationSpeed * deltaTime,
+										   glm::vec3(0.0f, 1.0f, 0.0f));
 
 	// Rotate around X axis (pitch) for vertical movement
-	glm::quat pitchRotation =
-		glm::angleAxis(deltaY * rotationSpeed, glm::vec3(1.0f, 0.0f, 0.0f));
+	glm::quat pitchRotation = glm::angleAxis(deltaY * rotationSpeed * deltaTime,
+											 glm::vec3(1.0f, 0.0f, 0.0f));
 
 	glm::quat newOrientation = yawRotation * pitchRotation * currentQuat;
 	newOrientation			 = glm::normalize(newOrientation);

@@ -42,7 +42,9 @@ namespace guillaume::components
 		private:
 		std::string _content {};		 ///< Text content
 		std::size_t _fontSize { 24 };	 ///< Font size of the text
-		std::size_t _cursorPosition { 0 };	 ///< Cursor position for text editing
+		std::size_t _cursorPosition {
+			0
+		};	  ///< Cursor position for text editing
 
 		public:
 		/**

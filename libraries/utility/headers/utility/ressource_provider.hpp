@@ -45,10 +45,10 @@ namespace utility
 		 * SystemIO interface to load resources from the filesystem, and this
 		 * constructor initializes the RessourceProvider with the provided
 		 * SystemIO instance for asset loading operations.
-		 * @param basePath An optional base path to prepend to resource paths when
-		 * loading resources. This can be used to specify a common directory for
-		 * all resources, allowing for more flexible resource management and
-		 * organization.
+		 * @param basePath An optional base path to prepend to resource paths
+		 * when loading resources. This can be used to specify a common
+		 * directory for all resources, allowing for more flexible resource
+		 * management and organization.
 		 */
 		RessourceProvider(SystemIO &systemInterface,
 						  const std::string &basePath = "");

@@ -259,8 +259,7 @@ namespace guillaume::systems
 	}
 
 	void
-		RectangleRender::update(const ecs::Entity::Identifier &entityIdentifier,
-								float deltaTime)
+		RectangleRender::update(const ecs::Entity::Identifier &entityIdentifier)
 	{
 		getLogger().debug() << "Updating RectangleRender system for entity "
 							<< entityIdentifier;

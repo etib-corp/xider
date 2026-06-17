@@ -116,11 +116,8 @@ namespace guillaume
 		/**
 		 * @brief Run one system update pass for the active scene.
 		 * @param phaseDefinition The system phase definition to run.
-		 * @param deltaTime Time elapsed since the last update in
-		 * seconds.
 		 */
-		template<typename PhaseType>
-		void runPhase(PhaseType &phaseDefinition, float deltaTime);
+		template<typename PhaseType> void runPhase(PhaseType &phaseDefinition);
 
 		/**
 		 * @brief Register core systems used by the application.

@@ -22,7 +22,6 @@
 
 #pragma once
 
-#include <chrono>
 #include <functional>
 
 #include "guillaume/application.hpp"
@@ -34,7 +33,7 @@ namespace guillaume
 	    requires IsOneOf<DefaultSceneType, SceneTypes...>
 	    template<typename PhaseType>
 	void Application<DefaultSceneType, SceneTypes...>::runPhase(
-		PhaseType &phaseDefinition, float deltaTime)
+		PhaseType &phaseDefinition)
 	{
 		const ecs::Phase phase					= phaseDefinition.getPhase();
 		const ecs::EntityTreeTraveler &traveler = phaseDefinition.getTraveler();
@@ -43,8 +42,7 @@ namespace guillaume
 			<< "Running systems for phase: " << static_cast<int>(phase);
 		for (const auto &system: _systemRegistry.getSystemsByPhase(phase)) {
 			system->routine(_sceneManager->getActiveComponentRegistry(),
-							_sceneManager->getActiveEntityRegistry(), traveler,
-							deltaTime);
+							_sceneManager->getActiveEntityRegistry(), traveler);
 		}
 		this->getLogger().debug()
 			<< "Finished systems for phase: " << static_cast<int>(phase);
@@ -137,14 +135,9 @@ namespace guillaume
 	    requires IsOneOf<DefaultSceneType, SceneTypes...>
 	void Application<DefaultSceneType, SceneTypes...>::routine(void)
 	{
-		static auto lastTime = std::chrono::steady_clock::now();
-		auto currentTime = std::chrono::steady_clock::now();
-		std::chrono::duration<float> deltaTime = currentTime - lastTime;
-		lastTime = currentTime;
-
 		std::apply(
-			[this, deltaTimeSeconds = deltaTime.count()](auto &...phaseDefinition) {
-				(this->runPhase(phaseDefinition, deltaTimeSeconds), ...);
+			[this](auto &...phaseDefinition) {
+				(this->runPhase(phaseDefinition), ...);
 			},
 			_systemPhases);
 	}

@@ -13,7 +13,8 @@
 namespace utility
 {
 
-	RessourceProvider::RessourceProvider(SystemIO &systemInterface, const std::string &basePath)
+	RessourceProvider::RessourceProvider(SystemIO &systemInterface,
+										 const std::string &basePath)
 		: _systemInterface(systemInterface)
 		, _basePath(basePath)
 	{
@@ -92,10 +93,13 @@ namespace utility
 			return it->second;
 		}
 
-		auto id = getNextID();;
-		auto textureFile = _systemInterface.add(resolvePath("textures/default_texture.png"));
+		auto id = getNextID();
+		;
+		auto textureFile =
+			_systemInterface.add(resolvePath("textures/default_texture.png"));
 
-		_materials[id] = std::make_shared<graphic::Material>(*this, std::string("default"), std::vector<File> { *textureFile });
+		_materials[id] = std::make_shared<graphic::Material>(
+			*this, std::string("default"), std::vector<File> { *textureFile });
 		_elementsIDs["default_material"] = id;
 
 		return id;
@@ -109,10 +113,13 @@ namespace utility
 			return it->second;
 		}
 
-		auto id = getNextID();;
-		auto textureFile = _systemInterface.add(resolvePath("textures/default_texture.png"));
+		auto id = getNextID();
+		;
+		auto textureFile =
+			_systemInterface.add(resolvePath("textures/default_texture.png"));
 
-		_materials[id] = std::make_shared<graphic::Material>(*this, std::string("mesh"), std::vector<File> { *textureFile });
+		_materials[id] = std::make_shared<graphic::Material>(
+			*this, std::string("mesh"), std::vector<File> { *textureFile });
 		_elementsIDs["mesh_material"] = id;
 
 		return id;
@@ -352,7 +359,7 @@ namespace utility
 		RessourceProvider::loadTexture(const std::string &path)
 	{
 		std::string resolvedPath = resolvePath(path);
-		auto it = _elementsIDs.find(resolvedPath);
+		auto it					 = _elementsIDs.find(resolvedPath);
 
 		if (it != _elementsIDs.end()) {
 			if (_textures.find(it->second) != _textures.end()) {
@@ -412,7 +419,7 @@ namespace utility
 		RessourceProvider::loadModel(const std::string &path)
 	{
 		std::string resolvedPath = resolvePath(path);
-		auto it = _elementsIDs.find(resolvedPath);
+		auto it					 = _elementsIDs.find(resolvedPath);
 
 		if (it != _elementsIDs.end()) {
 			if (_models.find(it->second) != _models.end()) {
@@ -477,7 +484,7 @@ namespace utility
 		RessourceProvider::loadObj(const std::string &path)
 	{
 		std::string resolvedPath = resolvePath(path);
-		auto it = _elementsIDs.find(resolvedPath);
+		auto it					 = _elementsIDs.find(resolvedPath);
 
 		if (it != _elementsIDs.end()) {
 			if (_models.find(it->second) != _models.end()) {
@@ -525,7 +532,7 @@ namespace utility
 		RessourceProvider::loadShader(const std::string &vertexPath,
 									  const std::string &fragmentPath)
 	{
-		std::string resolvedVertexPath   = resolvePath(vertexPath);
+		std::string resolvedVertexPath	 = resolvePath(vertexPath);
 		std::string resolvedFragmentPath = resolvePath(fragmentPath);
 		auto path = buildShaderPath(resolvedVertexPath, resolvedFragmentPath);
 		auto it	  = _elementsIDs.find(path);
@@ -588,7 +595,7 @@ namespace utility
 		RessourceProvider::loadCodePoints(const std::string &path)
 	{
 		std::string resolvedPath = resolvePath(path);
-		auto it = _elementsIDs.find(resolvedPath);
+		auto it					 = _elementsIDs.find(resolvedPath);
 
 		if (it != _elementsIDs.end()) {
 			if (_codePoints.find(it->second) != _codePoints.end()) {

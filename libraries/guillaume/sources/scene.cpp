@@ -133,7 +133,8 @@ namespace guillaume
 	{
 		getLogger().info() << "Scene entered";
 
-		// placeEntitiesInFrontOfView is now called by SceneManager with the engine view
+		// placeEntitiesInFrontOfView is now called by SceneManager with the
+		// engine view
 
 		for (auto *entity: getEntitiesBreadthFirst()) {
 			if (_componentRegistry.hasChanged(entity->getIdentifier())) {
