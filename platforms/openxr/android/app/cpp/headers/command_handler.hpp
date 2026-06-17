@@ -27,6 +27,8 @@
 #include <utility/logging/loggable.hpp>
 #include <utility/logging/default_logger.hpp>
 
+#include <functional>
+
 /**
  * @brief Handles Android application lifecycle commands.
  *
@@ -54,4 +56,17 @@ class CommandHandler:
 	 * @param cmd  The command id (APP_CMD_* constants).
 	 */
 	void handle(struct android_app *android_app, int32_t cmd);
+
+	void setOnPauseCallback(std::function<void()> callback);
+
+	private:
+	/**
+	 * @brief Handle the APP_CMD_PAUSE command.
+	 *
+	 * This method is called when the Android application receives the
+	 * APP_CMD_PAUSE command, indicating that the app is being paused. It
+	 * updates the internal state of the AndroidAppState struct to reflect
+	 * that the app is now paused and not resumed.
+	 */
+	std::function<void()> onPause;
 };
