@@ -147,6 +147,13 @@ namespace utility
 		[[nodiscard]] uint32_t getDefaultMaterialID();
 
 		/**
+		 * @brief Retrieves the unique ID of the mesh material.
+		 *
+		 * @return The unique ID of the mesh material.
+		 */
+		[[nodiscard]] uint32_t getMeshMaterialID();
+
+		/**
 		 * @brief Loads a font resource from a specified file path.
 		 *
 		 * @param path The file path to the font resource to be loaded.

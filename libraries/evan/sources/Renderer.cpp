@@ -566,6 +566,13 @@ void evan::Renderer::recordCommandBuffer(VkRenderPass renderPass,
 
 		auto correspondingPipelineID = material->getShaderID();
 
+		if (_pipelines.find(correspondingPipelineID) == _pipelines.end()) {
+			this->getLogger().warning()
+				<< "No pipeline found for shader ID: " << correspondingPipelineID
+				<< ". Skipping mesh.";
+			continue;
+		}
+
 		this->getLogger().info()
 			<< "Binding pipeline for shader ID: " << correspondingPipelineID;
 
