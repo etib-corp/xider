@@ -29,6 +29,7 @@ utility::sound::AudioSource::AudioSource(uint32_t sourceID, AudioManager &manage
 
 utility::sound::AudioSource::~AudioSource()
 {
+    _manager.destroyAudioSource(_sourceID);
 }
 
 void utility::sound::AudioSource::play()

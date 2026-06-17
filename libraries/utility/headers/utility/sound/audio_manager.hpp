@@ -75,8 +75,11 @@ namespace utility::sound
 
 		std::unique_ptr<AudioSource>
         createAudioSource(std::shared_ptr<AudioBuffer> buffer);
+		void destroyAudioSource(uint32_t sourceID);
 
 		void stop();
+
+		bool isRunning() const;
 
 		private:
 		void threadLoop();
