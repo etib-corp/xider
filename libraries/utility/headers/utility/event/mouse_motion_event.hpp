@@ -78,6 +78,12 @@ namespace utility::event
 		~MouseMotionEvent(void) override;
 
 		/**
+		 * @brief Get the event type.
+		 * @return The type of this event (MouseMotion).
+		 */
+		Type getEventType(void) const noexcept override { return Type::MouseMotion; }
+
+		/**
 		 * @brief Set the current mouse position.
 		 * @param position The mouse position as a 2D vector (x, y).
 		 * @return Reference to this MouseMotionEvent for method chaining.

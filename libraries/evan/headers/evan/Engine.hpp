@@ -25,6 +25,9 @@
 #include <utility/ressource_provider.hpp>
 
 #include <utility/event/event.hpp>
+#include <utility/event/keyboard_event.hpp>
+#include <utility/event/mouse_motion_event.hpp>
+#include <utility/event/mouse_button_event.hpp>
 
 #include <utility/logging/loggable.hpp>
 #include <utility/logging/default_logger.hpp>
@@ -156,6 +159,12 @@ namespace evan
 		utility::graphic::ViewF getView(void) const;
 
 		/**
+		 * @brief Get the view matrix.
+		 * @return The current view matrix.
+		 */
+		glm::mat4 getViewMatrix(void) const;
+
+		/**
 		 * @brief Adds a primitive object to the scene. This method takes a
 		 * shared pointer to a Primitive object, which contains the necessary
 		 * information for rendering the primitive, such as the mesh data,
@@ -240,18 +249,20 @@ namespace evan
 		 * camera position, and any transformations applied to the mesh.
 		 *
 		 * @param mesh The Mesh object to be added to the renderer.
-		 * @param materialName The name of the material to be used for rendering the
-		 * mesh. This parameter allows for flexibility in specifying the material
-		 * properties to be applied to the mesh during rendering.
-		 * @param shader The name of the shader to be used for rendering the mesh.
-		 * This parameter allows for flexibility in specifying the shader
+		 * @param materialName The name of the material to be used for rendering
+		 * the mesh. This parameter allows for flexibility in specifying the
+		 * material properties to be applied to the mesh during rendering.
+		 * @param shader The name of the shader to be used for rendering the
+		 * mesh. This parameter allows for flexibility in specifying the shader
 		 * program to be used for rendering the mesh, enabling different visual
 		 * effects and rendering techniques to be applied to the mesh.
 		 * @return The unique identifier (size_t) of the added mesh within the
 		 * renderer, which can be used for future reference or manipulation of
 		 * the mesh in the renderer.
 		 */
-		size_t addMesh(const utility::graphic::Mesh &mesh, const std::string &materialName = "default_material", const std::string &shader = "default");
+		size_t addMesh(const utility::graphic::Mesh &mesh,
+					   const std::string &materialName = "default_material",
+					   const std::string &shader	   = "default");
 
 		/**
 		 * @brief Updates the state of the engine. This method is responsible
@@ -306,7 +317,7 @@ namespace evan
 		 * core structure and functionality of the engine, with plans for
 		 * further improvements and optimizations in the future.
 		 *
-		 * @return A vector of unique pointers to Event objects representing the
+		 * @return A vector of shared pointers to Event objects representing the
 		 * events that were polled from the platform. Each Event object contains
 		 * information about the type of event, such as input events.
 		 * The vector may contain events such as keyboard input, mouse input, or
@@ -316,7 +327,7 @@ namespace evan
 		 * see utility::event::Event for more details on the Event class and its
 		 * derived classes representing specific types of events.
 		 */
-		std::vector<std::unique_ptr<utility::event::Event>> pollEvents();
+		std::vector<std::shared_ptr<utility::event::Event>> pollEvents();
 
 		/**
 		 * @brief Adds a new scene to the engine. This method allows users to
@@ -490,5 +501,131 @@ namespace evan
 		 * unique identification within the engine's data structures.
 		 */
 		size_t _nextObjectID = 1;
+
+		/**
+		 * When true, the engine copies keyboard and mouse input for movement:
+		 * - Keyboard events are copied for entity movement and related actions.
+		 * - Mouse movement is copied for view/camera rotation.
+		 * - Event copying to UI entities is disabled.
+		 *
+		 * This flag is typically true when the UI does not have focus on
+		 * any entity. When false, input is routed to the UI instead of the
+		 * viewport.
+		 */
+		bool _shouldCaptureViewportInput = true;
+
+		/**
+		 * A vector of shared pointers to Event objects representing the events
+		 * that have been captured for viewport input. This vector is used to
+		 * store events such as keyboard input and mouse input that are relevant
+		 * for controlling the camera or view in the engine. When
+		 * _shouldCaptureViewportInput is true, relevant events are copied to
+		 * this vector for processing in the handleViewportInput method,
+		 * allowing the engine to respond to user input for camera movement and
+		 * rotation while ensuring that UI entities do not receive input events
+		 * when the viewport is focused.
+		 */
+		std::vector<std::shared_ptr<utility::event::Event>>
+			_capturedViewportEvents;
+
+		/**
+		 * @brief Tracks whether the right mouse button is currently pressed.
+		 *
+		 * This state persists across frames to enable camera rotation when
+		 * dragging with the right mouse button held down.
+		 */
+		bool _isRightMouseButtonPressed = false;
+
+		/**
+		 * @brief Stores the last mouse position for calculating delta movement.
+		 *
+		 * This is updated each frame when the right mouse button is pressed to
+		 * calculate the mouse movement delta for camera rotation.
+		 */
+		utility::math::Vector2UI _lastMousePosition { 0, 0 };
+
+		private:
+		/**
+		 * @brief Handles viewport input for camera movement and rotation.
+		 *
+		 * This method processes keyboard and mouse events to control the view:
+		 * - WASD/Arrow keys for movement
+		 * - Right mouse button + drag for rotation
+		 * - Q/E for up/down movement
+		 *
+		 * @param events Vector of events to process.
+		 */
+		void handleViewportInput(
+			const std::vector<std::shared_ptr<utility::event::Event>> &events);
+
+		/**
+		 * @brief Processes keyboard events for camera movement.
+		 * @param keyboardEvent The keyboard event to process.
+		 * @param viewMatrix Current view matrix.
+		 * @param position Current camera position (modified in place).
+		 * @param movementSpeed Movement speed multiplier.
+		 */
+		void handleKeyboardMovement(
+			const std::shared_ptr<utility::event::KeyboardEvent> &keyboardEvent,
+			const glm::mat4 &viewMatrix, utility::graphic::PositionF &position,
+			float movementSpeed);
+
+		/**
+		 * @brief Processes mouse button events for rotation state.
+		 * @param mouseButtonEvent The mouse button event to process.
+		 * @param isRightMouseButtonPressed Reference to right button state.
+		 * @param lastMousePosition Reference to last mouse position.
+		 */
+		void handleMouseButtonEvent(
+			const std::shared_ptr<utility::event::MouseButtonEvent>
+				&mouseButtonEvent,
+			bool &isRightMouseButtonPressed,
+			utility::math::Vector2UI &lastMousePosition);
+
+		/**
+		 * @brief Processes mouse motion events for camera rotation.
+		 * @param mouseMotionEvent The mouse motion event to process.
+		 * @param isRightMouseButtonPressed Current right button state.
+		 * @param lastMousePosition Reference to last mouse position (updated).
+		 * @param orientation Current camera orientation (modified in place).
+		 * @param rotationSpeed Rotation speed multiplier.
+		 */
+		void handleMouseMotionEvent(
+			const std::shared_ptr<utility::event::MouseMotionEvent>
+				&mouseMotionEvent,
+			bool isRightMouseButtonPressed,
+			utility::math::Vector2UI &lastMousePosition,
+			utility::graphic::OrientationF &orientation, float rotationSpeed);
+
+		/**
+		 * @brief Extracts position from view matrix.
+		 * @param viewMatrix The view matrix to extract position from.
+		 * @return Camera position in world space.
+		 */
+		utility::graphic::PositionF
+			extractPositionFromViewMatrix(const glm::mat4 &viewMatrix) const;
+
+		/**
+		 * @brief Extracts orientation from view matrix.
+		 * @param viewMatrix The view matrix to extract orientation from.
+		 * @return Camera orientation as quaternion.
+		 */
+		utility::graphic::OrientationF
+			extractOrientationFromViewMatrix(const glm::mat4 &viewMatrix) const;
+
+		/**
+		 * @brief Builds view matrix from position and orientation.
+		 * @param position Camera position.
+		 * @param orientation Camera orientation.
+		 * @return View matrix.
+		 */
+		glm::mat4 buildViewMatrix(
+			const utility::graphic::PositionF &position,
+			const utility::graphic::OrientationF &orientation) const;
+
+		/**
+		 * @brief The current view matrix.
+		 */
+		glm::mat4 _viewMatrix;
 	};
 }	 // namespace evan

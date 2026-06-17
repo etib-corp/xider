@@ -6,8 +6,16 @@
 */
 
 #include <utility/event/quit_event.hpp>
+#include <utility/event/keyboard_event.hpp>
+#include <utility/event/mouse_motion_event.hpp>
+#include <utility/event/mouse_button_event.hpp>
+
+#include <utility/demangle.hpp>
 
 #include "evan/Engine.hpp"
+
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 
 evan::Engine::Engine(
 	std::shared_ptr<utility::RessourceProvider> ressourceProvider,
@@ -48,13 +56,11 @@ evan::Engine::Engine(
 							   *deviceBackend);
 	}
 
-	// Debug view setup - replace with actual camera and view configuration
-	utility::graphic::PoseF pose(
-		utility::graphic::PositionF(0.0f, 0.0f, -50.0f),
-		utility::graphic::OrientationF(0.0f, 0.9999846f, 0.0f, 0.0055555f));
-	utility::math::Vector2UI viewportSize(240);
-	utility::graphic::ViewF view(pose, 45.0f, 16.0f / 9.0f, viewportSize);
-	setView(view);
+	// Debug view setup - create initial view matrix
+	_viewMatrix =
+		glm::lookAt(glm::vec3(0.0f, 0.0f, -50.0f), glm::vec3(0.0f, 0.0f, 0.0f),
+					glm::vec3(0.0f, 1.0f, 0.0f));
+	_swapchainContext->setView(0, _viewMatrix);
 }
 
 evan::Engine::~Engine()
@@ -178,14 +184,26 @@ bool evan::Engine::removeObject(size_t objectID)
 		static_cast<uint32_t>(objectID));
 }
 
-void evan::Engine::setView(const utility::graphic::ViewF &view)
-{
-	_swapchainContext->setView(view);
-}
-
 utility::graphic::ViewF evan::Engine::getView(void) const
 {
-	return _swapchainContext->getView();
+	// Extract position and orientation from view matrix
+	utility::graphic::PositionF position =
+		extractPositionFromViewMatrix(_viewMatrix);
+	utility::graphic::OrientationF orientation =
+		extractOrientationFromViewMatrix(_viewMatrix);
+
+	// Create Pose from position and orientation
+	utility::graphic::PoseF pose(position, orientation);
+
+	// Create ViewF with default FOV and viewport (these would need to be stored
+	// separately if needed)
+	utility::math::Vector2UI viewportSize { 1920, 1080 };
+	return utility::graphic::ViewF(pose, 45.0f, 16.0f / 9.0f, viewportSize);
+}
+
+glm::mat4 evan::Engine::getViewMatrix(void) const
+{
+	return _viewMatrix;
 }
 
 void evan::Engine::addScene(size_t sceneIndex)
@@ -201,9 +219,12 @@ void evan::Engine::addScene(size_t sceneIndex)
 void evan::Engine::update()
 {
 	this->getLogger().info() << "Updating engine state...";
-	// Logic updates, input handling, etc.
-	// Will be implemented in the future when the input system and scene
-	// management will be implemented.
+
+	// Handle viewport input if capture is enabled
+	if (_shouldCaptureViewportInput) {
+		handleViewportInput(_capturedViewportEvents);
+		_capturedViewportEvents.clear();
+	}
 }
 
 void evan::Engine::render()
@@ -229,7 +250,7 @@ void evan::Engine::render()
 						 *currentSceneIt->second);
 }
 
-std::vector<std::unique_ptr<utility::event::Event>> evan::Engine::pollEvents()
+std::vector<std::shared_ptr<utility::event::Event>> evan::Engine::pollEvents()
 {
 	this->getLogger().info() << "Polling events from platform...";
 
@@ -238,6 +259,19 @@ std::vector<std::unique_ptr<utility::event::Event>> evan::Engine::pollEvents()
 
 	if (_platform->shouldClose())
 		events.emplace_back(quitEventFactory.create());
+
+	if (_shouldCaptureViewportInput) {
+		this->getLogger().info()
+			<< "Captured " << events.size() << " events for viewport input.";
+		_capturedViewportEvents.insert(_capturedViewportEvents.end(),
+									   events.begin(), events.end());
+
+	} else {
+		this->getLogger().info()
+			<< "Captured " << events.size()
+			<< " events, but viewport input capture is disabled.";
+	}
+
 	return events;
 }
 
@@ -252,4 +286,352 @@ void evan::Engine::switchScene(size_t sceneIndex)
 		this->getLogger().warning()
 			<< "Scene index " << sceneIndex << " does not exist.";
 	}
+}
+
+void evan::Engine::handleViewportInput(
+	const std::vector<std::shared_ptr<utility::event::Event>> &events)
+{
+	this->getLogger().warning() << "[DEBUG] handleViewportInput: Processing "
+								<< events.size() << " events";
+
+	utility::graphic::PositionF position =
+		extractPositionFromViewMatrix(_viewMatrix);
+	utility::graphic::OrientationF orientation =
+		extractOrientationFromViewMatrix(_viewMatrix);
+
+	this->getLogger().warning()
+		<< "[DEBUG] handleViewportInput: Starting position ("
+		<< position.getX() << ", " << position.getY() << ", " << position.getZ()
+		<< ")";
+	this->getLogger().warning()
+		<< "[DEBUG] handleViewportInput: Starting orientation ("
+		<< orientation.x << ", " << orientation.y << ", " << orientation.z
+		<< ", " << orientation.w << ")";
+
+	const float movementSpeed = 1.0f;
+	const float rotationSpeed = 0.1f;
+
+	// Use persistent state (not reset every frame)
+	bool isRightMouseButtonPressed = _isRightMouseButtonPressed;
+	utility::math::Vector2UI lastMousePosition = _lastMousePosition;
+
+	for (const auto &event: events) {
+		// Handle keyboard events for movement
+		getLogger().warning()
+			<< "[DEBUG] handleViewportInput: Processing event of type "
+			<< utility::demangle(typeid(*event).name())
+			<< " (eventTypeId=" << static_cast<int>(event->getEventType()) << ")";
+		if (event->getEventType() == utility::event::Event::Type::Keyboard) {
+			getLogger().warning()
+				<< "[DEBUG] handleViewportInput: KeyboardEvent type matched, "
+				   "calling handler";
+			std::shared_ptr<utility::event::KeyboardEvent> keyboardEvent =
+				std::dynamic_pointer_cast<utility::event::KeyboardEvent>(event);
+			if (keyboardEvent) {
+				getLogger().warning()
+					<< "[DEBUG] handleViewportInput: dynamic_cast succeeded, "
+					   "calling handleKeyboardMovement";
+				handleKeyboardMovement(keyboardEvent, _viewMatrix, position,
+									   movementSpeed);
+			} else {
+				getLogger().warning()
+					<< "[DEBUG] handleViewportInput: dynamic_cast FAILED for "
+					   "KeyboardEvent";
+			}
+		}
+
+		// Handle mouse button events for rotation
+		else if (event->getEventType()
+				 == utility::event::Event::Type::MouseButton) {
+			getLogger().warning()
+				<< "[DEBUG] handleViewportInput: MouseButtonEvent type matched, "
+				   "calling handler. Current isRightMouseButtonPressed="
+				<< (isRightMouseButtonPressed ? "true" : "false");
+			std::shared_ptr<utility::event::MouseButtonEvent> mouseButtonEvent =
+				std::dynamic_pointer_cast<utility::event::MouseButtonEvent>(
+					event);
+			if (mouseButtonEvent) {
+				getLogger().warning()
+					<< "[DEBUG] handleViewportInput: dynamic_cast succeeded, "
+					   "calling handleMouseButtonEvent";
+				handleMouseButtonEvent(mouseButtonEvent, isRightMouseButtonPressed,
+									   lastMousePosition);
+				getLogger().warning()
+					<< "[DEBUG] handleViewportInput: After handleMouseButtonEvent, "
+					   "isRightMouseButtonPressed="
+					<< (isRightMouseButtonPressed ? "true" : "false")
+					<< ", lastMousePosition=("
+					<< lastMousePosition.x << ", " << lastMousePosition.y << ")";
+			} else {
+				getLogger().warning()
+					<< "[DEBUG] handleViewportInput: dynamic_cast FAILED for "
+					   "MouseButtonEvent";
+			}
+		}
+
+		// Handle mouse motion events for rotation
+		else if (event->getEventType()
+				 == utility::event::Event::Type::MouseMotion) {
+			getLogger().warning()
+				<< "[DEBUG] handleViewportInput: MouseMotionEvent type matched, "
+				   "calling handler. isRightMouseButtonPressed="
+				<< (isRightMouseButtonPressed ? "true" : "false")
+				<< ", lastMousePosition=("
+				<< lastMousePosition.x << ", " << lastMousePosition.y << ")";
+			std::shared_ptr<utility::event::MouseMotionEvent> mouseMotionEvent =
+				std::dynamic_pointer_cast<utility::event::MouseMotionEvent>(
+					event);
+			if (mouseMotionEvent) {
+				getLogger().warning()
+					<< "[DEBUG] handleViewportInput: dynamic_cast succeeded, "
+					   "calling handleMouseMotionEvent";
+				handleMouseMotionEvent(mouseMotionEvent, isRightMouseButtonPressed,
+									   lastMousePosition, orientation,
+									   rotationSpeed);
+				getLogger().warning()
+					<< "[DEBUG] handleViewportInput: After handleMouseMotionEvent, "
+					   "orientation=("
+					<< orientation.x << ", " << orientation.y << ", "
+					<< orientation.z << ", " << orientation.w << ")";
+			} else {
+				getLogger().warning()
+					<< "[DEBUG] handleViewportInput: dynamic_cast FAILED for "
+					   "MouseMotionEvent";
+			}
+		}
+		else {
+			getLogger().warning()
+				<< "[DEBUG] handleViewportInput: Event type NOT matched (not "
+				   "Keyboard/MouseButton/MouseMotion), got typeId="
+				<< static_cast<int>(event->getEventType());
+		}
+	}
+
+	// Update view matrix
+	_viewMatrix = buildViewMatrix(position, orientation);
+
+	this->getLogger().warning()
+		<< "[DEBUG] handleViewportInput: Updated view position to ("
+		<< position.getX() << ", " << position.getY() << ", " << position.getZ()
+		<< ")";
+
+	// Save mouse state for next frame
+	_isRightMouseButtonPressed = isRightMouseButtonPressed;
+	_lastMousePosition = lastMousePosition;
+
+	this->getLogger().warning()
+		<< "[DEBUG] handleViewportInput: Saved mouse state - isRightMouseButtonPressed="
+		<< (_isRightMouseButtonPressed ? "true" : "false")
+		<< ", lastMousePosition=("
+		<< _lastMousePosition.x << ", " << _lastMousePosition.y << ")";
+
+	_swapchainContext->setView(0, _viewMatrix);
+}
+
+void evan::Engine::handleKeyboardMovement(
+	const std::shared_ptr<utility::event::KeyboardEvent> &keyboardEvent,
+	const glm::mat4 &viewMatrix, utility::graphic::PositionF &position,
+	float movementSpeed)
+{
+	this->getLogger().warning()
+		<< "[DEBUG] handleKeyboardMovement: Called with getIsDownEvent="
+		<< (keyboardEvent->getIsDownEvent() ? "true" : "false");
+	if (!keyboardEvent->getIsDownEvent()) {
+		this->getLogger().warning()
+			<< "[DEBUG] handleKeyboardMovement: Returning early, not a key down event";
+		return;
+	}
+
+	auto scancode = keyboardEvent->getScancode();
+	this->getLogger().warning()
+		<< "[DEBUG] handleKeyboardMovement: Scancode=" << static_cast<int>(scancode);
+	utility::math::Vector3F movement { 0.0f, 0.0f, 0.0f };
+
+	// Extract forward, right, and up vectors from view matrix
+	// View matrix transforms world to view space, so we need the inverse
+	glm::mat3 viewRotation = glm::mat3(viewMatrix);
+	auto forward =
+		-utility::math::Vector3F { viewRotation[2].x, viewRotation[2].y,
+								   viewRotation[2].z };
+	;
+	auto right = utility::math::Vector3F { viewRotation[0].x, viewRotation[0].y,
+										   viewRotation[0].z };
+	;
+	auto up = utility::math::Vector3F { viewRotation[1].x, viewRotation[1].y,
+										viewRotation[1].z };
+	;
+
+	// Use keycode instead of scancode (GLFW callbacks set keycode, not scancode)
+	auto keycode = keyboardEvent->getKeycode();
+	this->getLogger().warning()
+		<< "[DEBUG] handleKeyboardMovement: Keycode=" << static_cast<int>(keycode);
+
+	switch (keycode) {
+		case utility::event::KeyboardEvent::KeyCode::W:
+		case utility::event::KeyboardEvent::KeyCode::Up:
+			movement = forward * movementSpeed;
+			this->getLogger().warning()
+				<< "[DEBUG] Keyboard movement: Moving forward";
+			break;
+		case utility::event::KeyboardEvent::KeyCode::S:
+		case utility::event::KeyboardEvent::KeyCode::Down:
+			movement = -forward * movementSpeed;
+			this->getLogger().warning()
+				<< "[DEBUG] Keyboard movement: Moving backward";
+			break;
+		case utility::event::KeyboardEvent::KeyCode::A:
+		case utility::event::KeyboardEvent::KeyCode::Left:
+			movement = -right * movementSpeed;
+			this->getLogger().warning()
+				<< "[DEBUG] Keyboard movement: Strafing left";
+			break;
+		case utility::event::KeyboardEvent::KeyCode::D:
+		case utility::event::KeyboardEvent::KeyCode::Right:
+			movement = right * movementSpeed;
+			this->getLogger().warning()
+				<< "[DEBUG] Keyboard movement: Strafing right";
+			break;
+		case utility::event::KeyboardEvent::KeyCode::Q:
+			movement = -up * movementSpeed;
+			this->getLogger().warning()
+				<< "[DEBUG] Keyboard movement: Moving down";
+			break;
+		case utility::event::KeyboardEvent::KeyCode::E:
+			movement = up * movementSpeed;
+			this->getLogger().warning()
+				<< "[DEBUG] Keyboard movement: Moving up";
+			break;
+		default:
+			this->getLogger().warning()
+				<< "[DEBUG] handleKeyboardMovement: Unknown keycode, returning";
+			return;
+	}
+
+	if (movement != utility::math::Vector3F { 0.0f, 0.0f, 0.0f }) {
+		position = utility::graphic::PositionF(position.getX() + movement.x,
+											   position.getY() + movement.y,
+											   position.getZ() + movement.z);
+		this->getLogger().warning()
+			<< "[DEBUG] Keyboard movement: New position (" << position.getX()
+			<< ", " << position.getY() << ", " << position.getZ() << ")";
+	}
+}
+
+void evan::Engine::handleMouseButtonEvent(
+	const std::shared_ptr<utility::event::MouseButtonEvent> &mouseButtonEvent,
+	bool &isRightMouseButtonPressed,
+	utility::math::Vector2UI &lastMousePosition)
+{
+	if (mouseButtonEvent->getButton()
+		== utility::event::MouseButtonEvent::Button::Right) {
+		isRightMouseButtonPressed = mouseButtonEvent->isPressed();
+		if (isRightMouseButtonPressed) {
+			lastMousePosition = mouseButtonEvent->getPosition();
+			this->getLogger().warning()
+				<< "[DEBUG] Mouse button: Right button pressed at ("
+				<< lastMousePosition.x << ", " << lastMousePosition.y << ")";
+		} else {
+			this->getLogger().warning()
+				<< "[DEBUG] Mouse button: Right button released";
+		}
+	}
+}
+
+void evan::Engine::handleMouseMotionEvent(
+	const std::shared_ptr<utility::event::MouseMotionEvent> &mouseMotionEvent,
+	bool isRightMouseButtonPressed, utility::math::Vector2UI &lastMousePosition,
+	utility::graphic::OrientationF &orientation, float rotationSpeed)
+{
+	this->getLogger().warning()
+		<< "[DEBUG] handleMouseMotionEvent: Called with isRightMouseButtonPressed="
+		<< (isRightMouseButtonPressed ? "true" : "false");
+	if (!isRightMouseButtonPressed) {
+		this->getLogger().warning()
+			<< "[DEBUG] handleMouseMotionEvent: Returning early, right mouse button not pressed";
+		return;
+	}
+
+	auto currentPosition = mouseMotionEvent->getPosition();
+	this->getLogger().warning()
+		<< "[DEBUG] handleMouseMotionEvent: currentPosition=("
+		<< currentPosition.x << ", " << currentPosition.y << ")"
+		<< ", lastMousePosition=(" << lastMousePosition.x << ", "
+		<< lastMousePosition.y << ")";
+
+	auto deltaX = static_cast<float>(static_cast<int>(currentPosition.x)
+									 - static_cast<int>(lastMousePosition.x));
+	auto deltaY = static_cast<float>(static_cast<int>(currentPosition.y)
+									 - static_cast<int>(lastMousePosition.y));
+
+	this->getLogger().warning()
+		<< "[DEBUG] Mouse motion: Delta (" << deltaX << ", " << deltaY << ")";
+
+	// Create rotation from mouse delta
+	glm::quat currentQuat(orientation.w, orientation.x, orientation.y,
+						  orientation.z);
+
+	// Rotate around Y axis (yaw) for horizontal movement
+	glm::quat yawRotation =
+		glm::angleAxis(deltaX * rotationSpeed, glm::vec3(0.0f, 1.0f, 0.0f));
+
+	// Rotate around X axis (pitch) for vertical movement
+	glm::quat pitchRotation =
+		glm::angleAxis(deltaY * rotationSpeed, glm::vec3(1.0f, 0.0f, 0.0f));
+
+	glm::quat newOrientation = yawRotation * pitchRotation * currentQuat;
+	newOrientation			 = glm::normalize(newOrientation);
+
+	orientation = utility::graphic::OrientationF(
+		newOrientation.x, newOrientation.y, newOrientation.z, newOrientation.w);
+
+	this->getLogger().warning()
+		<< "[DEBUG] Mouse motion: Updated orientation (" << orientation.x
+		<< ", " << orientation.y << ", " << orientation.z << ", "
+		<< orientation.w << ")";
+
+	lastMousePosition = currentPosition;
+}
+
+utility::graphic::PositionF evan::Engine::extractPositionFromViewMatrix(
+	const glm::mat4 &viewMatrix) const
+{
+	// Position is in the 4th column of the inverse view matrix
+	// For a view matrix V = [R | -R*P], where R is rotation and P is position
+	// The inverse is V^-1 = [R^T | P], so position is in the translation part
+	glm::mat3 rotation	  = glm::mat3(viewMatrix);
+	glm::vec3 translation = glm::vec3(viewMatrix[3]);
+
+	// Extract position by applying inverse rotation to negative translation
+	glm::vec3 position = -glm::transpose(rotation) * translation;
+	return utility::graphic::PositionF(position.x, position.y, position.z);
+}
+
+utility::graphic::OrientationF evan::Engine::extractOrientationFromViewMatrix(
+	const glm::mat4 &viewMatrix) const
+{
+	// Extract rotation matrix from view matrix
+	glm::mat3 rotation = glm::mat3(viewMatrix);
+
+	// View matrix rotation is the inverse of camera orientation
+	// So we need to transpose it to get the camera orientation
+	glm::mat3 cameraRotation = glm::transpose(rotation);
+
+	// Convert to quaternion
+	glm::quat quat = glm::quat(cameraRotation);
+	return utility::graphic::OrientationF(quat.x, quat.y, quat.z, quat.w);
+}
+
+glm::mat4 evan::Engine::buildViewMatrix(
+	const utility::graphic::PositionF &position,
+	const utility::graphic::OrientationF &orientation) const
+{
+	// Build view matrix from position and orientation
+	// View matrix = inverse of camera world matrix
+	glm::quat quat(orientation.w, orientation.x, orientation.y, orientation.z);
+	glm::mat4 cameraWorld = glm::mat4_cast(quat);
+	cameraWorld[3] =
+		glm::vec4(position.getX(), position.getY(), position.getZ(), 1.0f);
+
+	// Return inverse (view matrix)
+	return glm::inverse(cameraWorld);
 }

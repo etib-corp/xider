@@ -651,7 +651,7 @@ void evan::DesktopBackend::setupCallbackEvent(const IPlatform &platform)
 
 			(void)window;
 			(void)scancode;
-			auto event = std::make_unique<utility::event::KeyboardEvent>();
+			auto event = std::make_shared<utility::event::KeyboardEvent>();
 			event->setKeycode(self->convertGlfwKeyToKeyCode(key));
 			event->setIsDownEvent(action == GLFW_PRESS);
 			event->setModifiers(self->convertGlfwModsToKeyModifiers(mods));
@@ -673,7 +673,7 @@ void evan::DesktopBackend::setupCallbackEvent(const IPlatform &platform)
 
 			(void)window;
 			(void)mods;
-			auto event = std::make_unique<utility::event::MouseButtonEvent>();
+			auto event = std::make_shared<utility::event::MouseButtonEvent>();
 			event->setButton(self->convertGlfwMouseButtonToButton(button));
 			event->setPressed(action == GLFW_PRESS);
 			event->setPosition(self->getMousePosition());
@@ -692,7 +692,7 @@ void evan::DesktopBackend::setupCallbackEvent(const IPlatform &platform)
 			auto *self = static_cast<evan::IDesktopPlatform *>(
 				glfwGetWindowUserPointer(window));
 
-			auto event = std::make_unique<utility::event::MouseMotionEvent>();
+			auto event = std::make_shared<utility::event::MouseMotionEvent>();
 			event->setPosition(utility::event::MouseMotionEvent::MousePosition {
 				static_cast<unsigned int>(xpos),
 				static_cast<unsigned int>(ypos) });
@@ -707,7 +707,7 @@ void evan::DesktopBackend::setupCallbackEvent(const IPlatform &platform)
 			auto *self = static_cast<evan::IDesktopPlatform *>(
 				glfwGetWindowUserPointer(window));
 
-			auto event = std::make_unique<utility::event::MouseWheelEvent>();
+			auto event = std::make_shared<utility::event::MouseWheelEvent>();
 			event->setOffset(utility::math::Vector2F {
 				static_cast<float>(xoffset), static_cast<float>(yoffset) });
 			self->_mouseWheelEvents.push_back(std::move(event));
@@ -722,7 +722,7 @@ void evan::DesktopBackend::setupCallbackEvent(const IPlatform &platform)
 			auto *self = static_cast<evan::IDesktopPlatform *>(
 				glfwGetWindowUserPointer(window));
 
-			auto event = std::make_unique<utility::event::CursorEnterEvent>();
+			auto event = std::make_shared<utility::event::CursorEnterEvent>();
 			event->setEntered(entered == GLFW_TRUE);
 			self->_cursorEnterEvents.push_back(std::move(event));
 			std::cout << "Cursor " << (entered ? "entered" : "left")
@@ -737,7 +737,7 @@ void evan::DesktopBackend::setupCallbackEvent(const IPlatform &platform)
 			auto *self = static_cast<evan::IDesktopPlatform *>(
 				glfwGetWindowUserPointer(window));
 
-			auto event = std::make_unique<utility::event::FileDropEvent>();
+			auto event = std::make_shared<utility::event::FileDropEvent>();
 			std::vector<std::string> pathVector;
 			pathVector.reserve(count);
 			for (int i = 0; i < count; i++) {
@@ -756,7 +756,7 @@ void evan::DesktopBackend::setupCallbackEvent(const IPlatform &platform)
 			auto *self = static_cast<evan::IDesktopPlatform *>(
 				glfwGetWindowUserPointer(window));
 
-			auto event = std::make_unique<utility::event::TextInputEvent>();
+			auto event = std::make_shared<utility::event::TextInputEvent>();
 			// Convert UTF-32 code point to UTF-8 string
 			std::string utf8Text;
 			if (codepoint <= 0x7F) {

@@ -556,6 +556,12 @@ namespace utility::event
 		~KeyboardEvent(void) override;
 
 		/**
+		 * @brief Get the event type.
+		 * @return The type of this event (Keyboard).
+		 */
+		Type getEventType(void) const noexcept override { return Type::Keyboard; }
+
+		/**
 		 * @brief Get the keyboard scancode.
 		 *
 		 * @return The keyboard scancode.
