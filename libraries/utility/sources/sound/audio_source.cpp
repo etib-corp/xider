@@ -25,12 +25,10 @@
 utility::sound::AudioSource::AudioSource(uint32_t sourceID, AudioManager &manager)
     : _sourceID(sourceID), _manager(manager)
 {
-    alGenSources(1, &_alId);
 }
 
 utility::sound::AudioSource::~AudioSource()
 {
-    // Cleanup OpenAL source if necessary
 }
 
 void utility::sound::AudioSource::play()
@@ -55,16 +53,15 @@ void utility::sound::AudioSource::setBuffer(std::shared_ptr<AudioBuffer> buffer)
 {
     _buffer = std::move(buffer);
 
-    alSourcei(
-        _alId,
-        AL_BUFFER,
-        static_cast<ALint>(_buffer->bufferID()));
+    AudioCommand command{ AudioCommandType::SetBuffer, _sourceID, {} };
+    command.data.bufferID = _buffer->bufferID();
+    _manager.submitCommand(command);
 }
 
 void utility::sound::AudioSource::setLooping(bool loop)
 {
     _looping = loop;
-    AudioCommand command{ AudioCommandType::SetLooping, _sourceID, {} };
+    AudioCommand command{ AudioCommandType::SetLooping, _sourceID,  {} };
     command.data.looping = loop;
     _manager.submitCommand(command);
 }
@@ -72,7 +69,7 @@ void utility::sound::AudioSource::setLooping(bool loop)
 void utility::sound::AudioSource::setPitch(float pitch)
 {
     _pitch = pitch;
-    AudioCommand command{ AudioCommandType::SetPitch, _sourceID, {} };
+    AudioCommand command{ AudioCommandType::SetPitch, _sourceID,  {} };
     command.data.pitch = pitch;
     _manager.submitCommand(command);
 }
@@ -80,7 +77,7 @@ void utility::sound::AudioSource::setPitch(float pitch)
 void utility::sound::AudioSource::setGain(float gain)
 {
     _gain = gain;
-    AudioCommand command{ AudioCommandType::SetGain, _sourceID, {} };
+    AudioCommand command{ AudioCommandType::SetGain, _sourceID,  {} };
     command.data.gain = gain;
     _manager.submitCommand(command);
 }
@@ -88,9 +85,4 @@ void utility::sound::AudioSource::setGain(float gain)
 uint32_t utility::sound::AudioSource::sourceID() const
 {
     return _sourceID;
-}
-
-ALuint utility::sound::AudioSource::alId() const
-{
-    return _alId;
 }

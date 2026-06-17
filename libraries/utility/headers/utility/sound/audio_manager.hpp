@@ -43,7 +43,10 @@ namespace utility::sound
 		SetPosition,
 		SetGain,
 		SetPitch,
-        SetLooping
+        SetLooping,
+		CreateSource,
+		SetBuffer,
+		DestroySource
 	};
 
     struct AudioCommand {
@@ -54,6 +57,7 @@ namespace utility::sound
             float gain;
             float pitch;
             bool looping;
+			ALuint bufferID;
         } data;
     };
 
@@ -64,10 +68,11 @@ namespace utility::sound
 
         void submitCommand(const AudioCommand &command);
 
-		std::shared_ptr<AudioSource>
+		std::unique_ptr<AudioSource>
         createAudioSource(std::shared_ptr<AudioBuffer> buffer);
 
 		void stop();
+
 		private:
 		void threadLoop();
         void processCommands();
@@ -76,7 +81,7 @@ namespace utility::sound
 		ALCdevice *_device;
 		ALCcontext *_context;
 
-		std::unordered_map<uint32_t, std::shared_ptr<AudioSource>> _sources;
+		std::unordered_map<uint32_t, ALuint> _sources;
 
         std::deque<AudioCommand> _commandQueue;
         std::mutex _commandQueueMutex;

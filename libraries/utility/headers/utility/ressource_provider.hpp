@@ -348,9 +348,9 @@ namespace utility
 		std::shared_ptr<graphic::CodePoints> loadCodePointsFromAsset(
 			std::shared_ptr<utility::File> codePointsAsset);
 
-		std::shared_ptr<sound::AudioSource> loadAudioSource(const std::string &path);
+		std::unique_ptr<sound::AudioSource> loadAudioSource(const std::string &path);
 
-		std::shared_ptr<sound::AudioSource> loadAudioSourceFromAsset(
+		std::unique_ptr<sound::AudioSource> loadAudioSourceFromAsset(
 			std::shared_ptr<utility::File> audioAsset);
 
 		protected:

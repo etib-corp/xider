@@ -39,91 +39,133 @@ utility::sound::AudioManager::AudioManager()
 
 utility::sound::AudioManager::~AudioManager()
 {
-    stop();
+	stop();
 
-    if (_audioThread.joinable())
-        _audioThread.join();
+	if (_audioThread.joinable())
+		_audioThread.join();
 
-    alcDestroyContext(_context);
-    alcCloseDevice(_device);
+	{
+		std::lock_guard lock(_sourcesMutex);
+
+		for (auto &[id, alId]: _sources)
+			alDeleteSources(1, &alId);
+
+		_sources.clear();
+	}
+
+	alcDestroyContext(_context);
+	alcCloseDevice(_device);
 }
 
 void utility::sound::AudioManager::submitCommand(const AudioCommand &command)
 {
-    std::lock_guard<std::mutex> lock(_commandQueueMutex);
-    _commandQueue.push_back(command);
+	std::lock_guard<std::mutex> lock(_commandQueueMutex);
+	_commandQueue.push_back(command);
 }
 
-std::shared_ptr<utility::sound::AudioSource>
+std::unique_ptr<utility::sound::AudioSource>
 	utility::sound::AudioManager::createAudioSource(
 		std::shared_ptr<AudioBuffer> buffer)
 {
-	auto audioSource = std::make_shared<AudioSource>(_nextSourceID++, *this);
-	audioSource->setBuffer(buffer);
+	auto id = _nextSourceID++;
 
-    std::lock_guard<std::mutex> lock(_sourcesMutex);
-    _sources[audioSource->sourceID()] = audioSource;
+	auto audioSource = std::make_unique<AudioSource>(id, *this);
+
+	submitCommand({ AudioCommandType::CreateSource, id, {} });
+
+	{
+		std::lock_guard<std::mutex> lock(_sourcesMutex);
+		_sources[id] = 0; // Placeholder for ALuint source ID
+	}
+
+	audioSource->setBuffer(buffer);
 
 	return audioSource;
 }
 
 void utility::sound::AudioManager::stop()
 {
-    _running = false;
+	_running = false;
 }
 
 void utility::sound::AudioManager::threadLoop()
 {
-    alcMakeContextCurrent(_context);
+	alcMakeContextCurrent(_context);
 
 	while (_running) {
-        processCommands();
+		processCommands();
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
-    alcMakeContextCurrent(nullptr);
+	alcMakeContextCurrent(nullptr);
 }
 
 void utility::sound::AudioManager::processCommands()
 {
-    std::lock_guard<std::mutex> lock(_commandQueueMutex);
-    while (!_commandQueue.empty()) {
-        executeCommand(_commandQueue.front());
-        _commandQueue.pop_front();
-    }
+	std::deque<AudioCommand> commandsToProcess;
+
+	{
+		std::lock_guard<std::mutex> lock(_commandQueueMutex);
+		commandsToProcess.swap(_commandQueue);
+	}
+
+	while (!commandsToProcess.empty()) {
+		executeCommand(commandsToProcess.front());
+		commandsToProcess.pop_front();
+	}
 }
 
 void utility::sound::AudioManager::executeCommand(const AudioCommand &command)
 {
-    std::lock_guard<std::mutex> lock(_sourcesMutex);
-    auto it = _sources.find(command.sourceID);
-    if (it == _sources.end()) {
-        std::cerr << "Audio source with ID " << command.sourceID << " not found" << std::endl;
-        return;
-    }
+	ALuint alId;
+	{
+		std::lock_guard<std::mutex> lock(_sourcesMutex);
+		auto it = _sources.find(command.sourceID);
+		if (it == _sources.end()) {
+			// Handle error: source not found
+			return;
+		}
+		alId = it->second;
+	}
 
-    auto &source = it->second;
-
-    switch (command.type) {
-        case AudioCommandType::Play:
-            alSourcePlay(source->alId());
-            break;
-        case AudioCommandType::Stop:
-            alSourceStop(source->alId());
-            break;
-        case AudioCommandType::Pause:
-            alSourcePause(source->alId());
-            break;
-        case AudioCommandType::SetPosition:
-            // source->setPosition(command.data.position);
-            break;
-        case AudioCommandType::SetGain:
-            alSourcef(source->alId(), AL_GAIN, command.data.gain);
-            break;
-        case AudioCommandType::SetPitch:
-            alSourcef(source->alId(), AL_PITCH, command.data.pitch);
-            break;
-        case AudioCommandType::SetLooping:
-            alSourcei(source->alId(), AL_LOOPING, command.data.looping ? AL_TRUE : AL_FALSE);
-            break;
-    }
+	switch (command.type) {
+		case AudioCommandType::Play:
+			alSourcePlay(alId);
+			break;
+		case AudioCommandType::Stop:
+			alSourceStop(alId);
+			break;
+		case AudioCommandType::Pause:
+			alSourcePause(alId);
+			break;
+		case AudioCommandType::SetPosition:
+			// source->setPosition(command.data.position);
+			break;
+		case AudioCommandType::SetGain:
+			alSourcef(alId, AL_GAIN, command.data.gain);
+			break;
+		case AudioCommandType::SetPitch:
+			alSourcef(alId, AL_PITCH, command.data.pitch);
+			break;
+		case AudioCommandType::SetLooping:
+			alSourcei(alId, AL_LOOPING,
+					  command.data.looping ? AL_TRUE : AL_FALSE);
+			break;
+		case AudioCommandType::CreateSource:
+			{
+				ALuint newSource;
+				alGenSources(1, &newSource);
+				{
+					std::lock_guard<std::mutex> lock(_sourcesMutex);
+					_sources[command.sourceID] = newSource;
+				}
+			}
+			break;
+		case AudioCommandType::SetBuffer:
+			alSourcei(alId, AL_BUFFER, command.data.bufferID);
+			break;
+		case AudioCommandType::DestroySource:
+			alDeleteSources(1, &_sources[command.sourceID]);
+			_sources.erase(command.sourceID);
+			break;
+	}
 }
