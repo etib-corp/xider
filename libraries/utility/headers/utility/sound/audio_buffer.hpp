@@ -34,11 +34,11 @@ namespace utility::sound
             AudioBuffer();
             ~AudioBuffer();
 
-            ALuint alId() const;
+            ALuint bufferID() const;
 
             void upload(const DecodedAudio &decodedAudio);
 
         private:
-            ALuint _id = 0;
+            ALuint _bufferID = 0;
     };
 }
