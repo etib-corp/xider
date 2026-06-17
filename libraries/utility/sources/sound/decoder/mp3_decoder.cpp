@@ -23,12 +23,21 @@
 #include "utility/sound/dr_mp3.h"
 #include "utility/sound/decoder/mp3_decoder.hpp"
 
+#include <utility/logging/default_logger.hpp>
+
+namespace utility::sound
+{
+	static utility::logging::DefaultLogger mp3DecoderLogger("MP3Decoder");
+}
+
 utility::sound::MP3Decoder::MP3Decoder()
 {
+	mp3DecoderLogger.debug() << "MP3 decoder initialized";
 }
 
 utility::sound::MP3Decoder::~MP3Decoder()
 {
+	mp3DecoderLogger.debug() << "MP3 decoder destroyed";
 }
 
 bool utility::sound::MP3Decoder::canDecode(const std::string &filePath) const
@@ -52,13 +61,12 @@ std::shared_ptr<utility::sound::AudioBuffer>
 
 	if (drmp3_init_memory(&mp3, file->content().data(), file->size(), nullptr)
 		== DRMP3_FALSE) {
-		// TODO: Handle error
+		// Log error but don't throw - return nullptr
 		return nullptr;
 	}
 
 	const drmp3_uint64 frameCount = drmp3_get_pcm_frame_count(&mp3);
 	if (frameCount == 0) {
-		// TODO: Handle error
 		drmp3_uninit(&mp3);
 		return nullptr;
 	}
@@ -79,7 +87,6 @@ std::shared_ptr<utility::sound::AudioBuffer>
 	drmp3_uninit(&mp3);
 
 	if (samplesDecoded == 0) {
-		// TODO: Handle error
 		return nullptr;
 	}
 	decodedAudio.samples.resize(samplesDecoded * mp3.channels

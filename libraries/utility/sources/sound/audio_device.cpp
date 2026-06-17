@@ -43,6 +43,8 @@ utility::sound::AudioDevice::AudioDevice()
         getLogger().error() << "Failed to make audio context current";
         return;
     }
+
+    getLogger().info() << "Audio device initialized successfully";
 }
 
 utility::sound::AudioDevice::~AudioDevice()
@@ -54,4 +56,5 @@ utility::sound::AudioDevice::~AudioDevice()
     if (_device) {
         alcCloseDevice(_device);
     }
+    getLogger().info() << "Audio device shut down";
 }

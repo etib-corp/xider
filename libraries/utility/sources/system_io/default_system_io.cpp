@@ -38,8 +38,8 @@ bool utility::DefaultSystemIO::loadDirectory(const std::string &directory)
 	const std::filesystem::path directoryPath(directory);
 	if (!std::filesystem::exists(directoryPath, error)
 		|| !std::filesystem::is_directory(directoryPath, error)) {
-		std::cerr << "Asset directory does not exist or is invalid: "
-				  << directory << std::endl;
+		getLogger().warning() << "Asset directory does not exist or is invalid: "
+							  << directory;
 		return false;
 	}
 
@@ -47,15 +47,15 @@ bool utility::DefaultSystemIO::loadDirectory(const std::string &directory)
 	for (const auto &entry:
 		 std::filesystem::directory_iterator(directoryPath, error)) {
 		if (error) {
-			std::cerr << "Failed to iterate asset directory: " << directory
-					  << std::endl;
+			getLogger().warning() << "Failed to iterate asset directory: "
+								  << directory;
 			return false;
 		}
 
 		if (entry.is_regular_file(error) && !error) {
 			const std::string path = entry.path().string();
 			if (this->add(path) == nullptr) {
-				std::cerr << "Failed to load asset: " << path << std::endl;
+				getLogger().warning() << "Failed to load asset: " << path;
 				success = false;
 			}
 		}
@@ -75,13 +75,13 @@ std::shared_ptr<utility::File>
 	std::ifstream file(key, std::ios::binary | std::ios::ate);
 
 	if (!file.is_open()) {
-		std::cerr << "Failed to open file: " << key << std::endl;
+		getLogger().warning() << "Failed to open file: " << key;
 		return nullptr;
 	}
 
 	const std::streamsize fileSize = file.tellg();
 	if (fileSize < 0) {
-		std::cerr << "Failed to read file size: " << key << std::endl;
+		getLogger().warning() << "Failed to read file size: " << key;
 		return nullptr;
 	}
 
@@ -91,7 +91,7 @@ std::shared_ptr<utility::File>
 	if (!content.empty()) {
 		file.read(content.data(), static_cast<std::streamsize>(content.size()));
 		if (!file) {
-			std::cerr << "Failed to read file content: " << key << std::endl;
+			getLogger().warning() << "Failed to read file content: " << key;
 			return nullptr;
 		}
 	}
@@ -99,7 +99,7 @@ std::shared_ptr<utility::File>
 
 	auto asset = std::make_shared<utility::File>(path, content);
 	if (!asset) {
-		std::cerr << "Failed to create File for: " << key << std::endl;
+		getLogger().warning() << "Failed to create File for: " << key;
 		return nullptr;
 	}
 
@@ -117,7 +117,7 @@ void utility::DefaultSystemIO::remove(const std::string &path, bool save)
 		}
 		_assets.erase(it);
 	} else {
-		std::cerr << "Asset not found: " << key << std::endl;
+		getLogger().warning() << "Asset not found: " << key;
 	}
 }
 
@@ -127,7 +127,7 @@ bool utility::DefaultSystemIO::save(const std::string &path,
 	const std::string key = NormalizePath(path);
 	auto it				  = _assets.find(key);
 	if (it == _assets.end()) {
-		std::cerr << "Asset not found: " << key << std::endl;
+		getLogger().warning() << "Asset not found: " << key;
 		return false;
 	}
 
@@ -139,22 +139,21 @@ bool utility::DefaultSystemIO::save(const std::string &path,
 	if (!parentPath.empty()) {
 		std::filesystem::create_directories(parentPath, error);
 		if (error) {
-			std::cerr << "Failed to create parent directories for: " << savePath
-					  << std::endl;
+			getLogger().warning() << "Failed to create parent directories for: "
+								  << savePath;
 			return false;
 		}
 	}
 
 	std::ofstream file(savePath, std::ios::binary);
 	if (!file.is_open()) {
-		std::cerr << "Failed to open file for writing: " << savePath
-				  << std::endl;
+		getLogger().warning() << "Failed to open file for writing: " << savePath;
 		return false;
 	}
 
 	file.write(content.data(), content.size());
 	if (!file) {
-		std::cerr << "Failed to write file content: " << savePath << std::endl;
+		getLogger().warning() << "Failed to write file content: " << savePath;
 		return false;
 	}
 	file.close();

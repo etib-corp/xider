@@ -15,6 +15,9 @@
 #include <utility/sound/decoder/decoder_registry.hpp>
 #include <utility/sound/audio_manager.hpp>
 
+#include <utility/logging/loggable.hpp>
+#include <utility/logging/default_logger.hpp>
+
 namespace utility
 {
 	/**
@@ -27,7 +30,9 @@ namespace utility
 	 * resources for efficient retrieval. It supports loading fonts, materials,
 	 * and textures, and it can handle different shader types for materials.
 	 */
-	class RessourceProvider
+	class RessourceProvider:
+		protected utility::logging::Loggable<RessourceProvider,
+											 utility::logging::DefaultLogger>
 	{
 		public:
 		/**
@@ -478,5 +483,7 @@ namespace utility
 		 * @return The resolved resource path with the base path prepended if it is set, or the original path if no base path is set.
 		 */
 		std::string resolvePath(const std::string &path) const;
+
+		using Loggable::getLogger;
 	};
 }	 // namespace utility

@@ -25,14 +25,18 @@ utility::sound::AudioManager::AudioManager()
 {
 	_device = alcOpenDevice(nullptr);
 	if (!_device) {
+		getLogger().error() << "Failed to open audio device";
 		throw std::runtime_error("Failed to open audio device");
 	}
 
 	_context = alcCreateContext(_device, nullptr);
 	if (!_context) {
+		getLogger().error() << "Failed to create audio context";
 		alcCloseDevice(_device);
 		throw std::runtime_error("Failed to create audio context");
 	}
+
+	getLogger().info() << "Audio manager initialized successfully";
 
 	_audioThread = std::thread(&AudioManager::threadLoop, this);
 }
@@ -55,6 +59,8 @@ utility::sound::AudioManager::~AudioManager()
 
 	alcDestroyContext(_context);
 	alcCloseDevice(_device);
+
+	getLogger().info() << "Audio manager shut down";
 }
 
 void utility::sound::AudioManager::submitCommand(const AudioCommand &command)
@@ -78,6 +84,8 @@ std::unique_ptr<utility::sound::AudioSource>
 		_sources[id] = 0; // Placeholder for ALuint source ID
 	}
 
+	getLogger().debug() << "Created audio source with ID: " << id;
+
 	audioSource->setBuffer(buffer);
 
 	return audioSource;
@@ -85,6 +93,7 @@ std::unique_ptr<utility::sound::AudioSource>
 
 void utility::sound::AudioManager::stop()
 {
+	getLogger().info() << "Stopping audio manager";
 	_running = false;
 }
 
@@ -121,7 +130,8 @@ void utility::sound::AudioManager::executeCommand(const AudioCommand &command)
 		std::lock_guard<std::mutex> lock(_sourcesMutex);
 		auto it = _sources.find(command.sourceID);
 		if (it == _sources.end()) {
-			// Handle error: source not found
+			getLogger().warning() << "Audio command failed: source not found (ID: "
+								  << command.sourceID << ")";
 			return;
 		}
 		alId = it->second;

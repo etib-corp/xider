@@ -21,6 +21,13 @@
  */
 #include "utility/sound/decoder/decoder_registry.hpp"
 
+#include <utility/logging/default_logger.hpp>
+
+namespace utility::sound
+{
+	static utility::logging::DefaultLogger decoderRegistryLogger("DecoderRegistry");
+}
+
 std::shared_ptr<utility::sound::AAudioDecoder>
 	utility::sound::DecoderRegistry::getDecoderForFile(
 		const std::string &filePath, AudioDecoderType type)
@@ -38,8 +45,10 @@ std::shared_ptr<utility::sound::AAudioDecoder>
 	};
 	for (const auto &decoder: decoders) {
 		if (decoder->canDecode(filePath) || decoder->canDecode(type)) {
+			decoderRegistryLogger.debug() << "Found decoder for file: " << filePath;
 			return decoder;
 		}
 	}
+	decoderRegistryLogger.warning() << "No decoder found for file: " << filePath;
 	return nullptr;
 }

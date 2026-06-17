@@ -34,6 +34,9 @@
 
 #include "utility/math/vector.hpp"
 
+#include <utility/logging/loggable.hpp>
+#include <utility/logging/default_logger.hpp>
+
 namespace utility::sound
 {
 	enum class AudioCommandType {
@@ -61,7 +64,9 @@ namespace utility::sound
         } data;
     };
 
-	class AudioManager {
+	class AudioManager: protected utility::logging::Loggable<AudioManager,
+															 utility::logging::DefaultLogger>
+	{
 		public:
 		AudioManager();
 		~AudioManager();
@@ -86,9 +91,11 @@ namespace utility::sound
         std::deque<AudioCommand> _commandQueue;
         std::mutex _commandQueueMutex;
 
-		std::thread _audioThread;
-		std::mutex _sourcesMutex;
-		uint32_t _nextSourceID = 1;
-		bool _running = true;
+        std::thread _audioThread;
+        std::mutex _sourcesMutex;
+        uint32_t _nextSourceID = 1;
+        bool _running = true;
+
+		using Loggable::getLogger;
 	};
 }	 // namespace utility::sound
