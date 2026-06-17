@@ -25,12 +25,21 @@
 #define DR_WAV_IMPLEMENTATION
 #include "utility/sound/dr_wav.h"
 
+#include <utility/logging/default_logger.hpp>
+
+namespace utility::sound
+{
+	static utility::logging::DefaultLogger wavDecoderLogger("WAVDecoder");
+}
+
 utility::sound::WAVDecoder::WAVDecoder()
 {
+	wavDecoderLogger.debug() << "WAV decoder initialized";
 }
 
 utility::sound::WAVDecoder::~WAVDecoder()
 {
+	wavDecoderLogger.debug() << "WAV decoder destroyed";
 }
 
 bool utility::sound::WAVDecoder::canDecode(const std::string &filePath) const
@@ -54,10 +63,7 @@ std::shared_ptr<utility::sound::AudioBuffer>
 	drwav wav;
 	if (!drwav_init_memory(&wav, file->content().data(), file->size(),
 						   nullptr)) {
-		// Failed to initialize the WAV decoder. Return an empty DecodedAudio
-		// object.
-		// TODO: We should probably have some error handling here instead of
-		// just returning an empty DecodedAudio object.
+		// Failed to initialize the WAV decoder. Return nullptr.
 		return nullptr;
 	}
 
@@ -70,7 +76,7 @@ std::shared_ptr<utility::sound::AudioBuffer>
 	size_t framesRead = drwav_read_pcm_frames(&wav, wav.totalPCMFrameCount,
 											  decodedAudio.samples.data());
 	if (framesRead != wav.totalPCMFrameCount) {
-		// TODO: Handle error
+		drwav_uninit(&wav);
 		return nullptr;
 	}
 

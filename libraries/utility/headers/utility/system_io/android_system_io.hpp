@@ -29,6 +29,9 @@
 
 	#include "utility/system_io/system_io.hpp"
 
+	#include <utility/logging/loggable.hpp>
+	#include <utility/logging/default_logger.hpp>
+
 namespace utility
 {
 
@@ -37,7 +40,9 @@ namespace utility
 	 * @brief The AndroidSystemIO class is an implementation of SystemIO
 	 * that uses the Android NDK's AAssetManager to load assets from the APK.
 	 */
-	class AndroidSystemIO: public SystemIO
+	class AndroidSystemIO: public SystemIO,
+						   protected utility::logging::Loggable<AndroidSystemIO,
+																utility::logging::DefaultLogger>
 	{
 		private:
 		AAssetManager
@@ -90,6 +95,8 @@ namespace utility
 		 */
 		bool save(const std::string &path,
 				  const std::string &newPath = "") override;
+
+		using Loggable::getLogger;
 	};
 }	 // namespace utility
 
