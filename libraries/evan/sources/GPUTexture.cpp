@@ -42,7 +42,9 @@ evan::GPUTexture::GPUTexture(const DeviceContext &deviceContext,
 			.mipmapMode			 = VK_SAMPLER_MIPMAP_MODE_LINEAR,
 			.mipLodBias			 = 0.0f,
 			.minLod				 = 0.0f,
-			.maxLod				 = static_cast<float>(_mipLevel)
+			.maxLod				 = static_cast<float>(_mipLevel),
+			.pNext = nullptr,
+    		.flags = 0
 		});
 	} else {
 		this->createSampler(*deviceBackend, VkSamplerCreateInfo {});
