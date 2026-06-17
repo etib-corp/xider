@@ -76,9 +76,10 @@ void android_main(struct android_app *android_app)
 	std::cout << "XIDER Application initialized successfully" << std::endl;
 	std::cout << "Entering main application loop..." << std::endl;
 
-	std::vector<std::string> texturePaths = {
-		"./texture1.png",
-	};
+	static auto source = ressourceProvider->loadAudioSource("sound/nastelbom-background-music-486996.mp3");
+
+	source->setGain(0.5f);
+	source->play();
 
 	while (!android_app->destroyRequested) {
 		// Process Android events

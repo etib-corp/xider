@@ -610,7 +610,7 @@ namespace utility
 		return _codePoints[id];
 	}
 
-	std::shared_ptr<sound::AudioSource> RessourceProvider::loadAudioSource(
+	std::unique_ptr<sound::AudioSource> RessourceProvider::loadAudioSource(
 		const std::string &path)
 	{
 		std::string resolvedPath = resolvePath(path);
@@ -635,7 +635,7 @@ namespace utility
 		return audioSource;
 	}
 
-	std::shared_ptr<sound::AudioSource> RessourceProvider::loadAudioSourceFromAsset(
+	std::unique_ptr<sound::AudioSource> RessourceProvider::loadAudioSourceFromAsset(
 		std::shared_ptr<utility::File> audioAsset)
 	{
 		auto it = _elementsIDs.find(audioAsset->path());
