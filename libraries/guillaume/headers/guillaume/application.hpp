@@ -170,6 +170,11 @@ namespace guillaume
 		void pollEvents(void);
 
 		/**
+		 * @brief Update the engine state.
+		 */
+		void update(void);
+
+		/**
 		 * @brief Clear the engine rendering target.
 		 */
 		void clear(void);

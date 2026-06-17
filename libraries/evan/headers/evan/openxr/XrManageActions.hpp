@@ -79,10 +79,10 @@ namespace evan
 		 *
 		 * @param deviceBackend Reference to the XrDeviceBackend instance that
 		 * manages the OpenXR device and session.
-		 * @return A vector of unique pointers to events representing the
+		 * @return A vector of shared pointers to events representing the
 		 * current state of all managed actions.
 		 */
-		std::vector<std::unique_ptr<utility::event::Event>>
+		std::vector<std::shared_ptr<utility::event::Event>>
 			pollActions(XrDeviceBackend &deviceBackend);
 
 		/**

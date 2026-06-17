@@ -39,7 +39,7 @@ namespace guillaume::event
 	 * @code
 	 * event::EventBus bus;
 	 * bus.subscribe<utility::event::KeyboardEvent>(
-	 *     [](std::unique_ptr<utility::event::Event> event) {
+	 *     [](std::shared_ptr<utility::event::Event> event) {
 	 *         // Handle keyboard event.
 	 *     });
 	 * @endcode
@@ -51,7 +51,7 @@ namespace guillaume::event
 	{
 		public:
 		using Listener = std::function<void(
-			std::unique_ptr<utility::event::Event>)>;	 ///< Event listener
+			std::shared_ptr<utility::event::Event>)>;	 ///< Event listener
 														 ///< type
 		using ListenerList =
 			std::vector<Listener>;	  ///< List of event listeners
@@ -65,7 +65,7 @@ namespace guillaume::event
 		 * @param event Event to dispatch.
 		 * @param listeners List of listeners to notify.
 		 */
-		void dispatchToListeners(std::unique_ptr<utility::event::Event> event,
+		void dispatchToListeners(std::shared_ptr<utility::event::Event> event,
 								 ListenerList &listeners);
 
 		public:
@@ -84,7 +84,7 @@ namespace guillaume::event
 		 * @param event Event to dispatch (ownership transferred).
 		 * @note Listeners take ownership of the event instance.
 		 */
-		void publish(std::unique_ptr<utility::event::Event> event);
+		void publish(std::shared_ptr<utility::event::Event> event);
 
 		/**
 		 * @brief Subscribe a listener to a specific event type.

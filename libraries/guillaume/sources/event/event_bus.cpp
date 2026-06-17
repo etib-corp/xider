@@ -26,7 +26,7 @@ namespace guillaume::event
 {
 
 	void EventBus::dispatchToListeners(
-		std::unique_ptr<utility::event::Event> event, ListenerList &listeners)
+		std::shared_ptr<utility::event::Event> event, ListenerList &listeners)
 	{
 		for (auto &listener: listeners) {
 			if (!listener) {
@@ -36,7 +36,7 @@ namespace guillaume::event
 		}
 	}
 
-	void EventBus::publish(std::unique_ptr<utility::event::Event> event)
+	void EventBus::publish(std::shared_ptr<utility::event::Event> event)
 	{
 		auto *rawEvent = event.get();
 		if (!rawEvent) {

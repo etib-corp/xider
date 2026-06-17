@@ -83,12 +83,6 @@ namespace xider
 		size_t addMesh(const utility::graphic::Mesh &mesh, const std::string &materialName = "default_material") override;
 
 		/**
-		 * @brief Synchronizes the view across Guillaume and Evan.
-		 * @param view The view to apply.
-		 */
-		void setView(const utility::graphic::ViewF &view) override;
-
-		/**
 		 * @brief Returns the mirrored view state.
 		 * @return The current view.
 		 */
@@ -129,6 +123,14 @@ namespace xider
 		 * @brief Poll for OS/input events and dispatch them.
 		 */
 		void pollEvents(void) override;
+
+		/**
+		 * @brief Update the engine state.
+		 *
+		 * Delegates to the Evan engine's update method to handle
+		 * input processing and logic updates.
+		 */
+		void update(void) override;
 	};
 
 }	 // namespace xider

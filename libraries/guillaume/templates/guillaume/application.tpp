@@ -122,7 +122,7 @@ namespace guillaume
 	{
 		_engine = std::move(engine);
 		_engine->setEventCallback(
-			[this](std::unique_ptr<utility::event::Event> &event) {
+			[this](std::shared_ptr<utility::event::Event> &event) {
 				this->_eventBus.publish(std::move(event));
 			});
 		std::vector<std::type_index> sceneTypes =
@@ -154,6 +154,13 @@ namespace guillaume
 	void Application<DefaultSceneType, SceneTypes...>::pollEvents(void)
 	{
 		_engine->pollEvents();
+	}
+
+	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
+	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+	void Application<DefaultSceneType, SceneTypes...>::update(void)
+	{
+		_engine->update();
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
@@ -191,6 +198,7 @@ namespace guillaume
 			try {
 				_engine->pollEvents();
 				_engine->clear();
+				_engine->update();
 				routine();
 				_sceneManager->processSceneTransition();
 				_engine->present();

@@ -78,14 +78,12 @@ namespace guillaume
 		 * Takes a unique pointer to an Event and performs an action.
 		 */
 		using Handler =
-			std::function<void(std::unique_ptr<utility::event::Event> &)>;
+			std::function<void(std::shared_ptr<utility::event::Event> &)>;
 
 		private:
 		Handler _callback;	   ///< Event callback function
 
 		protected:
-		utility::graphic::ViewF _view;	  ///< View state
-
 		/**
 		 * @brief Get the current event callback function.
 		 * @return Reference to the event callback function.
@@ -159,17 +157,10 @@ namespace guillaume
 							   const utility::graphic::PoseF &pose) = 0;
 
 		/**
-		 * @brief Set the full view model.
-		 * @param view The new view instance.
-		 * @note Synchronizes cached orientation and last mouse ray.
-		 */
-		virtual void setView(const utility::graphic::ViewF &view);
-
-		/**
 		 * @brief Get the full view model.
 		 * @return The view instance.
 		 */
-		virtual utility::graphic::ViewF getView(void) const;
+		virtual utility::graphic::ViewF getView(void) const = 0;
 
 		/**
 		 * @brief Add a scene to the renderer.
@@ -195,6 +186,16 @@ namespace guillaume
 		 * callback for each event.
 		 */
 		virtual void pollEvents(void) = 0;
+
+		/**
+		 * @brief Update the engine state.
+		 *
+		 * This method should handle logic updates, input processing, and other
+		 * non-rendering related tasks. It is typically called once per frame,
+		 * allowing the engine to respond to user input and update the state of
+		 * objects in the scene.
+		 */
+		virtual void update(void) = 0;
 	};
 
 	/**

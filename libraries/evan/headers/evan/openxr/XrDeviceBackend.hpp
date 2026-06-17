@@ -225,11 +225,11 @@ namespace evan
 		 * events based on the retrieved state, which can then be processed by
 		 * the application to respond to user input in the XR environment.
 		 *
-		 * @return A vector of unique pointers to events representing the
+		 * @return A vector of shared pointers to events representing the
 		 * current state of all managed actions, which can be used by the
 		 * application to respond to user input in the XR environment.
 		 */
-		std::vector<std::unique_ptr<utility::event::Event>> pollActions();
+		std::vector<std::shared_ptr<utility::event::Event>> pollActions();
 
 		/**
 		 * The OpenXR instance, which represents the

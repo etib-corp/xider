@@ -92,20 +92,15 @@ namespace guillaume
 		_nextSceneType = typeid(void);
 	}
 
-	void Scene::setView(const utility::graphic::ViewF &view)
-	{
-		_view = view;
-	}
-
-	void Scene::placeEntitiesInFrontOfView(void)
+	void Scene::placeEntitiesInFrontOfView(const utility::graphic::ViewF &view)
 	{
 		constexpr float distance   = 300.0f;
 		constexpr float spreadStep = 150.0f;
 
-		const auto centerRay = _view.centerRay();
+		const auto centerRay = view.centerRay();
 		const auto origin	 = centerRay.origin();
 		const auto forward	 = centerRay.direction();
-		const auto right	 = _view.right();
+		const auto right	 = view.right();
 
 		const auto &directEntities = accessDirectEntities();
 		std::size_t entityCount	   = directEntities.size();
@@ -138,7 +133,7 @@ namespace guillaume
 	{
 		getLogger().info() << "Scene entered";
 
-		placeEntitiesInFrontOfView();
+		// placeEntitiesInFrontOfView is now called by SceneManager with the engine view
 
 		for (auto *entity: getEntitiesBreadthFirst()) {
 			if (_componentRegistry.hasChanged(entity->getIdentifier())) {

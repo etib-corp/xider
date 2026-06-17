@@ -102,6 +102,7 @@ void android_main(struct android_app *android_app)
 
 		// Application lifecycle
 		app.pollEvents();
+		app.update();
 		app.clear();
 		app.routine();
 		app.present();

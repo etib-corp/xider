@@ -223,6 +223,25 @@ namespace evan
 		glm::mat4 getView(int index) const override;
 
 		/**
+		 * @brief Sets the view matrix for a specific view index.
+		 *
+		 * This method sets the view matrix for a specific view index, which is
+		 * essential for rendering the scene accurately in an OpenXR
+		 * application. The view matrix is used to transform the 3D scene based
+		 * on the position and orientation of the user's head and controllers,
+		 * and it may need to be updated based on user interactions and changes
+		 * in the VR environment. Implement this method to set the appropriate
+		 * view matrix for the specified view index.
+		 *
+		 * @param index The index of the view for which to set the view matrix.
+		 * @param view The view matrix to set for the specified view index,
+		 * which should be calculated based on user interactions and any changes
+		 * in the VR environment to ensure accurate rendering of the scene in an
+		 * OpenXR application.
+		 */
+		void setView(int index, const glm::mat4 &view) override;
+
+		/**
 		 * Vector of XrView structures for each view configuration.
 		 */
 		std::vector<XrView> _views;

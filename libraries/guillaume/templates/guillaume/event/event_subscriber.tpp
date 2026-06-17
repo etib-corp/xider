@@ -30,9 +30,8 @@ namespace guillaume::event
 	EventSubscriber<EventType>::EventSubscriber(EventBus &eventBus)
 	{
 		eventBus.subscribe<EventType>(
-			[this](std::unique_ptr<utility::event::Event> event) {
-				this->_eventQueue.push(std::unique_ptr<EventType>(
-					static_cast<EventType *>(event.release())));
+			[this](std::shared_ptr<utility::event::Event> event) {
+				this->_eventQueue.push(dynamic_pointer_cast<EventType>(event));
 			});
 	}
 
@@ -43,12 +42,12 @@ namespace guillaume::event
 	}
 
 	template<utility::event::InheritFromEvent EventType>
-	std::unique_ptr<EventType> EventSubscriber<EventType>::getNextEvent(void)
+	std::shared_ptr<EventType> EventSubscriber<EventType>::getNextEvent(void)
 	{
 		if (_eventQueue.empty()) {
 			return nullptr;
 		}
-		std::unique_ptr<EventType> event = std::move(_eventQueue.front());
+		std::shared_ptr<EventType> event = std::move(_eventQueue.front());
 		_eventQueue.pop();
 		return event;
 	}

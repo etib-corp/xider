@@ -28,9 +28,6 @@ namespace xider
 		: _evanEngine(std::move(engine))
 		, guillaume::Engine()
 	{
-		if (_evanEngine) {
-			guillaume::Engine::setView(_evanEngine->getView());
-		}
 	}
 
 	Engine::~Engine(void)
@@ -59,20 +56,12 @@ namespace xider
 		return _evanEngine->removeObject(objectID);
 	}
 
-	void Engine::setView(const utility::graphic::ViewF &view)
-	{
-		guillaume::Engine::setView(view);
-		if (_evanEngine) {
-			_evanEngine->setView(view);
-		}
-	}
-
 	utility::graphic::ViewF Engine::getView(void) const
 	{
 		if (_evanEngine) {
 			return _evanEngine->getView();
 		}
-		return guillaume::Engine::getView();
+		throw std::runtime_error("Engine not initialized, cannot get view");
 	}
 
 	utility::math::Vector2D
@@ -109,6 +98,13 @@ namespace xider
 		}
 		for (auto &event: events) {
 			callback(event);
+		}
+	}
+
+	void Engine::update(void)
+	{
+		if (_evanEngine) {
+			_evanEngine->update();
 		}
 	}
 }	 // namespace xider

@@ -63,14 +63,6 @@ namespace guillaume
 			_entityDirectorManager;		   ///< Manager for entity directors
 		std::type_index _nextSceneType;	   ///< Type of the next scene to switch
 										   ///< to at end of frame
-		utility::graphic::ViewF
-			_view {};	 ///< Current camera/view for positioning
-
-		/**
-		 * @brief Place all root entities in front of the current view with
-		 * horizontal spread.
-		 */
-		void placeEntitiesInFrontOfView(void);
 
 		protected:
 		/**
@@ -87,10 +79,12 @@ namespace guillaume
 
 		public:
 		/**
-		 * @brief Set the camera/view used to place entities on enter.
+		 * @brief Place all root entities in front of the current view with
+		 * horizontal spread.
 		 * @param view The view to use for positioning.
 		 */
-		void setView(const utility::graphic::ViewF &view);
+		void placeEntitiesInFrontOfView(const utility::graphic::ViewF &view);
+
 		/**
 		 * @brief Request a switch to another scene at the end of the current
 		 * frame.

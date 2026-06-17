@@ -37,13 +37,13 @@ std::shared_ptr<evan::ASwapchainContext>
 	return std::make_shared<DesktopSwapchainContext>(deviceContext, _window);
 }
 
-std::vector<std::unique_ptr<utility::event::Event>>
+std::vector<std::shared_ptr<utility::event::Event>>
 	evan::IDesktopPlatform::pollEvents(ADeviceBackend &deviceBackend)
 {
 	this->getLogger().info() << "Polling events for Desktop platform...";
 	glfwPollEvents();
 
-	std::vector<std::unique_ptr<utility::event::Event>> events;
+	std::vector<std::shared_ptr<utility::event::Event>> events;
 
 	this->getLogger().info()
 		<< "Processing keyboard events for Desktop platform...";

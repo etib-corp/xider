@@ -211,3 +211,8 @@ glm::mat4 evan::XrSwapchainContext::getView(int index) const
 
 	return rotation * translation;
 }
+
+void evan::XrSwapchainContext::setView(int index, const glm::mat4 &view)
+{
+	_view = view;
+}

@@ -64,7 +64,7 @@ namespace guillaume
 		 * Takes a unique pointer to an Event and performs an action.
 		 */
 		using Handler =
-			std::function<void(std::unique_ptr<utility::event::Event> &)>;
+			std::function<void(std::shared_ptr<utility::event::Event> &)>;
 
 		private:
 		Handler _callback;	   ///< Event callback function

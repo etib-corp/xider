@@ -243,13 +243,3 @@ VkFormat evan::ASwapchainContext::findSupportedFormat(
 		   "and feature criteria.";
 	return VK_FORMAT_UNDEFINED;
 }
-
-void evan::ASwapchainContext::setView(const utility::graphic::ViewF &view)
-{
-	_view = view;
-}
-
-utility::graphic::ViewF evan::ASwapchainContext::getView(void) const
-{
-	return _view;
-}

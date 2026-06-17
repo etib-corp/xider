@@ -38,15 +38,5 @@ namespace guillaume
 	{
 		_callback = callback;
 	}
-	
-	void Engine::setView(const utility::graphic::ViewF &view)
-	{
-		_view = view;
-	}
-
-	utility::graphic::ViewF Engine::getView(void) const
-	{
-		return _view;
-	}
 
 }	 // namespace guillaume
