@@ -48,15 +48,6 @@ utility::sound::AudioManager::~AudioManager()
 	if (_audioThread.joinable())
 		_audioThread.join();
 
-	{
-		std::lock_guard lock(_sourcesMutex);
-
-		for (auto &[id, alId]: _sources)
-			alDeleteSources(1, &alId);
-
-		_sources.clear();
-	}
-
 	alcDestroyContext(_context);
 	alcCloseDevice(_device);
 
@@ -91,10 +82,33 @@ std::unique_ptr<utility::sound::AudioSource>
 	return audioSource;
 }
 
+void utility::sound::AudioManager::destroyAudioSource(uint32_t sourceID)
+{
+    std::lock_guard lock(_sourcesMutex);
+
+    auto it = _sources.find(sourceID);
+
+    if (it == _sources.end())
+        return;
+
+    ALuint alId = it->second;
+
+    alSourceStop(alId);
+    alSourcei(alId, AL_BUFFER, 0);
+    alDeleteSources(1, &alId);
+
+    _sources.erase(it);
+}
+
 void utility::sound::AudioManager::stop()
 {
 	getLogger().info() << "Stopping audio manager";
 	_running = false;
+}
+
+bool utility::sound::AudioManager::isRunning() const
+{
+	return _running;
 }
 
 void utility::sound::AudioManager::threadLoop()
@@ -105,6 +119,9 @@ void utility::sound::AudioManager::threadLoop()
 		processCommands();
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
+
+	processCommands(); // Process any remaining commands before shutting down
+
 	alcMakeContextCurrent(nullptr);
 }
 
@@ -174,8 +191,15 @@ void utility::sound::AudioManager::executeCommand(const AudioCommand &command)
 			alSourcei(alId, AL_BUFFER, command.data.bufferID);
 			break;
 		case AudioCommandType::DestroySource:
-			alDeleteSources(1, &_sources[command.sourceID]);
-			_sources.erase(command.sourceID);
+			alSourceStop(alId);
+			alDeleteSources(1, &alId);
+			{
+				std::lock_guard<std::mutex> lock(_sourcesMutex);
+				_sources.erase(command.sourceID);
+			}
+			break;
+		default:
+			getLogger().warning() << "Unknown audio command type";
 			break;
 	}
 }
