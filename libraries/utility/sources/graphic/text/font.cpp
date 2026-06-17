@@ -51,6 +51,33 @@ namespace utility::graphic
 	// Public Methods //
 	////////////////////
 
+	float Font::getAscender(uint32_t fontSize) const
+	{
+		auto fontSizedIt = _sizes.find(fontSize);
+		if (fontSizedIt == _sizes.end()) {
+			return 0.0f;
+		}
+		return fontSizedIt->second.second->_ascender;
+	}
+
+	float Font::getDescender(uint32_t fontSize) const
+	{
+		auto fontSizedIt = _sizes.find(fontSize);
+		if (fontSizedIt == _sizes.end()) {
+			return 0.0f;
+		}
+		return fontSizedIt->second.second->_descender;
+	}
+
+	float Font::getLineHeight(uint32_t fontSize) const
+	{
+		auto fontSizedIt = _sizes.find(fontSize);
+		if (fontSizedIt == _sizes.end()) {
+			return 0.0f;
+		}
+		return fontSizedIt->second.second->_lineHeight;
+	}
+
 	std::vector<Glyph>
 		Font::processCodePoints(uint32_t fontSize,
 								const codePointString &codePoints)

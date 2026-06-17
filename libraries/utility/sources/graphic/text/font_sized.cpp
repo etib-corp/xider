@@ -7,6 +7,8 @@
 
 #include <utility/graphic/text/font_sized.hpp>
 
+#include <iostream>
+
 namespace utility::graphic
 {
 	FontSized::FontSized(uint32_t fontSize, FT_Face face)
@@ -18,8 +20,11 @@ namespace utility::graphic
 		_penX		 = 0;
 		_penY		 = 0;
 		_rowHeight	 = 0;
+		_ascender = face->size->metrics.ascender / 64.0f;
+		_descender = std::abs(face->size->metrics.descender / 64.0f);
+		_lineHeight = face->size->metrics.height / 64.0f;
 
-		_generatedAtlas = std::make_shared<Texture>(_atlasWidth, _atlasHeight);
+		_generatedAtlas = std::make_shared<Texture>(_atlasWidth, _atlasHeight, Texture::TextureType::FontAtlas);
 		FT_Set_Pixel_Sizes(_correspondingFace, 0, _fontSize);
 	}
 
@@ -54,14 +59,10 @@ namespace utility::graphic
 		for (unsigned int y = 0; y < g->bitmap.rows; ++y) {
 			for (unsigned int x = 0; x < g->bitmap.width; ++x) {
 				int pixelIndex = (_penY + y) * _atlasWidth + (_penX + x);
-				int atlasIndex = pixelIndex * 4;
 				uint8_t value  = static_cast<uint8_t>(
 					g->bitmap.buffer[y * g->bitmap.pitch + x]);
 
-				_generatedAtlas->_pixels[atlasIndex + 0] = 255;
-				_generatedAtlas->_pixels[atlasIndex + 1] = 255;
-				_generatedAtlas->_pixels[atlasIndex + 2] = 255;
-				_generatedAtlas->_pixels[atlasIndex + 3] = value;
+				_generatedAtlas->_pixels[pixelIndex] = value;
 			}
 		}
 
