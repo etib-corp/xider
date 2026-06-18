@@ -35,6 +35,8 @@
 #include "guillaume/components/hand_pinch_interaction.hpp"
 #include "guillaume/components/hand_poke_interaction.hpp"
 
+#include "guillaume/engine.hpp"
+
 namespace guillaume::systems
 {
 
@@ -55,6 +57,7 @@ namespace guillaume::systems
 			components::HandPokeInteraction>
 	{
 		private:
+		std::unique_ptr<Engine> &_engine;	   ///< Engine instance
 		std::optional<ecs::Entity::Identifier>
 			_focusedEntity;	   ///< Currently focused entity identifier
 		std::optional<ecs::Entity::Identifier>
@@ -64,8 +67,9 @@ namespace guillaume::systems
 		/**
 		 * @brief Default constructor for the Focus system.
 		 * @param eventBus The event bus for focus events.
+		 * @param engine Pointer to the engine for viewport input control.
 		 */
-		Focus(event::EventBus &eventBus);
+		Focus(event::EventBus &eventBus, std::unique_ptr<Engine> &engine);
 
 		/**
 		 * @brief Set focus to a specific entity.

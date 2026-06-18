@@ -381,6 +381,33 @@ namespace evan
 						 std::vector<std::string> texturePaths,
 						 std::map<std::string, std::vector<GPUMesh>> meshData);
 
+		/**
+		 * @brief Checks if the engine should capture viewport input. This
+		 * method returns a boolean value indicating whether the engine is
+		 * currently set to capture input events for the viewport, such as mouse
+		 * movements or keyboard inputs.
+		 *
+		 * @return True if the engine should capture viewport input, false
+		 * otherwise.
+		 */
+		bool shouldCaptureViewportInput(void) const
+		{
+			return _shouldCaptureViewportInput;
+		}
+
+		/**
+		 * @brief Sets whether the engine should capture viewport input. This
+		 * method allows users to enable or disable the capturing of input
+		 * events for the viewport, such as mouse movements or keyboard inputs.
+		 *
+		 * @param shouldCapture A boolean value indicating whether the engine
+		 * should capture viewport input (true) or not (false).
+		 */
+		void setShouldCaptureViewportInput(bool shouldCapture)
+		{
+			_shouldCaptureViewportInput = shouldCapture;
+		}
+
 		protected:
 		/**
 		 * The name of the engine.

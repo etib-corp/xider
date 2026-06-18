@@ -87,7 +87,7 @@ namespace guillaume
 		_systemRegistry.registerNewSystem(
 			std::make_unique<systems::RectangleRender>(_engine));
 		_systemRegistry.registerNewSystem(
-			std::make_unique<systems::Focus>(_eventBus));
+			std::make_unique<systems::Focus>(_eventBus, _engine));
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>

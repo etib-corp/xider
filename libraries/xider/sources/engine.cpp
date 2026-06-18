@@ -108,4 +108,19 @@ namespace xider
 			_evanEngine->update();
 		}
 	}
+
+	bool Engine::shouldCaptureViewportInput(void) const
+	{
+		if (_evanEngine) {
+			return _evanEngine->shouldCaptureViewportInput();
+		}
+		return false;
+	}
+
+	void Engine::setShouldCaptureViewportInput(bool capture)
+	{
+		if (_evanEngine) {
+			_evanEngine->setShouldCaptureViewportInput(capture);
+		}
+	}
 }	 // namespace xider

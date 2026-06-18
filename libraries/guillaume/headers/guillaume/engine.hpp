@@ -82,6 +82,9 @@ namespace guillaume
 
 		private:
 		Handler _callback;	  ///< Event callback function
+		bool _shouldCaptureViewportInput {
+			true
+		};	  ///< Viewport input capture state
 
 		protected:
 		/**
@@ -89,6 +92,21 @@ namespace guillaume
 		 * @return Reference to the event callback function.
 		 */
 		Handler &getEventCallback(void);
+
+		public:
+		/**
+		 * @brief Check if viewport input capture is enabled.
+		 * @return True when viewport input is captured for camera movement.
+		 */
+		bool shouldCaptureViewportInput(void) const;
+
+		/**
+		 * @brief Set the viewport input capture state.
+		 * @param capture True to enable viewport input capture, false to
+		 * disable. When disabled, input is routed to UI instead of camera
+		 * controls.
+		 */
+		void setShouldCaptureViewportInput(bool capture);
 
 		public:
 		/**

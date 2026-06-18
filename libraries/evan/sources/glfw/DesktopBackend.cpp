@@ -653,13 +653,16 @@ void evan::DesktopBackend::setupCallbackEvent(const IPlatform &platform)
 			(void)scancode;
 			auto event = std::make_shared<utility::event::KeyboardEvent>();
 			event->setKeycode(self->convertGlfwKeyToKeyCode(key));
-			event->setIsDownEvent(action == GLFW_PRESS);
+			event->setIsDownEvent(action == GLFW_PRESS
+								  || action == GLFW_REPEAT);
 			event->setModifiers(self->convertGlfwModsToKeyModifiers(mods));
 			self->_keyboardEvents.push_back(std::move(event));
 			if (action == GLFW_PRESS) {
 				std::cout << "Key pressed: " << key << std::endl;
 			} else if (action == GLFW_RELEASE) {
 				std::cout << "Key released: " << key << std::endl;
+			} else if (action == GLFW_REPEAT) {
+				std::cout << "Key held (repeat): " << key << std::endl;
 			}
 		});
 

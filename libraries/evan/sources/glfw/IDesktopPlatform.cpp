@@ -45,6 +45,14 @@ std::vector<std::shared_ptr<utility::event::Event>>
 
 	std::vector<std::shared_ptr<utility::event::Event>> events;
 
+	// Poll current key states for continuous movement
+	this->getLogger().info()
+		<< "Polling keyboard state for continuous movement...";
+	auto pressedKeys = getPressedMovementKeys();
+	for (auto &keyEvent: pressedKeys) {
+		events.push_back(std::move(keyEvent));
+	}
+
 	this->getLogger().info()
 		<< "Processing keyboard events for Desktop platform...";
 	events.insert(events.end(),
@@ -200,4 +208,25 @@ utility::event::MouseMotionEvent::MousePosition
 	return utility::event::MouseMotionEvent::MousePosition {
 		static_cast<unsigned int>(xPos), static_cast<unsigned int>(yPos)
 	};
+}
+
+std::vector<std::shared_ptr<utility::event::KeyboardEvent>>
+	evan::IDesktopPlatform::getPressedMovementKeys() const
+{
+	std::vector<std::shared_ptr<utility::event::KeyboardEvent>> events;
+	const int movementKeys[] = { GLFW_KEY_W,	GLFW_KEY_S,	   GLFW_KEY_A,
+								 GLFW_KEY_D,	GLFW_KEY_Q,	   GLFW_KEY_E,
+								 GLFW_KEY_UP,	GLFW_KEY_DOWN, GLFW_KEY_LEFT,
+								 GLFW_KEY_RIGHT };
+
+	for (int key: movementKeys) {
+		if (glfwGetKey(_window, key) == GLFW_PRESS) {
+			auto event = std::make_shared<utility::event::KeyboardEvent>();
+			event->setKeycode(convertGlfwKeyToKeyCode(key));
+			event->setIsDownEvent(true);
+			events.push_back(std::move(event));
+		}
+	}
+
+	return events;
 }

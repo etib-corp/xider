@@ -29,11 +29,11 @@
 namespace guillaume::tests
 {
 
-	class TestRenderer: public ::testing::Test
+	class TestEngine: public ::testing::Test
 	{
 		protected:
-		TestRenderer(void)			 = default;
-		~TestRenderer(void) override = default;
+		TestEngine(void)		   = default;
+		~TestEngine(void) override = default;
 		void SetUp(void) override
 		{
 		}

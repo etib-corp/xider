@@ -39,4 +39,14 @@ namespace guillaume
 		_callback = callback;
 	}
 
+	bool Engine::shouldCaptureViewportInput(void) const
+	{
+		return _shouldCaptureViewportInput;
+	}
+
+	void Engine::setShouldCaptureViewportInput(bool capture)
+	{
+		_shouldCaptureViewportInput = capture;
+	}
+
 }	 // namespace guillaume

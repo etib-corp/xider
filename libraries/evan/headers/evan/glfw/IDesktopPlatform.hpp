@@ -171,6 +171,19 @@ namespace evan
 			getMousePosition() const;
 
 		/**
+		 * @brief Get the current state of movement keys.
+		 *
+		 * Polls the current state of movement keys (WASD, QE, arrows) and
+		 * returns keyboard events for keys that are currently pressed.
+		 * This enables continuous movement while holding keys.
+		 *
+		 * @return Vector of keyboard events for currently pressed movement
+		 * keys.
+		 */
+		std::vector<std::shared_ptr<utility::event::KeyboardEvent>>
+			getPressedMovementKeys() const;
+
+		/**
 		 * @brief Currently active GLFW window for the Desktop platform.
 		 */
 		GLFWwindow *_window = nullptr;
