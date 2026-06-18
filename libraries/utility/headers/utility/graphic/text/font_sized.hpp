@@ -114,6 +114,24 @@ namespace utility::graphic
 		 */
 		std::vector<Glyph> generateGlyphs(const codePointString &codePoints);
 
+		/**
+		 * @brief The ascender value for the font size, representing the height
+		 * of the tallest glyph above the baseline.
+		 */
+		float _ascender;
+
+		/**
+		 * @brief The descender value for the font size, representing the depth
+		 * of the lowest glyph below the baseline.
+		 */
+		float _descender;
+
+		/**
+		 * @brief The line height value for the font size, representing the
+		 * vertical distance between lines of text.
+		 */
+		float _lineHeight;
+
 		protected:
 		/**
 		 * @brief Generates the texture atlas based on the currently generated

@@ -106,7 +106,7 @@ namespace utility::graphic
 												 std::vector<uint32_t> {});
 
 		float x	 = 0;
-		double y = 0;
+		double baseline = _font->getAscender(_fontSize) * 10.15f;
 
 		uint32_t indexOffset			 = 0;
 		std::vector<uint32_t> codepoints = utf8ToCodepoints(_content);
@@ -115,7 +115,7 @@ namespace utility::graphic
 
 		for (const auto &g: glyphs) {
 			double xpos = x + g.bearing[VEC_X];
-			double ypos = y - g.bearing[VEC_Y];
+			double ypos =baseline - g.bearing[VEC_Y];
 
 			double w = g.size[VEC_X];
 			double h = g.size[VEC_Y];

@@ -62,8 +62,10 @@ namespace evan
 						 ///< defining its diffuse color.
 			Normal,		 ///< Represents the normal map texture, which encodes
 						 ///< surface normals for detailed lighting effects.
-			Roughness	 ///< Represents the roughness texture, which defines
+			Roughness,	 ///< Represents the roughness texture, which defines
 						 ///< the surface roughness for specular reflections.
+			FontAtlas	 ///< Represents the font atlas texture, which contains
+						 ///< pre-rendered glyphs for text rendering.
 		};
 
 		/**

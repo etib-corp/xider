@@ -25,6 +25,21 @@ namespace utility::graphic
 	class Texture
 	{
 		public:
+
+		/**
+		 * @brief Describes the type of texture, such as albedo, normal, roughness, or font atlas.
+		 */
+		enum class TextureType {
+			Albedo,		 ///< Represents the albedo (diffuse) texture, which defines
+						 ///< the base color of a material.
+			Normal,		 ///< Represents the normal map texture, which encodes
+						 ///< surface normals for detailed lighting effects.
+			Roughness,	 ///< Represents the roughness texture, which defines
+						 ///< the surface roughness for specular reflections.
+			FontAtlas	 ///< Represents the font atlas texture, which contains
+						 ///< pre-rendered glyphs for text rendering.
+		};
+
 		/**
 		 * @brief Constructs a Texture object with the specified width and
 		 * height.
@@ -37,8 +52,9 @@ namespace utility::graphic
 		 *
 		 * @param width The width of the texture in pixels.
 		 * @param height The height of the texture in pixels.
+		 * @param type The type of the texture.
 		 */
-		Texture(uint32_t width, uint32_t height);
+		Texture(uint32_t width, uint32_t height, TextureType type = TextureType::Albedo);
 
 		/**
 		 * @brief Destructs the Texture object.
@@ -80,6 +96,11 @@ namespace utility::graphic
 		 * vector of bytes (RGBA format).
 		 */
 		std::vector<uint8_t> _pixels;
+
+		/**
+		 * @brief The type of the texture.
+		 */
+		TextureType _type;
 
 		protected:
 		/**

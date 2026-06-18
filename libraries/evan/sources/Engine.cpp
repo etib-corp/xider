@@ -25,6 +25,11 @@ evan::Engine::Engine(
 	ressourceProvider->loadShader("shaders/default.vert.spv",
 								  "shaders/default.frag.spv");
 
+	this->getLogger().info() << "Loading mesh shader...";
+
+	ressourceProvider->loadShader("shaders/mesh.vert.spv",
+								  "shaders/mesh.frag.spv");
+
 	_deviceContext	  = std::make_shared<DeviceContext>(*platform);
 	_swapchainContext = platform->createSwapchainContext(*_deviceContext);
 

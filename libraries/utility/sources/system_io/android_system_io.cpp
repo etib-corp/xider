@@ -45,8 +45,7 @@ bool utility::AndroidSystemIO::loadDirectory(const std::string &directory)
 	AAssetDir *assetDir =
 		AAssetManager_openDir(_assetManager, directory.c_str());
 	if (assetDir == nullptr) {
-		std::cerr << "Failed to open asset directory: " << directory
-				  << std::endl;
+		getLogger().warning() << "Failed to open asset directory: " << directory;
 		return false;
 	}
 
@@ -54,7 +53,7 @@ bool utility::AndroidSystemIO::loadDirectory(const std::string &directory)
 	while ((fileName = AAssetDir_getNextFileName(assetDir)) != nullptr) {
 		std::string assetPath = directory + "/" + fileName;
 		if (!this->add(assetPath)) {
-			std::cerr << "Failed to load asset: " << assetPath << std::endl;
+			getLogger().warning() << "Failed to load asset: " << assetPath;
 		}
 	}
 	AAssetDir_close(assetDir);
@@ -107,7 +106,7 @@ void utility::AndroidSystemIO::remove(const std::string &path, bool save)
 		}
 		_assets.erase(it);
 	} else {
-		std::cerr << "Asset not found: " << key << std::endl;
+		getLogger().warning() << "Asset not found: " << key;
 	}
 }
 
@@ -117,22 +116,20 @@ bool utility::AndroidSystemIO::save(const std::string &path,
 	const std::string key = NormalizePath(path);
 	auto it				  = _assets.find(key);
 	if (it == _assets.end()) {
-		std::cerr << "Asset not found: " << key << std::endl;
+		getLogger().warning() << "Asset not found: " << key;
 		return false;
 	}
 	// Android assets are read-only from the APK. Saving to a new path must be
 	// provided.
 	if (newPath.empty()) {
-		std::cerr
-			<< "Cannot save Android asset to original path. Provide a newPath."
-			<< std::endl;
+		getLogger().warning()
+			<< "Cannot save Android asset to original path. Provide a newPath.";
 		return false;
 	}
 	const std::string &content = it->second->content();
 	std::ofstream file(newPath, std::ios::binary);
 	if (!file.is_open()) {
-		std::cerr << "Failed to open file for writing: " << newPath
-				  << std::endl;
+		getLogger().warning() << "Failed to open file for writing: " << newPath;
 		return false;
 	}
 	file.write(content.data(), content.size());

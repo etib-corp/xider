@@ -29,6 +29,9 @@
 
 #include "utility/system_io/system_io.hpp"
 
+#include <utility/logging/loggable.hpp>
+#include <utility/logging/default_logger.hpp>
+
 namespace utility
 {
 
@@ -37,7 +40,9 @@ namespace utility
 	 * @brief The DefaultSystemIO class is a concrete implementation of the
 	 * SystemIO interface that loads assets from the file system.
 	 */
-	class DefaultSystemIO: public SystemIO
+	class DefaultSystemIO: public SystemIO,
+						   protected utility::logging::Loggable<DefaultSystemIO,
+																utility::logging::DefaultLogger>
 	{
 		public:
 		/**
@@ -49,6 +54,7 @@ namespace utility
 		using SystemIO::loadDirectory;
 		using SystemIO::remove;
 		using SystemIO::save;
+		using Loggable::getLogger;
 
 		/**
 		 * @brief Default destructor for DefaultSystemIO.

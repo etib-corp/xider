@@ -50,6 +50,9 @@ void CommandHandler::handle(struct android_app * /*android_app*/, int32_t cmd)
 			this->getLogger().debug() << "APP_CMD_PAUSE onPause()";
 			_appState->_resumed = false;
 			_appState->_paused	= true;
+			if (onPause) {
+				onPause();
+			}
 			break;
 		}
 		case APP_CMD_STOP: {
@@ -70,4 +73,9 @@ void CommandHandler::handle(struct android_app * /*android_app*/, int32_t cmd)
 			break;
 		}
 	}
+}
+
+void CommandHandler::setOnPauseCallback(std::function<void()> callback)
+{
+	this->onPause = callback;
 }
