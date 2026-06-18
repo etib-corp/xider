@@ -95,7 +95,7 @@ namespace utility
 		}
 
 		auto id = getNextID();
-		;
+
 		auto textureFile =
 			_systemInterface.add(resolvePath("textures/default_texture.png"));
 
@@ -115,7 +115,7 @@ namespace utility
 		}
 
 		auto id = getNextID();
-		;
+
 		auto textureFile =
 			_systemInterface.add(resolvePath("textures/default_texture.png"));
 
@@ -133,7 +133,8 @@ namespace utility
 	std::shared_ptr<graphic::Font>
 		RessourceProvider::loadFont(const std::string &path)
 	{
-		auto it = _elementsIDs.find(path);
+		std::string resolvedPath = resolvePath(path);
+		auto it = _elementsIDs.find(resolvedPath);
 
 		if (it != _elementsIDs.end()) {
 			if (_fonts.find(it->second) != _fonts.end()) {
@@ -141,7 +142,7 @@ namespace utility
 			}
 		}
 
-		auto fontAsset = _systemInterface.add(resolvePath(path));
+		auto fontAsset = _systemInterface.add(resolvedPath);
 
 		if (!fontAsset) {
 			getLogger().warning() << "Failed to load font asset: " << path;
@@ -166,7 +167,7 @@ namespace utility
 
 		auto font = std::make_shared<graphic::Font>(std::vector { *fontAsset });
 		auto fontID		 = getNextID();
-		auto materialKey = fontAsset->path();
+		auto materialKey = fontAsset->path() + "_material";
 
 		_fonts[fontID]					= font;
 		_elementsIDs[fontAsset->path()] = fontID;
@@ -254,7 +255,7 @@ namespace utility
 
 		auto font		 = std::make_shared<graphic::Font>(assets);
 		auto fontID		 = getNextID();
-		auto materialKey = familyName;
+		auto materialKey = familyName + "_material";
 
 		_fonts[fontID]			 = font;
 		_elementsIDs[familyName] = fontID;
