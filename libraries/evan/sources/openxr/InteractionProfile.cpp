@@ -11,6 +11,12 @@
 // Public Methods //
 ////////////////////
 
+evan::InteractionProfile::InteractionProfile()
+	: utility::logging::Loggable<InteractionProfile,
+								 utility::logging::DefaultLogger>()
+{
+}
+
 std::string evan::InteractionProfile::getRuntimeName(XrInstance instance)
 {
 	XrInstanceProperties instanceProperties { XR_TYPE_INSTANCE_PROPERTIES };
