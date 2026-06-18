@@ -69,7 +69,6 @@ namespace guillaume::systems
 
 	void TextRender::update(const ecs::Entity::Identifier &entityIdentifier)
 	{
-		std::cout << "############################## here974" << std::endl;
 		getLogger().debug()
 			<< "Updating TextRender system for entity " << entityIdentifier;
 		if (!requireComponent<components::Transform>(entityIdentifier)
