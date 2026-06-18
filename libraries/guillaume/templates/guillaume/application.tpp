@@ -22,6 +22,8 @@
 
 #pragma once
 
+#include <functional>
+
 #include "guillaume/application.hpp"
 
 namespace guillaume
@@ -85,7 +87,7 @@ namespace guillaume
 		_systemRegistry.registerNewSystem(
 			std::make_unique<systems::RectangleRender>(_engine));
 		_systemRegistry.registerNewSystem(
-			std::make_unique<systems::Focus>(_eventBus));
+			std::make_unique<systems::Focus>(_eventBus, _engine));
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
@@ -118,7 +120,7 @@ namespace guillaume
 	{
 		_engine = std::move(engine);
 		_engine->setEventCallback(
-			[this](std::unique_ptr<utility::event::Event> &event) {
+			[this](std::shared_ptr<utility::event::Event> &event) {
 				this->_eventBus.publish(std::move(event));
 			});
 		std::vector<std::type_index> sceneTypes =
@@ -149,6 +151,13 @@ namespace guillaume
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
 	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+	void Application<DefaultSceneType, SceneTypes...>::update(void)
+	{
+		_engine->update();
+	}
+
+	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
+	    requires IsOneOf<DefaultSceneType, SceneTypes...>
 	void Application<DefaultSceneType, SceneTypes...>::clear(void)
 	{
 		_engine->clear();
@@ -159,13 +168,6 @@ namespace guillaume
 	void Application<DefaultSceneType, SceneTypes...>::present(void)
 	{
 		_engine->present();
-	}
-
-	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
-	    requires IsOneOf<DefaultSceneType, SceneTypes...>
-	bool Application<DefaultSceneType, SceneTypes...>::gotNewEvents(void) const
-	{
-		return _engine->gotNewEvents();
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
@@ -188,10 +190,8 @@ namespace guillaume
 		while (!shouldQuit()) {
 			try {
 				_engine->pollEvents();
-				if (!_engine->gotNewEvents()) {
-					continue;
-				}
 				_engine->clear();
+				_engine->update();
 				routine();
 				_sceneManager->processSceneTransition();
 				_engine->present();

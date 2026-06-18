@@ -23,6 +23,7 @@
 #pragma once
 
 #include <bitset>
+#include <chrono>
 #include <functional>
 #include <stdexcept>
 #include <vector>

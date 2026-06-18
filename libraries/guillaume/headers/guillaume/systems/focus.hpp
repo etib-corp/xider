@@ -35,6 +35,8 @@
 #include "guillaume/components/hand_pinch_interaction.hpp"
 #include "guillaume/components/hand_poke_interaction.hpp"
 
+#include "guillaume/engine.hpp"
+
 namespace guillaume::systems
 {
 
@@ -48,25 +50,26 @@ namespace guillaume::systems
 	 * @see components::Focus
 	 */
 	class Focus:
-		public ecs::SystemFiller<components::Focus, components::Transform,
-								 components::Bound,
-								 components::MouseButtonInteraction,
-								 components::HandButtonInteraction,
-								 components::HandPinchInteraction,
-								 components::HandPokeInteraction>
+		public ecs::SystemFiller<
+			components::Focus, components::Transform, components::Bound,
+			components::MouseButtonInteraction,
+			components::HandButtonInteraction, components::HandPinchInteraction,
+			components::HandPokeInteraction>
 	{
 		private:
+		std::unique_ptr<Engine> &_engine;	   ///< Engine instance
 		std::optional<ecs::Entity::Identifier>
-			_focusedEntity;	  ///< Currently focused entity identifier
+			_focusedEntity;	   ///< Currently focused entity identifier
 		std::optional<ecs::Entity::Identifier>
-			_lastFocusedEntity; ///< Last entity that had focus
+			_lastFocusedEntity;	   ///< Last entity that had focus
 
 		public:
 		/**
 		 * @brief Default constructor for the Focus system.
 		 * @param eventBus The event bus for focus events.
+		 * @param engine Pointer to the engine for viewport input control.
 		 */
-		Focus(event::EventBus &eventBus);
+		Focus(event::EventBus &eventBus, std::unique_ptr<Engine> &engine);
 
 		/**
 		 * @brief Set focus to a specific entity.
@@ -97,7 +100,8 @@ namespace guillaume::systems
 		 * @brief Update the Focus system for the specified entity.
 		 * @param entityIdentifier The identifier of the entity to update.
 		 *
-		 * Checks if the entity was clicked with mouse or hand and sets focus accordingly.
+		 * Checks if the entity was clicked with mouse or hand and sets focus
+		 * accordingly.
 		 */
 		virtual void
 			update(const ecs::Entity::Identifier &entityIdentifier) override;

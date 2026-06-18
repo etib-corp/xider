@@ -37,8 +37,9 @@ evan::RenderObject::RenderObject(
 					+ std::to_string(vertex.getNormal().z) + ") and texCoord: ("
 					+ std::to_string(vertex.getTextureCoordinates().x) + ", "
 					+ std::to_string(vertex.getTextureCoordinates().y) + ")"
-					+ " and color: (" + std::to_string(vertex.getColor().getRed())
-					+ ", " + std::to_string(vertex.getColor().getGreen()) + ", "
+					+ " and color: ("
+					+ std::to_string(vertex.getColor().getRed()) + ", "
+					+ std::to_string(vertex.getColor().getGreen()) + ", "
 					+ std::to_string(vertex.getColor().getBlue()) + ", "
 					+ std::to_string(vertex.getColor().getAlpha()) + ")";
 			GPUVertex gpuVertex = GPUVertex::createFromVertexD(vertex);

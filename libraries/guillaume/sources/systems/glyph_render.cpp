@@ -53,7 +53,7 @@ namespace guillaume::systems
 				continue;
 			}
 			if (it->second.objectId != 0) {
-				_renderer->removeObject(it->second.objectId);
+				_engine->removeObject(it->second.objectId);
 			}
 			it = _cache.erase(it);
 		}
@@ -66,7 +66,7 @@ namespace guillaume::systems
 							components::Glyph, components::Color>(
 			  ecs::Phase::Render)
 		, _ressourceProvider(ressourceProvider)
-		, _renderer(engine)
+		, _engine(engine)
 		, _defaultFontPath(
 			  "fonts/Material_Symbols_Outlined/"
 			  "MaterialSymbolsOutlined-VariableFont_FILL,GRAD,opsz,wght.ttf")
@@ -148,11 +148,13 @@ namespace guillaume::systems
 		glyphText.setColor(currentColor);
 
 		if (cacheEntry.objectId != 0) {
-			_renderer->removeObject(cacheEntry.objectId);
+			_engine->removeObject(cacheEntry.objectId);
 		}
 
+
 		cacheEntry.objectId = _renderer->addText(glyphText, currentPose);
-		cacheEntry.text		= glyphText;
+
+    cacheEntry.text		= glyphText;
 		cacheEntry.pose		= currentPose;
 		
 		// Update cached properties

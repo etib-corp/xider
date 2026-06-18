@@ -71,7 +71,7 @@ namespace evan
 		 * @return A vector of unique pointers to Event objects representing the
 		 * thumb stick events.
 		 */
-		std::vector<std::unique_ptr<utility::event::Event>>
+		std::vector<std::shared_ptr<utility::event::Event>>
 			getEvent(evan::XrDeviceBackend &deviceBackend) override;
 
 		private:
@@ -142,10 +142,10 @@ namespace evan
 		 *
 		 * @param deviceBackend The device backend used for interacting with the
 		 * OpenXR runtime and managing resources.
-		 * @return A vector of unique pointers to Event objects representing the
+		 * @return A vector of shared pointers to Event objects representing the
 		 * thumb stick events.
 		 */
-		std::vector<std::unique_ptr<utility::event::Event>>
+		std::vector<std::shared_ptr<utility::event::Event>>
 			getEvents(evan::XrDeviceBackend &deviceBackend);
 
 		/**

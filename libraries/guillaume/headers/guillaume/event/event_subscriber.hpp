@@ -42,7 +42,7 @@ namespace guillaume::event
 	template<utility::event::InheritFromEvent EventType> class EventSubscriber
 	{
 		private:
-		std::queue<std::unique_ptr<EventType>>
+		std::queue<std::shared_ptr<EventType>>
 			_eventQueue;	///< Queue of received events
 
 		public:
@@ -69,7 +69,7 @@ namespace guillaume::event
 		 * @return The next event.
 		 * @retval nullptr If the queue is empty.
 		 */
-		std::unique_ptr<EventType> getNextEvent(void);
+		std::shared_ptr<EventType> getNextEvent(void);
 	};
 
 }	 // namespace guillaume::event

@@ -68,7 +68,7 @@ namespace utility::graphic
 
 	math::Vector2D Text::getTextDimensions(void) const
 	{
-		math::Vector2D dimensions({0.0, 0.0});
+		math::Vector2D dimensions({ 0.0, 0.0 });
 
 		std::vector<uint32_t> codepoints = utf8ToCodepoints(_content);
 		std::vector<Glyph> glyphs =

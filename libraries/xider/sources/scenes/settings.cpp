@@ -41,14 +41,13 @@ namespace xider::scenes
 			getDirectorManager()
 				.getDirector<guillaume::entities::Button::Director>();
 
-		buttonDirector.makeTextButton(
-			buttonBuilder, "Back to Main", [this]() {
-				this->goToScene<Main>();
-			});
+		buttonDirector.makeTextButton(buttonBuilder, "Back to Main", [this]() {
+			this->goToScene<Main>();
+		});
 	}
 
 	Settings::~Settings(void)
 	{
 	}
 
-} // namespace xider::scenes
+}	 // namespace xider::scenes

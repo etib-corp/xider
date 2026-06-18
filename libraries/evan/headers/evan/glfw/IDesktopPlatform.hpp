@@ -14,6 +14,10 @@
 #include <utility/event/keyboard_event.hpp>
 #include <utility/event/mouse_button_event.hpp>
 #include <utility/event/mouse_motion_event.hpp>
+#include <utility/event/mouse_wheel_event.hpp>
+#include <utility/event/cursor_enter_event.hpp>
+#include <utility/event/file_drop_event.hpp>
+#include <utility/event/text_input_event.hpp>
 
 #include <iostream>
 
@@ -70,11 +74,11 @@ namespace evan
 		 * event polling functions to handle events specific to the Desktop
 		 * platform.
 		 *
-		 * @return A vector of unique pointers to Event objects representing the
+		 * @return A vector of shared pointers to Event objects representing the
 		 * events that were polled from the Desktop platform. Each Event object
 		 * contains information about the type of event, such as input events.
 		 */
-		virtual std::vector<std::unique_ptr<utility::event::Event>>
+		virtual std::vector<std::shared_ptr<utility::event::Event>>
 			pollEvents(ADeviceBackend &deviceBackend) override;
 
 		/**
@@ -167,6 +171,19 @@ namespace evan
 			getMousePosition() const;
 
 		/**
+		 * @brief Get the current state of movement keys.
+		 *
+		 * Polls the current state of movement keys (WASD, QE, arrows) and
+		 * returns keyboard events for keys that are currently pressed.
+		 * This enables continuous movement while holding keys.
+		 *
+		 * @return Vector of keyboard events for currently pressed movement
+		 * keys.
+		 */
+		std::vector<std::shared_ptr<utility::event::KeyboardEvent>>
+			getPressedMovementKeys() const;
+
+		/**
 		 * @brief Currently active GLFW window for the Desktop platform.
 		 */
 		GLFWwindow *_window = nullptr;
@@ -182,7 +199,7 @@ namespace evan
 		 * process keyboard input in a structured way, responding to user
 		 * interactions effectively.
 		 */
-		std::vector<std::unique_ptr<utility::event::KeyboardEvent>>
+		std::vector<std::shared_ptr<utility::event::KeyboardEvent>>
 			_keyboardEvents;
 
 		/**
@@ -197,7 +214,7 @@ namespace evan
 		 * button input in a structured way, responding to user interactions
 		 * effectively.
 		 */
-		std::vector<std::unique_ptr<utility::event::MouseButtonEvent>>
+		std::vector<std::shared_ptr<utility::event::MouseButtonEvent>>
 			_mouseButtonEvents;
 
 		/**
@@ -209,8 +226,53 @@ namespace evan
 		 * current position of the mouse cursor, allowing the application to
 		 * respond to mouse movement and interactions effectively.
 		 */
-		std::vector<std::unique_ptr<utility::event::MouseMotionEvent>>
+		std::vector<std::shared_ptr<utility::event::MouseMotionEvent>>
 			_mouseMotionEvents;
+
+		/**
+		 * @brief Vector to store mouse wheel events.
+		 *
+		 * This vector holds unique pointers to MouseWheelEvent objects, which
+		 * represent mouse wheel scroll events that have been polled from the
+		 * GLFW event system. Each MouseWheelEvent contains information about
+		 * the scroll offset, allowing the application to respond to mouse wheel
+		 * scrolling interactions effectively.
+		 */
+		std::vector<std::shared_ptr<utility::event::MouseWheelEvent>>
+			_mouseWheelEvents;
+
+		/**
+		 * @brief Vector to store cursor enter/leave events.
+		 *
+		 * This vector holds unique pointers to CursorEnterEvent objects, which
+		 * represent cursor enter/leave events that have been polled from the
+		 * GLFW event system. Each CursorEnterEvent contains information about
+		 * whether the cursor entered or left the window's content area.
+		 */
+		std::vector<std::shared_ptr<utility::event::CursorEnterEvent>>
+			_cursorEnterEvents;
+
+		/**
+		 * @brief Vector to store file drop events.
+		 *
+		 * This vector holds unique pointers to FileDropEvent objects, which
+		 * represent file drop events that have been polled from the GLFW event
+		 * system. Each FileDropEvent contains information about the paths of
+		 * files and/or directories dropped on the window.
+		 */
+		std::vector<std::shared_ptr<utility::event::FileDropEvent>>
+			_fileDropEvents;
+
+		/**
+		 * @brief Vector to store text input events.
+		 *
+		 * This vector holds unique pointers to TextInputEvent objects, which
+		 * represent text input events that have been polled from the GLFW event
+		 * system. Each TextInputEvent contains committed UTF-8 text input from
+		 * the operating system's text input system.
+		 */
+		std::vector<std::shared_ptr<utility::event::TextInputEvent>>
+			_textInputEvents;
 
 		private:
 	};

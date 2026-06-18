@@ -74,7 +74,8 @@ namespace utility
 	/**
 	 * @brief Demangles a C++ type name from a raw type_info name string.
 	 *
-	 * @param mangledName The mangled type name (as returned by typeid(T).name()).
+	 * @param mangledName The mangled type name (as returned by
+	 * typeid(T).name()).
 	 * @return A human-readable string representing the type name.
 	 */
 	inline std::string demangle(const char *mangledName)
@@ -89,8 +90,8 @@ namespace utility
 #elif defined(_MSC_VER)
 		char buffer[1024] = { 0 };
 		if (UnDecorateSymbolName(mangledName, buffer,
-								static_cast<DWORD>(sizeof(buffer)),
-								UNDNAME_COMPLETE)) {
+								 static_cast<DWORD>(sizeof(buffer)),
+								 UNDNAME_COMPLETE)) {
 			return std::string(buffer);
 		}
 		return std::string(mangledName);
@@ -98,4 +99,4 @@ namespace utility
 		return std::string(mangledName);
 #endif
 	}
-}  // namespace utility
+}	 // namespace utility

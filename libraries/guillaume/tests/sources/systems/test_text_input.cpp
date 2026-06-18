@@ -67,7 +67,7 @@ namespace
 
 		void dispatchTextInputEvent(const std::string &textInput)
 		{
-			auto event = std::make_unique<utility::event::TextInputEvent>();
+			auto event = std::make_shared<utility::event::TextInputEvent>();
 			event->setText(textInput);
 			eventBus.publish(std::move(event));
 			textInputSystem.routine(componentRegistry, entityRegistry,

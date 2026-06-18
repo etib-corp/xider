@@ -26,10 +26,10 @@ evan::XrHandThumbStickAction::~XrHandThumbStickAction()
 // Public Methods //
 ////////////////////
 
-std::vector<std::unique_ptr<utility::event::Event>>
+std::vector<std::shared_ptr<utility::event::Event>>
 	evan::XrHandThumbStickAction::getEvent(evan::XrDeviceBackend &deviceBackend)
 {
-	std::vector<std::unique_ptr<utility::event::Event>> events = {};
+	std::vector<std::shared_ptr<utility::event::Event>> events = {};
 
 	XrActionStateGetInfo getInfo { XR_TYPE_ACTION_STATE_GET_INFO };
 	getInfo.action = getAction();
@@ -39,7 +39,7 @@ std::vector<std::unique_ptr<utility::event::Event>>
 
 	if (state.isActive) {
 		auto thumbStickEvent =
-			std::make_unique<utility::event::HandThumbStickEvent>();
+			std::make_shared<utility::event::HandThumbStickEvent>();
 		thumbStickEvent->setHandType(_handType);
 		thumbStickEvent->setAxis(state.currentState.x, state.currentState.y);
 
@@ -97,11 +97,11 @@ evan::XrManageThumbStickActions::~XrManageThumbStickActions()
 // Public Methods //
 ////////////////////
 
-std::vector<std::unique_ptr<utility::event::Event>>
+std::vector<std::shared_ptr<utility::event::Event>>
 	evan::XrManageThumbStickActions::getEvents(
 		evan::XrDeviceBackend &deviceBackend)
 {
-	std::vector<std::unique_ptr<utility::event::Event>> events;
+	std::vector<std::shared_ptr<utility::event::Event>> events;
 
 	// Get events from left hand thumb stick actions
 	auto leftHandEvents = _leftHandThumbStickActions->getEvent(deviceBackend);

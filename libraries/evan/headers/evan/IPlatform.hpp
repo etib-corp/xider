@@ -63,11 +63,11 @@ namespace evan
 		 *
 		 * @param deviceBackend The device backend to use for event processing,
 		 * if needed.
-		 * @return A vector of unique pointers to Event objects representing the
+		 * @return A vector of shared pointers to Event objects representing the
 		 * events that were polled from the platform. Each Event object contains
 		 * information about the type of event, such as input events.
 		 */
-		virtual std::vector<std::unique_ptr<utility::event::Event>>
+		virtual std::vector<std::shared_ptr<utility::event::Event>>
 			pollEvents(ADeviceBackend &deviceBackend) = 0;
 
 		/**

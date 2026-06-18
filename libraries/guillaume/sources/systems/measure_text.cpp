@@ -33,7 +33,7 @@ namespace guillaume::systems
 		: ecs::SystemFiller<components::Text, components::Bound>(
 			  ecs::Phase::Measure)
 		, _ressourceProvider(ressourceProvider)
-		, _renderer(engine)
+		, _engine(engine)
 		, _defaultFontPath("fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf")
 	{
 	}
@@ -61,7 +61,7 @@ namespace guillaume::systems
 			textComponent.getFontSize(), _defaultFontPath);
 		text.setColor(utility::graphic::Color32Bit());
 
-		auto textSize = _renderer->measureText(text);
+		auto textSize = _engine->measureText(text);
 
 		boundComponent.setWidth(textSize[0]).setHeight(textSize[1]);
 	}

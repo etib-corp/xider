@@ -49,7 +49,7 @@ namespace guillaume::systems
 			_ressourceProvider;	   ///< Shared resource provider for loading
 								   ///< fonts and glyphs
 		std::unique_ptr<Engine>
-			&_renderer;	   ///< Engine instance for text measurement
+			&_engine;	   ///< Engine instance for text measurement
 		std::string
 			_defaultFontPath;	 ///< Default font used for text measurement
 

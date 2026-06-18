@@ -92,40 +92,37 @@ namespace guillaume
 		_nextSceneType = typeid(void);
 	}
 
-	void Scene::setView(const utility::graphic::ViewF &view)
+	void Scene::placeEntitiesInFrontOfView(const utility::graphic::ViewF &view)
 	{
-		_view = view;
-	}
-
-	void Scene::placeEntitiesInFrontOfView(void)
-	{
-		constexpr float distance = 300.0f;
+		constexpr float distance   = 300.0f;
 		constexpr float spreadStep = 150.0f;
 
-		const auto centerRay = _view.centerRay();
-		const auto origin = centerRay.origin();
-		const auto forward = centerRay.direction();
-		const auto right = _view.right();
+		const auto centerRay = view.centerRay();
+		const auto origin	 = centerRay.origin();
+		const auto forward	 = centerRay.direction();
+		const auto right	 = view.right();
 
 		const auto &directEntities = accessDirectEntities();
-		std::size_t entityCount = directEntities.size();
-		float totalSpread = (entityCount > 1)
-							? static_cast<float>(entityCount - 1) * spreadStep
-							: 0.0f;
-		float startOffset = -totalSpread / 2.0f;
+		std::size_t entityCount	   = directEntities.size();
+		float totalSpread		   = (entityCount > 1)
+			? static_cast<float>(entityCount - 1) * spreadStep
+			: 0.0f;
+		float startOffset		   = -totalSpread / 2.0f;
 
 		for (std::size_t i = 0; i < entityCount; ++i) {
 			const ecs::Entity *entity = directEntities[i].get();
 			if (!_componentRegistry.hasComponent<components::Transform>(
-				    entity->getIdentifier())) {
+					entity->getIdentifier())) {
 				continue;
 			}
 
-			float horizontalOffset = startOffset + static_cast<float>(i) * spreadStep;
+			float horizontalOffset =
+				startOffset + static_cast<float>(i) * spreadStep;
 			auto newPosition = utility::graphic::PositionF(
 				origin + forward * distance + right * horizontalOffset);
-			auto &transform = _componentRegistry.getComponent<components::Transform>(
-				entity->getIdentifier());
+			auto &transform =
+				_componentRegistry.getComponent<components::Transform>(
+					entity->getIdentifier());
 			auto pose = transform.getPose();
 			pose.setPosition(newPosition);
 			transform.setPose(pose);
@@ -136,9 +133,10 @@ namespace guillaume
 	{
 		getLogger().info() << "Scene entered";
 
-		placeEntitiesInFrontOfView();
+		// placeEntitiesInFrontOfView is now called by SceneManager with the
+		// engine view
 
-		for (auto *entity : getEntitiesBreadthFirst()) {
+		for (auto *entity: getEntitiesBreadthFirst()) {
 			if (_componentRegistry.hasChanged(entity->getIdentifier())) {
 				entity->update();
 			}
@@ -151,4 +149,4 @@ namespace guillaume
 		getLogger().info() << "Scene exited";
 	}
 
-}  // namespace guillaume
+}	 // namespace guillaume

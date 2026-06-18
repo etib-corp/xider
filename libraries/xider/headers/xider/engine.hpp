@@ -74,19 +74,15 @@ namespace xider
 		/**
 		 * @brief Adds a mesh to the renderer.
 		 * @param mesh The mesh to add to the renderer.
-		 * @param materialName The name of the material to use for rendering the mesh.
-		 * This allows for flexibility in specifying the visual properties of
-		 * the mesh during rendering, such as textures, colors, and shader
+		 * @param materialName The name of the material to use for rendering the
+		 * mesh. This allows for flexibility in specifying the visual properties
+		 * of the mesh during rendering, such as textures, colors, and shader
 		 * parameters.
 		 * @return A unique identifier for the added mesh.
 		 */
-		size_t addMesh(const utility::graphic::Mesh &mesh, const std::string &materialName = "default_material") override;
-
-		/**
-		 * @brief Synchronizes the view across Guillaume and Evan.
-		 * @param view The view to apply.
-		 */
-		void setView(const utility::graphic::ViewF &view) override;
+		size_t addMesh(
+			const utility::graphic::Mesh &mesh,
+			const std::string &materialName = "default_material") override;
 
 		/**
 		 * @brief Returns the mirrored view state.
@@ -129,6 +125,28 @@ namespace xider
 		 * @brief Poll for OS/input events and dispatch them.
 		 */
 		void pollEvents(void) override;
+
+		/**
+		 * @brief Update the engine state.
+		 *
+		 * Delegates to the Evan engine's update method to handle
+		 * input processing and logic updates.
+		 */
+		void update(void) override;
+
+		/**
+		 * @brief Check if viewport input capture is enabled.
+		 * @return True when viewport input is captured for camera movement.
+		 */
+		bool shouldCaptureViewportInput(void) const;
+
+		/**
+		 * @brief Set the viewport input capture state.
+		 * @param capture True to enable viewport input capture, false to
+		 * disable. When disabled, input is routed to UI instead of camera
+		 * controls.
+		 */
+		void setShouldCaptureViewportInput(bool capture);
 	};
 
 }	 // namespace xider

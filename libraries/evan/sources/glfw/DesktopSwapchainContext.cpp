@@ -69,16 +69,15 @@ VkResult evan::DesktopSwapchainContext::aquireImage(
 
 glm::mat4 evan::DesktopSwapchainContext::getProjection(int index) const
 {
-	return glm::perspective(glm::radians(45.0f), _view.getAspectRatio(), 0.1f,
-							500.0f);
+	return glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 0.1f, 500.0f);
 }
 
 glm::mat4 evan::DesktopSwapchainContext::getView(int index) const
 {
-	glm::vec3 eyePosition(_view.getPose().getPosition().getX(),
-						  _view.getPose().getPosition().getY(),
-						  _view.getPose().getPosition().getZ());
-	glm::vec3 forward(_view.getPose().getOrientation().getForward());
-	glm::vec3 up(_view.getPose().getOrientation().getUp());
-	return glm::lookAt(eyePosition, eyePosition + forward, up);
+	return _view;
+}
+
+void evan::DesktopSwapchainContext::setView(int index, const glm::mat4 &view)
+{
+	_view = view;
 }

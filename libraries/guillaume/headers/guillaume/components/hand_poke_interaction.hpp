@@ -34,7 +34,7 @@ namespace guillaume::components
 	class HandPokeInteraction: public Interaction<utility::event::HandPokeEvent>
 	{
 		private:
-		bool _isPoking { false };  ///< Current poke state
+		bool _isPoking { false };	 ///< Current poke state
 
 		public:
 		/**

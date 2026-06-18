@@ -205,5 +205,22 @@ namespace evan
 		 * camera.
 		 */
 		glm::mat4 getView(int index) const override;
+
+		/**
+		 * @brief Sets the view matrix for the specified image index in the
+		 * swapchain.
+		 *
+		 * This function overrides the pure virtual function from
+		 * ASwapchainContext to set the view matrix associated with the
+		 * specified image index in the swapchain. The view matrix is used in
+		 * rendering operations to transform world coordinates into view space
+		 * for the corresponding image.
+		 *
+		 * @param index The index of the image in the swapchain for which to
+		 * set the view matrix.
+		 * @param view The view matrix as a glm::mat4 to set for the specified
+		 * image index in the swapchain.
+		 */
+		void setView(int index, const glm::mat4 &view) override;
 	};
 }	 // namespace evan

@@ -112,28 +112,6 @@ bool evan::XrDeviceBackend::preprocessFrame(ASwapchainContext &swapchainContext)
 			<< "Failed to locate OpenXR views: " << locateResult;
 		return false;
 	}
-
-	if (viewCount > 0) {
-		const XrView &view = views[0];
-		utility::graphic::ViewF currentView;
-
-		utility::graphic::Position<float> position(
-			static_cast<float>(view.pose.position.x),
-			static_cast<float>(view.pose.position.y),
-			static_cast<float>(view.pose.position.z));
-		utility::graphic::Orientation<float> orientation(
-			static_cast<float>(view.pose.orientation.x),
-			static_cast<float>(view.pose.orientation.y),
-			static_cast<float>(view.pose.orientation.z),
-			static_cast<float>(view.pose.orientation.w));
-
-		currentView.setPose(
-			utility::graphic::Pose<float>(position, orientation));
-		currentView.setFieldOfView(utility::graphic::FieldOfViewF(
-			view.fov.angleUp, view.fov.angleDown, view.fov.angleLeft,
-			view.fov.angleRight));
-		swapchainContext.setView(currentView);
-	}
 	return true;
 }
 
@@ -256,7 +234,7 @@ std::vector<XrViewConfigurationView>
 	return viewConfigurations;
 }
 
-std::vector<std::unique_ptr<utility::event::Event>>
+std::vector<std::shared_ptr<utility::event::Event>>
 	evan::XrDeviceBackend::pollActions()
 {
 	this->getLogger().info() << "Polling actions for OpenXR session";

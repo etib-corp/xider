@@ -21,7 +21,7 @@ evan::GPUMaterial::GPUMaterial(std::shared_ptr<DeviceContext> deviceContext,
 		<< "Initializing GPUMaterial with shader ID: " << shaderID << "...";
 
 	auto deviceBackend = deviceContext->getDeviceBackend();
-	auto textures = material.getTextures();
+	auto textures	   = material.getTextures();
 	for (const auto &texture: textures) {
 		GPUTexture::TextureType textureType;
 
@@ -44,7 +44,8 @@ evan::GPUMaterial::GPUMaterial(std::shared_ptr<DeviceContext> deviceContext,
 					<< shaderID << ". Defaulting to Albedo.";
 				textureType = GPUTexture::TextureType::Albedo;
 		}
-		_textures.emplace_back(std::make_shared<GPUTexture>(*deviceContext, *texture, textureType));
+		_textures.emplace_back(std::make_shared<GPUTexture>(
+			*deviceContext, *texture, textureType));
 	}
 
 	this->createDescriptorSets(

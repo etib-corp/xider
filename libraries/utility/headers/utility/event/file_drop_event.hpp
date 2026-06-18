@@ -23,8 +23,8 @@
 #pragma once
 
 #include <memory>
-
-#include "utility/math/vector.hpp"
+#include <vector>
+#include <string>
 
 #include "utility/event/event.hpp"
 
@@ -32,17 +32,17 @@ namespace utility::event
 {
 
 	/**
-	 * @brief Mouse motion event.
+	 * @brief File drop event.
 	 *
-	 * Represents mouse movement with position.
+	 * Represents files and/or directories dropped on a window.
+	 * This event is triggered when the user drops files on the window,
+	 * typically from the file system or another application.
 	 */
-	class MouseMotionEvent: public Event
+	class FileDropEvent: public Event
 	{
 		public:
-		using MousePosition = math::Vector2UI; /**< 2D mouse position type */
-
 		/**
-		 * @brief Factory for creating MouseMotionEvent instances.
+		 * @brief Factory for creating FileDropEvent instances.
 		 */
 		class Factory: public Event::AbstractFactory
 		{
@@ -50,54 +50,51 @@ namespace utility::event
 			~Factory(void) override;
 
 			/**
-			 * @brief Create a MouseMotionEvent as a base Event pointer.
-			 * @return Newly created MouseMotionEvent as std::unique_ptr<Event>.
+			 * @brief Create a FileDropEvent as a base Event pointer.
+			 * @return Newly created FileDropEvent as std::unique_ptr<Event>.
 			 */
 			std::unique_ptr<Event> create(void) const override;
 
 			/**
-			 * @brief Create a strongly-typed MouseMotionEvent.
-			 * @return Newly created MouseMotionEvent as
-			 * std::unique_ptr<MouseMotionEvent>.
+			 * @brief Create a strongly-typed FileDropEvent.
+			 * @return Newly created FileDropEvent as
+			 * std::unique_ptr<FileDropEvent>.
 			 */
-			std::unique_ptr<MouseMotionEvent> createTyped(void) const;
+			std::unique_ptr<FileDropEvent> createTyped(void) const;
 		};
 
 		private:
-		MousePosition _position { 0, 0 };
+		std::vector<std::string> _paths {}; /**< Paths of dropped files/dirs */
 
 		public:
 		/**
 		 * @brief Default constructor.
 		 */
-		explicit MouseMotionEvent(void);
+		explicit FileDropEvent(void);
 
 		/**
 		 * @brief Default destructor.
 		 */
-		~MouseMotionEvent(void) override;
+		~FileDropEvent(void) override;
 
 		/**
-		 * @brief Get the event type.
-		 * @return The type of this event (MouseMotion).
+		 * @brief Set the paths of dropped files/directories.
+		 * @param paths The UTF-8 encoded paths of dropped items.
+		 * @return Reference to this FileDropEvent for method chaining.
 		 */
-		Type getEventType(void) const noexcept override
-		{
-			return Type::MouseMotion;
-		}
+		FileDropEvent &setPaths(const std::vector<std::string> &paths);
 
 		/**
-		 * @brief Set the current mouse position.
-		 * @param position The mouse position as a 2D vector (x, y).
-		 * @return Reference to this MouseMotionEvent for method chaining.
+		 * @brief Get the paths of dropped files/directories.
+		 * @return A vector of UTF-8 encoded paths.
 		 */
-		MouseMotionEvent &setPosition(const MousePosition &position) noexcept;
+		const std::vector<std::string> &getPaths(void) const noexcept;
 
 		/**
-		 * @brief Get the current mouse position.
-		 * @return The mouse position as a 2D vector (x, y).
+		 * @brief Get the number of dropped items.
+		 * @return The count of dropped files/directories.
 		 */
-		MousePosition getPosition(void) const noexcept;
+		std::size_t getCount(void) const noexcept;
 	};
 
 }	 // namespace utility::event

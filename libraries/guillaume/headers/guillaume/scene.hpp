@@ -48,30 +48,23 @@ namespace guillaume
 	class Scene:
 		public ecs::EntityRegistryContainer,
 		public utility::logging::Loggable<Scene,
-									  utility::logging::DefaultLogger>
+										  utility::logging::DefaultLogger>
 	{
 		private:
 		LocalStorage &
 			_localStorage;	  ///< Reference to the local storage for this scene
-		SessionStorage &_sessionStorage;  ///< Reference to the session
-																///< storage for this scene
+		SessionStorage &_sessionStorage;	///< Reference to the session
+											///< storage for this scene
 		ecs::ComponentRegistry
 			_componentRegistry;	   ///< Component registry for the scene
 		std::unique_ptr<ecs::EntityBuilderManager>
 			_entityBuilderManager;	  ///< Manager for entity builders
 		std::unique_ptr<ecs::EntityDirectorManager>
-			_entityDirectorManager;	   ///< Manager for entity directors
-		std::type_index
-			_nextSceneType;  ///< Type of the next scene to switch to at end of frame
-		utility::graphic::ViewF _view {}; ///< Current camera/view for positioning
+			_entityDirectorManager;		   ///< Manager for entity directors
+		std::type_index _nextSceneType;	   ///< Type of the next scene to switch
+										   ///< to at end of frame
 
-		/**
-		 * @brief Place all root entities in front of the current view with
-		 * horizontal spread.
-		 */
-		void placeEntitiesInFrontOfView(void);
-
-	protected:
+		protected:
 		/**
 		 * @brief Get the entity builder manager for this scene.
 		 * @return Reference to the entity builder manager.
@@ -84,12 +77,14 @@ namespace guillaume
 		 */
 		ecs::EntityDirectorManager &getDirectorManager(void);
 
-	public:
+		public:
 		/**
-		 * @brief Set the camera/view used to place entities on enter.
+		 * @brief Place all root entities in front of the current view with
+		 * horizontal spread.
 		 * @param view The view to use for positioning.
 		 */
-		void setView(const utility::graphic::ViewF &view);
+		void placeEntitiesInFrontOfView(const utility::graphic::ViewF &view);
+
 		/**
 		 * @brief Request a switch to another scene at the end of the current
 		 * frame.
@@ -167,7 +162,7 @@ namespace guillaume
 	template<typename Type, typename... Types>
 	concept IsOneOf = (std::is_same_v<Type, Types> || ...);
 
-}  // namespace guillaume
+}	 // namespace guillaume
 
 // Include the goToScene template implementation
 #include "guillaume/scene.tpp"

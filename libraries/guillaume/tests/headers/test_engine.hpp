@@ -22,37 +22,24 @@
 
 #pragma once
 
-#include "guillaume/event/event_manager.hpp"
+#include <gtest/gtest.h>
 
-namespace guillaume::event
+#include <guillaume/engine.hpp>
+
+namespace guillaume::tests
 {
-	template<utility::event::InheritFromEvent EventType>
-	void EventManager<EventType>::consumeNextEvent(void)
+
+	class TestEngine: public ::testing::Test
 	{
-		if (_subscriber->hasPendingEvents()) {
-			_lastEvent = _subscriber->getNextEvent();
+		protected:
+		TestEngine(void)		   = default;
+		~TestEngine(void) override = default;
+		void SetUp(void) override
+		{
 		}
-	}
-
-	template<utility::event::InheritFromEvent EventType>
-	std::unique_ptr<EventType> EventManager<EventType>::getLastEvent(void)
-	{
-		if (!_lastEvent) {
-			return nullptr;
+		void TearDown(void) override
+		{
 		}
-		return std::move(_lastEvent);
-	}
+	};
 
-	template<utility::event::InheritFromEvent EventType>
-	EventManager<EventType>::EventManager(EventBus &eventBus)
-		: _eventBus(eventBus)
-		, _subscriber(std::make_unique<EventSubscriber<EventType>>(_eventBus))
-	{
-	}
-
-	template<utility::event::InheritFromEvent EventType>
-	bool EventManager<EventType>::hasPendingEvents(void) const
-	{
-		return _subscriber->hasPendingEvents();
-	}
-}	 // namespace guillaume::event
+}	 // namespace guillaume::tests

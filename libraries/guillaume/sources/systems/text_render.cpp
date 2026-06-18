@@ -41,7 +41,7 @@ namespace guillaume::systems
 				continue;
 			}
 			if (it->second.objectId != 0) {
-				_renderer->removeObject(it->second.objectId);
+				_engine->removeObject(it->second.objectId);
 			}
 			it = _cache.erase(it);
 		}
@@ -53,7 +53,7 @@ namespace guillaume::systems
 		: ecs::SystemFiller<components::Transform, components::Text,
 							components::Color>(ecs::Phase::Render)
 		, _ressourceProvider(ressourceProvider)
-		, _renderer(engine)
+		, _engine(engine)
 		, _defaultFontPath("fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf")
 	{
 	}
@@ -112,7 +112,7 @@ namespace guillaume::systems
 		text.setColor(currentColor);
 
 		if (cacheEntry.objectId != 0) {
-			_renderer->removeObject(cacheEntry.objectId);
+			_engine->removeObject(cacheEntry.objectId);
 		}
 
 		cacheEntry.objectId = _renderer->addText(text, currentPose);

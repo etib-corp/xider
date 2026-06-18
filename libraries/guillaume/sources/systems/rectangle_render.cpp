@@ -200,7 +200,7 @@ namespace guillaume::systems
 	{
 		// Add center vertex as the fan anchor (index 0)
 		mesh.addVertex(createVertex(center, color));
-		
+
 		// Add all outline vertices
 		for (const auto &outlineVertex: outline) {
 			mesh.addVertex(createVertex(outlineVertex, color));
@@ -215,20 +215,21 @@ namespace guillaume::systems
 			mesh.addIndex(0);
 			mesh.addIndex(1);
 			mesh.addIndex(2);
-			
+
 			// Remaining triangles: (0, i, i+1) for i from 2 to N
 			for (size_t i = 2; i < outline.size(); ++i) {
 				mesh.addIndex(0);
 				mesh.addIndex(static_cast<uint32_t>(i));
 				mesh.addIndex(static_cast<uint32_t>(i + 1));
 			}
-			
+
 			// Close the fan: connect last vertex back to first outline vertex
 			mesh.addIndex(0);
 			mesh.addIndex(static_cast<uint32_t>(outline.size()));
 			mesh.addIndex(1);
 		} else if (outline.size() == 1) {
-			// Degenerate case: single outline vertex, create a degenerate triangle
+			// Degenerate case: single outline vertex, create a degenerate
+			// triangle
 			mesh.addIndex(0);
 			mesh.addIndex(1);
 			mesh.addIndex(1);
@@ -313,7 +314,7 @@ namespace guillaume::systems
 		}
 
 		cacheEntry.objectId = _engine->addMesh(mesh, "mesh_material");
-		cacheEntry.mesh = mesh;
+		cacheEntry.mesh		= mesh;
 	}
 
 }	 // namespace guillaume::systems

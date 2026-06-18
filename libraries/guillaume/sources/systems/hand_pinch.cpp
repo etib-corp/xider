@@ -42,16 +42,16 @@ namespace guillaume::systems
 		if (!pinchEvent)
 			return;
 
-		auto &transform =
-			this->template getComponent<components::Transform>(entityIdentifier);
+		auto &transform = this->template getComponent<components::Transform>(
+			entityIdentifier);
 		auto &bound =
 			this->template getComponent<components::Bound>(entityIdentifier);
 		auto &interaction =
 			this->template getComponent<components::HandPinchInteraction>(
 				entityIdentifier);
 
-		const auto size = utility::math::Vector2UI(
-			{ bound.getWidth(), bound.getHeight() });
+		const auto size =
+			utility::math::Vector2UI({ bound.getWidth(), bound.getHeight() });
 		const auto ray = utility::graphic::RayF(
 			utility::graphic::PositionF(pinchEvent->getPose().getPosition()),
 			pinchEvent->getPose().getOrientation().getForward());

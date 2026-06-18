@@ -20,10 +20,10 @@ evan::XrButtonAction::XrButtonAction(
 // Public Methods //
 ////////////////////
 
-std::vector<std::unique_ptr<utility::event::Event>>
+std::vector<std::shared_ptr<utility::event::Event>>
 	evan::XrButtonAction::getEvent(evan::XrDeviceBackend &deviceBackend)
 {
-	std::vector<std::unique_ptr<utility::event::Event>> events = {};
+	std::vector<std::shared_ptr<utility::event::Event>> events = {};
 
 	XrActionStateGetInfo getInfo { XR_TYPE_ACTION_STATE_GET_INFO };
 	getInfo.action = getAction();
@@ -32,7 +32,7 @@ std::vector<std::unique_ptr<utility::event::Event>>
 	xrGetActionStateBoolean(deviceBackend._session, &getInfo, &state);
 
 	if (state.isActive) {
-		auto buttonEvent = std::make_unique<utility::event::HandButtonEvent>();
+		auto buttonEvent = std::make_shared<utility::event::HandButtonEvent>();
 		buttonEvent->setButton(_buttonType);
 		buttonEvent->setButtonPressed(state.currentState);
 
@@ -148,11 +148,11 @@ evan::XrManageButtonsActions::~XrManageButtonsActions()
 // Public Methods //
 ////////////////////
 
-std::vector<std::unique_ptr<utility::event::Event>>
+std::vector<std::shared_ptr<utility::event::Event>>
 	evan::XrManageButtonsActions::getEvents(
 		evan::XrDeviceBackend &deviceBackend)
 {
-	std::vector<std::unique_ptr<utility::event::Event>> events;
+	std::vector<std::shared_ptr<utility::event::Event>> events;
 
 	auto buttonAEvents = _buttonAAction->getEvent(deviceBackend);
 	events.insert(events.end(), std::make_move_iterator(buttonAEvents.begin()),

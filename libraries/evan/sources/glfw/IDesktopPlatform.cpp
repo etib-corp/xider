@@ -37,13 +37,21 @@ std::shared_ptr<evan::ASwapchainContext>
 	return std::make_shared<DesktopSwapchainContext>(deviceContext, _window);
 }
 
-std::vector<std::unique_ptr<utility::event::Event>>
+std::vector<std::shared_ptr<utility::event::Event>>
 	evan::IDesktopPlatform::pollEvents(ADeviceBackend &deviceBackend)
 {
 	this->getLogger().info() << "Polling events for Desktop platform...";
 	glfwPollEvents();
 
-	std::vector<std::unique_ptr<utility::event::Event>> events;
+	std::vector<std::shared_ptr<utility::event::Event>> events;
+
+	// Poll current key states for continuous movement
+	this->getLogger().info()
+		<< "Polling keyboard state for continuous movement...";
+	auto pressedKeys = getPressedMovementKeys();
+	for (auto &keyEvent: pressedKeys) {
+		events.push_back(std::move(keyEvent));
+	}
 
 	this->getLogger().info()
 		<< "Processing keyboard events for Desktop platform...";
@@ -70,6 +78,42 @@ std::vector<std::unique_ptr<utility::event::Event>>
 
 	// Clear mouse motion events after processing them
 	_mouseMotionEvents.clear();
+
+	this->getLogger().info()
+		<< "Processing mouse wheel events for Desktop platform...";
+	events.insert(events.end(),
+				  std::make_move_iterator(_mouseWheelEvents.begin()),
+				  std::make_move_iterator(_mouseWheelEvents.end()));
+
+	// Clear mouse wheel events after processing them
+	_mouseWheelEvents.clear();
+
+	this->getLogger().info()
+		<< "Processing cursor enter/leave events for Desktop platform...";
+	events.insert(events.end(),
+				  std::make_move_iterator(_cursorEnterEvents.begin()),
+				  std::make_move_iterator(_cursorEnterEvents.end()));
+
+	// Clear cursor enter/leave events after processing them
+	_cursorEnterEvents.clear();
+
+	this->getLogger().info()
+		<< "Processing file drop events for Desktop platform...";
+	events.insert(events.end(),
+				  std::make_move_iterator(_fileDropEvents.begin()),
+				  std::make_move_iterator(_fileDropEvents.end()));
+
+	// Clear file drop events after processing them
+	_fileDropEvents.clear();
+
+	this->getLogger().info()
+		<< "Processing text input events for Desktop platform...";
+	events.insert(events.end(),
+				  std::make_move_iterator(_textInputEvents.begin()),
+				  std::make_move_iterator(_textInputEvents.end()));
+
+	// Clear text input events after processing them
+	_textInputEvents.clear();
 
 	return events;
 }
@@ -164,4 +208,25 @@ utility::event::MouseMotionEvent::MousePosition
 	return utility::event::MouseMotionEvent::MousePosition {
 		static_cast<unsigned int>(xPos), static_cast<unsigned int>(yPos)
 	};
+}
+
+std::vector<std::shared_ptr<utility::event::KeyboardEvent>>
+	evan::IDesktopPlatform::getPressedMovementKeys() const
+{
+	std::vector<std::shared_ptr<utility::event::KeyboardEvent>> events;
+	const int movementKeys[] = { GLFW_KEY_W,	GLFW_KEY_S,	   GLFW_KEY_A,
+								 GLFW_KEY_D,	GLFW_KEY_Q,	   GLFW_KEY_E,
+								 GLFW_KEY_UP,	GLFW_KEY_DOWN, GLFW_KEY_LEFT,
+								 GLFW_KEY_RIGHT };
+
+	for (int key: movementKeys) {
+		if (glfwGetKey(_window, key) == GLFW_PRESS) {
+			auto event = std::make_shared<utility::event::KeyboardEvent>();
+			event->setKeycode(convertGlfwKeyToKeyCode(key));
+			event->setIsDownEvent(true);
+			events.push_back(std::move(event));
+		}
+	}
+
+	return events;
 }

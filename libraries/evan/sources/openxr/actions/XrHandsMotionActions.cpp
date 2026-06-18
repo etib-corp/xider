@@ -34,13 +34,13 @@ evan::XrHandsMotionActions::~XrHandsMotionActions()
 // Public Methods //
 ////////////////////
 
-std::vector<std::unique_ptr<utility::event::Event>>
+std::vector<std::shared_ptr<utility::event::Event>>
 	evan::XrHandsMotionActions::getEvents(evan::XrDeviceBackend &deviceBackend)
 {
-	std::vector<std::unique_ptr<utility::event::Event>> events;
+	std::vector<std::shared_ptr<utility::event::Event>> events;
 
 	for (int i = 0; i < 2; i++) {
-		auto handEvent = std::make_unique<utility::event::HandMotionEvent>();
+		auto handEvent = std::make_shared<utility::event::HandMotionEvent>();
 		handEvent->setHandType(
 			i == 0 ? utility::event::HandEvent::HandType::Left
 				   : utility::event::HandEvent::HandType::Right);
