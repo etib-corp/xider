@@ -33,7 +33,7 @@ namespace evan
 		 * @brief Deleted default constructor to prevent instantiation of this
 		 * utility class.
 		 */
-		InteractionProfile() = delete;
+		InteractionProfile();
 
 		/**
 		 * @brief Retrieves the name of the OpenXR runtime in use.

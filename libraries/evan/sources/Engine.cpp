@@ -105,9 +105,9 @@ size_t evan::Engine::addText(std::shared_ptr<utility::graphic::Text> text)
 	auto material_id = _ressourceProvider->getMaterialID(text->getFontFamily());
 
 	if (material_id == 0) {
-		std::cerr << "Warning: Material '" << text->getFontFamily()
-				  << "' not found for text object. Text will not be rendered."
-				  << std::endl;
+		this->getLogger().warning()
+			<< "Material '" << text->getFontFamily()
+			<< "' not found for text object. Text will not be rendered.";
 		return 0;	 // Skip rendering this text if its material is not found
 	}
 
