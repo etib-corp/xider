@@ -11,6 +11,13 @@
 #include <utility/graphic/model.hpp>
 #include <utility/graphic/shader.hpp>
 
+#include <utility/sound/audio_source.hpp>
+#include <utility/sound/decoder/decoder_registry.hpp>
+#include <utility/sound/audio_manager.hpp>
+
+#include <utility/logging/loggable.hpp>
+#include <utility/logging/default_logger.hpp>
+
 namespace utility
 {
 	/**
@@ -23,7 +30,9 @@ namespace utility
 	 * resources for efficient retrieval. It supports loading fonts, materials,
 	 * and textures, and it can handle different shader types for materials.
 	 */
-	class RessourceProvider
+	class RessourceProvider:
+		protected utility::logging::Loggable<RessourceProvider,
+											 utility::logging::DefaultLogger>
 	{
 		public:
 		/**
@@ -347,6 +356,26 @@ namespace utility
 		std::shared_ptr<graphic::CodePoints> loadCodePointsFromAsset(
 			std::shared_ptr<utility::File> codePointsAsset);
 
+		/**
+		 * @brief Loads an audio source resource from a specified file path.
+		 *
+		 * @param path The file path to the audio source resource to be loaded.
+		 *
+		 * @return A unique pointer to the loaded AudioSource object.
+		 */
+		std::unique_ptr<sound::AudioSource> loadAudioSource(const std::string &path);
+
+		/**
+		 * @brief Loads an audio source resource from a specified asset.
+		 *
+		 * @param audioAsset A shared pointer to the File object containing the
+		 * audio source data to be loaded.
+		 *
+		 * @return A unique pointer to the loaded AudioSource object.
+		 */
+		std::unique_ptr<sound::AudioSource> loadAudioSourceFromAsset(
+			std::shared_ptr<utility::File> audioAsset);
+
 		protected:
 		/**
 		 * @brief Builds a unique shader name based on the vertex and fragment
@@ -429,6 +458,12 @@ namespace utility
 		std::map<uint32_t, std::shared_ptr<graphic::CodePoints>> _codePoints;
 
 		/**
+		 * @brief Internal map to store loaded audio buffers for efficient
+		 * retrieval.
+		 */
+		std::map<uint32_t, std::shared_ptr<sound::AudioBuffer>> _audioSources;
+
+		/**
 		 * @brief Internal map to store resource IDs for efficient lookup based
 		 * on file paths.
 		 */
@@ -461,6 +496,15 @@ namespace utility
 		 */
 		std::string _basePath;
 
+		/**
+		 * @brief Internal audio manager instance for managing audio operations.
+		 *
+		 * This member variable holds an instance of the AudioManager that is used
+		 * for managing audio playback and related operations. It handles the creation
+		 * and management of audio sources loaded through the resource provider.
+		 */
+		utility::sound::AudioManager _audioManager;
+
 		private:
 		/**
 		 * @brief Resolves a resource path by prepending the base path if it is
@@ -477,5 +521,7 @@ namespace utility
 		 * is set, or the original path if no base path is set.
 		 */
 		std::string resolvePath(const std::string &path) const;
+
+		using Loggable::getLogger;
 	};
 }	 // namespace utility

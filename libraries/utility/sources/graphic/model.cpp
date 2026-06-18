@@ -18,15 +18,13 @@ namespace utility::graphic
 			loadOBJ(modelAsset);
 			_type = ModelType::OBJ;
 		} else if (extension == "fbx") {
-			std::cout
-				<< "FBX loading not implemented yet. Skipping model loading."
-				<< std::endl;
+			getLogger().warning()
+				<< "FBX loading not implemented yet. Skipping model loading.";
 			// loadFBX(modelAsset); // Not implemented yet
 			_type = ModelType::FBX;
 		} else if (extension == "gltf" || extension == "glb") {
-			std::cout
-				<< "GLTF loading not implemented yet. Skipping model loading."
-				<< std::endl;
+			getLogger().warning()
+				<< "GLTF loading not implemented yet. Skipping model loading.";
 			// loadGLTF(modelAsset); // Not implemented yet
 			_type = ModelType::GLTF;
 		} else {
@@ -43,15 +41,13 @@ namespace utility::graphic
 				loadOBJ(modelAsset);
 				break;
 			case ModelType::FBX:
-				std::cout << "FBX loading not implemented yet. Skipping model "
-							 "loading."
-						  << std::endl;
+				getLogger().warning()
+					<< "FBX loading not implemented yet. Skipping model loading.";
 				// loadFBX(modelAsset); // Not implemented yet
 				break;
 			case ModelType::GLTF:
-				std::cout << "GLTF loading not implemented yet. Skipping model "
-							 "loading."
-						  << std::endl;
+				getLogger().warning()
+					<< "GLTF loading not implemented yet. Skipping model loading.";
 				// loadGLTF(modelAsset); // Not implemented yet
 				break;
 			default:

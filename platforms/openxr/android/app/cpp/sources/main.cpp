@@ -76,9 +76,23 @@ void android_main(struct android_app *android_app)
 	std::cout << "XIDER Application initialized successfully" << std::endl;
 	std::cout << "Entering main application loop..." << std::endl;
 
-	std::vector<std::string> texturePaths = {
-		"./texture1.png",
-	};
+	static auto source = ressourceProvider->loadAudioSource("sound/nastelbom-background-music-486996.mp3");
+
+	source->setGain(0.5f);
+	source->play();
+
+	commandHandler.setOnPauseCallback([&]() mutable {
+		source->pause();
+	});
+
+	{
+		auto source2 = ressourceProvider->loadAudioSource("sound/sigmamusicart-jazz-lounge-relaxing-background-music-537739.mp3");
+		source2->setGain(0.5f);
+		source2->play();
+		// wait for 5 seconds
+		std::this_thread::sleep_for(std::chrono::seconds(5));
+		// the source2 will be destroyed when it goes out of scope, stopping the audio
+	}
 
 	while (!android_app->destroyRequested) {
 		// Process Android events

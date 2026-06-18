@@ -18,6 +18,9 @@
 
 #include <utility/graphic/renderable.hpp>
 
+#include <utility/logging/loggable.hpp>
+#include <utility/logging/default_logger.hpp>
+
 namespace utility::graphic
 {
 	/**
@@ -30,7 +33,9 @@ namespace utility::graphic
 	 * allowing for efficient rendering and manipulation within the graphics
 	 * application.
 	 */
-	class Model: public Renderable
+	class Model: public Renderable,
+				protected utility::logging::Loggable<Model,
+													 utility::logging::DefaultLogger>
 	{
 		public:
 		/**
@@ -113,5 +118,7 @@ namespace utility::graphic
 		void loadOBJ(std::shared_ptr<utility::File> modelAsset);
 
 		ModelType _type;	///< The type of the model (e.g., OBJ, FBX, GLTF)
+
+		using Loggable::getLogger;
 	};
 }	 // namespace utility::graphic
