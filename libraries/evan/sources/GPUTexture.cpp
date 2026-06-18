@@ -25,7 +25,30 @@ evan::GPUTexture::GPUTexture(const DeviceContext &deviceContext,
 	this->createImageView(*deviceBackend);
 
 	this->getLogger().info() << "Creating default sampler for GPUTexture...";
-	this->createSampler(*deviceBackend, VkSamplerCreateInfo {});
+	if (type == TextureType::FontAtlas) {
+		this->createSampler(*deviceBackend, VkSamplerCreateInfo {
+			.sType				 = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
+			.pNext = nullptr,
+    		.flags = 0,
+			.magFilter			 = VK_FILTER_LINEAR,
+			.minFilter			 = VK_FILTER_LINEAR,
+			.mipmapMode			 = VK_SAMPLER_MIPMAP_MODE_LINEAR,
+			.addressModeU		 = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
+			.addressModeV		 = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
+			.addressModeW		 = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
+			.mipLodBias			 = 0.0f,
+			.anisotropyEnable	 = VK_FALSE,
+			.maxAnisotropy		 = 1.0f,
+			.compareEnable		 = (VkBool32)VK_FALSE,
+			.compareOp			 = VK_COMPARE_OP_ALWAYS,
+			.minLod				 = 0.0f,
+			.maxLod				 = static_cast<float>(_mipLevel),
+			.borderColor		 = VK_BORDER_COLOR_INT_OPAQUE_BLACK,
+			.unnormalizedCoordinates = VK_FALSE,
+		});
+	} else {
+		this->createSampler(*deviceBackend, VkSamplerCreateInfo {});
+	}
 }
 
 evan::GPUTexture::~GPUTexture()
@@ -69,7 +92,10 @@ void evan::GPUTexture::createImage(const ADeviceBackend &deviceBackend,
 	this->getLogger().info()
 		<< "Texture dimensions: " << texWidth << "x" << texHeight;
 
-	VkDeviceSize imageSize = texWidth * texHeight * 4;
+	VkDeviceSize imageSize = texWidth * texHeight
+		* (texture._type == utility::graphic::Texture::TextureType::FontAtlas
+			   ? 1
+			   : 4);
 	VkBuffer stagingBuffer;
 	VkDeviceMemory stagingBufferMemory;
 
@@ -86,9 +112,13 @@ void evan::GPUTexture::createImage(const ADeviceBackend &deviceBackend,
 		texHeight			  = 1;
 	}
 
-	_mipLevel = static_cast<uint32_t>(
-					std::floor(std::log2((std::max)(texWidth, texHeight))))
-		+ 1;
+	if (texture._type == utility::graphic::Texture::TextureType::FontAtlas) {
+		_mipLevel = 1; // Font atlases typically don't use mipmaps
+	} else {
+		_mipLevel = static_cast<uint32_t>(
+						std::floor(std::log2((std::max)(texWidth, texHeight))))
+			+ 1;
+	}
 	this->getLogger().info() << "Calculated mip levels: " << _mipLevel;
 
 	ADeviceBackend::CreateBufferProperties stagingBufferProperties = {
@@ -118,7 +148,8 @@ void evan::GPUTexture::createImage(const ADeviceBackend &deviceBackend,
 		._height	 = (uint32_t)texHeight,
 		._mipLevels	 = _mipLevel,
 		._numSamples = VK_SAMPLE_COUNT_1_BIT,
-		._format	 = VK_FORMAT_R8G8B8A8_SRGB,
+		._format	 = type == TextureType::FontAtlas ? VK_FORMAT_R8_UNORM
+													  : VK_FORMAT_R8G8B8A8_SRGB,
 		._tiling	 = VK_IMAGE_TILING_OPTIMAL,
 		._usage		 = VK_IMAGE_USAGE_TRANSFER_SRC_BIT
 			| VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
@@ -133,7 +164,8 @@ void evan::GPUTexture::createImage(const ADeviceBackend &deviceBackend,
 		._commandPool	= commandPool,
 		._graphicsQueue = graphicsQueue,
 		._image			= _image,
-		._format		= VK_FORMAT_R8G8B8A8_SRGB,
+		._format		= type == TextureType::FontAtlas ? VK_FORMAT_R8_UNORM
+														 : VK_FORMAT_R8G8B8A8_SRGB,
 		._oldLayout		= VK_IMAGE_LAYOUT_UNDEFINED,
 		._newLayout		= VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
 		._mipLevels		= _mipLevel
@@ -154,7 +186,9 @@ void evan::GPUTexture::createImage(const ADeviceBackend &deviceBackend,
 		._commandPool	= commandPool,
 		._graphicsQueue = graphicsQueue,
 		._image			= _image,
-		._imageFormat	= VK_FORMAT_R8G8B8A8_SRGB,
+		._imageFormat	= type == TextureType::FontAtlas
+			? VK_FORMAT_R8_UNORM
+			: VK_FORMAT_R8G8B8A8_SRGB,
 		._texWidth		= (uint32_t)texWidth,
 		._texHeight		= (uint32_t)texHeight,
 		._mipLevels		= _mipLevel
@@ -169,7 +203,10 @@ void evan::GPUTexture::createImage(const ADeviceBackend &deviceBackend,
 void evan::GPUTexture::createImageView(const ADeviceBackend &deviceBackend)
 {
 	this->getLogger().info() << "Creating image view...";
-	view = deviceBackend.createImageView(_image, VK_FORMAT_R8G8B8A8_SRGB,
+	view = deviceBackend.createImageView(_image,
+										 type == TextureType::FontAtlas
+											 ? VK_FORMAT_R8_UNORM
+											 : VK_FORMAT_R8G8B8A8_SRGB,
 										 VK_IMAGE_ASPECT_COLOR_BIT, _mipLevel);
 }
 

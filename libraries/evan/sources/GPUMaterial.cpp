@@ -21,11 +21,31 @@ evan::GPUMaterial::GPUMaterial(std::shared_ptr<DeviceContext> deviceContext,
 		<< "Initializing GPUMaterial with shader ID: " << shaderID << "...";
 
 	auto deviceBackend = deviceContext->getDeviceBackend();
-
-	auto textures = material.getTextures();
+	auto textures	   = material.getTextures();
 	for (const auto &texture: textures) {
-		_textures.emplace_back(
-			std::make_shared<GPUTexture>(*deviceContext, *texture));
+		GPUTexture::TextureType textureType;
+
+		switch (texture->_type) {
+			case utility::graphic::Texture::TextureType::Albedo:
+				textureType = GPUTexture::TextureType::Albedo;
+				break;
+			case utility::graphic::Texture::TextureType::Normal:
+				textureType = GPUTexture::TextureType::Normal;
+				break;
+			case utility::graphic::Texture::TextureType::Roughness:
+				textureType = GPUTexture::TextureType::Roughness;
+				break;
+			case utility::graphic::Texture::TextureType::FontAtlas:
+				textureType = GPUTexture::TextureType::FontAtlas;
+				break;
+			default:
+				this->getLogger().warning()
+					<< "Unknown texture type for material with shader ID: "
+					<< shaderID << ". Defaulting to Albedo.";
+				textureType = GPUTexture::TextureType::Albedo;
+		}
+		_textures.emplace_back(std::make_shared<GPUTexture>(
+			*deviceContext, *texture, textureType));
 	}
 
 	this->createDescriptorSets(
@@ -193,6 +213,10 @@ uint32_t evan::GPUMaterial::getBinding(GPUTexture::TextureType type)
 			this->getLogger().info()
 				<< "Returning binding 3 for Roughness texture.";
 			return 3;
+		case GPUTexture::TextureType::FontAtlas:
+			this->getLogger().info()
+				<< "Returning binding 4 for FontAtlas texture.";
+			return 4;
 	}
 	this->getLogger().warning()
 		<< "Unknown texture type: " << static_cast<int>(type)

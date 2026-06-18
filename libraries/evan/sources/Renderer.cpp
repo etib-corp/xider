@@ -245,6 +245,14 @@ void evan::Renderer::createDescriptorSetLayout(VkDevice device)
 		{ 3, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1,
 		  VK_SHADER_STAGE_FRAGMENT_BIT });	  // MetallicRoughness
 
+	VkDescriptorSetLayoutBinding fontAtlasBinding{};
+	fontAtlasBinding.binding = 4;
+	fontAtlasBinding.descriptorCount = 1;
+	fontAtlasBinding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+	fontAtlasBinding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+
+	bindings.push_back(fontAtlasBinding);
+
 	this->getLogger().info()
 		<< "Added texture bindings to descriptor set layout.";
 
@@ -347,8 +355,8 @@ void evan::Renderer::createGraphicsPipelines(VkDevice device,
 			VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
 		colorBlendAttachment.colorBlendOp		 = VK_BLEND_OP_ADD;
 		colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
-		colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
-		colorBlendAttachment.alphaBlendOp		 = VK_BLEND_OP_ADD;
+		colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+		colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
 
 		VkPipelineColorBlendStateCreateInfo colorBlending {};
 		colorBlending.sType =
@@ -373,11 +381,19 @@ void evan::Renderer::createGraphicsPipelines(VkDevice device,
 			static_cast<uint32_t>(dynamicStates.size());
 		dynamicState.pDynamicStates = dynamicStates.data();
 
-		VkPipelineLayoutCreateInfo pipelineLayoutInfo {};
-		pipelineLayoutInfo.sType =
-			VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+		VkPushConstantRange pushConstantRange{};
+		pushConstantRange.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
+		pushConstantRange.offset = 0;
+		pushConstantRange.size = sizeof(glm::vec4);
+
+		VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
+		pipelineLayoutInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+
 		pipelineLayoutInfo.setLayoutCount = 1;
-		pipelineLayoutInfo.pSetLayouts	  = &_descriptorSetLayout;
+		pipelineLayoutInfo.pSetLayouts = &_descriptorSetLayout;
+
+		pipelineLayoutInfo.pushConstantRangeCount = 1;
+		pipelineLayoutInfo.pPushConstantRanges = &pushConstantRange;
 
 		if (vkCreatePipelineLayout(device, &pipelineLayoutInfo, nullptr,
 								   &_pipelineLayouts[id])
@@ -602,6 +618,10 @@ void evan::Renderer::recordCommandBuffer(VkRenderPass renderPass,
 				_pipelineLayouts[correspondingPipelineID], 0, 1,
 				&material->getDescriptorSets()[_currentFrameIndex], 0, nullptr);
 		}
+
+		glm::vec4 color{1.f, 1.f, 1.f, 1.f};
+
+		vkCmdPushConstants(commandBuffer, _pipelineLayouts[correspondingPipelineID], VK_SHADER_STAGE_FRAGMENT_BIT, 0, sizeof(glm::vec4), &color);
 
 		this->getLogger().info() << "Drawing indexed mesh with index count: "
 								 << mesh->getIndexCount();

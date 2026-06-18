@@ -54,6 +54,42 @@ namespace utility::graphic
 		~Font();
 
 		/**
+		 * @brief Retrieves the ascender value for the specified font size.
+		 *
+		 * The ascender value represents the distance from the baseline to the
+		 * highest point of the font. It is used in text layout calculations to
+		 * determine the vertical positioning of text.
+		 *
+		 * @param fontSize The font size for which to retrieve the ascender value.
+		 * @return The ascender value for the specified font size.
+		 */
+		float getAscender(uint32_t fontSize) const;
+
+		/**
+		 * @brief Retrieves the descender value for the specified font size.
+		 *
+		 * The descender value represents the distance from the baseline to the
+		 * lowest point of the font. It is used in text layout calculations to
+		 * determine the vertical positioning of text.
+		 *
+		 * @param fontSize The font size for which to retrieve the descender value.
+		 * @return The descender value for the specified font size.
+		 */
+		float getDescender(uint32_t fontSize) const;
+
+		/**
+		 * @brief Retrieves the line height for the specified font size.
+		 *
+		 * The line height represents the vertical distance between lines of
+		 * text. It is used in text layout calculations to determine the spacing
+		 * between lines of text.
+		 *
+		 * @param fontSize The font size for which to retrieve the line height.
+		 * @return The line height for the specified font size.
+		 */
+		float getLineHeight(uint32_t fontSize) const;
+
+		/**
 		 * @brief Processes a string of Unicode code points to generate glyphs
 		 * for rendering text.
 		 *
