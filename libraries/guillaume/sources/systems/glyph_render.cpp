@@ -78,6 +78,11 @@ namespace guillaume::systems
 
 	GlyphRender::~GlyphRender(void)
 	{
+		for (auto &[_, entry]: _cache) {
+			if (entry.objectId != 0) {
+				_renderer->removeObject(entry.objectId);
+			}
+		}
 	}
 
 	void GlyphRender::update(const ecs::Entity::Identifier &entityIdentifier)
@@ -118,24 +123,43 @@ namespace guillaume::systems
 		auto &cacheEntry = _cache[entityIdentifier];
 		cacheEntry.used	 = true;
 
-		utility::graphic::Text glyphText(
-			_ressourceProvider, utility::graphic::CodePoints::toUtf8(glyphCode),
-			boundComponent.getHeight(), _defaultFontPath);
-		glyphText.setColor(colorComponent.getColor());
-		const auto pose = transformComponent.getPose();
+		const auto &currentPose = transformComponent.getPose();
+		const auto &currentHeight = boundComponent.getHeight();
+		const auto &currentColor = colorComponent.getColor();
 
-		if (cacheEntry.objectId != 0 && cacheEntry.text.has_value()
-			&& *cacheEntry.text == glyphText && cacheEntry.pose == pose) {
+		// If properties match cached values, skip Text object creation
+		if (cacheEntry.objectId != 0
+			&& cacheEntry.cachedGlyphName == glyphName
+			&& cacheEntry.cachedHeight == currentHeight
+			&& cacheEntry.cachedColor == currentColor
+			&& cacheEntry.pose == currentPose) {
+			getLogger().debug() << "GlyphRender: Skipping entity " << entityIdentifier 
+								<< " - properties unchanged";
 			return;
 		}
+
+		getLogger().info() << "GlyphRender: Creating new Text object for entity " 
+						  << entityIdentifier << " (glyph: '" << glyphName 
+						  << "', height: " << currentHeight << ")";
+
+		utility::graphic::Text glyphText(
+			_ressourceProvider, utility::graphic::CodePoints::toUtf8(glyphCode),
+			currentHeight, _defaultFontPath);
+		glyphText.setColor(currentColor);
 
 		if (cacheEntry.objectId != 0) {
 			_renderer->removeObject(cacheEntry.objectId);
 		}
 
-		cacheEntry.objectId = _renderer->addText(glyphText, pose);
+		cacheEntry.objectId = _renderer->addText(glyphText, currentPose);
 		cacheEntry.text		= glyphText;
-		cacheEntry.pose		= pose;
+		cacheEntry.pose		= currentPose;
+		
+		// Update cached properties
+		cacheEntry.cachedGlyphName	= glyphName;
+		cacheEntry.cachedHeight		= currentHeight;
+		cacheEntry.cachedColor		= currentColor;
+		cacheEntry.pose		= currentPose;
 	}
 
 }	 // namespace guillaume::systems
