@@ -414,6 +414,7 @@ namespace utility
 				  _textures[id]->_pixels.data());
 
 		_elementsIDs[textureAsset->path()] = id;
+		stbi_image_free(pixels);
 		return _textures[id];
 	}
 
