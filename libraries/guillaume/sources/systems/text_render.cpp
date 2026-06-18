@@ -62,7 +62,7 @@ namespace guillaume::systems
 	{
 		for (auto &[_, entry]: _cache) {
 			if (entry.objectId != 0) {
-				_renderer->removeObject(entry.objectId);
+				_engine->removeObject(entry.objectId);
 			}
 		}
 	}
@@ -115,7 +115,7 @@ namespace guillaume::systems
 			_engine->removeObject(cacheEntry.objectId);
 		}
 
-		cacheEntry.objectId = _renderer->addText(text, currentPose);
+		cacheEntry.objectId = _engine->addText(text, currentPose);
 		cacheEntry.text		= text;
 		cacheEntry.pose		= currentPose;
 		

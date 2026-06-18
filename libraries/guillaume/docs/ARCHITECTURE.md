@@ -9,11 +9,11 @@ presentation, and interaction logic stay separate.
 - Components store data such as transform, bounds, text, color, and borders.
 - Systems apply behavior such as rendering, interaction, and text measurement.
 - Scenes group entities into screens and let the application switch between
-	them.
+ them.
 
 ## Runtime Flow
 
-1. The application creates a renderer and event handler.
+1. The application create an engine.
 2. Scenes populate the UI tree using the storage objects passed in by the app.
 3. Systems render and update entities every frame.
 4. Input events update component state and drive transitions.

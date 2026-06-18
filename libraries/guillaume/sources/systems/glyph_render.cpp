@@ -80,7 +80,7 @@ namespace guillaume::systems
 	{
 		for (auto &[_, entry]: _cache) {
 			if (entry.objectId != 0) {
-				_renderer->removeObject(entry.objectId);
+				_engine->removeObject(entry.objectId);
 			}
 		}
 	}
@@ -152,7 +152,7 @@ namespace guillaume::systems
 		}
 
 
-		cacheEntry.objectId = _renderer->addText(glyphText, currentPose);
+		cacheEntry.objectId = _engine->addText(glyphText, currentPose);
 
     cacheEntry.text		= glyphText;
 		cacheEntry.pose		= currentPose;
