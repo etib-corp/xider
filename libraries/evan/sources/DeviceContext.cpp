@@ -30,10 +30,45 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL defaultDebugCallback(
 	VkDebugUtilsMessageTypeFlagsEXT messageType,
 	const VkDebugUtilsMessengerCallbackDataEXT *pCallbackData, void *pUserData)
 {
-	(void)messageSeverity;
-	(void)messageType;
-	(void)pCallbackData;
-	(void)pUserData;
+	static std::unique_ptr<utility::logging::Logger> logger = nullptr;
+	std::string_view message;
+	if (!logger) {
+		logger = std::make_unique<utility::logging::DefaultLogger>(
+			"VulkanValidation");
+	}
+
+	switch (messageType) {
+		case VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT:
+			message = "General";
+			break;
+		case VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT:
+			message = "Validation";
+			break;
+		case VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT:
+			message = "Performance";
+			break;
+		default:
+			message = "Unknown";
+			break;
+	}
+
+	switch (messageSeverity) {
+		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT:
+			logger->error()
+				<< "[" << message << "] " << pCallbackData->pMessage;
+			break;
+		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT:
+			logger->warning()
+				<< "[" << message << "] " << pCallbackData->pMessage;
+			break;
+		case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT:
+			logger->info() << "[" << message << "] " << pCallbackData->pMessage;
+			break;
+		default:
+			logger->debug()
+				<< "[" << message << "] " << pCallbackData->pMessage;
+			break;
+	}
 	return VK_FALSE;
 }
 
