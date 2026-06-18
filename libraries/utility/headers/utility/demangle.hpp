@@ -29,6 +29,7 @@
 	#include <cstdlib>
 	#include <cxxabi.h>
 #elif defined(_MSC_VER)
+	#define NOMINMAX
 	#include <Windows.h>
 	#include <dbghelp.h>
 #endif
