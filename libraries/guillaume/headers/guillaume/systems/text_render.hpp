@@ -51,6 +51,9 @@ namespace guillaume::systems
 			utility::graphic::PoseF pose;
 			size_t objectId { 0 };
 			bool used { false };
+			std::string cachedContent;
+			uint32_t cachedFontSize { 0 };
+			utility::graphic::Color32Bit cachedColor;
 		};
 
 		private:

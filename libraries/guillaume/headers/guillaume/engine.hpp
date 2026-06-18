@@ -137,9 +137,9 @@ namespace guillaume
 		virtual void present(void) = 0;
 
 		/**
-		 * @brief Add a mesh to the renderer.
+		 * @brief Add a mesh to the engine.
 		 *
-		 * @param mesh The mesh to add to the renderer.
+		 * @param mesh The mesh to add to the engine.
 		 * @param materialName The name of the material to use for rendering the
 		 * mesh.
 		 * @return A unique identifier for the added mesh.
@@ -166,7 +166,7 @@ namespace guillaume
 			measureText(const utility::graphic::Text &text) const = 0;
 
 		/**
-		 * @brief Add a text element to the renderer at a specified pose.
+		 * @brief Add a text element to the engine at a specified pose.
 		 * @param text The text to draw.
 		 * @param pose The pose at which to draw the text.
 		 * @return A unique identifier for the added text.
@@ -181,7 +181,7 @@ namespace guillaume
 		virtual utility::graphic::ViewF getView(void) const = 0;
 
 		/**
-		 * @brief Add a scene to the renderer.
+		 * @brief Add a scene to the engine.
 		 * @param sceneIndex The index of the scene to add.
 		 */
 		virtual void addScene(size_t sceneIndex) = 0;

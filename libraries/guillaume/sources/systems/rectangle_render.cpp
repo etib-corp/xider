@@ -256,6 +256,11 @@ namespace guillaume::systems
 
 	RectangleRender::~RectangleRender(void)
 	{
+		for (auto &[_, entry]: _cache) {
+			if (entry.objectId != 0) {
+				_engine->removeObject(entry.objectId);
+			}
+		}
 	}
 
 	void

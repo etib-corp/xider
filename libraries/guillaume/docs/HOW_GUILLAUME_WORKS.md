@@ -1,11 +1,11 @@
 # How Guillaume Works
 
-Guillaume exposes a small application template that owns the renderer, event
-handler, scene manager, and storage objects.
+Guillaume exposes a small application template that owns the engine, storage,
+and scene manager objects.
 
 ## Lifecycle
 
-1. Construct an `Application` specialization with the renderer, event handler,
+1. Construct an `Application` specialization with the engine, storage,
    and scene types you need.
 2. Use `pollEvents()` to process input and platform activity.
 3. Call `update()` to advance application state.
