@@ -102,7 +102,8 @@ size_t evan::Engine::addText(std::shared_ptr<utility::graphic::Text> text)
 	this->getLogger().info() << "Drawing text: " << text->getContent();
 
 	std::map<uint32_t, utility::graphic::Mesh> rawObjects;
-	auto material_id = _ressourceProvider->getMaterialID(text->getFontFamily());
+	auto material_id = _ressourceProvider->getMaterialID(
+		text->getFontFamily() + "_material");
 
 	if (material_id == 0) {
 		this->getLogger().warning()
