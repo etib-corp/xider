@@ -28,12 +28,51 @@
 
 namespace utility::sound
 {
-	class DecoderRegistry {
-		public:
-		static std::shared_ptr<AAudioDecoder> getDecoderForFile(
-			const std::string &filePath,
-			AudioDecoderType type = AudioDecoderType::UNKNOWN);
+    /**
+     * @class DecoderRegistry
+     *
+     * @brief Factory responsible for resolving audio decoders.
+     *
+     * DecoderRegistry provides a centralized mechanism for locating an
+     * appropriate AAudioDecoder implementation for a given audio file or
+     * decoder type.
+     *
+     * The registry abstracts format-specific decoder selection from the rest
+     * of the audio subsystem, allowing clients to decode audio files without
+     * needing to know which concrete decoder implementation is required.
+     *
+     * Supported decoder implementations are evaluated sequentially until a
+     * compatible decoder is found.
+     *
+     * @note The current implementation uses a static collection of decoder
+     * instances.
+     *
+     * @note Future implementations may replace the linear search with a more
+     * efficient lookup mechanism or a plugin-based architecture.
+     */
+    class DecoderRegistry {
+    public:
+        /**
+         * @brief Retrieves a decoder compatible with the specified audio
+         * source.
+         *
+         * The registry attempts to find a decoder that supports either the
+         * provided file path or the specified decoder type.
+         *
+         * @param filePath Path to the audio file.
+         * @param type Explicit audio type hint.
+         *
+         * @return A shared pointer to a compatible decoder, or nullptr if no
+         * suitable decoder is found.
+         */
+        [[nodiscard]]
+        static std::shared_ptr<AAudioDecoder>
+        getDecoderForFile(
+            const std::string &filePath,
+            AudioDecoderType type = AudioDecoderType::UNKNOWN);
 
-		private:
-	};
-}	 // namespace utility::sound
+    private:
+        DecoderRegistry() = delete;
+        ~DecoderRegistry() = delete;
+    };
+} // namespace utility::sound

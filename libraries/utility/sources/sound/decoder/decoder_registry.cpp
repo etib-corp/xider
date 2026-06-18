@@ -40,7 +40,7 @@ std::shared_ptr<utility::sound::AAudioDecoder>
 	 * plugin system for dynamically loading decoders.
 	 *
 	 */
-	static std::vector<std::shared_ptr<AAudioDecoder>> decoders = {
+	static const std::vector<std::shared_ptr<AAudioDecoder>> decoders = {
 		std::make_shared<WAVDecoder>(), std::make_shared<MP3Decoder>()
 	};
 	for (const auto &decoder: decoders) {
