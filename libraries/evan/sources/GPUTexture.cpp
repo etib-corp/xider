@@ -28,23 +28,23 @@ evan::GPUTexture::GPUTexture(const DeviceContext &deviceContext,
 	if (type == TextureType::FontAtlas) {
 		this->createSampler(*deviceBackend, VkSamplerCreateInfo {
 			.sType				 = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
+			.pNext = nullptr,
+    		.flags = 0,
 			.magFilter			 = VK_FILTER_LINEAR,
 			.minFilter			 = VK_FILTER_LINEAR,
+			.mipmapMode			 = VK_SAMPLER_MIPMAP_MODE_LINEAR,
 			.addressModeU		 = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
 			.addressModeV		 = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
 			.addressModeW		 = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
+			.mipLodBias			 = 0.0f,
 			.anisotropyEnable	 = VK_FALSE,
 			.maxAnisotropy		 = 1.0f,
-			.borderColor		 = VK_BORDER_COLOR_INT_OPAQUE_BLACK,
-			.unnormalizedCoordinates = VK_FALSE,
-			.compareOp			 = VK_COMPARE_OP_ALWAYS,
 			.compareEnable		 = (VkBool32)VK_FALSE,
-			.mipmapMode			 = VK_SAMPLER_MIPMAP_MODE_LINEAR,
-			.mipLodBias			 = 0.0f,
+			.compareOp			 = VK_COMPARE_OP_ALWAYS,
 			.minLod				 = 0.0f,
 			.maxLod				 = static_cast<float>(_mipLevel),
-			.pNext = nullptr,
-    		.flags = 0
+			.borderColor		 = VK_BORDER_COLOR_INT_OPAQUE_BLACK,
+			.unnormalizedCoordinates = VK_FALSE,
 		});
 	} else {
 		this->createSampler(*deviceBackend, VkSamplerCreateInfo {});
