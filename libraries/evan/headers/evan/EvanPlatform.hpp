@@ -76,6 +76,7 @@ const int MAX_FRAMES_IN_FLIGHT = 2;
 
 #ifdef __OPENXR__
 	#ifdef _WIN32
+		#define NOMINMAX
 		#include <windows.h>
 	#endif
 	#include <openxr/openxr.h>
