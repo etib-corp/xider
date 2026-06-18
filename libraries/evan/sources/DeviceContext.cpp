@@ -32,10 +32,8 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL defaultDebugCallback(
 {
 	(void)messageSeverity;
 	(void)messageType;
+	(void)pCallbackData;
 	(void)pUserData;
-	std::cerr << "[VULKAN] Validation layer: " << pCallbackData->pMessage
-			  << std::endl;
-
 	return VK_FALSE;
 }
 

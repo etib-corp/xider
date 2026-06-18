@@ -39,9 +39,8 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL defaultDebugCallback(
 {
 	(void)messageSeverity;
 	(void)messageType;
+	(void)pCallbackData;
 	(void)pUserData;
-	std::cerr << "Validation layer: " << pCallbackData->pMessage << std::endl;
-
 	return VK_FALSE;
 }
 
@@ -657,13 +656,6 @@ void evan::DesktopBackend::setupCallbackEvent(const IPlatform &platform)
 								  || action == GLFW_REPEAT);
 			event->setModifiers(self->convertGlfwModsToKeyModifiers(mods));
 			self->_keyboardEvents.push_back(std::move(event));
-			if (action == GLFW_PRESS) {
-				std::cout << "Key pressed: " << key << std::endl;
-			} else if (action == GLFW_RELEASE) {
-				std::cout << "Key released: " << key << std::endl;
-			} else if (action == GLFW_REPEAT) {
-				std::cout << "Key held (repeat): " << key << std::endl;
-			}
 		});
 
 	this->getLogger().info()
@@ -681,10 +673,6 @@ void evan::DesktopBackend::setupCallbackEvent(const IPlatform &platform)
 			event->setPressed(action == GLFW_PRESS);
 			event->setPosition(self->getMousePosition());
 			self->_mouseButtonEvents.push_back(std::move(event));
-			std::string actionStr =
-				(action == GLFW_PRESS) ? "pressed" : "released";
-			std::cout << "Mouse button " << actionStr << ": " << button
-					  << std::endl;
 		});
 
 	this->getLogger().info()
@@ -714,8 +702,6 @@ void evan::DesktopBackend::setupCallbackEvent(const IPlatform &platform)
 			event->setOffset(utility::math::Vector2F {
 				static_cast<float>(xoffset), static_cast<float>(yoffset) });
 			self->_mouseWheelEvents.push_back(std::move(event));
-			std::cout << "Mouse wheel scroll: x=" << xoffset
-					  << ", y=" << yoffset << std::endl;
 		});
 
 	this->getLogger().info() << "Setting GLFW cursor enter callback for cursor "
@@ -728,8 +714,6 @@ void evan::DesktopBackend::setupCallbackEvent(const IPlatform &platform)
 			auto event = std::make_shared<utility::event::CursorEnterEvent>();
 			event->setEntered(entered == GLFW_TRUE);
 			self->_cursorEnterEvents.push_back(std::move(event));
-			std::cout << "Cursor " << (entered ? "entered" : "left")
-					  << " window" << std::endl;
 		});
 
 	this->getLogger().info()
@@ -748,8 +732,6 @@ void evan::DesktopBackend::setupCallbackEvent(const IPlatform &platform)
 			}
 			event->setPaths(pathVector);
 			self->_fileDropEvents.push_back(std::move(event));
-			std::cout << "Dropped " << count << " file(s) on window"
-					  << std::endl;
 		});
 
 	this->getLogger().info()
@@ -784,7 +766,5 @@ void evan::DesktopBackend::setupCallbackEvent(const IPlatform &platform)
 			}
 			event->setText(utf8Text);
 			self->_textInputEvents.push_back(std::move(event));
-			std::cout << "Character input: U+" << std::hex << codepoint
-					  << std::dec << std::endl;
 		});
 }

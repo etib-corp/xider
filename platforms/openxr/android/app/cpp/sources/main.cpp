@@ -73,9 +73,6 @@ void android_main(struct android_app *android_app)
 	// Initialize XIDER application with Evan engine
 	xider::XIDER app(xrPlatform, ressourceProvider);
 
-	std::cout << "XIDER Application initialized successfully" << std::endl;
-	std::cout << "Entering main application loop..." << std::endl;
-
 	static auto source = ressourceProvider->loadAudioSource("sound/nastelbom-background-music-486996.mp3");
 
 	source->setGain(0.5f);
