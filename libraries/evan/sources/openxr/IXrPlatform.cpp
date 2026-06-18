@@ -17,7 +17,7 @@ bool evan::IXrPlatform::shouldClose() const
 	return _shouldClose;
 }
 
-std::vector<std::unique_ptr<utility::event::Event>>
+std::vector<std::shared_ptr<utility::event::Event>>
 	evan::IXrPlatform::pollEvents(ADeviceBackend &deviceBackend)
 {
 	this->getLogger().info() << "Polling OpenXR events";
@@ -26,7 +26,7 @@ std::vector<std::unique_ptr<utility::event::Event>>
 	evan::XrDeviceBackend &xrDeviceBackend =
 		dynamic_cast<evan::XrDeviceBackend &>(deviceBackend);
 
-	std::vector<std::unique_ptr<utility::event::Event>> events =
+	std::vector<std::shared_ptr<utility::event::Event>> events =
 		xrDeviceBackend.pollActions();
 
 	while (xrPollEvent(xrDeviceBackend._XrInstance, &eventDataBuffer)

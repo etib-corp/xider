@@ -76,7 +76,7 @@ namespace
 				utility::event::KeyboardEvent::KeyModifiers::Unknown,
 			const bool isDownEvent = true)
 		{
-			auto event = std::make_unique<utility::event::KeyboardEvent>();
+			auto event = std::make_shared<utility::event::KeyboardEvent>();
 			event->setKeycode(keycode);
 			event->setModifiers(modifiers);
 			event->setIsDownEvent(isDownEvent);

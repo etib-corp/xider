@@ -79,10 +79,10 @@ namespace evan
 		 *
 		 * @param deviceBackend The device backend used for interacting with the
 		 * OpenXR runtime and managing resources.
-		 * @return A vector of unique pointers to events representing the
+		 * @return A vector of shared pointers to events representing the
 		 * current state of the hand motion actions.
 		 */
-		std::vector<std::unique_ptr<utility::event::Event>>
+		std::vector<std::shared_ptr<utility::event::Event>>
 			getEvents(XrDeviceBackend &deviceBackend);
 
 		/** @brief The XrAction handle for hand aim tracking.

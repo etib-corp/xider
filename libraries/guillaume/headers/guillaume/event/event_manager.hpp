@@ -157,6 +157,12 @@ namespace guillaume::event
 		 * @brief Virtual destructor for proper cleanup of derived classes.
 		 */
 		virtual ~EventManager(void) = default;
+
+		/**
+		 * @brief Check if there are pending events.
+		 * @return True if there are pending events, false otherwise.
+		 */
+		bool hasPendingEvents(void) const;
 	};
 }	 // namespace guillaume::event
 

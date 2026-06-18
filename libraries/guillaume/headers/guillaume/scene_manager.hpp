@@ -69,7 +69,7 @@ namespace guillaume
 		LocalStorage _localStorage;	   ///< Local storage for persistent data
 		SessionStorage
 			_sessionStorage;	///< Session storage for temporary data
-		Engine *_engine; ///< Pointer to the application engine (non-owning)
+		Engine *_engine;	///< Pointer to the application engine (non-owning)
 
 		/**
 		 * @brief Get the active scene.

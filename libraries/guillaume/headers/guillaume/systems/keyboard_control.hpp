@@ -23,10 +23,11 @@
 #pragma once
 
 #include "guillaume/ecs/system_filler.hpp"
-#include "guillaume/event/event_manager.hpp"
 
 #include "guillaume/components/focus.hpp"
 #include "guillaume/components/text.hpp"
+
+#include "guillaume/event/event_subscriber.hpp"
 
 #include <utility/event/event.hpp>
 #include <utility/event/keyboard_event.hpp>
@@ -39,10 +40,12 @@ namespace guillaume::systems
 	 * @see components::Text
 	 */
 	class KeyboardControl:
-		public ecs::SystemFiller<components::Text, components::Focus>,
-		public event::EventManager<utility::event::KeyboardEvent>
+		public ecs::SystemFiller<components::Text, components::Focus>
 	{
 		private:
+		event::EventSubscriber<utility::event::KeyboardEvent>
+			_keyboardSubscriber;
+
 		public:
 		/**
 		 * @brief Default constructor for the KeyboardControl system.

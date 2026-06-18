@@ -39,7 +39,7 @@ namespace guillaume::components
 			std::function<void(void)>;	  ///< Focus event handler type
 
 		private:
-		Handler _onFocusGained;	 ///< Focus gained event handler
+		Handler _onFocusGained;	   ///< Focus gained event handler
 		Handler _onFocusLost;	   ///< Focus lost event handler
 
 		public:

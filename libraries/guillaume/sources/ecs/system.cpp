@@ -95,6 +95,14 @@ namespace guillaume::ecs
 			update(entity->getIdentifier());
 		}
 
+		// If no entities match but system has no requirements, still call
+		// update once
+		if (matchingEntities == 0 && getSignature().none()) {
+			getLogger().debug() << "System has no entity requirements, calling "
+								   "update with dummy identifier";
+			update(0);
+		}
+
 		// Per-frame cleanup
 		cleanup();
 

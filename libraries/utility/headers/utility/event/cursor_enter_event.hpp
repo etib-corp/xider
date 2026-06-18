@@ -24,25 +24,23 @@
 
 #include <memory>
 
-#include "utility/math/vector.hpp"
-
 #include "utility/event/event.hpp"
 
 namespace utility::event
 {
 
 	/**
-	 * @brief Mouse motion event.
+	 * @brief Cursor enter/leave event.
 	 *
-	 * Represents mouse movement with position.
+	 * Represents the cursor entering or leaving the content area of a window.
+	 * This event is triggered when the cursor crosses the boundary of the
+	 * window's content area.
 	 */
-	class MouseMotionEvent: public Event
+	class CursorEnterEvent: public Event
 	{
 		public:
-		using MousePosition = math::Vector2UI; /**< 2D mouse position type */
-
 		/**
-		 * @brief Factory for creating MouseMotionEvent instances.
+		 * @brief Factory for creating CursorEnterEvent instances.
 		 */
 		class Factory: public Event::AbstractFactory
 		{
@@ -50,54 +48,46 @@ namespace utility::event
 			~Factory(void) override;
 
 			/**
-			 * @brief Create a MouseMotionEvent as a base Event pointer.
-			 * @return Newly created MouseMotionEvent as std::unique_ptr<Event>.
+			 * @brief Create a CursorEnterEvent as a base Event pointer.
+			 * @return Newly created CursorEnterEvent as std::unique_ptr<Event>.
 			 */
 			std::unique_ptr<Event> create(void) const override;
 
 			/**
-			 * @brief Create a strongly-typed MouseMotionEvent.
-			 * @return Newly created MouseMotionEvent as
-			 * std::unique_ptr<MouseMotionEvent>.
+			 * @brief Create a strongly-typed CursorEnterEvent.
+			 * @return Newly created CursorEnterEvent as
+			 * std::unique_ptr<CursorEnterEvent>.
 			 */
-			std::unique_ptr<MouseMotionEvent> createTyped(void) const;
+			std::unique_ptr<CursorEnterEvent> createTyped(void) const;
 		};
 
 		private:
-		MousePosition _position { 0, 0 };
+		bool _entered { false }; /**< True if cursor entered, false if left */
 
 		public:
 		/**
 		 * @brief Default constructor.
 		 */
-		explicit MouseMotionEvent(void);
+		explicit CursorEnterEvent(void);
 
 		/**
 		 * @brief Default destructor.
 		 */
-		~MouseMotionEvent(void) override;
+		~CursorEnterEvent(void) override;
 
 		/**
-		 * @brief Get the event type.
-		 * @return The type of this event (MouseMotion).
+		 * @brief Set whether the cursor entered or left the content area.
+		 * @param entered True if the cursor entered the content area, false if
+		 * it left.
+		 * @return Reference to this CursorEnterEvent for method chaining.
 		 */
-		Type getEventType(void) const noexcept override
-		{
-			return Type::MouseMotion;
-		}
+		CursorEnterEvent &setEntered(const bool entered) noexcept;
 
 		/**
-		 * @brief Set the current mouse position.
-		 * @param position The mouse position as a 2D vector (x, y).
-		 * @return Reference to this MouseMotionEvent for method chaining.
+		 * @brief Check if the cursor entered the content area.
+		 * @return True if the cursor entered, false if it left.
 		 */
-		MouseMotionEvent &setPosition(const MousePosition &position) noexcept;
-
-		/**
-		 * @brief Get the current mouse position.
-		 * @return The mouse position as a 2D vector (x, y).
-		 */
-		MousePosition getPosition(void) const noexcept;
+		bool isEntered(void) const noexcept;
 	};
 
 }	 // namespace utility::event

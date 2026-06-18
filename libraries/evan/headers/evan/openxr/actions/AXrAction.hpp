@@ -101,11 +101,11 @@ namespace evan
 		 *
 		 * @param deviceBackend Reference to the `XrDeviceBackend` used to
 		 * communicate with the OpenXR session and query action state.
-		 * @return std::vector<std::unique_ptr<utility::event::Event>> A vector
+		 * @return std::vector<std::shared_ptr<utility::event::Event>> A vector
 		 * of allocated events describing input changes; may be empty if no
 		 * changes were detected.
 		 */
-		virtual std::vector<std::unique_ptr<utility::event::Event>>
+		virtual std::vector<std::shared_ptr<utility::event::Event>>
 			getEvent(XrDeviceBackend &deviceBackend) = 0;
 
 		/** @brief Retrieves the XrAction handle associated with this AXrAction.

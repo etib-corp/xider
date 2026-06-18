@@ -20,39 +20,51 @@
  SOFTWARE.
  */
 
-#pragma once
+#include "utility/event/file_drop_event.hpp"
 
-#include "guillaume/event/event_manager.hpp"
-
-namespace guillaume::event
+namespace utility::event
 {
-	template<utility::event::InheritFromEvent EventType>
-	void EventManager<EventType>::consumeNextEvent(void)
+
+	//////////////////////
+	// Factory methods //
+	////////////////////
+
+	FileDropEvent::Factory::~Factory(void) = default;
+
+	std::unique_ptr<Event> FileDropEvent::Factory::create(void) const
 	{
-		if (_subscriber->hasPendingEvents()) {
-			_lastEvent = _subscriber->getNextEvent();
-		}
+		return std::make_unique<FileDropEvent>();
 	}
 
-	template<utility::event::InheritFromEvent EventType>
-	std::unique_ptr<EventType> EventManager<EventType>::getLastEvent(void)
+	std::unique_ptr<FileDropEvent>
+		FileDropEvent::Factory::createTyped(void) const
 	{
-		if (!_lastEvent) {
-			return nullptr;
-		}
-		return std::move(_lastEvent);
+		return std::make_unique<FileDropEvent>();
 	}
 
-	template<utility::event::InheritFromEvent EventType>
-	EventManager<EventType>::EventManager(EventBus &eventBus)
-		: _eventBus(eventBus)
-		, _subscriber(std::make_unique<EventSubscriber<EventType>>(_eventBus))
+	////////////////////
+	// Public methods //
+	//////////////////
+
+	FileDropEvent::FileDropEvent(void) = default;
+
+	FileDropEvent::~FileDropEvent(void) = default;
+
+	FileDropEvent &
+		FileDropEvent::setPaths(const std::vector<std::string> &paths)
 	{
+		_paths = paths;
+		return *this;
 	}
 
-	template<utility::event::InheritFromEvent EventType>
-	bool EventManager<EventType>::hasPendingEvents(void) const
+	const std::vector<std::string> &FileDropEvent::getPaths(void) const noexcept
 	{
-		return _subscriber->hasPendingEvents();
+		return _paths;
 	}
-}	 // namespace guillaume::event
+
+	std::size_t FileDropEvent::getCount(void) const noexcept
+	{
+		return _paths.size();
+	}
+
+}	 // namespace utility::event

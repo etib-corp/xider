@@ -20,26 +20,44 @@
  SOFTWARE.
  */
 
-#pragma once
+#include "utility/event/mouse_wheel_event.hpp"
 
-#include <gtest/gtest.h>
-
-#include <guillaume/engine.hpp>
-
-namespace guillaume::tests
+namespace utility::event
 {
 
-	class TestRenderer: public ::testing::Test
+	MouseWheelEvent::Factory::~Factory(void)
 	{
-		protected:
-		TestRenderer(void)			 = default;
-		~TestRenderer(void) override = default;
-		void SetUp(void) override
-		{
-		}
-		void TearDown(void) override
-		{
-		}
-	};
+	}
 
-}	 // namespace guillaume::tests
+	std::unique_ptr<Event> MouseWheelEvent::Factory::create(void) const
+	{
+		return this->createTyped();
+	}
+
+	std::unique_ptr<MouseWheelEvent>
+		MouseWheelEvent::Factory::createTyped(void) const
+	{
+		return std::make_unique<MouseWheelEvent>();
+	}
+
+	MouseWheelEvent::MouseWheelEvent(void)
+	{
+	}
+
+	MouseWheelEvent::~MouseWheelEvent(void)
+	{
+	}
+
+	MouseWheelEvent &
+		MouseWheelEvent::setOffset(const math::Vector2F &offset) noexcept
+	{
+		_offset = offset;
+		return *this;
+	}
+
+	math::Vector2F MouseWheelEvent::getOffset(void) const noexcept
+	{
+		return _offset;
+	}
+
+}	 // namespace utility::event

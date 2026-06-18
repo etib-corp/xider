@@ -39,12 +39,12 @@ evan::XrManageActions::~XrManageActions()
 	xrDestroyActionSet(_actionSet);
 }
 
-std::vector<std::unique_ptr<utility::event::Event>>
+std::vector<std::shared_ptr<utility::event::Event>>
 	evan::XrManageActions::pollActions(XrDeviceBackend &deviceBackend)
 {
 	this->getLogger().debug() << "Polling actions from OpenXR runtime";
 
-	std::vector<std::unique_ptr<utility::event::Event>> events;
+	std::vector<std::shared_ptr<utility::event::Event>> events;
 
 	const XrActiveActionSet activeActionSet { _actionSet, XR_NULL_PATH };
 	XrActionsSyncInfo syncInfo { XR_TYPE_ACTIONS_SYNC_INFO };

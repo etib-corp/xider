@@ -57,7 +57,7 @@ namespace guillaume::systems
 		std::shared_ptr<utility::RessourceProvider>
 			_ressourceProvider;	   ///< Shared resource provider for loading
 								   ///< fonts and glyphs
-		std::unique_ptr<Engine> &_renderer;	   ///< Engine instance
+		std::unique_ptr<Engine> &_engine;	   ///< Engine instance
 		std::string _defaultFontPath;	 ///< Default font for text rendering
 		std::map<ecs::Entity::Identifier, CacheEntry> _cache;
 

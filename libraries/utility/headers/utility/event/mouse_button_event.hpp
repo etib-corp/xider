@@ -82,7 +82,7 @@ namespace utility::event
 		MousePosition _position { 0, 0 }; /**< Current mouse position (x, y) */
 		Button _button {
 			Button::Unknown
-		};						 /**< Currently active mouse button */
+		}; /**< Currently active mouse button */
 		bool _pressed { false }; /**< True when the button is pressed */
 
 		public:
@@ -95,6 +95,15 @@ namespace utility::event
 		 * @brief Default destructor.
 		 */
 		~MouseButtonEvent(void) override;
+
+		/**
+		 * @brief Get the event type.
+		 * @return The type of this event (MouseButton).
+		 */
+		Type getEventType(void) const noexcept override
+		{
+			return Type::MouseButton;
+		}
 
 		/**
 		 * @brief Set the current mouse position.

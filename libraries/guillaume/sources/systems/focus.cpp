@@ -25,16 +25,18 @@
 namespace guillaume::systems
 {
 
-	Focus::Focus(event::EventBus &eventBus)
+	Focus::Focus(event::EventBus &eventBus, std::unique_ptr<Engine> &engine)
 		: ecs::SystemFiller<components::Focus, components::Transform,
 							components::Bound,
 							components::MouseButtonInteraction,
 							components::HandButtonInteraction,
 							components::HandPinchInteraction,
 							components::HandPokeInteraction>(ecs::Phase::Event)
+		, _engine(engine)
 		, _focusedEntity(std::nullopt)
+
 	{
-		getLogger().info() << "Focus system initialized";
+		this->getLogger().info() << "Focus system initialized";
 	}
 
 	void Focus::setFocus(const ecs::Entity::Identifier &entityIdentifier)
@@ -49,12 +51,14 @@ namespace guillaume::systems
 		if (_focusedEntity.has_value()
 			&& _focusedEntity.value() != entityIdentifier) {
 			auto previousEntity = _focusedEntity.value();
-			if (hasComponent<components::Focus>(previousEntity)) {
+			if (this->template hasComponent<components::Focus>(
+					previousEntity)) {
 				auto &previousFocus =
-					getComponent<components::Focus>(previousEntity);
+					this->template getComponent<components::Focus>(
+						previousEntity);
 				auto handler = previousFocus.getOnFocusLostHandler();
 				if (handler) {
-					getLogger().debug()
+					this->getLogger().debug()
 						<< "Triggering focus lost handler for entity "
 						<< previousEntity;
 					handler();
@@ -64,14 +68,15 @@ namespace guillaume::systems
 
 		// Set focus to new entity
 		_focusedEntity = entityIdentifier;
-		getLogger().info() << "Focus set to entity " << entityIdentifier;
+		this->getLogger().info() << "Focus set to entity " << entityIdentifier;
 
 		// Trigger focus handler for new entity
-		if (hasComponent<components::Focus>(entityIdentifier)) {
-			auto &focus = getComponent<components::Focus>(entityIdentifier);
+		if (this->template hasComponent<components::Focus>(entityIdentifier)) {
+			auto &focus = this->template getComponent<components::Focus>(
+				entityIdentifier);
 			auto handler = focus.getOnFocusGainedHandler();
 			if (handler) {
-				getLogger().debug()
+				this->getLogger().debug()
 					<< "Triggering focus gained handler for entity "
 					<< entityIdentifier;
 				handler();
@@ -86,18 +91,21 @@ namespace guillaume::systems
 			_lastFocusedEntity = _focusedEntity.value();
 
 			auto previousEntity = _focusedEntity.value();
-			if (hasComponent<components::Focus>(previousEntity)) {
+			if (this->template hasComponent<components::Focus>(
+					previousEntity)) {
 				auto &previousFocus =
-					getComponent<components::Focus>(previousEntity);
+					this->template getComponent<components::Focus>(
+						previousEntity);
 				auto handler = previousFocus.getOnFocusLostHandler();
 				if (handler) {
-					getLogger().debug()
+					this->getLogger().debug()
 						<< "Triggering focus lost handler for entity "
 						<< previousEntity;
 					handler();
 				}
 			}
-			getLogger().info() << "Focus cleared from entity " << previousEntity;
+			this->getLogger().info()
+				<< "Focus cleared from entity " << previousEntity;
 			_focusedEntity = std::nullopt;
 		}
 	}
@@ -107,63 +115,87 @@ namespace guillaume::systems
 		return _focusedEntity;
 	}
 
-	std::optional<ecs::Entity::Identifier> Focus::getLastFocusedEntity(void) const
+	std::optional<ecs::Entity::Identifier>
+		Focus::getLastFocusedEntity(void) const
 	{
 		return _lastFocusedEntity;
 	}
 
 	void Focus::update(const ecs::Entity::Identifier &entityIdentifier)
 	{
-		getLogger().debug() << "Updating Focus system for entity "
-							<< entityIdentifier;
+		this->getLogger().debug()
+			<< "Updating Focus system for entity " << entityIdentifier;
+
+		bool entityClicked = false;
 
 		// Check if entity was clicked with mouse
-		if (hasComponent<components::MouseButtonInteraction>(entityIdentifier)) {
+		if (this->template hasComponent<components::MouseButtonInteraction>(
+				entityIdentifier)) {
 			auto &mouseInteraction =
-				getComponent<components::MouseButtonInteraction>(entityIdentifier);
+				this->template getComponent<components::MouseButtonInteraction>(
+					entityIdentifier);
 			if (mouseInteraction.isButtonPressed(
 					utility::event::MouseButtonEvent::Button::Left)) {
-				setFocus(entityIdentifier);
-				return;
+				entityClicked = true;
 			}
 		}
 
 		// Check if entity was clicked with hand button
-		if (hasComponent<components::HandButtonInteraction>(entityIdentifier)) {
+		if (!entityClicked
+			&& this->template hasComponent<components::HandButtonInteraction>(
+				entityIdentifier)) {
 			auto &handInteraction =
-				getComponent<components::HandButtonInteraction>(entityIdentifier);
+				this->template getComponent<components::HandButtonInteraction>(
+					entityIdentifier);
 			// Check common hand buttons (A, B, X, Y)
 			if (handInteraction.isButtonPressed(
 					utility::event::HandButtonEvent::Button::A)
 				|| handInteraction.isButtonPressed(
-						utility::event::HandButtonEvent::Button::B)
+					utility::event::HandButtonEvent::Button::B)
 				|| handInteraction.isButtonPressed(
-						utility::event::HandButtonEvent::Button::X)
+					utility::event::HandButtonEvent::Button::X)
 				|| handInteraction.isButtonPressed(
-						utility::event::HandButtonEvent::Button::Y)) {
-				setFocus(entityIdentifier);
-				return;
+					utility::event::HandButtonEvent::Button::Y)) {
+				entityClicked = true;
 			}
 		}
 
 		// Check if entity was clicked with hand pinch
-		if (hasComponent<components::HandPinchInteraction>(entityIdentifier)) {
+		if (!entityClicked
+			&& this->template hasComponent<components::HandPinchInteraction>(
+				entityIdentifier)) {
 			auto &pinchInteraction =
-				getComponent<components::HandPinchInteraction>(entityIdentifier);
+				this->template getComponent<components::HandPinchInteraction>(
+					entityIdentifier);
 			if (pinchInteraction.isPinch()) {
-				setFocus(entityIdentifier);
-				return;
+				entityClicked = true;
 			}
 		}
 
 		// Check if entity was clicked with hand poke
-		if (hasComponent<components::HandPokeInteraction>(entityIdentifier)) {
+		if (!entityClicked
+			&& this->template hasComponent<components::HandPokeInteraction>(
+				entityIdentifier)) {
 			auto &pokeInteraction =
-				getComponent<components::HandPokeInteraction>(entityIdentifier);
+				this->template getComponent<components::HandPokeInteraction>(
+					entityIdentifier);
 			if (pokeInteraction.isPoke()) {
-				setFocus(entityIdentifier);
-				return;
+				entityClicked = true;
 			}
+		}
+
+		// If entity was clicked, set focus and disable viewport input
+		if (entityClicked) {
+			setFocus(entityIdentifier);
+			if (_engine) {
+				_engine->setShouldCaptureViewportInput(false);
+			}
+			return;
+		}
+
+		// If focus was cleared and we have an engine, re-enable viewport input
+		if (!_focusedEntity.has_value() && _engine) {
+			_engine->setShouldCaptureViewportInput(true);
 		}
 	}
 

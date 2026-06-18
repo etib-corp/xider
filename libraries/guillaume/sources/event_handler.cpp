@@ -26,7 +26,6 @@ namespace guillaume
 {
 
 	EventHandler::EventHandler(void)
-		: _gotNewEvents(false)
 	{
 	}
 
@@ -35,19 +34,9 @@ namespace guillaume
 		return _callback;
 	}
 
-	void EventHandler::setGotNewEvents(bool gotNewEvents)
-	{
-		_gotNewEvents = gotNewEvents;
-	}
-
 	void EventHandler::setEventCallback(const Handler &callback)
 	{
 		_callback = callback;
-	}
-
-	bool EventHandler::gotNewEvents(void) const
-	{
-		return _gotNewEvents;
 	}
 
 }	 // namespace guillaume

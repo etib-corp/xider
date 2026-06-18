@@ -651,15 +651,18 @@ void evan::DesktopBackend::setupCallbackEvent(const IPlatform &platform)
 
 			(void)window;
 			(void)scancode;
-			auto event = std::make_unique<utility::event::KeyboardEvent>();
+			auto event = std::make_shared<utility::event::KeyboardEvent>();
 			event->setKeycode(self->convertGlfwKeyToKeyCode(key));
-			event->setIsDownEvent(action == GLFW_PRESS);
+			event->setIsDownEvent(action == GLFW_PRESS
+								  || action == GLFW_REPEAT);
 			event->setModifiers(self->convertGlfwModsToKeyModifiers(mods));
 			self->_keyboardEvents.push_back(std::move(event));
 			if (action == GLFW_PRESS) {
 				std::cout << "Key pressed: " << key << std::endl;
 			} else if (action == GLFW_RELEASE) {
 				std::cout << "Key released: " << key << std::endl;
+			} else if (action == GLFW_REPEAT) {
+				std::cout << "Key held (repeat): " << key << std::endl;
 			}
 		});
 
@@ -673,7 +676,7 @@ void evan::DesktopBackend::setupCallbackEvent(const IPlatform &platform)
 
 			(void)window;
 			(void)mods;
-			auto event = std::make_unique<utility::event::MouseButtonEvent>();
+			auto event = std::make_shared<utility::event::MouseButtonEvent>();
 			event->setButton(self->convertGlfwMouseButtonToButton(button));
 			event->setPressed(action == GLFW_PRESS);
 			event->setPosition(self->getMousePosition());
@@ -692,10 +695,96 @@ void evan::DesktopBackend::setupCallbackEvent(const IPlatform &platform)
 			auto *self = static_cast<evan::IDesktopPlatform *>(
 				glfwGetWindowUserPointer(window));
 
-			auto event = std::make_unique<utility::event::MouseMotionEvent>();
+			auto event = std::make_shared<utility::event::MouseMotionEvent>();
 			event->setPosition(utility::event::MouseMotionEvent::MousePosition {
 				static_cast<unsigned int>(xpos),
 				static_cast<unsigned int>(ypos) });
 			self->_mouseMotionEvents.push_back(std::move(event));
+		});
+
+	this->getLogger().info()
+		<< "Setting GLFW scroll callback for mouse wheel events...";
+	glfwSetScrollCallback(
+		glfwPlatform->_window,
+		[](GLFWwindow *window, double xoffset, double yoffset) {
+			auto *self = static_cast<evan::IDesktopPlatform *>(
+				glfwGetWindowUserPointer(window));
+
+			auto event = std::make_shared<utility::event::MouseWheelEvent>();
+			event->setOffset(utility::math::Vector2F {
+				static_cast<float>(xoffset), static_cast<float>(yoffset) });
+			self->_mouseWheelEvents.push_back(std::move(event));
+			std::cout << "Mouse wheel scroll: x=" << xoffset
+					  << ", y=" << yoffset << std::endl;
+		});
+
+	this->getLogger().info() << "Setting GLFW cursor enter callback for cursor "
+								"enter/leave events...";
+	glfwSetCursorEnterCallback(
+		glfwPlatform->_window, [](GLFWwindow *window, int entered) {
+			auto *self = static_cast<evan::IDesktopPlatform *>(
+				glfwGetWindowUserPointer(window));
+
+			auto event = std::make_shared<utility::event::CursorEnterEvent>();
+			event->setEntered(entered == GLFW_TRUE);
+			self->_cursorEnterEvents.push_back(std::move(event));
+			std::cout << "Cursor " << (entered ? "entered" : "left")
+					  << " window" << std::endl;
+		});
+
+	this->getLogger().info()
+		<< "Setting GLFW drop callback for file drop events...";
+	glfwSetDropCallback(
+		glfwPlatform->_window,
+		[](GLFWwindow *window, int count, const char **paths) {
+			auto *self = static_cast<evan::IDesktopPlatform *>(
+				glfwGetWindowUserPointer(window));
+
+			auto event = std::make_shared<utility::event::FileDropEvent>();
+			std::vector<std::string> pathVector;
+			pathVector.reserve(count);
+			for (int i = 0; i < count; i++) {
+				pathVector.emplace_back(paths[i]);
+			}
+			event->setPaths(pathVector);
+			self->_fileDropEvents.push_back(std::move(event));
+			std::cout << "Dropped " << count << " file(s) on window"
+					  << std::endl;
+		});
+
+	this->getLogger().info()
+		<< "Setting GLFW character callback for text input events...";
+	glfwSetCharCallback(
+		glfwPlatform->_window, [](GLFWwindow *window, unsigned int codepoint) {
+			auto *self = static_cast<evan::IDesktopPlatform *>(
+				glfwGetWindowUserPointer(window));
+
+			auto event = std::make_shared<utility::event::TextInputEvent>();
+			// Convert UTF-32 code point to UTF-8 string
+			std::string utf8Text;
+			if (codepoint <= 0x7F) {
+				// ASCII range
+				utf8Text = static_cast<char>(codepoint);
+			} else if (codepoint <= 0x7FF) {
+				// 2-byte UTF-8
+				utf8Text += static_cast<char>(0xC0 | (codepoint >> 6));
+				utf8Text += static_cast<char>(0x80 | (codepoint & 0x3F));
+			} else if (codepoint <= 0xFFFF) {
+				// 3-byte UTF-8
+				utf8Text += static_cast<char>(0xE0 | (codepoint >> 12));
+				utf8Text += static_cast<char>(0x80 | ((codepoint >> 6) & 0x3F));
+				utf8Text += static_cast<char>(0x80 | (codepoint & 0x3F));
+			} else if (codepoint <= 0x10FFFF) {
+				// 4-byte UTF-8
+				utf8Text += static_cast<char>(0xF0 | (codepoint >> 18));
+				utf8Text +=
+					static_cast<char>(0x80 | ((codepoint >> 12) & 0x3F));
+				utf8Text += static_cast<char>(0x80 | ((codepoint >> 6) & 0x3F));
+				utf8Text += static_cast<char>(0x80 | (codepoint & 0x3F));
+			}
+			event->setText(utf8Text);
+			self->_textInputEvents.push_back(std::move(event));
+			std::cout << "Character input: U+" << std::hex << codepoint
+					  << std::dec << std::endl;
 		});
 }

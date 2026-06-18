@@ -20,39 +20,45 @@
  SOFTWARE.
  */
 
-#pragma once
+#include "utility/event/cursor_enter_event.hpp"
 
-#include "guillaume/event/event_manager.hpp"
-
-namespace guillaume::event
+namespace utility::event
 {
-	template<utility::event::InheritFromEvent EventType>
-	void EventManager<EventType>::consumeNextEvent(void)
+
+	////////////////////////
+	// Factory methods //
+	////////////////
+
+	CursorEnterEvent::Factory::~Factory(void) = default;
+
+	std::unique_ptr<Event> CursorEnterEvent::Factory::create(void) const
 	{
-		if (_subscriber->hasPendingEvents()) {
-			_lastEvent = _subscriber->getNextEvent();
-		}
+		return std::make_unique<CursorEnterEvent>();
 	}
 
-	template<utility::event::InheritFromEvent EventType>
-	std::unique_ptr<EventType> EventManager<EventType>::getLastEvent(void)
+	std::unique_ptr<CursorEnterEvent>
+		CursorEnterEvent::Factory::createTyped(void) const
 	{
-		if (!_lastEvent) {
-			return nullptr;
-		}
-		return std::move(_lastEvent);
+		return std::make_unique<CursorEnterEvent>();
 	}
 
-	template<utility::event::InheritFromEvent EventType>
-	EventManager<EventType>::EventManager(EventBus &eventBus)
-		: _eventBus(eventBus)
-		, _subscriber(std::make_unique<EventSubscriber<EventType>>(_eventBus))
+	/////////////////////
+	// Public methods //
+	///////////////////
+
+	CursorEnterEvent::CursorEnterEvent(void) = default;
+
+	CursorEnterEvent::~CursorEnterEvent(void) = default;
+
+	CursorEnterEvent &CursorEnterEvent::setEntered(const bool entered) noexcept
 	{
+		_entered = entered;
+		return *this;
 	}
 
-	template<utility::event::InheritFromEvent EventType>
-	bool EventManager<EventType>::hasPendingEvents(void) const
+	bool CursorEnterEvent::isEntered(void) const noexcept
 	{
-		return _subscriber->hasPendingEvents();
+		return _entered;
 	}
-}	 // namespace guillaume::event
+
+}	 // namespace utility::event

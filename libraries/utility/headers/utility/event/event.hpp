@@ -37,6 +37,21 @@ namespace utility::event
 	{
 		public:
 		/**
+		 * @brief Event type enumeration for reliable type checking.
+		 */
+		enum class Type {
+			Unknown,
+			Keyboard,
+			MouseButton,
+			MouseMotion,
+			MouseWheel,
+			CursorEnter,
+			FileDrop,
+			TextInput,
+			Quit
+		};
+
+		/**
 		 * @brief Abstract factory interface for creating events.
 		 */
 		class AbstractFactory
@@ -60,6 +75,15 @@ namespace utility::event
 		 * @brief Virtual destructor.
 		 */
 		virtual ~Event(void) = default;
+
+		/**
+		 * @brief Get the event type.
+		 * @return The type of this event.
+		 */
+		virtual Type getEventType(void) const noexcept
+		{
+			return Type::Unknown;
+		}
 	};
 
 	/**

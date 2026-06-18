@@ -42,6 +42,9 @@ namespace guillaume::components
 		private:
 		std::string _content {};		 ///< Text content
 		std::size_t _fontSize { 24 };	 ///< Font size of the text
+		std::size_t _cursorPosition {
+			0
+		};	  ///< Cursor position for text editing
 
 		public:
 		/**
@@ -79,6 +82,57 @@ namespace guillaume::components
 		 * @return The Text component for chaining.
 		 */
 		Text &setFontSize(std::size_t fontSize);
+
+		/**
+		 * @brief Get the cursor position.
+		 * @return The cursor position in the text.
+		 */
+		std::size_t getCursorPosition(void) const;
+
+		/**
+		 * @brief Set the cursor position.
+		 * @param position The cursor position to set.
+		 * @return The Text component for chaining.
+		 */
+		Text &setCursorPosition(std::size_t position);
+
+		/**
+		 * @brief Move the cursor left by one character.
+		 * @return True if the cursor was moved, false if already at start.
+		 */
+		bool moveCursorLeft(void);
+
+		/**
+		 * @brief Move the cursor right by one character.
+		 * @return True if the cursor was moved, false if already at end.
+		 */
+		bool moveCursorRight(void);
+
+		/**
+		 * @brief Insert a character at the cursor position.
+		 * @param ch The character to insert.
+		 * @return The Text component for chaining.
+		 */
+		Text &insertCharacter(char ch);
+
+		/**
+		 * @brief Insert a UTF-8 string at the cursor position.
+		 * @param str The string to insert.
+		 * @return The Text component for chaining.
+		 */
+		Text &insertString(const std::string &str);
+
+		/**
+		 * @brief Delete the character before the cursor (backspace).
+		 * @return True if a character was deleted, false otherwise.
+		 */
+		bool deleteCharacterBefore(void);
+
+		/**
+		 * @brief Delete the character at the cursor (delete key).
+		 * @return True if a character was deleted, false otherwise.
+		 */
+		bool deleteCharacterAfter(void);
 	};
 
 }	 // namespace guillaume::components

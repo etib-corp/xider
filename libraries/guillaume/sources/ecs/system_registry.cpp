@@ -22,6 +22,8 @@
 
 #include "guillaume/ecs/system_registry.hpp"
 
+#include <functional>
+
 namespace guillaume::ecs
 {
 	template<InheritFromSystem SystemType>

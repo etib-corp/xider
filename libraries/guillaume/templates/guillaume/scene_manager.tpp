@@ -142,7 +142,7 @@ namespace guillaume
 	{
 		std::unique_ptr<Scene> &activeScene = getActiveScene();
 		if (_engine != nullptr) {
-			activeScene->setView(_engine->getView());
+			activeScene->placeEntitiesInFrontOfView(_engine->getView());
 		}
 		activeScene->onEnter();
 	}

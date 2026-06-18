@@ -113,6 +113,10 @@ namespace guillaume
 								   ///< ressource
 								   ///< provider
 
+		/**
+		 * @brief Run one system update pass for the active scene.
+		 * @param phaseDefinition The system phase definition to run.
+		 */
 		template<typename PhaseType> void runPhase(PhaseType &phaseDefinition);
 
 		/**
@@ -163,6 +167,11 @@ namespace guillaume
 		void pollEvents(void);
 
 		/**
+		 * @brief Update the engine state.
+		 */
+		void update(void);
+
+		/**
 		 * @brief Clear the engine rendering target.
 		 */
 		void clear(void);
@@ -171,12 +180,6 @@ namespace guillaume
 		 * @brief Present the rendered frame.
 		 */
 		void present(void);
-
-		/**
-		 * @brief Check if the engine has new events.
-		 * @return True if new events were received, false otherwise.
-		 */
-		bool gotNewEvents(void) const;
 
 		/**
 		 * @brief Check if the application should quit (using engine).

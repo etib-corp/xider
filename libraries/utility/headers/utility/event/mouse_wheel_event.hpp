@@ -32,17 +32,15 @@ namespace utility::event
 {
 
 	/**
-	 * @brief Mouse motion event.
+	 * @brief Mouse wheel event.
 	 *
-	 * Represents mouse movement with position.
+	 * Represents mouse wheel scroll with offset values.
 	 */
-	class MouseMotionEvent: public Event
+	class MouseWheelEvent: public Event
 	{
 		public:
-		using MousePosition = math::Vector2UI; /**< 2D mouse position type */
-
 		/**
-		 * @brief Factory for creating MouseMotionEvent instances.
+		 * @brief Factory for creating MouseWheelEvent instances.
 		 */
 		class Factory: public Event::AbstractFactory
 		{
@@ -50,54 +48,47 @@ namespace utility::event
 			~Factory(void) override;
 
 			/**
-			 * @brief Create a MouseMotionEvent as a base Event pointer.
-			 * @return Newly created MouseMotionEvent as std::unique_ptr<Event>.
+			 * @brief Create a MouseWheelEvent as a base Event pointer.
+			 * @return Newly created MouseWheelEvent as std::unique_ptr<Event>.
 			 */
 			std::unique_ptr<Event> create(void) const override;
 
 			/**
-			 * @brief Create a strongly-typed MouseMotionEvent.
-			 * @return Newly created MouseMotionEvent as
-			 * std::unique_ptr<MouseMotionEvent>.
+			 * @brief Create a strongly-typed MouseWheelEvent.
+			 * @return Newly created MouseWheelEvent as
+			 * std::unique_ptr<MouseWheelEvent>.
 			 */
-			std::unique_ptr<MouseMotionEvent> createTyped(void) const;
+			std::unique_ptr<MouseWheelEvent> createTyped(void) const;
 		};
 
 		private:
-		MousePosition _position { 0, 0 };
+		math::Vector2F _offset { 0.0f, 0.0f };	  ///< Scroll offset (x, y)
 
 		public:
 		/**
 		 * @brief Default constructor.
 		 */
-		explicit MouseMotionEvent(void);
+		explicit MouseWheelEvent(void);
 
 		/**
 		 * @brief Default destructor.
 		 */
-		~MouseMotionEvent(void) override;
+		~MouseWheelEvent(void) override;
 
 		/**
-		 * @brief Get the event type.
-		 * @return The type of this event (MouseMotion).
+		 * @brief Set the scroll offset.
+		 * @param offset The scroll offset as a 2D vector (x, y).
+		 * Positive y typically means scroll up/away from user.
+		 * Positive x typically means scroll right.
+		 * @return Reference to this MouseWheelEvent for method chaining.
 		 */
-		Type getEventType(void) const noexcept override
-		{
-			return Type::MouseMotion;
-		}
+		MouseWheelEvent &setOffset(const math::Vector2F &offset) noexcept;
 
 		/**
-		 * @brief Set the current mouse position.
-		 * @param position The mouse position as a 2D vector (x, y).
-		 * @return Reference to this MouseMotionEvent for method chaining.
+		 * @brief Get the scroll offset.
+		 * @return The scroll offset as a 2D vector (x, y).
 		 */
-		MouseMotionEvent &setPosition(const MousePosition &position) noexcept;
-
-		/**
-		 * @brief Get the current mouse position.
-		 * @return The mouse position as a 2D vector (x, y).
-		 */
-		MousePosition getPosition(void) const noexcept;
+		math::Vector2F getOffset(void) const noexcept;
 	};
 
 }	 // namespace utility::event

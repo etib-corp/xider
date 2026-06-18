@@ -104,9 +104,8 @@ namespace utility::graphic
 		 * @return A codePointString containing the Unicode code points
 		 * extracted from the input UTF-8 string.
 		 */
-		codePointString utf8ToCodepoints(
-			const std::string
-				&str) const;	  //< Convert UTF-8 string to Unicode code points
+		codePointString utf8ToCodepoints(const std::string &str)
+			const;	  //< Convert UTF-8 string to Unicode code points
 
 		public:
 		/**
@@ -203,12 +202,13 @@ namespace utility::graphic
 		/**
 		 * @brief Get the dimensions of the rendered text.
 		 *
-		 * This method calculates and returns the dimensions of the rendered text
-		 * based on the current content, font, and font size. It uses the Font
-		 * class to retrieve the glyph information for the text content and computes the overall
-		 * width and height of the text as it would be rendered, which can be useful for layout
-		 * and positioning purposes.
-		 * @return A Vector2D containing the width and height of the rendered text.
+		 * This method calculates and returns the dimensions of the rendered
+		 * text based on the current content, font, and font size. It uses the
+		 * Font class to retrieve the glyph information for the text content and
+		 * computes the overall width and height of the text as it would be
+		 * rendered, which can be useful for layout and positioning purposes.
+		 * @return A Vector2D containing the width and height of the rendered
+		 * text.
 		 */
 		math::Vector2D getTextDimensions(void) const;
 
