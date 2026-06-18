@@ -26,14 +26,64 @@
 
 namespace utility::sound
 {
+    /**
+     * @class MP3Decoder
+     *
+     * @brief Decoder implementation for MPEG Audio Layer III (MP3) files.
+     *
+     * MP3Decoder uses the dr_mp3 library to decode MP3-encoded audio data
+     * into raw Pulse-Code Modulation (PCM) samples compatible with OpenAL.
+     *
+     * Decoded audio samples are converted to 16-bit PCM format and uploaded
+     * to an AudioBuffer instance for playback.
+     */
     class MP3Decoder : public AAudioDecoder
     {
-        public:
-            MP3Decoder();
-            ~MP3Decoder() override;
+    public:
+        /**
+         * @brief Creates an MP3 decoder instance.
+         */
+        MP3Decoder();
 
-            bool canDecode(const std::string &filePath) const override;
-            bool canDecode(AudioDecoderType type) const override;
-            std::shared_ptr<AudioBuffer>  decode(std::shared_ptr<utility::File> file) override;
+        /**
+         * @brief Destroys the MP3 decoder instance.
+         */
+        ~MP3Decoder() override;
+
+        /**
+         * @brief Determines whether the specified file can be decoded.
+         *
+         * Compatibility is determined from the file extension.
+         *
+         * @param filePath Path to the audio file.
+         *
+         * @return true if the file extension is supported, false otherwise.
+         */
+        bool canDecode(const std::string &filePath) const override;
+
+        /**
+         * @brief Determines whether the specified decoder type is supported.
+         *
+         * @param type Audio decoder type to test.
+         *
+         * @return true if the decoder supports the specified type, false
+         * otherwise.
+         */
+        bool canDecode(AudioDecoderType type) const override;
+
+        /**
+         * @brief Decodes an MP3 file into an AudioBuffer.
+         *
+         * The encoded audio stream is decoded into 16-bit PCM samples and
+         * uploaded to an AudioBuffer for playback.
+         *
+         * @param file The file containing MP3-encoded audio data.
+         *
+         * @return A shared pointer to the decoded AudioBuffer, or nullptr if
+         * decoding fails.
+         */
+        [[nodiscard]]
+        std::shared_ptr<AudioBuffer>
+        decode(std::shared_ptr<utility::File> file) override;
     };
 }
