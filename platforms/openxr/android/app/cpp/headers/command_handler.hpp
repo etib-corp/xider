@@ -57,6 +57,11 @@ class CommandHandler:
 	 */
 	void handle(struct android_app *android_app, int32_t cmd);
 
+	/**
+	 * @brief Set a callback to be invoked when the app receives the
+	 * APP_CMD_PAUSE command.
+	 * @param callback A function to call when the app is paused.
+	 */
 	void setOnPauseCallback(std::function<void()> callback);
 
 	private:
