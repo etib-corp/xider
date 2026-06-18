@@ -76,6 +76,15 @@ FetchContent_Declare(openal
 )
 FetchContent_MakeAvailable(openal)
 
+FetchContent_Declare(
+    dr_libs
+    GIT_REPOSITORY https://github.com/mackron/dr_libs.git
+    GIT_TAG master
+    GIT_SHALLOW TRUE
+    GIT_PROGRESS TRUE
+)
+FetchContent_MakeAvailable(dr_libs)
+
 # Set the files directories
 set(HEADERS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/headers")
 set(SOURCES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/sources")
@@ -121,6 +130,7 @@ target_include_directories(${PROJECT_NAME}
         $<BUILD_INTERFACE:${HEADERS_DIR}>
         $<INSTALL_INTERFACE:include>
         $<BUILD_INTERFACE:${stb_SOURCE_DIR}>
+        $<BUILD_INTERFACE:${dr_libs_SOURCE_DIR}>
 )
 
 # 08. Documentations

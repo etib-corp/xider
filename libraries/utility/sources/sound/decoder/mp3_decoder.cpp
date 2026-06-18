@@ -20,7 +20,7 @@
  SOFTWARE.
  */
 #define DR_MP3_IMPLEMENTATION
-#include "utility/sound/dr_mp3.h"
+#include <dr_mp3.h>
 #include "utility/sound/decoder/mp3_decoder.hpp"
 
 #include <utility/logging/default_logger.hpp>

@@ -20,10 +20,9 @@
  SOFTWARE.
  */
 #include "utility/sound/decoder/wav_decoder.hpp"
-#include "utility/sound/audio_buffer.hpp"
 
 #define DR_WAV_IMPLEMENTATION
-#include "utility/sound/dr_wav.h"
+#include <dr_wav.h>
 
 #include <utility/logging/default_logger.hpp>
 
