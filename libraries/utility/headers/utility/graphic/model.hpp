@@ -33,9 +33,10 @@ namespace utility::graphic
 	 * allowing for efficient rendering and manipulation within the graphics
 	 * application.
 	 */
-	class Model: public Renderable,
-				protected utility::logging::Loggable<Model,
-													 utility::logging::DefaultLogger>
+	class Model:
+		public Renderable,
+		protected utility::logging::Loggable<Model,
+											 utility::logging::DefaultLogger>
 	{
 		public:
 		/**

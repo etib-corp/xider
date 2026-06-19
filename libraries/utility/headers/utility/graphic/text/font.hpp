@@ -60,7 +60,8 @@ namespace utility::graphic
 		 * highest point of the font. It is used in text layout calculations to
 		 * determine the vertical positioning of text.
 		 *
-		 * @param fontSize The font size for which to retrieve the ascender value.
+		 * @param fontSize The font size for which to retrieve the ascender
+		 * value.
 		 * @return The ascender value for the specified font size.
 		 */
 		float getAscender(uint32_t fontSize) const;
@@ -72,7 +73,8 @@ namespace utility::graphic
 		 * lowest point of the font. It is used in text layout calculations to
 		 * determine the vertical positioning of text.
 		 *
-		 * @param fontSize The font size for which to retrieve the descender value.
+		 * @param fontSize The font size for which to retrieve the descender
+		 * value.
 		 * @return The descender value for the specified font size.
 		 */
 		float getDescender(uint32_t fontSize) const;

@@ -9,7 +9,7 @@
 
 namespace utility::graphic
 {
-	Mesh::Mesh(const std::vector<VertexD> &vertices,
+	Mesh::Mesh(const std::vector<VertexF> &vertices,
 			   const std::vector<uint32_t> &indices)
 		: _vertices(vertices)
 		, _indices(indices)
@@ -20,7 +20,7 @@ namespace utility::graphic
 	{
 	}
 
-	void Mesh::addVertex(const VertexD &vertex)
+	void Mesh::addVertex(const VertexF &vertex)
 	{
 		_vertices.push_back(vertex);
 	}
@@ -30,7 +30,7 @@ namespace utility::graphic
 		_indices.push_back(index);
 	}
 
-	const std::vector<VertexD> &Mesh::getVertices() const
+	const std::vector<VertexF> &Mesh::getVertices() const
 	{
 		return _vertices;
 	}

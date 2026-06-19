@@ -20,8 +20,23 @@
  SOFTWARE.
  */
 
-#include "utility/graphic/orientation.hpp"
+#include <ostream>
+
+#include "utility/graphic/pose.hpp"
 
 namespace utility::graphic
 {
+	std::ostream &operator<<(std::ostream &stream, const PoseF &pose)
+	{
+		stream << "PoseF(" << pose.getPosition() << ", "
+			   << pose.getOrientation() << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const PoseD &pose)
+	{
+		stream << "PoseD(" << pose.getPosition() << ", "
+			   << pose.getOrientation() << ")";
+		return stream;
+	}
 }	 // namespace utility::graphic

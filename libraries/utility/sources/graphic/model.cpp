@@ -10,6 +10,7 @@
 namespace utility::graphic
 {
 	Model::Model(std::shared_ptr<utility::File> modelAsset)
+		: Renderable(PoseF(), Color32Bit())
 	{
 		std::string extension =
 			modelAsset->path().substr(modelAsset->path().find_last_of(".") + 1);
@@ -33,6 +34,7 @@ namespace utility::graphic
 	}
 
 	Model::Model(std::shared_ptr<utility::File> modelAsset, ModelType modelType)
+		: Renderable(PoseF(), Color32Bit())
 	{
 		_type = modelType;
 
@@ -41,13 +43,13 @@ namespace utility::graphic
 				loadOBJ(modelAsset);
 				break;
 			case ModelType::FBX:
-				getLogger().warning()
-					<< "FBX loading not implemented yet. Skipping model loading.";
+				getLogger().warning() << "FBX loading not implemented yet. "
+										 "Skipping model loading.";
 				// loadFBX(modelAsset); // Not implemented yet
 				break;
 			case ModelType::GLTF:
-				getLogger().warning()
-					<< "GLTF loading not implemented yet. Skipping model loading.";
+				getLogger().warning() << "GLTF loading not implemented yet. "
+										 "Skipping model loading.";
 				// loadGLTF(modelAsset); // Not implemented yet
 				break;
 			default:
@@ -70,7 +72,7 @@ namespace utility::graphic
 
 	void Model::loadOBJ(std::shared_ptr<utility::File> modelAsset)
 	{
-		std::vector<VertexD> vertices;
+		std::vector<VertexF> vertices;
 		std::vector<uint32_t> indices;
 
 		tinyobj::attrib_t attrib;
@@ -98,8 +100,8 @@ namespace utility::graphic
 					continue;
 				}
 
-				utility::graphic::VertexD vertex {};
-				vertex.setPosition(utility::graphic::PositionD(
+				utility::graphic::VertexF vertex {};
+				vertex.setPosition(utility::graphic::PositionF(
 					attrib.vertices[vertexBase + 0],
 					attrib.vertices[vertexBase + 1],
 					attrib.vertices[vertexBase + 2]));
@@ -108,10 +110,9 @@ namespace utility::graphic
 					const size_t texcoordBase =
 						static_cast<size_t>(index.texcoord_index) * 2;
 					if (texcoordBase + 1 < attrib.texcoords.size()) {
-						vertex.setTextureCoordinates(
-							utility::math::Vector<double, 2>(
-								{ attrib.texcoords[texcoordBase + 0],
-								  attrib.texcoords[texcoordBase + 1] }));
+						vertex.setTextureCoordinates(utility::math::Vector2F(
+							{ attrib.texcoords[texcoordBase + 0],
+							  attrib.texcoords[texcoordBase + 1] }));
 					}
 				}
 

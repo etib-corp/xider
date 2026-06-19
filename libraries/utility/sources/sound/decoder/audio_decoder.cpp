@@ -22,21 +22,21 @@
 #include "utility/sound/decoder/audio_decoder.hpp"
 
 ALenum utility::sound::AAudioDecoder::getALFormat(uint16_t channels,
-                                                    uint16_t bitsPerSample) const
+												  uint16_t bitsPerSample) const
 {
-    if (channels == 1) {
-        if (bitsPerSample == 8) {
-            return AL_FORMAT_MONO8;
-        } else if (bitsPerSample == 16) {
-            return AL_FORMAT_MONO16;
-        }
-    } else if (channels == 2) {
-        if (bitsPerSample == 8) {
-            return AL_FORMAT_STEREO8;
-        } else if (bitsPerSample == 16) {
-            return AL_FORMAT_STEREO16;
-        }
-    }
-    // Unsupported format
-    return 0;
+	if (channels == 1) {
+		if (bitsPerSample == 8) {
+			return AL_FORMAT_MONO8;
+		} else if (bitsPerSample == 16) {
+			return AL_FORMAT_MONO16;
+		}
+	} else if (channels == 2) {
+		if (bitsPerSample == 8) {
+			return AL_FORMAT_STEREO8;
+		} else if (bitsPerSample == 16) {
+			return AL_FORMAT_STEREO16;
+		}
+	}
+	// Unsupported format
+	return 0;
 }

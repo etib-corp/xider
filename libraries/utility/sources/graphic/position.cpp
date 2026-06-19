@@ -20,10 +20,24 @@
  SOFTWARE.
  */
 
+#include <ostream>
+
 #include "utility/graphic/position.hpp"
 
 namespace utility::graphic
 {
-	// Explicit template instantiations or future Scale implementation can go
-	// here.
+	std::ostream &operator<<(std::ostream &stream, const PositionF &position)
+	{
+		stream << "PositionF(" << position.getX() << ", " << position.getY()
+			   << ", " << position.getZ() << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const PositionD &position)
+	{
+		stream << "PositionD(" << position.getX() << ", " << position.getY()
+			   << ", " << position.getZ() << ")";
+		return stream;
+	}
+
 }	 // namespace utility::graphic

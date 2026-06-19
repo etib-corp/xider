@@ -42,11 +42,11 @@ int main(void)
 	// Initialize XIDER application with Evan engine
 	xider::XIDER app(linuxDesktopPlatform, ressourceProvider);
 
-	static auto source = ressourceProvider->loadAudioSource("sound/nastelbom-background-music-486996.mp3");
+	static auto source = ressourceProvider->loadAudioSource(
+		"sound/nastelbom-background-music-486996.mp3");
 
 	source->setGain(0.5f);
 	source->play();
-
 
 	return app.run();
 }

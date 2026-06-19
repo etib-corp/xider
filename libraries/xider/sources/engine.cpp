@@ -64,7 +64,7 @@ namespace xider
 		throw std::runtime_error("Engine not initialized, cannot get view");
 	}
 
-	utility::math::Vector2D
+	utility::math::Vector2F
 		Engine::measureText(const utility::graphic::Text &text) const
 	{
 		return text.getTextDimensions();
@@ -75,8 +75,7 @@ namespace xider
 		return { 0.0f, 0.0f };
 	}
 
-	size_t Engine::addText(const utility::graphic::Text &text,
-						   const utility::graphic::PoseF &pose)
+	size_t Engine::addText(const utility::graphic::Text &text)
 	{
 		return _evanEngine->addText(
 			std::make_shared<utility::graphic::Text>(text));

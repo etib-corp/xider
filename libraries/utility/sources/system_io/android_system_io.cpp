@@ -45,7 +45,8 @@ bool utility::AndroidSystemIO::loadDirectory(const std::string &directory)
 	AAssetDir *assetDir =
 		AAssetManager_openDir(_assetManager, directory.c_str());
 	if (assetDir == nullptr) {
-		getLogger().warning() << "Failed to open asset directory: " << directory;
+		getLogger().warning()
+			<< "Failed to open asset directory: " << directory;
 		return false;
 	}
 

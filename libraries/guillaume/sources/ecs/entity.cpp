@@ -32,7 +32,8 @@ namespace guillaume::ecs
 	}
 
 	Entity::Entity(void)
-		: _identifier(getNextIdentifier())
+		: utility::logging::Loggable<Entity, utility::logging::DefaultLogger>()
+		, _identifier(getNextIdentifier())
 	{
 	}
 

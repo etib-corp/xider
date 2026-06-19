@@ -66,8 +66,8 @@ namespace guillaume::systems
 		 * @param orientation Orientation used as rotation.
 		 * @return Rotated point.
 		 */
-		utility::graphic::PositionD rotatePositionByQuaternion(
-			const utility::graphic::PositionD &position,
+		utility::graphic::PositionF rotatePositionByQuaternion(
+			const utility::graphic::PositionF &position,
 			const utility::graphic::OrientationF &orientation) const;
 
 		/**
@@ -123,9 +123,9 @@ namespace guillaume::systems
 		 * @param orientation Rectangle world orientation.
 		 * @return World-space vertices.
 		 */
-		std::vector<utility::graphic::PositionD> transformToWorldVertices(
+		std::vector<utility::graphic::PositionF> transformToWorldVertices(
 			const std::vector<utility::math::Vector2F> &localVertices,
-			const utility::graphic::PositionD &center,
+			const utility::graphic::PositionF &center,
 			const utility::graphic::OrientationF &orientation) const;
 
 		/**
@@ -140,8 +140,8 @@ namespace guillaume::systems
 		 * @param epsilon Threshold used to consider radius as zero.
 		 * @return World-space outline vertices.
 		 */
-		std::vector<utility::graphic::PositionD> buildRoundedRectVertices(
-			const utility::graphic::PositionD &center,
+		std::vector<utility::graphic::PositionF> buildRoundedRectVertices(
+			const utility::graphic::PositionF &center,
 			const utility::graphic::OrientationF &orientation,
 			const utility::math::Vector2F &scale,
 			const utility::math::Vector2F &size, float radius,
@@ -156,8 +156,8 @@ namespace guillaume::systems
 		 */
 		void buildTriangleFanVertices(
 			utility::graphic::Mesh &mesh,
-			const utility::graphic::PositionD &center,
-			const std::vector<utility::graphic::PositionD> &outline,
+			const utility::graphic::PositionF &center,
+			const std::vector<utility::graphic::PositionF> &outline,
 			const utility::graphic::Color32Bit &color);
 
 		/**
@@ -166,8 +166,8 @@ namespace guillaume::systems
 		 * @param color Vertex color.
 		 * @return Render vertex.
 		 */
-		utility::graphic::VertexD
-			createVertex(const utility::graphic::PositionD &position,
+		utility::graphic::VertexF
+			createVertex(const utility::graphic::PositionF &position,
 						 const utility::graphic::Color32Bit &color) const;
 
 		public:

@@ -40,9 +40,10 @@ namespace utility
 	 * @brief The DefaultSystemIO class is a concrete implementation of the
 	 * SystemIO interface that loads assets from the file system.
 	 */
-	class DefaultSystemIO: public SystemIO,
-						   protected utility::logging::Loggable<DefaultSystemIO,
-																utility::logging::DefaultLogger>
+	class DefaultSystemIO:
+		public SystemIO,
+		protected utility::logging::Loggable<DefaultSystemIO,
+											 utility::logging::DefaultLogger>
 	{
 		public:
 		/**
@@ -50,11 +51,11 @@ namespace utility
 		 */
 		DefaultSystemIO() = default;
 
+		using Loggable::getLogger;
 		using SystemIO::add;
 		using SystemIO::loadDirectory;
 		using SystemIO::remove;
 		using SystemIO::save;
-		using Loggable::getLogger;
 
 		/**
 		 * @brief Default destructor for DefaultSystemIO.

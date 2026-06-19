@@ -65,10 +65,10 @@ evan::Engine::Engine(
 	}
 
 	// Debug view setup - create initial view matrix
-	_viewMatrix =
-		glm::lookAt(glm::vec3(0.0f, 0.0f, -50.0f), glm::vec3(0.0f, 0.0f, 0.0f),
-					glm::vec3(0.0f, 1.0f, 0.0f));
-	_swapchainContext->setView(0, _viewMatrix);
+	// _viewMatrix =
+	// 	glm::lookAt(glm::vec3(0.0f, 0.0f, 100.0f), glm::vec3(0.0f, 0.0f,
+	// -10.0f), 				glm::vec3(0.0f, 1.0f, 1.0f)); _swapchainContext->setView(0,
+	// _viewMatrix);
 }
 
 evan::Engine::~Engine()
@@ -102,8 +102,8 @@ size_t evan::Engine::addText(std::shared_ptr<utility::graphic::Text> text)
 	this->getLogger().info() << "Drawing text: " << text->getContent();
 
 	std::map<uint32_t, utility::graphic::Mesh> rawObjects;
-	auto material_id = _ressourceProvider->getMaterialID(
-		text->getFontFamily() + "_material");
+	auto material_id =
+		_ressourceProvider->getMaterialID(text->getFontFamily() + "_material");
 
 	if (material_id == 0) {
 		this->getLogger().warning()

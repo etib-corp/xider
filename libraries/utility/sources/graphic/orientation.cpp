@@ -20,8 +20,25 @@
  SOFTWARE.
  */
 
+#include <ostream>
+
 #include "utility/graphic/orientation.hpp"
 
 namespace utility::graphic
 {
+	std::ostream &operator<<(std::ostream &stream,
+							 const OrientationF &orientation)
+	{
+		stream << "OrientationF(" << orientation.x << ", " << orientation.y
+			   << ", " << orientation.z << ", " << orientation.w << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream,
+							 const OrientationD &orientation)
+	{
+		stream << "OrientationD(" << orientation.x << ", " << orientation.y
+			   << ", " << orientation.z << ", " << orientation.w << ")";
+		return stream;
+	}
 }	 // namespace utility::graphic

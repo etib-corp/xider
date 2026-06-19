@@ -73,7 +73,8 @@ void android_main(struct android_app *android_app)
 	// Initialize XIDER application with Evan engine
 	xider::XIDER app(xrPlatform, ressourceProvider);
 
-	static auto source = ressourceProvider->loadAudioSource("sound/nastelbom-background-music-486996.mp3");
+	static auto source = ressourceProvider->loadAudioSource(
+		"sound/nastelbom-background-music-486996.mp3");
 
 	source->setGain(0.5f);
 	source->play();
@@ -83,12 +84,15 @@ void android_main(struct android_app *android_app)
 	});
 
 	{
-		auto source2 = ressourceProvider->loadAudioSource("sound/sigmamusicart-jazz-lounge-relaxing-background-music-537739.mp3");
+		auto source2 = ressourceProvider->loadAudioSource(
+			"sound/"
+			"sigmamusicart-jazz-lounge-relaxing-background-music-537739.mp3");
 		source2->setGain(0.5f);
 		source2->play();
 		// wait for 5 seconds
 		std::this_thread::sleep_for(std::chrono::seconds(5));
-		// the source2 will be destroyed when it goes out of scope, stopping the audio
+		// the source2 will be destroyed when it goes out of scope, stopping the
+		// audio
 	}
 
 	while (!android_app->destroyRequested) {

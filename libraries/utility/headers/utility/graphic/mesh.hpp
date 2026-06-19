@@ -28,12 +28,12 @@ namespace utility::graphic
 		 * @brief Constructs a Mesh object with the specified vertices and
 		 * indices.
 		 *
-		 * @param vertices A vector of VertexD objects representing the vertices
+		 * @param vertices A vector of VertexF objects representing the vertices
 		 * of the mesh.
 		 * @param indices A vector of uint32_t values representing the indices
 		 * for indexed drawing of the mesh.
 		 */
-		Mesh(const std::vector<VertexD> &vertices,
+		Mesh(const std::vector<VertexF> &vertices,
 			 const std::vector<uint32_t> &indices);
 
 		/**
@@ -44,13 +44,13 @@ namespace utility::graphic
 		/**
 		 * @brief Add a vertex to the mesh.
 		 *
-		 * @param vertex The VertexD object representing the vertex to be added
+		 * @param vertex The VertexF object representing the vertex to be added
 		 * to the mesh.
 		 *
 		 * This method appends the provided vertex to the internal vertex list
 		 * of the mesh, allowing for dynamic construction of the mesh geometry.
 		 */
-		void addVertex(const VertexD &vertex);
+		void addVertex(const VertexF &vertex);
 
 		/**
 		 * @brief Add an index to the mesh.
@@ -66,13 +66,13 @@ namespace utility::graphic
 		/**
 		 * @brief Get the vertices of the mesh.
 		 *
-		 * @return A const reference to a vector of VertexD objects representing
+		 * @return A const reference to a vector of VertexF objects representing
 		 * the vertices of the mesh.
 		 *
 		 * This method allows retrieval of the current vertex data of the mesh,
 		 * which can be used for rendering or further processing.
 		 */
-		const std::vector<VertexD> &getVertices() const;
+		const std::vector<VertexF> &getVertices() const;
 
 		/**
 		 * @brief Get the indices of the mesh.
@@ -118,7 +118,7 @@ namespace utility::graphic
 		/**
 		 * @brief Internal storage for the vertices and indices of the mesh.
 		 */
-		std::vector<VertexD> _vertices;
+		std::vector<VertexF> _vertices;
 
 		/**
 		 * @brief Internal storage for the indices of the mesh.

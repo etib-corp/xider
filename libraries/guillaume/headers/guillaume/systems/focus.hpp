@@ -57,7 +57,7 @@ namespace guillaume::systems
 			components::HandPokeInteraction>
 	{
 		private:
-		std::unique_ptr<Engine> &_engine;	   ///< Engine instance
+		std::unique_ptr<Engine> &_engine;	 ///< Engine instance
 		std::optional<ecs::Entity::Identifier>
 			_focusedEntity;	   ///< Currently focused entity identifier
 		std::optional<ecs::Entity::Identifier>

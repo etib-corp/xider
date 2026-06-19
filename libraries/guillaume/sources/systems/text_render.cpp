@@ -87,43 +87,44 @@ namespace guillaume::systems
 		auto &cacheEntry = _cache[entityIdentifier];
 		cacheEntry.used	 = true;
 
-
-		const auto &currentContent = textComponent.getContent();
+		const auto &currentContent	= textComponent.getContent();
 		const auto &currentFontSize = textComponent.getFontSize();
-		const auto &currentColor = colorComponent.getColor();
-		const auto &currentPose = transformComponent.getPose();
+		const auto &currentColor	= colorComponent.getColor();
+		const auto &currentPose		= transformComponent.getPose();
 
 		if (cacheEntry.objectId != 0
 			&& cacheEntry.cachedContent == currentContent
 			&& cacheEntry.cachedFontSize == currentFontSize
 			&& cacheEntry.cachedColor == currentColor
 			&& cacheEntry.pose == currentPose) {
-			getLogger().debug() << "TextRender: Skipping entity " << entityIdentifier 
-								<< " - properties unchanged";
+			getLogger().debug()
+				<< "TextRender: Skipping entity " << entityIdentifier
+				<< " - properties unchanged";
 			return;
 		}
 
-		getLogger().info() << "TextRender: Creating new Text object for entity " 
-						  << entityIdentifier << " (content: '" << currentContent 
-						  << "', fontSize: " << currentFontSize << ")";
+		getLogger().info() << "TextRender: Creating new Text object for entity "
+						   << entityIdentifier << " (content: '"
+						   << currentContent
+						   << "', fontSize: " << currentFontSize << ")";
 
-		utility::graphic::Text text(
-			_ressourceProvider, currentContent, currentFontSize, _defaultFontPath);
-		text.setColor(currentColor);
+		utility::graphic::Text text(_ressourceProvider, currentPose,
+									currentColor, currentContent,
+									currentFontSize, _defaultFontPath);
 
 		if (cacheEntry.objectId != 0) {
 			_engine->removeObject(cacheEntry.objectId);
 		}
 
-		cacheEntry.objectId = _engine->addText(text, currentPose);
+		cacheEntry.objectId = _engine->addText(text);
 		cacheEntry.text		= text;
 		cacheEntry.pose		= currentPose;
-		
+
 		// Update cached properties
-		cacheEntry.cachedContent	= currentContent;
-		cacheEntry.cachedFontSize	= currentFontSize;
-		cacheEntry.cachedColor		= currentColor;
-		cacheEntry.pose				= currentPose;
+		cacheEntry.cachedContent  = currentContent;
+		cacheEntry.cachedFontSize = currentFontSize;
+		cacheEntry.cachedColor	  = currentColor;
+		cacheEntry.pose			  = currentPose;
 	}
 
 }	 // namespace guillaume::systems

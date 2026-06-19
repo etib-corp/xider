@@ -363,7 +363,8 @@ namespace utility
 		 *
 		 * @return A unique pointer to the loaded AudioSource object.
 		 */
-		std::unique_ptr<sound::AudioSource> loadAudioSource(const std::string &path);
+		std::unique_ptr<sound::AudioSource>
+			loadAudioSource(const std::string &path);
 
 		/**
 		 * @brief Loads an audio source resource from a specified asset.
@@ -373,8 +374,8 @@ namespace utility
 		 *
 		 * @return A unique pointer to the loaded AudioSource object.
 		 */
-		std::unique_ptr<sound::AudioSource> loadAudioSourceFromAsset(
-			std::shared_ptr<utility::File> audioAsset);
+		std::unique_ptr<sound::AudioSource>
+			loadAudioSourceFromAsset(std::shared_ptr<utility::File> audioAsset);
 
 		protected:
 		/**
@@ -499,9 +500,10 @@ namespace utility
 		/**
 		 * @brief Internal audio manager instance for managing audio operations.
 		 *
-		 * This member variable holds an instance of the AudioManager that is used
-		 * for managing audio playback and related operations. It handles the creation
-		 * and management of audio sources loaded through the resource provider.
+		 * This member variable holds an instance of the AudioManager that is
+		 * used for managing audio playback and related operations. It handles
+		 * the creation and management of audio sources loaded through the
+		 * resource provider.
 		 */
 		utility::sound::AudioManager _audioManager;
 

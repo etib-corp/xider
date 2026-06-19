@@ -25,6 +25,9 @@
 #include <bitset>
 #include <cstddef>
 
+#include <utility/logging/loggable.hpp>
+#include <utility/logging/default_logger.hpp>
+
 #include "guillaume/ecs/component.hpp"
 #include "guillaume/ecs/component_type_id.hpp"
 
@@ -39,7 +42,9 @@ namespace guillaume::ecs
 	 * @see ComponentRegistry
 	 * @see System
 	 */
-	class Entity
+	class Entity:
+		protected utility::logging::Loggable<Entity,
+											 utility::logging::DefaultLogger>
 	{
 		public:
 		/**

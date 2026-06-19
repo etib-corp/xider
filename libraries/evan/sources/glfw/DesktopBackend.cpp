@@ -40,7 +40,8 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL defaultDebugCallback(
 	static std::unique_ptr<utility::logging::Logger> logger = nullptr;
 	std::string_view message;
 	if (!logger) {
-		logger = std::make_unique<utility::logging::DefaultLogger>("VulkanValidation");
+		logger = std::make_unique<utility::logging::DefaultLogger>(
+			"VulkanValidation");
 	}
 
 	switch (messageType) {

@@ -9,6 +9,12 @@
 
 namespace utility::graphic
 {
+	Renderable::Renderable(const PoseF &pose, const Color32Bit &color)
+		: _pose(pose)
+		, _color(color)
+	{
+	}
+
 	/////////////
 	// Getters //
 	/////////////

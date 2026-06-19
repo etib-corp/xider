@@ -72,7 +72,7 @@ std::unique_ptr<utility::sound::AudioSource>
 
 	{
 		std::lock_guard<std::mutex> lock(_sourcesMutex);
-		_sources[id] = 0; // Placeholder for ALuint source ID
+		_sources[id] = 0;	 // Placeholder for ALuint source ID
 	}
 
 	getLogger().debug() << "Created audio source with ID: " << id;
@@ -84,20 +84,20 @@ std::unique_ptr<utility::sound::AudioSource>
 
 void utility::sound::AudioManager::destroyAudioSource(uint32_t sourceID)
 {
-    std::lock_guard lock(_sourcesMutex);
+	std::lock_guard lock(_sourcesMutex);
 
-    auto it = _sources.find(sourceID);
+	auto it = _sources.find(sourceID);
 
-    if (it == _sources.end())
-        return;
+	if (it == _sources.end())
+		return;
 
-    ALuint alId = it->second;
+	ALuint alId = it->second;
 
-    alSourceStop(alId);
-    alSourcei(alId, AL_BUFFER, 0);
-    alDeleteSources(1, &alId);
+	alSourceStop(alId);
+	alSourcei(alId, AL_BUFFER, 0);
+	alDeleteSources(1, &alId);
 
-    _sources.erase(it);
+	_sources.erase(it);
 }
 
 void utility::sound::AudioManager::stop()
@@ -120,7 +120,7 @@ void utility::sound::AudioManager::threadLoop()
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
 
-	processCommands(); // Process any remaining commands before shutting down
+	processCommands();	  // Process any remaining commands before shutting down
 
 	alcMakeContextCurrent(nullptr);
 }
@@ -147,8 +147,9 @@ void utility::sound::AudioManager::executeCommand(const AudioCommand &command)
 		std::lock_guard<std::mutex> lock(_sourcesMutex);
 		auto it = _sources.find(command.sourceID);
 		if (it == _sources.end()) {
-			getLogger().warning() << "Audio command failed: source not found (ID: "
-								  << command.sourceID << ")";
+			getLogger().warning()
+				<< "Audio command failed: source not found (ID: "
+				<< command.sourceID << ")";
 			return;
 		}
 		alId = it->second;
@@ -177,16 +178,14 @@ void utility::sound::AudioManager::executeCommand(const AudioCommand &command)
 			alSourcei(alId, AL_LOOPING,
 					  command.data.looping ? AL_TRUE : AL_FALSE);
 			break;
-		case AudioCommandType::CreateSource:
+		case AudioCommandType::CreateSource: {
+			ALuint newSource;
+			alGenSources(1, &newSource);
 			{
-				ALuint newSource;
-				alGenSources(1, &newSource);
-				{
-					std::lock_guard<std::mutex> lock(_sourcesMutex);
-					_sources[command.sourceID] = newSource;
-				}
+				std::lock_guard<std::mutex> lock(_sourcesMutex);
+				_sources[command.sourceID] = newSource;
 			}
-			break;
+		} break;
 		case AudioCommandType::SetBuffer:
 			alSourcei(alId, AL_BUFFER, command.data.bufferID);
 			break;

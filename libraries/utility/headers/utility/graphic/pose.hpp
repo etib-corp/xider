@@ -237,4 +237,20 @@ namespace utility::graphic
 	 */
 	using PoseD = Pose<double>;
 
+	/**
+	 * @brief Stream insertion operator for Pose.
+	 * @param stream Output stream.
+	 * @param pose Pose to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const PoseF &pose);
+
+	/**
+	 * @brief Stream insertion operator for Pose.
+	 * @param stream Output stream.
+	 * @param pose Pose to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const PoseD &pose);
+
 }	 // namespace utility::graphic
