@@ -53,6 +53,9 @@ namespace xider::scenes
 										  [this]() {
 											  this->goToScene<Settings>();
 										  });
+		buttonDirector.makeIconTextButton(buttonBuilder, "exit", "Exit", []() {
+			std::exit(0);
+		});
 	}
 
 	Main::~Main(void)
