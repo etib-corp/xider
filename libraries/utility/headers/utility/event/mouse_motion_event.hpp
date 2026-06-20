@@ -39,7 +39,7 @@ namespace utility::event
 	class MouseMotionEvent: public Event
 	{
 		public:
-		using MousePosition = math::Vector2UI; /**< 2D mouse position type */
+		using MousePosition = math::Vector2F; /**< 2D mouse position type */
 
 		/**
 		 * @brief Factory for creating MouseMotionEvent instances.

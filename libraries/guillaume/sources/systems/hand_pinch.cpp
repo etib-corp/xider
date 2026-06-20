@@ -51,7 +51,7 @@ namespace guillaume::systems
 				entityIdentifier);
 
 		const auto size =
-			utility::math::Vector2UI({ bound.getWidth(), bound.getHeight() });
+			utility::math::Vector2F({ bound.getWidth(), bound.getHeight() });
 		const auto ray = utility::graphic::RayF(
 			utility::graphic::PositionF(pinchEvent->getPose().getPosition()),
 			pinchEvent->getPose().getOrientation().getForward());

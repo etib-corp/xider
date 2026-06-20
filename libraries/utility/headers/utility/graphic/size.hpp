@@ -23,6 +23,7 @@
 #pragma once
 
 #include <concepts>
+#include <ostream>
 
 namespace utility::graphic
 {
@@ -181,5 +182,37 @@ namespace utility::graphic
 	 * @brief Type alias for unsigned integral size component.
 	 */
 	using SizeUI = Size<unsigned int>;
+
+	/**
+	 * @brief Stream insertion operator for Size.
+	 * @param stream Output stream to write to.
+	 * @param size Size object to insert into the stream.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const SizeF &size);
+
+	/**
+	 * @brief Stream insertion operator for Size.
+	 * @param stream Output stream to write to.
+	 * @param size Size object to insert into the stream.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const SizeD &size);
+
+	/**
+	 * @brief Stream insertion operator for Size.
+	 * @param stream Output stream to write to.
+	 * @param size Size object to insert into the stream.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const SizeI &size);
+
+	/**
+	 * @brief Stream insertion operator for Size.
+	 * @param stream Output stream to write to.
+	 * @param size Size object to insert into the stream.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const SizeUI &size);
 
 }	 // namespace utility::graphic

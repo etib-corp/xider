@@ -720,8 +720,8 @@ void evan::DesktopBackend::setupCallbackEvent(const IPlatform &platform)
 
 			auto event = std::make_shared<utility::event::MouseMotionEvent>();
 			event->setPosition(utility::event::MouseMotionEvent::MousePosition {
-				static_cast<unsigned int>(xpos),
-				static_cast<unsigned int>(ypos) });
+				static_cast<float>(xpos),
+				static_cast<float>(ypos) });
 			self->_mouseMotionEvents.push_back(std::move(event));
 		});
 

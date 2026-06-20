@@ -32,7 +32,7 @@ namespace guillaume::components
 	/**
 	 * @brief Component representing a bounding rectangle.
 	 */
-	class Bound: public ecs::Component, public utility::graphic::SizeUI
+	class Bound: public ecs::Component, public utility::graphic::SizeF
 	{
 		public:
 		/**

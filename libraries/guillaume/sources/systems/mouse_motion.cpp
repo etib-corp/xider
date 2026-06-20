@@ -53,7 +53,7 @@ namespace guillaume::systems
 			getComponent<components::MouseHoverInteraction>(entityIdentifier);
 
 		const auto size =
-			utility::math::Vector2UI({ bound.getWidth(), bound.getHeight() });
+			utility::math::Vector2F({ bound.getWidth(), bound.getHeight() });
 		const bool isIntersecting =
 			ray.intersectRectangle(transform.getPose(), size);
 

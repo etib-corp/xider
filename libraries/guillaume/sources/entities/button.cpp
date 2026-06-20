@@ -165,9 +165,9 @@ namespace guillaume::entities
 				return 96;
 			case Button::Size::ExtraLarge:
 				return 136;
+			default:
+				throw std::runtime_error("Invalid button size");
 		}
-
-		return 40;
 	}
 
 	static float getBorderRadius(Button::Size size, Button::Shape shape,
@@ -221,15 +221,15 @@ namespace guillaume::entities
 	{
 		switch (size) {
 			case Button::Size::ExtraSmall:
-				return 20U;
+				return 15U;	   // 20 pixels
 			case Button::Size::Small:
-				return 20U;
+				return 15U;	   // 20 pixels
 			case Button::Size::Medium:
-				return 24U;
+				return 18U;	   // 24 pixels
 			case Button::Size::Large:
-				return 32U;
+				return 24U;	   // 32 pixels
 			case Button::Size::ExtraLarge:
-				return 40U;
+				return 30U;	   // 40 pixels
 			default:
 				throw std::runtime_error("Invalid button size");
 		}
@@ -266,9 +266,9 @@ namespace guillaume::entities
 				return 12U;
 			case Button::Size::ExtraLarge:
 				return 16U;
+			default:
+				throw std::runtime_error("Invalid button size");
 		}
-
-		return 8U;
 	}
 
 	static utility::graphic::Color32Bit

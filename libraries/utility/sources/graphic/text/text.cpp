@@ -68,6 +68,15 @@ namespace utility::graphic
 		return _fontSize;
 	}
 
+	Text &Text::setFontSize(uint32_t fontSize)
+	{
+		_fontSize = fontSize;
+
+		updateMesh();
+
+		return *this;
+	}
+
 	math::Vector2F Text::getTextDimensions(void) const
 	{
 		math::Vector2F dimensions({ 0.0, 0.0 });
@@ -89,15 +98,6 @@ namespace utility::graphic
 		return dimensions;
 	}
 
-	Text &Text::setFontSize(uint32_t fontSize)
-	{
-		_fontSize = fontSize;
-
-		updateMesh();
-
-		return *this;
-	}
-
 	///////////////////////
 	// Protected Methods //
 	///////////////////////
@@ -107,10 +107,10 @@ namespace utility::graphic
 		_meshes.front() = std::make_shared<Mesh>(std::vector<VertexF> {},
 												 std::vector<uint32_t> {});
 
-		float x			= getPose().getPosition().getX();
-		float y			= getPose().getPosition().getY();
-		float z			= getPose().getPosition().getZ();
-		double baseline = _font->getAscender(_fontSize) * 10.15f;
+		float x		   = getPose().getPosition().getX();
+		float y		   = getPose().getPosition().getY();
+		float z		   = getPose().getPosition().getZ();
+		float baseline = _font->getAscender(_fontSize) / 64.0f;
 
 		uint32_t indexOffset			 = 0;
 		std::vector<uint32_t> codepoints = utf8ToCodepoints(_content);
@@ -118,50 +118,44 @@ namespace utility::graphic
 			_font->processCodePoints(_fontSize, codepoints);
 
 		for (const auto &g: glyphs) {
-			double xpos = x + g.bearing[VEC_X];
-			double ypos = y + baseline - g.bearing[VEC_Y];
+			float xpos = x + g.bearing[VEC_X];
+			float ypos = y + baseline - g.bearing[VEC_Y];
 
-			double w = g.size[VEC_X];
-			double h = g.size[VEC_Y];
+			float w = static_cast<float>(g.size[VEC_X]);
+			float h = static_cast<float>(g.size[VEC_Y]);
 
-			utility::graphic::VertexF v0(
-				utility::graphic::PositionF(xpos, ypos + h, z),
-				getPose().getOrientation().getForward(),
-				utility::math::Vector2F({ g.uvMin[VEC_X], g.uvMax[VEC_Y] }),
-				_color);
-			utility::graphic::VertexF v1(
-				utility::graphic::PositionF(xpos, ypos, z),
-				getPose().getOrientation().getForward(),
-				utility::math::Vector2F({ g.uvMin[VEC_X], g.uvMin[VEC_Y] }),
-				_color);
-			utility::graphic::VertexF v2(
-				utility::graphic::PositionF(xpos + w, ypos, z),
-				getPose().getOrientation().getForward(),
-				utility::math::Vector2F({ g.uvMax[VEC_X], g.uvMin[VEC_Y] }),
-				_color);
-			utility::graphic::VertexF v3(
-				utility::graphic::PositionF(xpos + w, ypos + h, z),
-				getPose().getOrientation().getForward(),
-				utility::math::Vector2F({ g.uvMax[VEC_X], g.uvMax[VEC_Y] }),
-				_color);
+			VertexF v0(PositionF(xpos, ypos + h, z),
+					   getPose().getOrientation().getForward(),
+					   math::Vector2F({ g.uvMin[VEC_X], g.uvMax[VEC_Y] }),
+					   _color);
+			VertexF v1(PositionF(xpos, ypos, z),
+					   getPose().getOrientation().getForward(),
+					   math::Vector2F({ g.uvMin[VEC_X], g.uvMin[VEC_Y] }),
+					   _color);
+			VertexF v2(PositionF(xpos + w, ypos, z),
+					   getPose().getOrientation().getForward(),
+					   math::Vector2F({ g.uvMax[VEC_X], g.uvMin[VEC_Y] }),
+					   _color);
+			VertexF v3(PositionF(xpos + w, ypos + h, z),
+					   getPose().getOrientation().getForward(),
+					   math::Vector2F({ g.uvMax[VEC_X], g.uvMax[VEC_Y] }),
+					   _color);
 
 			_meshes.front()->addVertex(v0);
 			_meshes.front()->addVertex(v1);
 			_meshes.front()->addVertex(v2);
 			_meshes.front()->addVertex(v3);
 
-			_meshes.front()->addIndex(indexOffset + 0);
-			_meshes.front()->addIndex(indexOffset + 1);
-			_meshes.front()->addIndex(indexOffset + 2);
+			// Correct triangle indices for quad
+			_meshes.front()->addIndex(indexOffset + 1);	   // v1
+			_meshes.front()->addIndex(indexOffset + 2);	   // v2
+			_meshes.front()->addIndex(indexOffset + 0);	   // v0
 
-			_meshes.front()->addIndex(indexOffset + 0);
-			_meshes.front()->addIndex(indexOffset + 2);
-			_meshes.front()->addIndex(indexOffset + 3);
+			_meshes.front()->addIndex(indexOffset + 0);	   // v0
+			_meshes.front()->addIndex(indexOffset + 2);	   // v2
+			_meshes.front()->addIndex(indexOffset + 3);	   // v3
 
 			indexOffset += 4;
-
-			// Freetype uses 1/64th of a pixel as its unit, so we need to shift
-			// by 6 to get the actual pixel value
 			x += (g.advance >> 6);
 		}
 	}

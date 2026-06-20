@@ -570,7 +570,7 @@ namespace evan
 		 * This is updated each frame when the right mouse button is pressed to
 		 * calculate the mouse movement delta for camera rotation.
 		 */
-		utility::math::Vector2UI _lastMousePosition { 0, 0 };
+		utility::math::Vector2F _lastMousePosition { 0.0f, 0.0f };
 
 		private:
 		/**
@@ -608,7 +608,7 @@ namespace evan
 			const std::shared_ptr<utility::event::MouseButtonEvent>
 				&mouseButtonEvent,
 			bool &isRightMouseButtonPressed,
-			utility::math::Vector2UI &lastMousePosition);
+			utility::math::Vector2F &lastMousePosition);
 
 		/**
 		 * @brief Processes mouse motion events for camera rotation.
@@ -622,7 +622,7 @@ namespace evan
 			const std::shared_ptr<utility::event::MouseMotionEvent>
 				&mouseMotionEvent,
 			bool isRightMouseButtonPressed,
-			utility::math::Vector2UI &lastMousePosition,
+			utility::math::Vector2F &lastMousePosition,
 			utility::graphic::OrientationF &orientation, float rotationSpeed,
 			float deltaTime);
 
