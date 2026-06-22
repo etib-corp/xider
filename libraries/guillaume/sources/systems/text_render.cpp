@@ -54,7 +54,7 @@ namespace guillaume::systems
 							components::Color>(ecs::Phase::Render)
 		, _ressourceProvider(ressourceProvider)
 		, _engine(engine)
-		, _defaultFontPath("fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf")
+		, _defaultFontPath("fonts/Roboto-Regular.ttf")
 	{
 	}
 
