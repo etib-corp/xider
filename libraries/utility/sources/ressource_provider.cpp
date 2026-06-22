@@ -18,7 +18,8 @@ namespace utility
 		: _systemInterface(systemInterface)
 		, _basePath(basePath)
 	{
-		getLogger().info() << "RessourceProvider initialized with base path: " << basePath;
+		getLogger().info() << "RessourceProvider initialized with base path: "
+						   << basePath;
 	}
 
 	/////////////
@@ -134,7 +135,7 @@ namespace utility
 		RessourceProvider::loadFont(const std::string &path)
 	{
 		std::string resolvedPath = resolvePath(path);
-		auto it = _elementsIDs.find(resolvedPath);
+		auto it					 = _elementsIDs.find(resolvedPath);
 
 		if (it != _elementsIDs.end()) {
 			if (_fonts.find(it->second) != _fonts.end()) {
@@ -189,8 +190,9 @@ namespace utility
 				auto materialKeyIt = _elementsIDs.find(materialKey);
 
 				if (materialKeyIt == _elementsIDs.end()) {
-					getLogger().warning() << "Missing text material entry for font atlas: "
-							  << name;
+					getLogger().warning()
+						<< "Missing text material entry for font atlas: "
+						<< name;
 					return;
 				}
 
@@ -198,8 +200,7 @@ namespace utility
 
 				if (materialIt == _materials.end()) {
 					getLogger().warning()
-						<< "Missing text material for font atlas: " << name
-						;
+						<< "Missing text material for font atlas: " << name;
 					return;
 				}
 
@@ -208,8 +209,9 @@ namespace utility
 						materialIt->second);
 
 				if (!atlasMaterial) {
-					getLogger().warning() << "Misconfigured material for font: " << name
-							  << " is not a TextMaterial";
+					getLogger().warning()
+						<< "Misconfigured material for font: " << name
+						<< " is not a TextMaterial";
 					return;
 				}
 
@@ -277,8 +279,9 @@ namespace utility
 				auto materialKeyIt = _elementsIDs.find(materialKey);
 
 				if (materialKeyIt == _elementsIDs.end()) {
-					getLogger().warning() << "Missing text material entry for font atlas: "
-							  << name;
+					getLogger().warning()
+						<< "Missing text material entry for font atlas: "
+						<< name;
 					return;
 				}
 
@@ -286,8 +289,7 @@ namespace utility
 
 				if (materialIt == _materials.end()) {
 					getLogger().warning()
-						<< "Missing text material for font atlas: " << name
-						;
+						<< "Missing text material for font atlas: " << name;
 					return;
 				}
 
@@ -296,8 +298,9 @@ namespace utility
 						materialIt->second);
 
 				if (!atlasMaterial) {
-					getLogger().warning() << "Misconfigured material for font: " << name
-							  << " is not a TextMaterial";
+					getLogger().warning()
+						<< "Misconfigured material for font: " << name
+						<< " is not a TextMaterial";
 					return;
 				}
 
@@ -402,8 +405,8 @@ namespace utility
 			STBI_rgb_alpha);
 
 		if (!pixels) {
-			getLogger().warning() << "Failed to load texture: " << textureAsset->path()
-					 ;
+			getLogger().warning()
+				<< "Failed to load texture: " << textureAsset->path();
 			return nullptr;
 		}
 
@@ -549,14 +552,14 @@ namespace utility
 		auto fragment = _systemInterface.add(resolvedFragmentPath);
 
 		if (!vertex) {
-			getLogger().warning() << "Failed to load shader asset: " << vertexPath
-					 ;
+			getLogger().warning()
+				<< "Failed to load shader asset: " << vertexPath;
 			return nullptr;
 		}
 
 		if (!fragment) {
-			getLogger().warning() << "Failed to load shader asset: " << fragmentPath
-					 ;
+			getLogger().warning()
+				<< "Failed to load shader asset: " << fragmentPath;
 			return nullptr;
 		}
 
@@ -608,8 +611,8 @@ namespace utility
 		auto codePointsAsset = _systemInterface.add(resolvedPath);
 
 		if (!codePointsAsset) {
-			getLogger().warning() << "Failed to load codepoints asset: " << path
-					 ;
+			getLogger().warning()
+				<< "Failed to load codepoints asset: " << path;
 			return nullptr;
 		}
 
@@ -640,16 +643,16 @@ namespace utility
 		return _codePoints[id];
 	}
 
-	std::unique_ptr<sound::AudioSource> RessourceProvider::loadAudioSource(
-		const std::string &path)
+	std::unique_ptr<sound::AudioSource>
+		RessourceProvider::loadAudioSource(const std::string &path)
 	{
 		std::string resolvedPath = resolvePath(path);
-		auto it = _elementsIDs.find(resolvedPath);
+		auto it					 = _elementsIDs.find(resolvedPath);
 
 		if (it != _elementsIDs.end()) {
 			if (_audioSources.find(it->second) != _audioSources.end()) {
 				auto audioBuffer = _audioSources[it->second];
-				return  _audioManager.createAudioSource(audioBuffer);
+				return _audioManager.createAudioSource(audioBuffer);
 			}
 		}
 
@@ -665,8 +668,9 @@ namespace utility
 		return audioSource;
 	}
 
-	std::unique_ptr<sound::AudioSource> RessourceProvider::loadAudioSourceFromAsset(
-		std::shared_ptr<utility::File> audioAsset)
+	std::unique_ptr<sound::AudioSource>
+		RessourceProvider::loadAudioSourceFromAsset(
+			std::shared_ptr<utility::File> audioAsset)
 	{
 		auto it = _elementsIDs.find(audioAsset->path());
 
@@ -681,22 +685,22 @@ namespace utility
 			sound::DecoderRegistry::getDecoderForFile(audioAsset->path());
 
 		if (!audioDecoder) {
-			getLogger().warning() << "Failed to get audio decoder for asset: " << audioAsset->path()
-					 ;
+			getLogger().warning() << "Failed to get audio decoder for asset: "
+								  << audioAsset->path();
 			return nullptr;
 		}
 
 		auto audioBuffer = audioDecoder->decode(audioAsset);
 
 		if (!audioBuffer) {
-			getLogger().warning() << "Failed to decode audio asset: " << audioAsset->path()
-					 ;
+			getLogger().warning()
+				<< "Failed to decode audio asset: " << audioAsset->path();
 			return nullptr;
 		}
 
 		auto id = getNextID();
 
-		_audioSources[id]					  = audioBuffer;
+		_audioSources[id]				 = audioBuffer;
 		_elementsIDs[audioAsset->path()] = id;
 
 		return _audioManager.createAudioSource(audioBuffer);

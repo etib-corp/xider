@@ -30,7 +30,7 @@
 namespace guillaume
 {
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
-	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+		requires IsOneOf<DefaultSceneType, SceneTypes...>
 	SceneManager<DefaultSceneType, SceneTypes...>::SceneManager(void)
 		: _scenes()
 		, _activeSceneType(typeid(void))
@@ -46,21 +46,21 @@ namespace guillaume
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
-	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+		requires IsOneOf<DefaultSceneType, SceneTypes...>
 	SceneManager<DefaultSceneType, SceneTypes...>::~SceneManager(void)
 	{
-		this->getLogger().info() << "SceneManager destroyed with " << _scenes.size()
-								 << " registered scene(s)";
+		this->getLogger().info() << "SceneManager destroyed with "
+								 << _scenes.size() << " registered scene(s)";
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
-	    requires IsOneOf<DefaultSceneType, SceneTypes...>
-	std::unique_ptr<Scene> &SceneManager<DefaultSceneType, SceneTypes...>::getActiveScene(
-		void)
+		requires IsOneOf<DefaultSceneType, SceneTypes...>
+	std::unique_ptr<Scene> &
+		SceneManager<DefaultSceneType, SceneTypes...>::getActiveScene(void)
 	{
 		if (_scenes.empty()) {
 			this->getLogger().error() << "Cannot activate scene: no scenes are "
-							  "registered";
+										 "registered";
 			throw std::runtime_error(
 				"SceneManager requires at least one registered scene before "
 				"accessing the active scene");
@@ -68,21 +68,23 @@ namespace guillaume
 
 		if (_activeSceneType == typeid(void)) {
 			_activeSceneType = _scenes.begin()->first;
-			this->getLogger().info() << "No active scene set. Defaulting to first "
-							  "registered scene";
+			this->getLogger().info()
+				<< "No active scene set. Defaulting to first "
+				   "registered scene";
 		}
 		return _scenes[_activeSceneType];
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
-	    requires IsOneOf<DefaultSceneType, SceneTypes...>
-	bool SceneManager<DefaultSceneType, SceneTypes...>::hasScenes(void) const noexcept
+		requires IsOneOf<DefaultSceneType, SceneTypes...>
+	bool SceneManager<DefaultSceneType, SceneTypes...>::hasScenes(
+		void) const noexcept
 	{
 		return !_scenes.empty();
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
-	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+		requires IsOneOf<DefaultSceneType, SceneTypes...>
 	bool SceneManager<DefaultSceneType, SceneTypes...>::hasActiveScene(
 		void) const noexcept
 	{
@@ -90,25 +92,28 @@ namespace guillaume
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
-	    requires IsOneOf<DefaultSceneType, SceneTypes...>
-	ecs::EntityRegistry &SceneManager<DefaultSceneType, SceneTypes...>::getActiveEntityRegistry(
-		void)
+		requires IsOneOf<DefaultSceneType, SceneTypes...>
+	ecs::EntityRegistry &
+		SceneManager<DefaultSceneType, SceneTypes...>::getActiveEntityRegistry(
+			void)
 	{
 		return getActiveScene()->getEntityRegistry();
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
-	    requires IsOneOf<DefaultSceneType, SceneTypes...>
-	ecs::ComponentRegistry &SceneManager<DefaultSceneType, SceneTypes...>::getActiveComponentRegistry(
-		void)
+		requires IsOneOf<DefaultSceneType, SceneTypes...>
+	ecs::ComponentRegistry &
+		SceneManager<DefaultSceneType,
+					 SceneTypes...>::getActiveComponentRegistry(void)
 	{
 		return getActiveScene()->getComponentRegistry();
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
-	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+		requires IsOneOf<DefaultSceneType, SceneTypes...>
 	std::vector<std::type_index>
-		SceneManager<DefaultSceneType, SceneTypes...>::getRegisteredSceneTypes(void) const
+		SceneManager<DefaultSceneType, SceneTypes...>::getRegisteredSceneTypes(
+			void) const
 	{
 		std::vector<std::type_index> sceneTypes;
 		for (const auto &entry: _scenes) {
@@ -118,26 +123,27 @@ namespace guillaume
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
-	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+		requires IsOneOf<DefaultSceneType, SceneTypes...>
 	template<InheritFromScene SceneType>
 	void SceneManager<DefaultSceneType, SceneTypes...>::addScene(void)
 	{
 		std::type_index typeIndex(typeid(SceneType));
 		_scenes[typeIndex] =
 			std::make_unique<SceneType>(_localStorage, _sessionStorage);
-		this->getLogger().info() << "Registered scene type: "
-						 << utility::demangle<SceneType>();
+		this->getLogger().info()
+			<< "Registered scene type: " << utility::demangle<SceneType>();
 	}
 
-		template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
-	    requires IsOneOf<DefaultSceneType, SceneTypes...>
-	void SceneManager<DefaultSceneType, SceneTypes...>::setEngine(Engine *engine)
+	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
+		requires IsOneOf<DefaultSceneType, SceneTypes...>
+	void
+		SceneManager<DefaultSceneType, SceneTypes...>::setEngine(Engine *engine)
 	{
 		_engine = engine;
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
-	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+		requires IsOneOf<DefaultSceneType, SceneTypes...>
 	void SceneManager<DefaultSceneType, SceneTypes...>::enterActiveScene(void)
 	{
 		std::unique_ptr<Scene> &activeScene = getActiveScene();
@@ -148,7 +154,7 @@ namespace guillaume
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
-	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+		requires IsOneOf<DefaultSceneType, SceneTypes...>
 	void SceneManager<DefaultSceneType, SceneTypes...>::processSceneTransition(
 		void)
 	{
@@ -166,8 +172,8 @@ namespace guillaume
 				   "registered: "
 				<< utility::demangle(nextType.name());
 			activeScene->clearNextScene();
-			throw std::runtime_error(
-				"Scene transition failed: target scene not found in scene manager");
+			throw std::runtime_error("Scene transition failed: target scene "
+									 "not found in scene manager");
 		}
 
 		this->getLogger().info() << "Transitioning from active scene to type: "
@@ -180,18 +186,20 @@ namespace guillaume
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
-	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+		requires IsOneOf<DefaultSceneType, SceneTypes...>
 	template<InheritFromScene SceneType>
 	void SceneManager<DefaultSceneType, SceneTypes...>::switchToScene(void)
 	{
 		std::type_index typeIndex(typeid(SceneType));
 		if (_scenes.find(typeIndex) == _scenes.end()) {
-			this->getLogger().error() << "Scene switch failed. Scene type is not "
-								  "registered: " << utility::demangle<SceneType>();
+			this->getLogger().error()
+				<< "Scene switch failed. Scene type is not "
+				   "registered: "
+				<< utility::demangle<SceneType>();
 			throw std::runtime_error("Scene not found in scene manager");
 		}
 		_activeSceneType = typeIndex;
 		this->getLogger().info() << "Switched active scene to type: "
-							 << utility::demangle<SceneType>();
+								 << utility::demangle<SceneType>();
 	}
-}  // namespace guillaume
+}	 // namespace guillaume

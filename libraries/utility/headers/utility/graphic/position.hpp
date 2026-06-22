@@ -293,4 +293,20 @@ namespace utility::graphic
 	 */
 	using PositionD = Position<double>;
 
+	/**
+	 * @brief Stream insertion operator for Position.
+	 * @param stream Output stream.
+	 * @param position Position to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const PositionF &position);
+
+	/**
+	 * @brief Stream insertion operator for Position.
+	 * @param stream Output stream.
+	 * @param position Position to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const PositionD &position);
+
 }	 // namespace utility::graphic

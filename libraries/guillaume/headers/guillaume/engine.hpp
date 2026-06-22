@@ -162,17 +162,15 @@ namespace guillaume
 		 * @return A 2D vector containing the width and height of the rendered
 		 * text in pixels in the form of utility::math::Vector<float, 2>.
 		 */
-		virtual utility::math::Vector2D
+		virtual utility::math::Vector2F
 			measureText(const utility::graphic::Text &text) const = 0;
 
 		/**
 		 * @brief Add a text element to the engine at a specified pose.
 		 * @param text The text to draw.
-		 * @param pose The pose at which to draw the text.
 		 * @return A unique identifier for the added text.
 		 */
-		virtual size_t addText(const utility::graphic::Text &text,
-							   const utility::graphic::PoseF &pose) = 0;
+		virtual size_t addText(const utility::graphic::Text &text) = 0;
 
 		/**
 		 * @brief Get the full view model.

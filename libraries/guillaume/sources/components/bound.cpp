@@ -26,7 +26,7 @@ namespace guillaume::components
 {
 	Bound::Bound(void)
 		: ecs::Component()
-		, utility::graphic::SizeUI()
+		, utility::graphic::SizeF()
 	{
 	}
 }	 // namespace guillaume::components

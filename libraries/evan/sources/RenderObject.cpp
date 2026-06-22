@@ -42,7 +42,7 @@ evan::RenderObject::RenderObject(
 					+ std::to_string(vertex.getColor().getGreen()) + ", "
 					+ std::to_string(vertex.getColor().getBlue()) + ", "
 					+ std::to_string(vertex.getColor().getAlpha()) + ")";
-			GPUVertex gpuVertex = GPUVertex::createFromVertexD(vertex);
+			GPUVertex gpuVertex = GPUVertex::createFromVertex(vertex);
 			gpuVertices.push_back(gpuVertex);
 		}
 

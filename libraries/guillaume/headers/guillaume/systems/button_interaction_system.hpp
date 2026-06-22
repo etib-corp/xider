@@ -145,7 +145,7 @@ namespace guillaume::systems
 				this->template getComponent<InteractionComponent>(
 					entityIdentifier);
 
-			const auto size = utility::math::Vector2UI(
+			const auto size = utility::math::Vector2F(
 				{ bound.getWidth(), bound.getHeight() });
 			const bool isIntersecting =
 				ray.intersectRectangle(transform.getPose(), size);

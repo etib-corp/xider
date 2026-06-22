@@ -95,18 +95,16 @@ namespace xider
 		/**
 		 * @brief Draws text at the specified position.
 		 * @param text The text to render.
-		 * @param pose The position and orientation for the text.
 		 * @return A unique identifier for the added text.
 		 */
-		size_t addText(const utility::graphic::Text &text,
-					   const utility::graphic::PoseF &pose) override;
+		size_t addText(const utility::graphic::Text &text) override;
 
 		/**
 		 * @brief Measures text dimensions.
 		 * @param text The text to measure.
 		 * @return A Vector2F containing the width and height.
 		 */
-		utility::math::Vector2D
+		utility::math::Vector2F
 			measureText(const utility::graphic::Text &text) const override;
 
 		/**

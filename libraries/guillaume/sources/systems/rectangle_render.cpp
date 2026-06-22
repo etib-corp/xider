@@ -48,8 +48,8 @@ namespace guillaume::systems
 		}
 	}
 
-	utility::graphic::PositionD RectangleRender::rotatePositionByQuaternion(
-		const utility::graphic::PositionD &position,
+	utility::graphic::PositionF RectangleRender::rotatePositionByQuaternion(
+		const utility::graphic::PositionF &position,
 		const utility::graphic::OrientationF &orientation) const
 	{
 		const auto normalizedOrientation = orientation.normalized();
@@ -74,7 +74,7 @@ namespace guillaume::systems
 		const float crossTY = (qz * tX) - (qx * tZ);
 		const float crossTZ = (qx * tY) - (qy * tX);
 
-		return utility::graphic::PositionD(positionX + (qw * tX) + crossTX,
+		return utility::graphic::PositionF(positionX + (qw * tX) + crossTX,
 										   positionY + (qw * tY) + crossTY,
 										   positionZ + (qw * tZ) + crossTZ);
 	}
@@ -158,29 +158,29 @@ namespace guillaume::systems
 		return localVertices;
 	}
 
-	std::vector<utility::graphic::PositionD>
+	std::vector<utility::graphic::PositionF>
 		RectangleRender::transformToWorldVertices(
 			const std::vector<utility::math::Vector2F> &localVertices,
-			const utility::graphic::PositionD &center,
+			const utility::graphic::PositionF &center,
 			const utility::graphic::OrientationF &orientation) const
 	{
-		std::vector<utility::graphic::PositionD> worldVertices;
+		std::vector<utility::graphic::PositionF> worldVertices;
 		worldVertices.reserve(localVertices.size());
 		for (const auto &localVertex: localVertices) {
-			const utility::graphic::PositionD localPosition(
+			const utility::graphic::PositionF localPosition(
 				localVertex[0], localVertex[1], 0.0f);
 			const auto rotatedPosition =
 				rotatePositionByQuaternion(localPosition, orientation);
-			worldVertices.push_back(utility::graphic::PositionD(
+			worldVertices.push_back(utility::graphic::PositionF(
 				center[0] + rotatedPosition[0], center[1] + rotatedPosition[1],
 				center[2] + rotatedPosition[2]));
 		}
 		return worldVertices;
 	}
 
-	std::vector<utility::graphic::PositionD>
+	std::vector<utility::graphic::PositionF>
 		RectangleRender::buildRoundedRectVertices(
-			const utility::graphic::PositionD &center,
+			const utility::graphic::PositionF &center,
 			const utility::graphic::OrientationF &orientation,
 			const utility::math::Vector2F &scale,
 			const utility::math::Vector2F &size, float radius, int arcSegments,
@@ -194,8 +194,8 @@ namespace guillaume::systems
 	}
 
 	void RectangleRender::buildTriangleFanVertices(
-		utility::graphic::Mesh &mesh, const utility::graphic::PositionD &center,
-		const std::vector<utility::graphic::PositionD> &outline,
+		utility::graphic::Mesh &mesh, const utility::graphic::PositionF &center,
+		const std::vector<utility::graphic::PositionF> &outline,
 		const utility::graphic::Color32Bit &color)
 	{
 		// Add center vertex as the fan anchor (index 0)
@@ -236,11 +236,11 @@ namespace guillaume::systems
 		}
 	}
 
-	utility::graphic::VertexD RectangleRender::createVertex(
-		const utility::graphic::PositionD &position,
+	utility::graphic::VertexF RectangleRender::createVertex(
+		const utility::graphic::PositionF &position,
 		const utility::graphic::Color32Bit &color) const
 	{
-		utility::graphic::VertexD vertex;
+		utility::graphic::VertexF vertex;
 		vertex.setPosition(position);
 		vertex.setColor(color);
 		return vertex;
@@ -295,13 +295,13 @@ namespace guillaume::systems
 		auto &cacheEntry	   = _cache[entityIdentifier];
 		cacheEntry.used		   = true;
 
-		const utility::graphic::PositionD center(
+		const utility::graphic::PositionF center(
 			position[0], position[1] - (height / 2.0f), position[2]);
 		const auto roundedVertices = buildRoundedRectVertices(
 			center, orientation, utility::math::Vector2F({ 1.0f, 1.0f }),
 			utility::math::Vector2F({ (float)width, (float)height }), radius);
 
-		utility::graphic::Mesh mesh(std::vector<utility::graphic::VertexD> {},
+		utility::graphic::Mesh mesh(std::vector<utility::graphic::VertexF> {},
 									std::vector<uint32_t> {});
 		buildTriangleFanVertices(mesh, center, roundedVertices, color);
 

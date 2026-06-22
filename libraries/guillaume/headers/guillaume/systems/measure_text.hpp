@@ -29,6 +29,7 @@
 #include "guillaume/components/bound.hpp"
 #include "guillaume/components/text.hpp"
 #include "guillaume/components/transform.hpp"
+#include "guillaume/components/color.hpp"
 
 #include "guillaume/engine.hpp"
 
@@ -42,14 +43,15 @@ namespace guillaume::systems
 	 * @see components::Transform
 	 */
 	class MeasureText:
-		public ecs::SystemFiller<components::Text, components::Bound>
+		public ecs::SystemFiller<components::Text, components::Bound,
+								 components::Transform, components::Color>
 	{
 		private:
 		std::shared_ptr<utility::RessourceProvider>
 			_ressourceProvider;	   ///< Shared resource provider for loading
 								   ///< fonts and glyphs
 		std::unique_ptr<Engine>
-			&_engine;	   ///< Engine instance for text measurement
+			&_engine;	 ///< Engine instance for text measurement
 		std::string
 			_defaultFontPath;	 ///< Default font used for text measurement
 

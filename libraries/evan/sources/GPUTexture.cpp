@@ -26,26 +26,28 @@ evan::GPUTexture::GPUTexture(const DeviceContext &deviceContext,
 
 	this->getLogger().info() << "Creating default sampler for GPUTexture...";
 	if (type == TextureType::FontAtlas) {
-		this->createSampler(*deviceBackend, VkSamplerCreateInfo {
-			.sType				 = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
-			.pNext = nullptr,
-    		.flags = 0,
-			.magFilter			 = VK_FILTER_LINEAR,
-			.minFilter			 = VK_FILTER_LINEAR,
-			.mipmapMode			 = VK_SAMPLER_MIPMAP_MODE_LINEAR,
-			.addressModeU		 = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
-			.addressModeV		 = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
-			.addressModeW		 = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
-			.mipLodBias			 = 0.0f,
-			.anisotropyEnable	 = VK_FALSE,
-			.maxAnisotropy		 = 1.0f,
-			.compareEnable		 = (VkBool32)VK_FALSE,
-			.compareOp			 = VK_COMPARE_OP_ALWAYS,
-			.minLod				 = 0.0f,
-			.maxLod				 = static_cast<float>(_mipLevel),
-			.borderColor		 = VK_BORDER_COLOR_INT_OPAQUE_BLACK,
-			.unnormalizedCoordinates = VK_FALSE,
-		});
+		this->createSampler(
+			*deviceBackend,
+			VkSamplerCreateInfo {
+				.sType			  = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
+				.pNext			  = nullptr,
+				.flags			  = 0,
+				.magFilter		  = VK_FILTER_LINEAR,
+				.minFilter		  = VK_FILTER_LINEAR,
+				.mipmapMode		  = VK_SAMPLER_MIPMAP_MODE_LINEAR,
+				.addressModeU	  = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
+				.addressModeV	  = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
+				.addressModeW	  = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
+				.mipLodBias		  = 0.0f,
+				.anisotropyEnable = VK_FALSE,
+				.maxAnisotropy	  = 1.0f,
+				.compareEnable	  = (VkBool32)VK_FALSE,
+				.compareOp		  = VK_COMPARE_OP_ALWAYS,
+				.minLod			  = 0.0f,
+				.maxLod			  = static_cast<float>(_mipLevel),
+				.borderColor	  = VK_BORDER_COLOR_INT_OPAQUE_BLACK,
+				.unnormalizedCoordinates = VK_FALSE,
+			});
 	} else {
 		this->createSampler(*deviceBackend, VkSamplerCreateInfo {});
 	}
@@ -113,7 +115,7 @@ void evan::GPUTexture::createImage(const ADeviceBackend &deviceBackend,
 	}
 
 	if (texture._type == utility::graphic::Texture::TextureType::FontAtlas) {
-		_mipLevel = 1; // Font atlases typically don't use mipmaps
+		_mipLevel = 1;	  // Font atlases typically don't use mipmaps
 	} else {
 		_mipLevel = static_cast<uint32_t>(
 						std::floor(std::log2((std::max)(texWidth, texHeight))))

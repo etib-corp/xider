@@ -38,8 +38,8 @@ bool utility::DefaultSystemIO::loadDirectory(const std::string &directory)
 	const std::filesystem::path directoryPath(directory);
 	if (!std::filesystem::exists(directoryPath, error)
 		|| !std::filesystem::is_directory(directoryPath, error)) {
-		getLogger().warning() << "Asset directory does not exist or is invalid: "
-							  << directory;
+		getLogger().warning()
+			<< "Asset directory does not exist or is invalid: " << directory;
 		return false;
 	}
 
@@ -47,8 +47,8 @@ bool utility::DefaultSystemIO::loadDirectory(const std::string &directory)
 	for (const auto &entry:
 		 std::filesystem::directory_iterator(directoryPath, error)) {
 		if (error) {
-			getLogger().warning() << "Failed to iterate asset directory: "
-								  << directory;
+			getLogger().warning()
+				<< "Failed to iterate asset directory: " << directory;
 			return false;
 		}
 
@@ -139,15 +139,16 @@ bool utility::DefaultSystemIO::save(const std::string &path,
 	if (!parentPath.empty()) {
 		std::filesystem::create_directories(parentPath, error);
 		if (error) {
-			getLogger().warning() << "Failed to create parent directories for: "
-								  << savePath;
+			getLogger().warning()
+				<< "Failed to create parent directories for: " << savePath;
 			return false;
 		}
 	}
 
 	std::ofstream file(savePath, std::ios::binary);
 	if (!file.is_open()) {
-		getLogger().warning() << "Failed to open file for writing: " << savePath;
+		getLogger().warning()
+			<< "Failed to open file for writing: " << savePath;
 		return false;
 	}
 

@@ -22,68 +22,70 @@
 #include "utility/sound/audio_source.hpp"
 #include "utility/sound/audio_manager.hpp"
 
-utility::sound::AudioSource::AudioSource(uint32_t sourceID, AudioManager &manager)
-    : _sourceID(sourceID), _manager(manager)
+utility::sound::AudioSource::AudioSource(uint32_t sourceID,
+										 AudioManager &manager)
+	: _sourceID(sourceID)
+	, _manager(manager)
 {
 }
 
 utility::sound::AudioSource::~AudioSource()
 {
-    _manager.destroyAudioSource(_sourceID);
+	_manager.destroyAudioSource(_sourceID);
 }
 
 void utility::sound::AudioSource::play()
 {
-    _isPlaying = true;
-    _manager.submitCommand({ AudioCommandType::Play, _sourceID });
+	_isPlaying = true;
+	_manager.submitCommand({ AudioCommandType::Play, _sourceID });
 }
 
 void utility::sound::AudioSource::pause()
 {
-    _isPlaying = false;
-    _manager.submitCommand({ AudioCommandType::Pause, _sourceID });
+	_isPlaying = false;
+	_manager.submitCommand({ AudioCommandType::Pause, _sourceID });
 }
 
 void utility::sound::AudioSource::stop()
 {
-    _isPlaying = false;
-    _manager.submitCommand({ AudioCommandType::Stop, _sourceID });
+	_isPlaying = false;
+	_manager.submitCommand({ AudioCommandType::Stop, _sourceID });
 }
 
 void utility::sound::AudioSource::setBuffer(std::shared_ptr<AudioBuffer> buffer)
 {
-    _buffer = std::move(buffer);
+	_buffer = std::move(buffer);
 
-    AudioCommand command{ AudioCommandType::SetBuffer, _sourceID, {} };
-    command.data.bufferID = _buffer->bufferID();
-    _manager.submitCommand(command);
+	AudioCommand command { AudioCommandType::SetBuffer, _sourceID, {} };
+	command.data.bufferID = _buffer->bufferID();
+	_manager.submitCommand(command);
 }
 
 void utility::sound::AudioSource::setLooping(bool loop)
 {
-    _looping = loop;
-    AudioCommand command{ AudioCommandType::SetLooping, _sourceID,  {} };
-    command.data.looping = loop;
-    _manager.submitCommand(command);
+	_looping = loop;
+	AudioCommand command { AudioCommandType::SetLooping, _sourceID, {} };
+	command.data.looping = loop;
+	_manager.submitCommand(command);
 }
 
 void utility::sound::AudioSource::setPitch(float pitch)
 {
-    _pitch = pitch;
-    AudioCommand command{ AudioCommandType::SetPitch, _sourceID,  {} };
-    command.data.pitch = pitch;
-    _manager.submitCommand(command);
+	_pitch = pitch;
+	AudioCommand command { AudioCommandType::SetPitch, _sourceID, {} };
+	command.data.pitch = pitch;
+	_manager.submitCommand(command);
 }
 
 void utility::sound::AudioSource::setGain(float gain)
 {
-    _gain = gain;
-    AudioCommand command{ AudioCommandType::SetGain, _sourceID,  {} };
-    command.data.gain = gain;
-    _manager.submitCommand(command);
+	_gain = gain;
+	AudioCommand command { AudioCommandType::SetGain, _sourceID, {} };
+	command.data.gain = gain;
+	_manager.submitCommand(command);
 }
 
 uint32_t utility::sound::AudioSource::sourceID() const
 {
-    return _sourceID;
+	return _sourceID;
 }

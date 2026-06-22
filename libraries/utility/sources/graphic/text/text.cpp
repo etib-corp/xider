@@ -25,15 +25,17 @@
 namespace utility::graphic
 {
 	Text::Text(std::shared_ptr<RessourceProvider> ressourceProvider,
+			   const PoseF &pose, const Color32Bit &color,
 			   const std::string &content, uint32_t fontSize,
 			   const std::string &font)
+		: Renderable(pose, color)
+		, _content(content)
+		, _fontSize(fontSize)
+		, _fontPath(font)
 	{
-		_content  = content;
-		_fontSize = fontSize;
-		_font	  = ressourceProvider->loadFont(font);
-		_fontPath = font;
-		_meshes	  = { std::make_shared<Mesh>(std::vector<VertexD> {},
-											 std::vector<uint32_t> {}) };
+		_font	= ressourceProvider->loadFont(_fontPath);
+		_meshes = { std::make_shared<Mesh>(std::vector<VertexF> {},
+										   std::vector<uint32_t> {}) };
 		updateMesh();
 	}
 
@@ -66,17 +68,26 @@ namespace utility::graphic
 		return _fontSize;
 	}
 
-	math::Vector2D Text::getTextDimensions(void) const
+	Text &Text::setFontSize(uint32_t fontSize)
 	{
-		math::Vector2D dimensions({ 0.0, 0.0 });
+		_fontSize = fontSize;
+
+		updateMesh();
+
+		return *this;
+	}
+
+	math::Vector2F Text::getTextDimensions(void) const
+	{
+		math::Vector2F dimensions({ 0.0, 0.0 });
 
 		std::vector<uint32_t> codepoints = utf8ToCodepoints(_content);
 		std::vector<Glyph> glyphs =
 			_font->processCodePoints(_fontSize, codepoints);
 
 		for (const auto &g: glyphs) {
-			double w = g.size[VEC_X];
-			double h = g.size[VEC_Y];
+			float w = g.size[VEC_X];
+			float h = g.size[VEC_Y];
 
 			// Freetype uses 1/64th of a pixel as its unit, so we need to shift
 			// by 6 to get the actual pixel value
@@ -87,26 +98,19 @@ namespace utility::graphic
 		return dimensions;
 	}
 
-	Text &Text::setFontSize(uint32_t fontSize)
-	{
-		_fontSize = fontSize;
-
-		updateMesh();
-
-		return *this;
-	}
-
 	///////////////////////
 	// Protected Methods //
 	///////////////////////
 
 	void Text::updateMesh(void)
 	{
-		_meshes.front() = std::make_shared<Mesh>(std::vector<VertexD> {},
+		_meshes.front() = std::make_shared<Mesh>(std::vector<VertexF> {},
 												 std::vector<uint32_t> {});
 
-		float x	 = 0;
-		double baseline = _font->getAscender(_fontSize) * 10.15f;
+		float x		   = getPose().getPosition().getX();
+		float y		   = getPose().getPosition().getY();
+		float z		   = getPose().getPosition().getZ();
+		float baseline = _font->getAscender(_fontSize) / 64.0f;
 
 		uint32_t indexOffset			 = 0;
 		std::vector<uint32_t> codepoints = utf8ToCodepoints(_content);
@@ -114,46 +118,44 @@ namespace utility::graphic
 			_font->processCodePoints(_fontSize, codepoints);
 
 		for (const auto &g: glyphs) {
-			double xpos = x + g.bearing[VEC_X];
-			double ypos =baseline - g.bearing[VEC_Y];
+			float xpos = x + g.bearing[VEC_X];
+			float ypos = y + baseline - g.bearing[VEC_Y];
 
-			double w = g.size[VEC_X];
-			double h = g.size[VEC_Y];
+			float w = static_cast<float>(g.size[VEC_X]);
+			float h = static_cast<float>(g.size[VEC_Y]);
 
-			graphic::Vertex<double> v0(
-				graphic::Position<double>(xpos, ypos + h, 0.0),
-				math::Vector3D({ 0.0, 0.0, 1.0 }),
-				math::Vector2D({ g.uvMin[VEC_X], g.uvMax[VEC_Y] }), _color);
-			graphic::Vertex<double> v1(
-				graphic::Position<double>(xpos, ypos, 0.0),
-				math::Vector3D({ 0.0, 0.0, 1.0 }),
-				math::Vector2D({ g.uvMin[VEC_X], g.uvMin[VEC_Y] }), _color);
-			graphic::Vertex<double> v2(
-				graphic::Position<double>(xpos + w, ypos, 0.0),
-				math::Vector3D({ 0.0, 0.0, 1.0 }),
-				math::Vector2D({ g.uvMax[VEC_X], g.uvMin[VEC_Y] }), _color);
-			graphic::Vertex<double> v3(
-				graphic::Position<double>(xpos + w, ypos + h, 0.0),
-				math::Vector3D({ 0.0, 0.0, 1.0 }),
-				math::Vector2D({ g.uvMax[VEC_X], g.uvMax[VEC_Y] }), _color);
+			VertexF v0(PositionF(xpos, ypos + h, z),
+					   getPose().getOrientation().getForward(),
+					   math::Vector2F({ g.uvMin[VEC_X], g.uvMax[VEC_Y] }),
+					   _color);
+			VertexF v1(PositionF(xpos, ypos, z),
+					   getPose().getOrientation().getForward(),
+					   math::Vector2F({ g.uvMin[VEC_X], g.uvMin[VEC_Y] }),
+					   _color);
+			VertexF v2(PositionF(xpos + w, ypos, z),
+					   getPose().getOrientation().getForward(),
+					   math::Vector2F({ g.uvMax[VEC_X], g.uvMin[VEC_Y] }),
+					   _color);
+			VertexF v3(PositionF(xpos + w, ypos + h, z),
+					   getPose().getOrientation().getForward(),
+					   math::Vector2F({ g.uvMax[VEC_X], g.uvMax[VEC_Y] }),
+					   _color);
 
 			_meshes.front()->addVertex(v0);
 			_meshes.front()->addVertex(v1);
 			_meshes.front()->addVertex(v2);
 			_meshes.front()->addVertex(v3);
 
-			_meshes.front()->addIndex(indexOffset + 0);
-			_meshes.front()->addIndex(indexOffset + 1);
-			_meshes.front()->addIndex(indexOffset + 2);
+			// Correct triangle indices for quad
+			_meshes.front()->addIndex(indexOffset + 1);	   // v1
+			_meshes.front()->addIndex(indexOffset + 2);	   // v2
+			_meshes.front()->addIndex(indexOffset + 0);	   // v0
 
-			_meshes.front()->addIndex(indexOffset + 0);
-			_meshes.front()->addIndex(indexOffset + 2);
-			_meshes.front()->addIndex(indexOffset + 3);
+			_meshes.front()->addIndex(indexOffset + 0);	   // v0
+			_meshes.front()->addIndex(indexOffset + 2);	   // v2
+			_meshes.front()->addIndex(indexOffset + 3);	   // v3
 
 			indexOffset += 4;
-
-			// Freetype uses 1/64th of a pixel as its unit, so we need to shift
-			// by 6 to get the actual pixel value
 			x += (g.advance >> 6);
 		}
 	}

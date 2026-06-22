@@ -309,7 +309,7 @@ namespace utility::graphic
 		 */
 		template<typename RectanglePoseType>
 		bool intersectRectangle(const RectanglePoseType &rectanglePose,
-								const math::Vector2UI &rectangleSize) const
+								const math::Vector2F &rectangleSize) const
 		{
 			const auto rectangleCenter		= rectanglePose.getPosition();
 			const auto rectangleOrientation = rectanglePose.getOrientation();

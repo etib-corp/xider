@@ -118,14 +118,17 @@ namespace utility::graphic
 		 *
 		 * @param ressourceProvider A reference to the RessourceProvider
 		 * instance used to load font resources.
+		 * @param pose The initial position and orientation for the text.
+		 * @param color The initial color of the text.
 		 * @param content The text content to be displayed.
 		 * @param fontSize The font size in points for rendering the text.
 		 * @param font The file path to the font resource to be used for
-		 * rendering the text (default is "assets/fonts/Roboto.ttf").
+		 * rendering the text.
 		 */
 		Text(std::shared_ptr<RessourceProvider> ressourceProvider,
+			 const PoseF &pose, const Color32Bit &color,
 			 const std::string &content, uint32_t fontSize,
-			 const std::string &font = "fonts/Roboto.ttf");
+			 const std::string &font);
 
 		/**
 		 * @brief Copy constructor.
@@ -207,10 +210,10 @@ namespace utility::graphic
 		 * Font class to retrieve the glyph information for the text content and
 		 * computes the overall width and height of the text as it would be
 		 * rendered, which can be useful for layout and positioning purposes.
-		 * @return A Vector2D containing the width and height of the rendered
+		 * @return A Vector2F containing the width and height of the rendered
 		 * text.
 		 */
-		math::Vector2D getTextDimensions(void) const;
+		math::Vector2F getTextDimensions(void) const;
 
 		/**
 		 * @brief Set the font size.

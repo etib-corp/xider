@@ -30,7 +30,8 @@ namespace guillaume::systems
 	MeasureText::MeasureText(
 		std::shared_ptr<utility::RessourceProvider> ressourceProvider,
 		std::unique_ptr<Engine> &engine)
-		: ecs::SystemFiller<components::Text, components::Bound>(
+		: ecs::SystemFiller<components::Text, components::Bound,
+							components::Transform, components::Color>(
 			  ecs::Phase::Measure)
 		, _ressourceProvider(ressourceProvider)
 		, _engine(engine)
@@ -47,7 +48,9 @@ namespace guillaume::systems
 		getLogger().debug()
 			<< "Updating MeasureText system for entity " << entityIdentifier;
 		if (!requireComponent<components::Text>(entityIdentifier)
-			|| !requireComponent<components::Bound>(entityIdentifier)) {
+			|| !requireComponent<components::Bound>(entityIdentifier)
+			|| !requireComponent<components::Transform>(entityIdentifier)
+			|| !requireComponent<components::Color>(entityIdentifier)) {
 			return;
 		}
 
@@ -55,9 +58,14 @@ namespace guillaume::systems
 			getComponent<components::Text>(entityIdentifier);
 		auto &boundComponent =
 			getComponent<components::Bound>(entityIdentifier);
+		auto &transformComponent =
+			getComponent<components::Transform>(entityIdentifier);
+		auto &colorComponent =
+			getComponent<components::Color>(entityIdentifier);
 
 		utility::graphic::Text text(
-			_ressourceProvider, textComponent.getContent(),
+			_ressourceProvider, transformComponent.getPose(),
+			colorComponent.getColor(), textComponent.getContent(),
 			textComponent.getFontSize(), _defaultFontPath);
 		text.setColor(utility::graphic::Color32Bit());
 

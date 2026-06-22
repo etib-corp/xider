@@ -20,11 +20,12 @@ namespace utility::graphic
 		_penX		 = 0;
 		_penY		 = 0;
 		_rowHeight	 = 0;
-		_ascender = face->size->metrics.ascender / 64.0f;
-		_descender = std::abs(face->size->metrics.descender / 64.0f);
-		_lineHeight = face->size->metrics.height / 64.0f;
+		_ascender	 = face->size->metrics.ascender / 64.0f;
+		_descender	 = std::abs(face->size->metrics.descender / 64.0f);
+		_lineHeight	 = face->size->metrics.height / 64.0f;
 
-		_generatedAtlas = std::make_shared<Texture>(_atlasWidth, _atlasHeight, Texture::TextureType::FontAtlas);
+		_generatedAtlas = std::make_shared<Texture>(
+			_atlasWidth, _atlasHeight, Texture::TextureType::FontAtlas);
 		FT_Set_Pixel_Sizes(_correspondingFace, 0, _fontSize);
 	}
 

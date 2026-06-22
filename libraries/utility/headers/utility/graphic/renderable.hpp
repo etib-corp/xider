@@ -30,6 +30,15 @@ namespace utility::graphic
 	{
 		public:
 		/**
+		 * @brief Default constructor for Renderable.
+		 * @param pose The initial pose (position and orientation) of the
+		 * renderable object. Defaults to the origin with no rotation.
+		 * @param color The initial color of the renderable object. Defaults to
+		 * opaque white.
+		 */
+		Renderable(const PoseF &pose, const Color32Bit &color);
+
+		/**
 		 * @brief Virtual destructor for Renderable.
 		 */
 		virtual ~Renderable() = default;

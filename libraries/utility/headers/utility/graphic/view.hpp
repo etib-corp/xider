@@ -58,7 +58,7 @@ namespace utility::graphic
 		FieldOfView<ViewComponentType>
 			_fieldOfView;	 ///< View field-of-view parameters
 
-		math::Vector2UI
+		math::Vector2F
 			_viewportSize;	  ///< Viewport size in pixels (width, height)
 
 		/**
@@ -260,7 +260,7 @@ namespace utility::graphic
 		 * invalid.
 		 */
 		View(Pose<ViewComponentType> pose, ViewComponentType verticalFovDegrees,
-			 ViewComponentType aspectRatio, math::Vector2UI viewportSize)
+			 ViewComponentType aspectRatio, math::Vector2F viewportSize)
 			: _pose(std::move(pose))
 			, _fieldOfView()
 			, _viewportSize(viewportSize)
@@ -502,7 +502,7 @@ namespace utility::graphic
 		 * @throws std::out_of_range if point is outside of viewport bounds.
 		 */
 		Ray<ViewComponentType>
-			viewPointToRay(const math::Vector2UI &point) const
+			viewPointToRay(const math::Vector2F &point) const
 		{
 			if (point.x >= _viewportSize.x || point.y >= _viewportSize.y) {
 				throw std::out_of_range("Point is outside of viewport bounds");

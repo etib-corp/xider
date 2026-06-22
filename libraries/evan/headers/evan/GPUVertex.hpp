@@ -106,22 +106,22 @@ namespace evan
 		}
 
 		/**
-		 * @brief Create a GPUVertex from a utility::graphic::VertexD object.
+		 * @brief Create a GPUVertex from a utility::graphic::Vertex object.
 		 *
-		 * This static function takes a utility::graphic::VertexD object as
+		 * This static function takes a utility::graphic::Vertex object as
 		 * input and converts it into a GPUVertex object. It extracts the
-		 * position, color, and texture coordinates from the VertexD object and
+		 * position, color, and texture coordinates from the Vertex object and
 		 * maps them to the corresponding attributes of the GPUVertex. The color
 		 * is converted from a Color32Bit format (with components in the range
 		 * [0, 255]) to a normalized RGB format (with components in the range
 		 * [0.0, 1.0]) suitable for use in shaders.
 		 *
-		 * @param vertex The utility::graphic::VertexD object to convert.
+		 * @param vertex The utility::graphic::VertexF object to convert.
 		 * @return GPUVertex The resulting GPUVertex object with the converted
 		 * attributes.
 		 */
 		static GPUVertex
-			createFromVertexD(const utility::graphic::VertexD &vertex)
+			createFromVertex(const utility::graphic::VertexF &vertex)
 		{
 			auto color32Bit = vertex.getColor();
 			auto red		= color32Bit.getRed() / 255.0f;

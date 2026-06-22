@@ -15,7 +15,9 @@ namespace utility::graphic
 		, _type(type)
 	{
 		if (type == TextureType::FontAtlas) {
-			_pixels.resize(width * height, 0); // Initialize pixel data with zeros (grayscale)
+			_pixels.resize(
+				width * height,
+				0);	   // Initialize pixel data with zeros (grayscale)
 		} else {
 			_pixels.resize(width * height * 4, 0);
 		}

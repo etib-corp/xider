@@ -24,4 +24,33 @@
 
 namespace utility::graphic
 {
+
+	std::ostream &operator<<(std::ostream &stream, const SizeF &size)
+	{
+		stream << "SizeF(width: " << size.getWidth()
+			   << ", height: " << size.getHeight() << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const SizeD &size)
+	{
+		stream << "SizeD(width: " << size.getWidth()
+			   << ", height: " << size.getHeight() << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const SizeI &size)
+	{
+		stream << "SizeI(width: " << size.getWidth()
+			   << ", height: " << size.getHeight() << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const SizeUI &size)
+	{
+		stream << "SizeUI(width: " << size.getWidth()
+			   << ", height: " << size.getHeight() << ")";
+		return stream;
+	}
+
 }	 // namespace utility::graphic

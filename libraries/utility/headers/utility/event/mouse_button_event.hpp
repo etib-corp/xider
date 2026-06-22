@@ -41,7 +41,7 @@ namespace utility::event
 	{
 		public:
 		using MousePosition =
-			math::Vector2UI; /**< Type alias for mouse position as a 2D unsigned
+			math::Vector2F; /**< Type alias for mouse position as a 2D unsigned
 								integer vector (x, y) */
 
 		/**

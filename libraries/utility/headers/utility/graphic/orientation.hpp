@@ -314,4 +314,22 @@ namespace utility::graphic
 	 */
 	using OrientationD = Orientation<double>;
 
+	/**
+	 * @brief Stream insertion operator for Orientation.
+	 * @param stream Output stream.
+	 * @param orientation Orientation to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream,
+							 const OrientationF &orientation);
+
+	/**
+	 * @brief Stream insertion operator for Orientation.
+	 * @param stream Output stream.
+	 * @param orientation Orientation to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream,
+							 const OrientationD &orientation);
+
 }	 // namespace utility::graphic

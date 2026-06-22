@@ -40,9 +40,10 @@ namespace utility
 	 * @brief The AndroidSystemIO class is an implementation of SystemIO
 	 * that uses the Android NDK's AAssetManager to load assets from the APK.
 	 */
-	class AndroidSystemIO: public SystemIO,
-						   protected utility::logging::Loggable<AndroidSystemIO,
-																utility::logging::DefaultLogger>
+	class AndroidSystemIO:
+		public SystemIO,
+		protected utility::logging::Loggable<AndroidSystemIO,
+											 utility::logging::DefaultLogger>
 	{
 		private:
 		AAssetManager

@@ -206,7 +206,7 @@ utility::event::MouseMotionEvent::MousePosition
 
 	glfwGetCursorPos(_window, &xPos, &yPos);
 	return utility::event::MouseMotionEvent::MousePosition {
-		static_cast<unsigned int>(xPos), static_cast<unsigned int>(yPos)
+		static_cast<float>(xPos), static_cast<float>(yPos)
 	};
 }
 

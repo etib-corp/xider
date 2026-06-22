@@ -65,10 +65,10 @@ evan::Engine::Engine(
 	}
 
 	// Debug view setup - create initial view matrix
-	_viewMatrix =
-		glm::lookAt(glm::vec3(0.0f, 0.0f, -50.0f), glm::vec3(0.0f, 0.0f, 0.0f),
-					glm::vec3(0.0f, 1.0f, 0.0f));
-	_swapchainContext->setView(0, _viewMatrix);
+	// _viewMatrix =
+	// 	glm::lookAt(glm::vec3(0.0f, 0.0f, 100.0f), glm::vec3(0.0f, 0.0f,
+	// -10.0f), 				glm::vec3(0.0f, 1.0f, 1.0f)); _swapchainContext->setView(0,
+	// _viewMatrix);
 }
 
 evan::Engine::~Engine()
@@ -102,8 +102,8 @@ size_t evan::Engine::addText(std::shared_ptr<utility::graphic::Text> text)
 	this->getLogger().info() << "Drawing text: " << text->getContent();
 
 	std::map<uint32_t, utility::graphic::Mesh> rawObjects;
-	auto material_id = _ressourceProvider->getMaterialID(
-		text->getFontFamily() + "_material");
+	auto material_id =
+		_ressourceProvider->getMaterialID(text->getFontFamily() + "_material");
 
 	if (material_id == 0) {
 		this->getLogger().warning()
@@ -206,7 +206,7 @@ utility::graphic::ViewF evan::Engine::getView(void) const
 
 	// Create ViewF with default FOV and viewport (these would need to be stored
 	// separately if needed)
-	utility::math::Vector2UI viewportSize { 1920, 1080 };
+	utility::math::Vector2F viewportSize { 1920.0f, 1080.0f };
 	return utility::graphic::ViewF(pose, 45.0f, 16.0f / 9.0f, viewportSize);
 }
 
@@ -311,7 +311,7 @@ void evan::Engine::handleViewportInput(
 
 	// Use persistent state (not reset every frame)
 	bool isRightMouseButtonPressed			   = _isRightMouseButtonPressed;
-	utility::math::Vector2UI lastMousePosition = _lastMousePosition;
+	utility::math::Vector2F lastMousePosition = _lastMousePosition;
 
 	for (const auto &event: events) {
 		// Handle keyboard events for movement
@@ -423,7 +423,7 @@ void evan::Engine::handleKeyboardMovement(
 void evan::Engine::handleMouseButtonEvent(
 	const std::shared_ptr<utility::event::MouseButtonEvent> &mouseButtonEvent,
 	bool &isRightMouseButtonPressed,
-	utility::math::Vector2UI &lastMousePosition)
+	utility::math::Vector2F &lastMousePosition)
 {
 	if (mouseButtonEvent->getButton()
 		== utility::event::MouseButtonEvent::Button::Right) {
@@ -436,7 +436,7 @@ void evan::Engine::handleMouseButtonEvent(
 
 void evan::Engine::handleMouseMotionEvent(
 	const std::shared_ptr<utility::event::MouseMotionEvent> &mouseMotionEvent,
-	bool isRightMouseButtonPressed, utility::math::Vector2UI &lastMousePosition,
+	bool isRightMouseButtonPressed, utility::math::Vector2F &lastMousePosition,
 	utility::graphic::OrientationF &orientation, float rotationSpeed,
 	float deltaTime)
 {
