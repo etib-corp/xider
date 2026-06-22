@@ -342,7 +342,6 @@ void evan::Renderer::createGraphicsPipelines(VkDevice device,
 			VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
 		multisampling.sampleShadingEnable  = VK_FALSE;
 		multisampling.rasterizationSamples = msaaSamples;
-		multisampling.sampleShadingEnable  = VK_TRUE;
 		multisampling.minSampleShading	   = .2f;
 
 		VkPipelineColorBlendAttachmentState colorBlendAttachment {};
