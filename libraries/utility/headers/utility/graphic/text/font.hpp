@@ -53,6 +53,7 @@ namespace utility::graphic
 			 * std::map or other associative containers.
 			 *
 			 * @param other The other FontSizedKey to compare against.
+			 * @return true if this FontSizedKey is less than the other, false otherwise.
 			 */
 			bool operator<(const FontSizedKey &other) const
 			{
