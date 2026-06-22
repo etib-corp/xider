@@ -42,7 +42,7 @@ namespace utility::graphic
 		 * @brief Advance value, specifying the horizontal distance to advance
 		 * the cursor after rendering the glyph.
 		 */
-		uint32_t advance;
+		float advance;
 
 		/**
 		 * @brief Minimum UV coordinates for the glyph in the font atlas.
