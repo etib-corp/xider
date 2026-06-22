@@ -44,32 +44,32 @@ namespace utility::graphic
 		updateMesh();
 	}
 
-    std::shared_ptr<Mesh> Text::getMesh() const
-    {
-        return _meshes.front();
-    }
+	std::shared_ptr<Mesh> Text::getMesh() const
+	{
+		return _meshes.front();
+	}
 
-    const std::string &Text::getFontFamily(void) const
-    {
-        return _fontPath;
-    }
+	const std::string &Text::getFontFamily(void) const
+	{
+		return _fontPath;
+	}
 
-    const std::string &Text::getContent(void) const
-    {
-        return _content;
-    }
+	const std::string &Text::getContent(void) const
+	{
+		return _content;
+	}
 
-    Text &Text::setContent(const std::string &content)
-    {
-        _content = content;
-        updateMesh();
-        return *this;
-    }
+	Text &Text::setContent(const std::string &content)
+	{
+		_content = content;
+		updateMesh();
+		return *this;
+	}
 
-    uint32_t Text::getFontSize(void) const
-    {
-        return _fontSize;
-    }
+	uint32_t Text::getFontSize(void) const
+	{
+		return _fontSize;
+	}
 
 	Text &Text::setFontSize(uint32_t fontSize)
 	{
@@ -80,35 +80,28 @@ namespace utility::graphic
 		return *this;
 	}
 
-    math::Vector2D Text::getTextDimensions(void) const
-    {
-        math::Vector2D dimensions({ 0.0, 0.0 });
+	math::Vector2F Text::getTextDimensions(void) const
+	{
+		math::Vector2F dimensions({ 0.0, 0.0 });
 
-        std::vector<uint32_t> codepoints = utf8ToCodepoints(_content);
-        std::vector<Glyph> glyphs = _font->processCodePoints(_fontSize, codepoints);
+		std::vector<uint32_t> codepoints = utf8ToCodepoints(_content);
+		std::vector<Glyph> glyphs =
+			_font->processCodePoints(_fontSize, codepoints);
 
-        double maxTop = 0.0;
-        double maxBottom = 0.0;
+		double maxTop	 = 0.0;
+		double maxBottom = 0.0;
 
-        for (const auto &g : glyphs) {
-            dimensions[VEC_X] += g.advance;
-            maxTop = std::max(maxTop, static_cast<double>(g.bearing[VEC_Y]));
-            maxBottom = std::max(
-                maxBottom,
-                static_cast<double>(g.size[VEC_Y] - g.bearing[VEC_Y])
-            );
-        }
+		for (const auto &g: glyphs) {
+			dimensions[VEC_X] += g.advance;
+			maxTop = std::max(maxTop, static_cast<double>(g.bearing[VEC_Y]));
+			maxBottom =
+				std::max(maxBottom,
+						 static_cast<double>(g.size[VEC_Y] - g.bearing[VEC_Y]));
+		}
 
-        dimensions[VEC_Y] = maxTop + maxBottom;
-        return dimensions;
-    }
-
-    Text &Text::setFontSize(uint32_t fontSize)
-    {
-        _fontSize = fontSize;
-        updateMesh();
-        return *this;
-    }
+		dimensions[VEC_Y] = maxTop + maxBottom;
+		return dimensions;
+	}
 
 	///////////////////////
 	// Protected Methods //
@@ -119,111 +112,124 @@ namespace utility::graphic
 		_meshes.front() = std::make_shared<Mesh>(std::vector<VertexF> {},
 												 std::vector<uint32_t> {});
 
-		float x		   = getPose().getPosition().getX();
-		float y		   = getPose().getPosition().getY();
-		float z		   = getPose().getPosition().getZ();
-		float baseline = _font->getAscender(_fontSize) / 64.0f;
-        double penX = 0.0;
-		double baselineY = std::round(_font->getAscender(_fontSize));
+		float x = getPose().getPosition().getX();
+		float y = getPose().getPosition().getY();
+		float z = getPose().getPosition().getZ();
 
-        uint32_t indexOffset = 0;
-        std::vector<uint32_t> codepoints = utf8ToCodepoints(_content);
-        std::vector<Glyph> glyphs = _font->processCodePoints(_fontSize, codepoints);
+		double penX		= 0.0;
+		double baseline = std::round(_font->getAscender(_fontSize));
+
+		uint32_t indexOffset			 = 0;
+		std::vector<uint32_t> codepoints = utf8ToCodepoints(_content);
+		std::vector<Glyph> glyphs =
+			_font->processCodePoints(_fontSize, codepoints);
 
 		for (const auto &g: glyphs) {
-			float xpos = x + g.bearing[VEC_X];
-			float ypos = y + baseline - g.bearing[VEC_Y];
+			const float xpos =
+				static_cast<float>(std::round(x + penX + g.bearing[VEC_X]));
+			const float ypos =
+				static_cast<float>(std::round(y + baseline - g.bearing[VEC_Y]));
 
-			float w = static_cast<float>(g.size[VEC_X]);
-			float h = static_cast<float>(g.size[VEC_Y]);
+			const float w = g.size[VEC_X];
+			const float h = g.size[VEC_Y];
 
 			VertexF v0(PositionF(xpos, ypos + h, z),
 					   getPose().getOrientation().getForward(),
 					   math::Vector2F({ g.uvMin[VEC_X], g.uvMax[VEC_Y] }),
 					   _color);
+
 			VertexF v1(PositionF(xpos, ypos, z),
 					   getPose().getOrientation().getForward(),
 					   math::Vector2F({ g.uvMin[VEC_X], g.uvMin[VEC_Y] }),
 					   _color);
+
 			VertexF v2(PositionF(xpos + w, ypos, z),
 					   getPose().getOrientation().getForward(),
 					   math::Vector2F({ g.uvMax[VEC_X], g.uvMin[VEC_Y] }),
 					   _color);
+
 			VertexF v3(PositionF(xpos + w, ypos + h, z),
 					   getPose().getOrientation().getForward(),
 					   math::Vector2F({ g.uvMax[VEC_X], g.uvMax[VEC_Y] }),
 					   _color);
 
-            _meshes.front()->addIndex(indexOffset + 0);
-            _meshes.front()->addIndex(indexOffset + 1);
-            _meshes.front()->addIndex(indexOffset + 2);
+			_meshes.front()->addIndex(indexOffset + 0);
+			_meshes.front()->addIndex(indexOffset + 1);
+			_meshes.front()->addIndex(indexOffset + 2);
 
-            _meshes.front()->addIndex(indexOffset + 0);
-            _meshes.front()->addIndex(indexOffset + 2);
-            _meshes.front()->addIndex(indexOffset + 3);
+			_meshes.front()->addIndex(indexOffset + 0);
+			_meshes.front()->addIndex(indexOffset + 2);
+			_meshes.front()->addIndex(indexOffset + 3);
 
-            indexOffset += 4;
-		    penX += g.advance;
-        }
-    }
+			_meshes.front()->addVertex(v0);
+			_meshes.front()->addVertex(v1);
+			_meshes.front()->addVertex(v2);
+			_meshes.front()->addVertex(v3);
 
-    std::vector<uint32_t> Text::utf8ToCodepoints(const std::string &str) const
-    {
-        std::vector<uint32_t> codepoints;
+			indexOffset += 4;
+			penX += g.advance;
+		}
+	}
+	std::vector<uint32_t> Text::utf8ToCodepoints(const std::string &str) const
+	{
+		std::vector<uint32_t> codepoints;
 
-        size_t i = 0;
-        while (i < str.size()) {
-            uint8_t c0 = static_cast<uint8_t>(str[i]);
-            uint32_t codepoint = 0;
-            size_t bytes = 0;
+		size_t i = 0;
+		while (i < str.size()) {
+			uint8_t c0		   = static_cast<uint8_t>(str[i]);
+			uint32_t codepoint = 0;
+			size_t bytes	   = 0;
 
-            if (c0 < 0x80) {
-                codepoint = c0;
-                bytes = 1;
-            } else if (c0 >= 0xC2 && c0 <= 0xDF) {
-                codepoint = c0 & 0x1F;
-                bytes = 2;
-            } else if (c0 >= 0xE0 && c0 <= 0xEF) {
-                codepoint = c0 & 0x0F;
-                bytes = 3;
-            } else if (c0 >= 0xF0 && c0 <= 0xF4) {
-                codepoint = c0 & 0x07;
-                bytes = 4;
-            } else {
-                ++i;
-                continue;
-            }
+			if (c0 < 0x80) {
+				codepoint = c0;
+				bytes	  = 1;
+			} else if (c0 >= 0xC2 && c0 <= 0xDF) {
+				codepoint = c0 & 0x1F;
+				bytes	  = 2;
+			} else if (c0 >= 0xE0 && c0 <= 0xEF) {
+				codepoint = c0 & 0x0F;
+				bytes	  = 3;
+			} else if (c0 >= 0xF0 && c0 <= 0xF4) {
+				codepoint = c0 & 0x07;
+				bytes	  = 4;
+			} else {
+				++i;
+				continue;
+			}
 
-            if (i + bytes > str.size()) {
-                break;
-            }
+			if (i + bytes > str.size()) {
+				break;
+			}
 
-            bool valid = true;
-            for (size_t j = 1; j < bytes; ++j) {
-                uint8_t cc = static_cast<uint8_t>(str[i + j]);
-                if ((cc & 0xC0) != 0x80) {
-                    valid = false;
-                    break;
-                }
-                codepoint = (codepoint << 6) | (cc & 0x3F);
-            }
+			bool valid = true;
+			for (size_t j = 1; j < bytes; ++j) {
+				uint8_t cc = static_cast<uint8_t>(str[i + j]);
+				if ((cc & 0xC0) != 0x80) {
+					valid = false;
+					break;
+				}
+				codepoint = (codepoint << 6) | (cc & 0x3F);
+			}
 
-            if (valid) {
-                if ((bytes == 2 && codepoint < 0x80)
-                    || (bytes == 3 && (codepoint < 0x800 || (codepoint >= 0xD800 && codepoint <= 0xDFFF)))
-                    || (bytes == 4 && (codepoint < 0x10000 || codepoint > 0x10FFFF))) {
-                    valid = false;
-                }
-            }
+			if (valid) {
+				if ((bytes == 2 && codepoint < 0x80)
+					|| (bytes == 3
+						&& (codepoint < 0x800
+							|| (codepoint >= 0xD800 && codepoint <= 0xDFFF)))
+					|| (bytes == 4
+						&& (codepoint < 0x10000 || codepoint > 0x10FFFF))) {
+					valid = false;
+				}
+			}
 
-            if (valid) {
-                codepoints.push_back(codepoint);
-                i += bytes;
-            } else {
-                ++i;
-            }
-        }
+			if (valid) {
+				codepoints.push_back(codepoint);
+				i += bytes;
+			} else {
+				++i;
+			}
+		}
 
-        return codepoints;
-    }
-}
+		return codepoints;
+	}
+}	 // namespace utility::graphic
