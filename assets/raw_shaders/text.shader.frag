@@ -9,9 +9,8 @@ layout(binding = 4) uniform sampler2D fontAtlas;
 
 void main()
 {
-    float coverage = texture(fontAtlas, fragUV).r;
-
-    float alpha = smoothstep(0.15, 0.85, coverage);
-
-    outColor = vec4(fragColor, alpha);
+    float a = texture(fontAtlas, fragUV).r;
+    if (a < 0.01)
+        discard;
+    outColor = vec4(fragColor * a, a);
 }
