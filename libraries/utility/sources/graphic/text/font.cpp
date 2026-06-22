@@ -53,29 +53,29 @@ namespace utility::graphic
 
 	float Font::getAscender(uint32_t fontSize) const
 	{
-		auto fontSizedIt = _sizes.find(fontSize);
-		if (fontSizedIt == _sizes.end()) {
-			return 0.0f;
+		auto fontSizedIt = _sizes.find({ "", fontSize });
+		if (fontSizedIt != _sizes.end()) {
+			return fontSizedIt->second->_ascender;
 		}
-		return fontSizedIt->second.second->_ascender;
+		return 0.0f;
 	}
 
 	float Font::getDescender(uint32_t fontSize) const
 	{
-		auto fontSizedIt = _sizes.find(fontSize);
-		if (fontSizedIt == _sizes.end()) {
-			return 0.0f;
+		auto fontSizedIt = _sizes.find({ "", fontSize });
+		if (fontSizedIt != _sizes.end()) {
+			return fontSizedIt->second->_descender;
 		}
-		return fontSizedIt->second.second->_descender;
+		return 0.0f;
 	}
 
 	float Font::getLineHeight(uint32_t fontSize) const
 	{
-		auto fontSizedIt = _sizes.find(fontSize);
-		if (fontSizedIt == _sizes.end()) {
-			return 0.0f;
+		auto fontSizedIt = _sizes.find({ "", fontSize });
+		if (fontSizedIt != _sizes.end()) {
+			return fontSizedIt->second->_lineHeight;
 		}
-		return fontSizedIt->second.second->_lineHeight;
+		return 0.0f;
 	}
 
 	std::vector<Glyph>
@@ -83,38 +83,39 @@ namespace utility::graphic
 								const codePointString &codePoints)
 	{
 		std::vector<Glyph> glyphs;
+		glyphs.reserve(codePoints.size());
 
 		for (const auto &codePoint: codePoints) {
-			std::string faceName = _getFaceNameForGlyph(codePoint);
+			const std::string faceName = _getFaceNameForGlyph(codePoint);
 
 			if (faceName.empty()) {
 				continue;
 			}
 
-			auto fontSizedIt = _sizes.find(fontSize);
+			const FontSizedKey key { faceName, fontSize };
+
 			std::shared_ptr<FontSized> fontSized;
+			auto fontSizedIt = _sizes.find(key);
 
 			if (fontSizedIt == _sizes.end()) {
 				fontSized =
 					std::make_shared<FontSized>(fontSize, _faces.at(faceName));
-				_sizes[fontSize] = { faceName, fontSized };
+				_sizes.emplace(key, fontSized);
+
 				if (onNewTextureCreated) {
 					onNewTextureCreated(faceName + "_"
 											+ std::to_string(fontSize),
 										fontSized->getAtlas());
-				} else {
-					throw std::runtime_error("Font size already processed but "
-											 "not found in sizes map: "
-											 + std::to_string(fontSize));
 				}
 			} else {
-				fontSized = fontSizedIt->second.second;
+				fontSized = fontSizedIt->second;
 			}
+
 			glyphs.push_back(fontSized->generateGlyph(codePoint));
 		}
+
 		return glyphs;
 	}
-
 	std::vector<std::string> Font::getFontPaths(void) const
 	{
 		std::vector<std::string> fontPaths;

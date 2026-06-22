@@ -34,6 +34,36 @@ namespace utility::graphic
 	{
 		public:
 		/**
+		 * @brief A struct representing a unique key for identifying a specific font
+		 * face and size combination.
+		 */
+		struct FontSizedKey {
+			/**
+			 * @brief The name of the font face (e.g., "Arial", "Times New Roman").
+			 */
+			std::string faceName;
+
+			/**
+			 * @brief The size of the font in points (e.g., 12, 14, 16).
+			 */
+			uint32_t fontSize = 0;
+
+			/**
+			 * @brief Comparison operator to allow FontSizedKey to be used as a key in
+			 * std::map or other associative containers.
+			 *
+			 * @param other The other FontSizedKey to compare against.
+			 */
+			bool operator<(const FontSizedKey &other) const
+			{
+				if (faceName != other.faceName) {
+					return faceName < other.faceName;
+				}
+				return fontSize < other.fontSize;
+			}
+		};
+
+		/**
 		 * @brief Constructs a Font object by loading font data from the
 		 * provided file assets.
 		 *
@@ -221,8 +251,7 @@ namespace utility::graphic
 		 * Font class is responsible for managing the lifetime of these
 		 * FontSized objects to ensure proper resource management.
 		 */
-		std::map<uint32_t, std::pair<std::string, std::shared_ptr<FontSized>>>
-			_sizes;
+        std::map<FontSizedKey, std::shared_ptr<FontSized>> _sizes;
 
 		/**
 		 * @brief In-memory buffers backing FreeType faces.

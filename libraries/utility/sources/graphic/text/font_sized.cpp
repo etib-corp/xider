@@ -10,14 +10,15 @@
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
-#include <cstring>
+#include <memory>
 #include <stdexcept>
+#include <vector>
 
 namespace utility::graphic
 {
     namespace
     {
-        constexpr int GLYPH_PADDING = 1;
+        constexpr int GLYPH_PADDING = 2;
     }
 
     FontSized::FontSized(uint32_t fontSize, FT_Face face)
@@ -37,7 +38,7 @@ namespace utility::graphic
             throw std::runtime_error("FT_Set_Pixel_Sizes failed");
         }
 
-        _ascender  = _correspondingFace->size->metrics.ascender / 64.0f;
+        _ascender = _correspondingFace->size->metrics.ascender / 64.0f;
         _descender = std::abs(_correspondingFace->size->metrics.descender / 64.0f);
         _lineHeight = _correspondingFace->size->metrics.height / 64.0f;
 
@@ -47,10 +48,7 @@ namespace utility::graphic
             Texture::TextureType::FontAtlas
         );
 
-        if (_generatedAtlas->_pixels.size() != static_cast<size_t>(_atlasWidth * _atlasHeight)) {
-            _generatedAtlas->_pixels.resize(_atlasWidth * _atlasHeight, 0);
-        }
-
+        _generatedAtlas->_pixels.resize(_atlasWidth * _atlasHeight, 0);
         std::fill(_generatedAtlas->_pixels.begin(), _generatedAtlas->_pixels.end(), 0);
     }
 
@@ -78,7 +76,7 @@ namespace utility::graphic
             throw std::runtime_error("Unsupported glyph bitmap format");
         }
 
-        const int glyphWidth  = static_cast<int>(g->bitmap.width);
+        const int glyphWidth = static_cast<int>(g->bitmap.width);
         const int glyphHeight = static_cast<int>(g->bitmap.rows);
 
         if (_penX + glyphWidth + GLYPH_PADDING >= static_cast<int>(_atlasWidth)) {
@@ -108,16 +106,12 @@ namespace utility::graphic
                 const int dstX = _penX + x;
                 const int dstY = _penY + y;
                 const int dstIndex = dstY * static_cast<int>(_atlasWidth) + dstX;
-
                 _generatedAtlas->_pixels[dstIndex] = srcRow[x];
             }
         }
 
         Glyph glyph;
-        glyph.size = {
-            static_cast<float>(glyphWidth),
-            static_cast<float>(glyphHeight)
-        };
+        glyph.size = { static_cast<float>(glyphWidth), static_cast<float>(glyphHeight) };
         glyph.bearing = {
             static_cast<float>(g->bitmap_left),
             static_cast<float>(g->bitmap_top)
@@ -185,9 +179,5 @@ namespace utility::graphic
         _penX = 0;
         _penY = 0;
         _rowHeight = 0;
-
-		for (const auto &[codePoint, _] : _generatedGlyphs) {
-			generateGlyph(codePoint);
-		}
-	}
+    }
 }
