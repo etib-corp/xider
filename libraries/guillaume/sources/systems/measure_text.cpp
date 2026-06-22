@@ -35,7 +35,7 @@ namespace guillaume::systems
 			  ecs::Phase::Measure)
 		, _ressourceProvider(ressourceProvider)
 		, _engine(engine)
-		, _defaultFontPath("fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf")
+		, _defaultFontPath("fonts/Roboto-Regular.ttf")
 	{
 	}
 
