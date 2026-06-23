@@ -234,3 +234,10 @@ if(BUILD_TESTING)
 else()
     message(STATUS "Skipping tests...")
 endif()
+
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    target_compile_definitions(
+        ${PROJECT_NAME}
+        PRIVATE
+        $<$<CONFIG:Debug>:DEBUG>)
+endif()
