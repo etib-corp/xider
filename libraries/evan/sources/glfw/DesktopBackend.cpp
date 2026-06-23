@@ -481,6 +481,9 @@ void evan::DesktopBackend::createLogicalDevice()
 
 	deviceFeatures.samplerAnisotropy = supportedFeatures.samplerAnisotropy;
 	deviceFeatures.sampleRateShading = supportedFeatures.sampleRateShading;
+	#ifdef DEBUG
+		deviceFeatures.fillModeNonSolid = VK_TRUE;
+	#endif
 
 	this->getLogger().info() << "Setting up extended dynamic state features...";
 	VkPhysicalDeviceExtendedDynamicStateFeaturesEXT extendedDynamicState {};
