@@ -269,6 +269,9 @@ namespace guillaume::entities
 		bool _isMorph { false };	///< Whether the button is in a morph state
 		std::function<void(void)>
 			_onClick {};	///< Click event handler for the button
+		static constexpr float _layerDepthStep {
+			1.0f
+		};	  ///< Distance pushed toward the camera per layer.
 
 		private:
 		/**
@@ -322,6 +325,26 @@ namespace guillaume::entities
 		 * @return The calculated width of the button.
 		 */
 		std::size_t calculWidth(void);
+
+		/**
+		 * @brief Push a pose toward the camera based on an entity's layer.
+		 * @param pose The base pose to offset.
+		 * @param entityIdentifier The entity whose layer determines the offset.
+		 * @return The offset pose.
+		 */
+		utility::graphic::PoseF
+			applyLayerOffset(const utility::graphic::PoseF &pose,
+							 ecs::Entity::Identifier entityIdentifier) const;
+
+		/**
+		 * @brief Push a pose toward the camera by a fixed amount per layer.
+		 * @param pose The base pose to offset.
+		 * @param layer The layer value to apply.
+		 * @return The offset pose.
+		 */
+		utility::graphic::PoseF
+			applyLayerOffset(const utility::graphic::PoseF &pose,
+							 std::int32_t layer) const;
 
 		public:
 		/**
@@ -403,6 +426,18 @@ namespace guillaume::entities
 		 * @return Reference to this Button for chaining.
 		 */
 		Button &setOnClick(const std::function<void(void)> &onClick);
+
+		/**
+		 * @brief Get the internal child icon entity identifier.
+		 * @return The icon entity identifier, or InvalidIdentifier if none.
+		 */
+		ecs::Entity::Identifier getIconIdentifier(void) const;
+
+		/**
+		 * @brief Get the internal child label entity identifier.
+		 * @return The label entity identifier, or InvalidIdentifier if none.
+		 */
+		ecs::Entity::Identifier getLabelIdentifier(void) const;
 
 		/**
 		 * @brief Recompute the button entity's derived state.

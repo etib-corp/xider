@@ -163,6 +163,17 @@ namespace guillaume::ecs
 					 const ecs::EntityTreeTraveler &traveler);
 
 		/**
+		 * @brief Bind a component registry for direct update/setFocus calls.
+		 * @param componentRegistry The component registry to bind.
+		 */
+		void bindComponentRegistry(ecs::ComponentRegistry &componentRegistry);
+
+		/**
+		 * @brief Unbind the currently bound component registry.
+		 */
+		void unbindComponentRegistry(void);
+
+		/**
 		 * @brief Update the system, processing relevant entities.
 		 * @param entityIdentifier The identifier of the entity to update.
 		 */

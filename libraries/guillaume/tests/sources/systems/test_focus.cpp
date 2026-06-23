@@ -25,18 +25,18 @@
 namespace guillaume::systems::tests
 {
 
-	TEST_F(TestFocus, Constructor)
+	TEST_F(TestFocusSystem, Constructor)
 	{
-		EXPECT_NO_THROW({ auto focusSystem = Focus(*_eventBus); });
+		EXPECT_NO_THROW({ auto focusSystem = Focus(*_eventBus, _engine); });
 	}
 
-	TEST_F(TestFocus, InitialFocusState)
+	TEST_F(TestFocusSystem, InitialFocusState)
 	{
 		EXPECT_FALSE(_focusSystem->getFocusedEntity().has_value());
 		EXPECT_FALSE(_focusSystem->getLastFocusedEntity().has_value());
 	}
 
-	TEST_F(TestFocus, SetFocusToEntity)
+	TEST_F(TestFocusSystem, SetFocusToEntity)
 	{
 		auto entity1 = createFocusableEntity();
 
@@ -47,7 +47,7 @@ namespace guillaume::systems::tests
 		EXPECT_FALSE(_focusSystem->getLastFocusedEntity().has_value());
 	}
 
-	TEST_F(TestFocus, SetFocusToEntityWithHandler)
+	TEST_F(TestFocusSystem, SetFocusToEntityWithHandler)
 	{
 		auto entity1 = createFocusableEntity();
 
@@ -63,7 +63,7 @@ namespace guillaume::systems::tests
 		EXPECT_TRUE(focusGained);
 	}
 
-	TEST_F(TestFocus, ClearFocus)
+	TEST_F(TestFocusSystem, ClearFocus)
 	{
 		auto entity1 = createFocusableEntity();
 
@@ -74,7 +74,7 @@ namespace guillaume::systems::tests
 		EXPECT_FALSE(_focusSystem->getFocusedEntity().has_value());
 	}
 
-	TEST_F(TestFocus, ClearFocusWithHandler)
+	TEST_F(TestFocusSystem, ClearFocusWithHandler)
 	{
 		auto entity1 = createFocusableEntity();
 
@@ -95,13 +95,15 @@ namespace guillaume::systems::tests
 		EXPECT_EQ(_focusSystem->getLastFocusedEntity().value(), entity1);
 	}
 
-	TEST_F(TestFocus, SwitchFocusBetweenEntities)
+	TEST_F(TestFocusSystem, SwitchFocusBetweenEntities)
 	{
 		auto entity1 = createFocusableEntity(
-			utility::graphic::PoseF(utility::graphic::PositionF(-100, 0, 0)),
+			utility::graphic::PoseF(utility::graphic::PositionF(-100, 0, 0),
+									utility::graphic::OrientationF()),
 			100, 50);
 		auto entity2 = createFocusableEntity(
-			utility::graphic::PoseF(utility::graphic::PositionF(100, 0, 0)),
+			utility::graphic::PoseF(utility::graphic::PositionF(100, 0, 0),
+									utility::graphic::OrientationF()),
 			100, 50);
 
 		bool entity1Lost   = false;
@@ -132,7 +134,7 @@ namespace guillaume::systems::tests
 		EXPECT_TRUE(entity2Gained);
 	}
 
-	TEST_F(TestFocus, UpdateWithMouseClick)
+	TEST_F(TestFocusSystem, UpdateWithMouseClick)
 	{
 		auto entity1 = createFocusableEntity();
 
@@ -143,13 +145,13 @@ namespace guillaume::systems::tests
 		mouseInteraction.setButtonPressed(
 			utility::event::MouseButtonEvent::Button::Left, true);
 
-		_focusSystem->update(entity1, 0.0f);
+		_focusSystem->update(entity1);
 
 		EXPECT_TRUE(_focusSystem->getFocusedEntity().has_value());
 		EXPECT_EQ(_focusSystem->getFocusedEntity().value(), entity1);
 	}
 
-	TEST_F(TestFocus, UpdateWithHandClick)
+	TEST_F(TestFocusSystem, UpdateWithHandClick)
 	{
 		auto entity1 = createFocusableEntity();
 
@@ -160,13 +162,13 @@ namespace guillaume::systems::tests
 		handInteraction.setButtonPressed(
 			utility::event::HandButtonEvent::Button::A, true);
 
-		_focusSystem->update(entity1, 0.0f);
+		_focusSystem->update(entity1);
 
 		EXPECT_TRUE(_focusSystem->getFocusedEntity().has_value());
 		EXPECT_EQ(_focusSystem->getFocusedEntity().value(), entity1);
 	}
 
-	TEST_F(TestFocus, UpdateWithHandPinch)
+	TEST_F(TestFocusSystem, UpdateWithHandPinch)
 	{
 		auto entity1 = createFocusableEntity();
 
@@ -176,13 +178,13 @@ namespace guillaume::systems::tests
 				entity1);
 		pinchInteraction.setPinching(true);
 
-		_focusSystem->update(entity1, 0.0f);
+		_focusSystem->update(entity1);
 
 		EXPECT_TRUE(_focusSystem->getFocusedEntity().has_value());
 		EXPECT_EQ(_focusSystem->getFocusedEntity().value(), entity1);
 	}
 
-	TEST_F(TestFocus, UpdateWithHandPoke)
+	TEST_F(TestFocusSystem, UpdateWithHandPoke)
 	{
 		auto entity1 = createFocusableEntity();
 
@@ -192,24 +194,24 @@ namespace guillaume::systems::tests
 				entity1);
 		pokeInteraction.setPoking(true);
 
-		_focusSystem->update(entity1, 0.0f);
+		_focusSystem->update(entity1);
 
 		EXPECT_TRUE(_focusSystem->getFocusedEntity().has_value());
 		EXPECT_EQ(_focusSystem->getFocusedEntity().value(), entity1);
 	}
 
-	TEST_F(TestFocus, UpdateNoClick)
+	TEST_F(TestFocusSystem, UpdateNoClick)
 	{
 		auto entity1 = createFocusableEntity();
 
 		// No button pressed
-		_focusSystem->update(entity1, 0.0f);
+		_focusSystem->update(entity1);
 
 		// Focus should remain unchanged (nullopt initially)
 		EXPECT_FALSE(_focusSystem->getFocusedEntity().has_value());
 	}
 
-	TEST_F(TestFocus, UpdateDoesNotChangeFocusWithoutClick)
+	TEST_F(TestFocusSystem, UpdateDoesNotChangeFocusWithoutClick)
 	{
 		auto entity1 = createFocusableEntity();
 		auto entity2 = createFocusableEntity();
@@ -219,20 +221,22 @@ namespace guillaume::systems::tests
 		EXPECT_TRUE(_focusSystem->getFocusedEntity().has_value());
 
 		// Update entity2 without click should not change focus
-		_focusSystem->update(entity2, 0.0f);
+		_focusSystem->update(entity2);
 
 		// Focus should remain on entity1
 		EXPECT_TRUE(_focusSystem->getFocusedEntity().has_value());
 		EXPECT_EQ(_focusSystem->getFocusedEntity().value(), entity1);
 	}
 
-	TEST_F(TestFocus, MultipleEntitiesSameFocus)
+	TEST_F(TestFocusSystem, MultipleEntitiesSameFocus)
 	{
 		auto entity1 = createFocusableEntity(
-			utility::graphic::PoseF(utility::graphic::PositionF(-100, 0, 0)),
+			utility::graphic::PoseF(utility::graphic::PositionF(-100, 0, 0),
+									utility::graphic::OrientationF()),
 			100, 50);
 		auto entity2 = createFocusableEntity(
-			utility::graphic::PoseF(utility::graphic::PositionF(100, 0, 0)),
+			utility::graphic::PoseF(utility::graphic::PositionF(100, 0, 0),
+									utility::graphic::OrientationF()),
 			100, 50);
 
 		_focusSystem->setFocus(entity1);

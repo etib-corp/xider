@@ -22,9 +22,21 @@
 
 #include "test_xider.hpp"
 
-TEST_F(TestXIDER, SampleTest)
+namespace xider::tests
 {
-	// This is a sample test case. Replace it with actual tests for the Engine
-	// class.
-	EXPECT_TRUE(true);
-}
+	void TestXIDER::SetUp(void)
+	{
+	}
+
+	void TestXIDER::TearDown(void)
+	{
+	}
+
+	TEST_F(TestXIDER, SampleTest)
+	{
+		// This is a sample test case. Replace it with actual tests for the
+		// Engine class.
+		EXPECT_TRUE(true);
+	}
+
+}	 // namespace xider::tests

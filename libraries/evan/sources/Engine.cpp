@@ -67,8 +67,8 @@ evan::Engine::Engine(
 	// Debug view setup - create initial view matrix
 	// _viewMatrix =
 	// 	glm::lookAt(glm::vec3(0.0f, 0.0f, 100.0f), glm::vec3(0.0f, 0.0f,
-	// -10.0f), 				glm::vec3(0.0f, 1.0f, 1.0f)); _swapchainContext->setView(0,
-	// _viewMatrix);
+	// -10.0f), 				glm::vec3(0.0f, 1.0f, 1.0f));
+	// _swapchainContext->setView(0, _viewMatrix);
 }
 
 evan::Engine::~Engine()
@@ -310,7 +310,7 @@ void evan::Engine::handleViewportInput(
 	const float rotationSpeed = 0.01f;
 
 	// Use persistent state (not reset every frame)
-	bool isRightMouseButtonPressed			   = _isRightMouseButtonPressed;
+	bool isRightMouseButtonPressed			  = _isRightMouseButtonPressed;
 	utility::math::Vector2F lastMousePosition = _lastMousePosition;
 
 	for (const auto &event: events) {
@@ -422,8 +422,7 @@ void evan::Engine::handleKeyboardMovement(
 
 void evan::Engine::handleMouseButtonEvent(
 	const std::shared_ptr<utility::event::MouseButtonEvent> &mouseButtonEvent,
-	bool &isRightMouseButtonPressed,
-	utility::math::Vector2F &lastMousePosition)
+	bool &isRightMouseButtonPressed, utility::math::Vector2F &lastMousePosition)
 {
 	if (mouseButtonEvent->getButton()
 		== utility::event::MouseButtonEvent::Button::Right) {
