@@ -33,18 +33,26 @@ evan::Engine::Engine(
 {
 	this->getLogger().info() << "Loading text shader...";
 
-	ressourceProvider->loadShader("shaders/text.vert.spv",
-								  "shaders/text.frag.spv");
+	std::string shaderPrefix = "shaders/";
+
+	#ifdef DEBUG
+		shaderPrefix = "shaders/debug/";
+		this->getLogger().info() << "Debug mode enabled. Using debug shader prefix: "
+								 << shaderPrefix;
+	#endif
+
+	ressourceProvider->loadShader(shaderPrefix + "text.vert.spv",
+								  shaderPrefix + "text.frag.spv");
 
 	this->getLogger().info() << "Loading default shader...";
 
-	ressourceProvider->loadShader("shaders/default.vert.spv",
-								  "shaders/default.frag.spv");
+	ressourceProvider->loadShader(shaderPrefix + "default.vert.spv",
+								  shaderPrefix + "default.frag.spv");
 
 	this->getLogger().info() << "Loading mesh shader...";
 
-	ressourceProvider->loadShader("shaders/mesh.vert.spv",
-								  "shaders/mesh.frag.spv");
+	ressourceProvider->loadShader(shaderPrefix + "mesh.vert.spv",
+								  shaderPrefix + "mesh.frag.spv");
 
 	_deviceContext	  = std::make_shared<DeviceContext>(*platform);
 	_swapchainContext = platform->createSwapchainContext(*_deviceContext);
