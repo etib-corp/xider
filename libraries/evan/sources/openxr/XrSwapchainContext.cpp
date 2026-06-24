@@ -193,6 +193,8 @@ glm::mat4 evan::XrSwapchainContext::getProjection(int index) const
 	projection[2][3] = -1.0f;
 	projection[3][2] = -(farZ * nearZ) / (farZ - nearZ);
 
+	projection[1][1] *= -1;
+
 	return projection;
 }
 
