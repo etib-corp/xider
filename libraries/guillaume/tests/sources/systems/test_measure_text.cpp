@@ -23,8 +23,10 @@
 #include <vector>
 
 #include <utility/graphic/text/text.hpp>
+#include <utility/system_io/default_system_io.hpp>
 
 #include "guillaume/components/bound.hpp"
+#include "guillaume/components/color.hpp"
 #include "guillaume/components/text.hpp"
 #include "guillaume/components/transform.hpp"
 #include "guillaume/ecs/component_registry.hpp"
@@ -39,9 +41,9 @@ namespace
 	class EngineStub: public guillaume::Engine
 	{
 		public:
-		utility::math::Vector<float, 2> measurement = { 0.0f, 0.0f };
-		std::size_t measureCallCount				= 0;
-		std::string lastContent;
+		mutable utility::math::Vector<float, 2> measurement = { 0.0f, 0.0f };
+		mutable std::size_t measureCallCount				= 0;
+		mutable std::string lastContent;
 
 		ViewportSize getViewportSize(void) const override
 		{
@@ -53,34 +55,39 @@ namespace
 		void present(void) override
 		{
 		}
+		size_t addMesh(const utility::graphic::Mesh &,
+					   const std::string &) override
+		{
+			return 0;
+		}
 		bool removeObject(size_t objectID) override
 		{
 			(void)objectID;
 			return true;
 		}
-		void drawVertices(
-			const std::vector<utility::graphic::VertexF> &vertices) override
-		{
-			(void)vertices;
-		}
-		utility::math::Vector<float, 2>
-			measureText(const utility::graphic::Text &text) override
+		utility::math::Vector2F
+			measureText(const utility::graphic::Text &text) const override
 		{
 			++measureCallCount;
 			lastContent = text.getContent();
 			return measurement;
 		}
-		void drawText(const utility::graphic::Text &text,
-					  const utility::graphic::PoseF &pose) override
+		size_t addText(const utility::graphic::Text &) override
 		{
-			(void)text;
-			(void)pose;
+			return 0;
+		}
+		utility::graphic::ViewF getView(void) const override
+		{
+			return utility::graphic::ViewF();
 		}
 		void addScene(size_t sceneIndex) override
 		{
 			(void)sceneIndex;
 		}
 		void pollEvents(void) override
+		{
+		}
+		void update(void) override
 		{
 		}
 	};
@@ -91,8 +98,9 @@ namespace
 		std::unique_ptr<EngineStub> engineStub = std::make_unique<EngineStub>();
 		EngineStub *enginePtr				   = engineStub.get();
 		std::unique_ptr<guillaume::Engine> engine { std::move(engineStub) };
+		utility::DefaultSystemIO systemIo;
 		std::shared_ptr<utility::RessourceProvider> ressourceProvider =
-			std::make_shared<utility::RessourceProvider>();
+			std::make_shared<utility::RessourceProvider>(systemIo);
 		guillaume::systems::MeasureText measureTextSystem { ressourceProvider,
 															engine };
 		guillaume::ecs::ComponentRegistry componentRegistry;
@@ -108,7 +116,8 @@ namespace
 			entity->setSignature(guillaume::ecs::Entity::getSignatureFromTypes<
 								 guillaume::components::Transform,
 								 guillaume::components::Text,
-								 guillaume::components::Bound>());
+								 guillaume::components::Bound,
+								 guillaume::components::Color>());
 			entityRegistry.addEntity(std::move(entity));
 
 			componentRegistry.addComponent<guillaume::components::Transform>(

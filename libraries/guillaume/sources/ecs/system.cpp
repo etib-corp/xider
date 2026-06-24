@@ -113,4 +113,14 @@ namespace guillaume::ecs
 		_activeComponentRegistry = nullptr;
 	}
 
+
+	void System::bindComponentRegistry(ecs::ComponentRegistry &componentRegistry)
+	{
+		_activeComponentRegistry = &componentRegistry;
+	}
+
+	void System::unbindComponentRegistry(void)
+	{
+		_activeComponentRegistry = nullptr;
+	}
 }	 // namespace guillaume::ecs

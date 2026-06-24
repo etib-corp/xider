@@ -24,6 +24,7 @@
 
 #include <bitset>
 #include <cstddef>
+#include <cstdint>
 
 #include <utility/logging/loggable.hpp>
 #include <utility/logging/default_logger.hpp>
@@ -78,6 +79,7 @@ namespace guillaume::ecs
 		private:
 		const Identifier _identifier;	 ///< Unique identifier
 		Signature _signature;			 ///< Entity signature
+		std::int32_t _layer { 0 };		 ///< Rendering/depth layer
 
 		protected:
 		/**
@@ -117,6 +119,19 @@ namespace guillaume::ecs
 		 * @param signature The new signature.
 		 */
 		void setSignature(const Signature &signature);
+
+		/**
+		 * @brief Set the entity's rendering layer.
+		 * @param layer The new layer value.
+		 * @return Reference to this Entity for chaining.
+		 */
+		Entity &setLayer(std::int32_t layer);
+
+		/**
+		 * @brief Get the entity's rendering layer.
+		 * @return The layer value.
+		 */
+		std::int32_t getLayer(void) const;
 
 		/**
 		 * @brief Recompute the entity's derived state.

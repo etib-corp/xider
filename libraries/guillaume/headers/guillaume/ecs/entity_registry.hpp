@@ -95,6 +95,21 @@ namespace guillaume::ecs
 		std::vector<const Entity *> getEntitiesBreadthFirst(void) const;
 
 		/**
+		 * @brief Find an entity in this registry hierarchy by identifier.
+		 * @param identifier The entity identifier to search for.
+		 * @return Pointer to the entity if found, nullptr otherwise.
+		 */
+		Entity *getEntity(Entity::Identifier identifier);
+
+		/**
+		 * @brief Find an entity in this registry hierarchy by identifier
+		 * (const).
+		 * @param identifier The entity identifier to search for.
+		 * @return Const pointer to the entity if found, nullptr otherwise.
+		 */
+		const Entity *getEntity(Entity::Identifier identifier) const;
+
+		/**
 		 * @brief Get all registered entity identifier that match the specified
 		 * signature.
 		 * @param systemSignature The signature to match against registered

@@ -100,12 +100,10 @@ namespace utility::graphic
 				/ ViewComponentType { 180 };
 			const ViewComponentType halfHorizontalRad =
 				std::atan(std::tan(halfVerticalRad) * aspectRatio);
-			const ViewComponentType halfHorizontal = halfHorizontalRad
-				* ViewComponentType { 180 }
-				/ std::numbers::pi_v<ViewComponentType>;
 
 			return FieldOfView<ViewComponentType>(
-				halfVertical, halfVertical, halfHorizontal, halfHorizontal);
+				halfVerticalRad, halfVerticalRad, halfHorizontalRad,
+				halfHorizontalRad);
 		}
 
 		/**
@@ -501,8 +499,7 @@ namespace utility::graphic
 		 * @return Ray originating at view position toward projected direction.
 		 * @throws std::out_of_range if point is outside of viewport bounds.
 		 */
-		Ray<ViewComponentType>
-			viewPointToRay(const math::Vector2F &point) const
+		Ray<ViewComponentType> viewPointToRay(const math::Vector2F &point) const
 		{
 			if (point.x >= _viewportSize.x || point.y >= _viewportSize.y) {
 				throw std::out_of_range("Point is outside of viewport bounds");
@@ -566,14 +563,10 @@ namespace utility::graphic
 		bool operator==(const View &other) const noexcept
 		{
 			return _pose == other._pose
-				&& _fieldOfView.getUpDegrees()
-				== other._fieldOfView.getUpDegrees()
-				&& _fieldOfView.getDownDegrees()
-				== other._fieldOfView.getDownDegrees()
-				&& _fieldOfView.getLeftDegrees()
-				== other._fieldOfView.getLeftDegrees()
-				&& _fieldOfView.getRightDegrees()
-				== other._fieldOfView.getRightDegrees();
+				&& _fieldOfView.getUp() == other._fieldOfView.getUp()
+				&& _fieldOfView.getDown() == other._fieldOfView.getDown()
+				&& _fieldOfView.getLeft() == other._fieldOfView.getLeft()
+				&& _fieldOfView.getRight() == other._fieldOfView.getRight();
 		}
 
 		/**

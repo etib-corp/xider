@@ -30,14 +30,14 @@ namespace utility::graphic
 		 * roughness, or font atlas.
 		 */
 		enum class TextureType {
-			Albedo,	   ///< Represents the albedo (diffuse) texture, which
-					   ///< defines the base color of a material.
-			Normal,	   ///< Represents the normal map texture, which encodes
-					   ///< surface normals for detailed lighting effects.
+			Albedo,		  ///< Represents the albedo (diffuse) texture, which
+						  ///< defines the base color of a material.
+			Normal,		  ///< Represents the normal map texture, which encodes
+						  ///< surface normals for detailed lighting effects.
 			Roughness,	  ///< Represents the roughness texture, which defines
 						  ///< the surface roughness for specular reflections.
-			FontAtlas	 ///< Represents the font atlas texture, which contains
-						 ///< pre-rendered glyphs for text rendering.
+			FontAtlas	  ///< Represents the font atlas texture, which contains
+						  ///< pre-rendered glyphs for text rendering.
 		};
 
 		/**

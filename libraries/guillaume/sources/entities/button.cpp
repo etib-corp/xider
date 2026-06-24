@@ -467,8 +467,9 @@ namespace guillaume::entities
 						  + (labelWidth / 2.0f));
 		textPosition.setY(buttonCenterY);
 		textPosition.setZ(buttonPose.getPosition().getZ());
-		return utility::graphic::PoseF(textPosition,
-									   buttonPose.getOrientation());
+		return applyLayerOffset(
+			utility::graphic::PoseF(textPosition, buttonPose.getOrientation()),
+			_labelIdentifier);
 	}
 
 	utility::graphic::PoseF Button::calculTextPoseWithIcon(void)
@@ -494,8 +495,9 @@ namespace guillaume::entities
 			+ getSpaceBetweenIconAndLabel(_size) + (labelWidth / 2.0f));
 		textPosition.setY(buttonCenterY);
 		textPosition.setZ(buttonPose.getPosition().getZ());
-		return utility::graphic::PoseF(textPosition,
-									   buttonPose.getOrientation());
+		return applyLayerOffset(
+			utility::graphic::PoseF(textPosition, buttonPose.getOrientation()),
+			_labelIdentifier);
 	}
 
 	std::size_t Button::calculWidth(void)
@@ -511,6 +513,31 @@ namespace guillaume::entities
 			width += labelBound.getWidth();
 		}
 		return width;
+	}
+
+	utility::graphic::PoseF
+		Button::applyLayerOffset(const utility::graphic::PoseF &pose,
+								 ecs::Entity::Identifier entityIdentifier) const
+	{
+		const auto *entity = getEntity(entityIdentifier);
+		if (entity == nullptr) {
+			return pose;
+		}
+		return applyLayerOffset(pose, entity->getLayer());
+	}
+
+	utility::graphic::PoseF
+		Button::applyLayerOffset(const utility::graphic::PoseF &pose,
+								 std::int32_t layer) const
+	{
+		if (layer <= 0) {
+			return pose;
+		}
+		const auto forward = pose.getOrientation().getForward();
+		auto position	   = pose.getPosition();
+		position.translate(utility::graphic::PositionF(
+			-forward * _layerDepthStep * static_cast<float>(layer)));
+		return utility::graphic::PoseF(position, pose.getOrientation());
 	}
 
 	Button::Button(ecs::ComponentRegistry &registry,
@@ -557,6 +584,7 @@ namespace guillaume::entities
 				getComponentRegistry(), _iconGlyphName,
 				static_cast<float>(getFontSize(_size)),
 				getContentColor(_colorStyle), Icon::Style::Outlined);
+			icon->setLayer(getLayer() + 1);
 			_iconIdentifier = icon->getIdentifier();
 			addEntity(std::move(icon));
 		} else {
@@ -601,10 +629,13 @@ namespace guillaume::entities
 		iconPosition.setY(buttonCenterY);
 		iconPosition.setZ(buttonPose.getPosition().getZ());
 
+		auto iconPose = applyLayerOffset(
+			utility::graphic::PoseF(iconPosition, buttonPose.getOrientation()),
+			_iconIdentifier);
+
 		getComponentRegistry()
 			.getComponent<components::Transform>(_iconIdentifier)
-			.setPose(utility::graphic::PoseF(iconPosition,
-											 buttonPose.getOrientation()));
+			.setPose(iconPose);
 
 		if (_labelIdentifier != ecs::Entity::InvalidIdentifier) {
 			getComponentRegistry()
@@ -627,6 +658,7 @@ namespace guillaume::entities
 			auto label = std::make_unique<Text>(
 				getComponentRegistry(), _labelContent, getFontSize(_size),
 				getContentColor(_colorStyle));
+			label->setLayer(getLayer() + 1);
 			_labelIdentifier = label->getIdentifier();
 			addEntity(std::move(label));
 		} else {
@@ -743,6 +775,16 @@ namespace guillaume::entities
 			.setOnButtonReleaseHandler(
 				utility::event::MouseButtonEvent::Button::Left,
 				std::bind(&Button::leftClickReleaseHandler, this));
+	}
+
+	ecs::Entity::Identifier Button::getIconIdentifier(void) const
+	{
+		return _iconIdentifier;
+	}
+
+	ecs::Entity::Identifier Button::getLabelIdentifier(void) const
+	{
+		return _labelIdentifier;
 	}
 
 }	 // namespace guillaume::entities

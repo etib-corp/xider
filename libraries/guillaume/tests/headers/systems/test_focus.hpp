@@ -28,6 +28,7 @@
 
 #include "guillaume/ecs/component_registry.hpp"
 #include "guillaume/ecs/entity_registry.hpp"
+#include "guillaume/ecs/entity_registry_container.hpp"
 #include "guillaume/ecs/system_phase.hpp"
 
 #include "guillaume/components/focus.hpp"
@@ -40,8 +41,11 @@
 
 #include "guillaume/systems/focus.hpp"
 #include "guillaume/event/event_bus.hpp"
+#include "guillaume/engine.hpp"
 
-#include <utility/graphic/pose.hpp>
+#include <utility/graphic/mesh.hpp>
+#include <utility/graphic/text/text.hpp>
+#include <utility/graphic/view.hpp>
 #include <utility/math/vector.hpp>
 #include <utility/event/mouse_button_event.hpp>
 #include <utility/event/hand_button_event.hpp>
@@ -49,26 +53,77 @@
 namespace guillaume::systems::tests
 {
 
-	class TestFocus: public ::testing::Test
+	class EngineStub: public Engine
+	{
+		public:
+		ViewportSize getViewportSize(void) const override
+		{
+			return { 800.0f, 600.0f };
+		}
+		void clear(void) override
+		{
+		}
+		void present(void) override
+		{
+		}
+		size_t addMesh(const utility::graphic::Mesh &,
+					   const std::string &) override
+		{
+			return 0;
+		}
+		bool removeObject(size_t) override
+		{
+			return true;
+		}
+		utility::math::Vector2F
+			measureText(const utility::graphic::Text &) const override
+		{
+			return { 0.0f, 0.0f };
+		}
+		size_t addText(const utility::graphic::Text &) override
+		{
+			return 0;
+		}
+		utility::graphic::ViewF getView(void) const override
+		{
+			return utility::graphic::ViewF();
+		}
+		void addScene(size_t) override
+		{
+		}
+		void pollEvents(void) override
+		{
+		}
+		void update(void) override
+		{
+		}
+	};
+
+	class TestFocusSystem: public ::testing::Test
 	{
 		protected:
 		std::unique_ptr<event::EventBus> _eventBus;
+		std::unique_ptr<Engine> _engine;
 		std::unique_ptr<Focus> _focusSystem;
 		ecs::ComponentRegistry _componentRegistry;
-		ecs::EntityRegistry _entityRegistry;
+		ecs::EntityRegistryContainer _entityRegistry;
 
-		TestFocus(void)			  = default;
-		~TestFocus(void) override = default;
+		TestFocusSystem(void)			  = default;
+		~TestFocusSystem(void) override = default;
 
 		void SetUp(void) override
 		{
 			_eventBus	 = std::make_unique<event::EventBus>();
-			_focusSystem = std::make_unique<Focus>(*_eventBus);
+			_engine		 = std::make_unique<EngineStub>();
+			_focusSystem = std::make_unique<Focus>(*_eventBus, _engine);
+			_focusSystem->bindComponentRegistry(_componentRegistry);
 		}
 
 		void TearDown(void) override
 		{
+			_focusSystem->unbindComponentRegistry();
 			_focusSystem.reset();
+			_engine.reset();
 			_eventBus.reset();
 		}
 
@@ -81,8 +136,16 @@ namespace guillaume::systems::tests
 			const utility::graphic::PoseF &pose = utility::graphic::PoseF(),
 			float width = 100.0f, float height = 50.0f)
 		{
-			auto &entity = _entityRegistry.createEntity();
-			auto id		 = entity.getIdentifier();
+			auto entity = std::make_unique<ecs::Entity>();
+			auto id		= entity->getIdentifier();
+			entity->setSignature(
+				ecs::Entity::getSignatureFromTypes<
+					components::Focus, components::Transform, components::Bound,
+					components::MouseButtonInteraction,
+					components::HandButtonInteraction,
+					components::HandPinchInteraction,
+					components::HandPokeInteraction>());
+			_entityRegistry.addEntity(std::move(entity));
 
 			_componentRegistry.addComponent<components::Focus>(id);
 			_componentRegistry.addComponent<components::Transform>(id);

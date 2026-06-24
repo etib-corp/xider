@@ -20,51 +20,27 @@
  SOFTWARE.
  */
 
-#include "guillaume/ecs/entity.hpp"
+#pragma once
 
-namespace guillaume::ecs
+#include <gtest/gtest.h>
+
+#include <guillaume/component_registry.hpp>
+#include <guillaume/entities/button.hpp>
+
+namespace guillaume::entities::tests
 {
 
-	Entity::Identifier Entity::getNextIdentifier(void)
+	class TestButton: public ::testing::Test
 	{
-		static Identifier currentId = InvalidIdentifier;
-		return ++currentId;
-	}
+		protected:
+		TestButton(void)		   = default;
+		~TestButton(void) override = default;
+		void SetUp(void) override
+		{
+		}
+		void TearDown(void) override
+		{
+		}
+	};
 
-	Entity::Entity(void)
-		: utility::logging::Loggable<Entity, utility::logging::DefaultLogger>()
-		, _identifier(getNextIdentifier())
-	{
-	}
-
-	Entity::Identifier Entity::getIdentifier(void) const
-	{
-		return _identifier;
-	}
-
-	Entity::Signature Entity::getSignature(void) const
-	{
-		return _signature;
-	}
-
-	void Entity::setSignature(const Signature &signature)
-	{
-		_signature = signature;
-	}
-
-	Entity &Entity::setLayer(std::int32_t layer)
-	{
-		_layer = layer;
-		return *this;
-	}
-
-	std::int32_t Entity::getLayer(void) const
-	{
-		return _layer;
-	}
-
-	void Entity::update(void)
-	{
-	}
-
-}	 // namespace guillaume::ecs
+}	 // namespace guillaume::entities::tests

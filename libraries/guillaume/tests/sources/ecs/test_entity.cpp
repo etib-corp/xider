@@ -22,6 +22,70 @@
 
 #include "ecs/test_entity.hpp"
 
+#include <memory>
+#include <vector>
+
+#include <guillaume/ecs/entity_registry.hpp>
+
 namespace guillaume::ecs::tests
 {
+	class LocalEntityRegistry final: public EntityRegistry
+	{
+		private:
+		std::vector<std::unique_ptr<Entity>> _entities;
+
+		protected:
+		std::vector<std::unique_ptr<Entity>> &
+			accessDirectEntities(void) override
+		{
+			return _entities;
+		}
+
+		const std::vector<std::unique_ptr<Entity>> &
+			accessDirectEntities(void) const override
+		{
+			return _entities;
+		}
+	};
+
+	TEST_F(TestEntity, DefaultLayerIsZero)
+	{
+		Entity entity;
+
+		EXPECT_EQ(entity.getLayer(), 0);
+	}
+
+	TEST_F(TestEntity, SetLayerUpdatesValue)
+	{
+		Entity entity;
+
+		entity.setLayer(3);
+		EXPECT_EQ(entity.getLayer(), 3);
+
+		entity.setLayer(-1);
+		EXPECT_EQ(entity.getLayer(), -1);
+	}
+
+	TEST_F(TestEntity, SetLayerReturnsSelf)
+	{
+		Entity entity;
+
+		Entity &result = entity.setLayer(5);
+		EXPECT_EQ(&result, &entity);
+		EXPECT_EQ(entity.getLayer(), 5);
+	}
+
+	TEST_F(TestEntity, LayerIsPreservedWhenMovedIntoRegistry)
+	{
+		LocalEntityRegistry registry;
+		auto entity = std::make_unique<Entity>();
+		entity->setLayer(7);
+		const auto identifier = entity->getIdentifier();
+
+		registry.addEntity(std::move(entity));
+
+		const auto *foundEntity = registry.getEntity(identifier);
+		ASSERT_NE(foundEntity, nullptr);
+		EXPECT_EQ(foundEntity->getLayer(), 7);
+	}
 }	 // namespace guillaume::ecs::tests

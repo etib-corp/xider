@@ -103,4 +103,24 @@ namespace guillaume::ecs
 		return matchingIdentifiers;
 	}
 
+	Entity *EntityRegistry::getEntity(Entity::Identifier identifier)
+	{
+		for (auto *entity: getEntitiesBreadthFirst()) {
+			if (entity->getIdentifier() == identifier) {
+				return entity;
+			}
+		}
+		return nullptr;
+	}
+
+	const Entity *EntityRegistry::getEntity(Entity::Identifier identifier) const
+	{
+		for (const auto *entity: getEntitiesBreadthFirst()) {
+			if (entity->getIdentifier() == identifier) {
+				return entity;
+			}
+		}
+		return nullptr;
+	}
+
 }	 // namespace guillaume::ecs
