@@ -174,7 +174,7 @@ glm::mat4 evan::XrSwapchainContext::getProjection(int index) const
 {
 	const XrFovf &fov = _views[index].fov;
 	float nearZ		  = 0.1f;
-	float farZ		  = 10.0f;
+	float farZ		  = 500.0f;
 
 	float tanLeft  = tanf(fov.angleLeft);
 	float tanRight = tanf(fov.angleRight);
@@ -198,18 +198,24 @@ glm::mat4 evan::XrSwapchainContext::getProjection(int index) const
 
 glm::mat4 evan::XrSwapchainContext::getView(int index) const
 {
-	const auto &pose = _views[index].pose;
+    const auto& pose = _views[index].pose;
 
-	const glm::quat orientation_glm(pose.orientation.w, pose.orientation.x,
-									pose.orientation.y, pose.orientation.z);
-	const glm::vec3 position_glm(pose.position.x, pose.position.y,
-								 pose.position.z);
+    glm::quat orientation(
+        pose.orientation.w,
+        pose.orientation.x,
+        pose.orientation.y,
+        pose.orientation.z);
 
-	const glm::mat4 rotation = glm::mat4_cast(glm::conjugate(orientation_glm));
-	const glm::mat4 translation =
-		glm::translate(glm::mat4(1.0f), -position_glm);
+    glm::vec3 position(
+        pose.position.x,
+        pose.position.y,
+        pose.position.z);
 
-	return rotation * translation;
+    glm::mat4 head =
+        glm::translate(glm::mat4(1.0f), position) *
+        glm::mat4_cast(orientation);
+
+    return glm::inverse(head);
 }
 
 void evan::XrSwapchainContext::setView(int index, const glm::mat4 &view)
