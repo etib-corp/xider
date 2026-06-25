@@ -25,6 +25,7 @@
 #include <map>
 #include <optional>
 
+#include "guillaume/systems/cache_system.hpp"
 #include "guillaume/ecs/system_filler.hpp"
 
 #include "guillaume/components/text.hpp"
@@ -42,15 +43,13 @@ namespace guillaume::systems
 	 * @see components::Transform
 	 */
 	class TextRender:
+		public CacheSystem<ecs::Entity::Identifier, utility::graphic::Text>,
 		public ecs::SystemFiller<components::Transform, components::Text,
 								 components::Color>
 	{
 		private:
-		struct CacheEntry {
-			std::optional<utility::graphic::Text> text;
+		struct ExtraCacheData {
 			utility::graphic::PoseF pose;
-			size_t objectId { 0 };
-			bool used { false };
 			std::string cachedContent;
 			uint32_t cachedFontSize { 0 };
 			utility::graphic::Color32Bit cachedColor;
@@ -62,7 +61,7 @@ namespace guillaume::systems
 								   ///< fonts and glyphs
 		std::unique_ptr<Engine> &_engine;	 ///< Engine instance
 		std::string _defaultFontPath;	 ///< Default font for text rendering
-		std::map<ecs::Entity::Identifier, CacheEntry> _cache;
+		std::map<ecs::Entity::Identifier, ExtraCacheData> _extraCache;
 
 		public:
 		/**

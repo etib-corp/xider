@@ -13,7 +13,7 @@
 
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT IN NO EVENT SHALL THE
  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
@@ -22,40 +22,42 @@
 
 #include <utility/graphic/text/text.hpp>
 
-#include "guillaume/systems/measure_text.hpp"
+#include "guillaume/systems/measure_glyph.hpp"
 
 namespace guillaume::systems
 {
 
-	MeasureText::MeasureText(
+	MeasureGlyph::MeasureGlyph(
 		std::shared_ptr<utility::RessourceProvider> ressourceProvider,
 		std::unique_ptr<Engine> &engine)
-		: ecs::SystemFiller<components::Text, components::Bound,
+		: ecs::SystemFiller<components::Glyph, components::Bound,
 							components::Transform, components::Color>(
 			  ecs::Phase::Measure)
 		, _ressourceProvider(ressourceProvider)
 		, _engine(engine)
-		, _defaultFontPath("fonts/Roboto-Regular.ttf")
+		, _defaultFontPath(
+			  "fonts/Material_Symbols_Outlined/"
+			  "MaterialSymbolsOutlined-VariableFont_FILL,GRAD,opsz,wght.ttf")
 	{
 	}
 
-	MeasureText::~MeasureText(void)
+	MeasureGlyph::~MeasureGlyph(void)
 	{
 	}
 
-	void MeasureText::update(const ecs::Entity::Identifier &entityIdentifier)
+	void MeasureGlyph::update(const ecs::Entity::Identifier &entityIdentifier)
 	{
 		getLogger().debug()
-			<< "Updating MeasureText system for entity " << entityIdentifier;
-		if (!requireComponent<components::Text>(entityIdentifier)
+			<< "Updating MeasureGlyph system for entity " << entityIdentifier;
+		if (!requireComponent<components::Glyph>(entityIdentifier)
 			|| !requireComponent<components::Bound>(entityIdentifier)
 			|| !requireComponent<components::Transform>(entityIdentifier)
 			|| !requireComponent<components::Color>(entityIdentifier)) {
 			return;
 		}
 
-		const auto &textComponent =
-			getComponent<components::Text>(entityIdentifier);
+		const auto &glyphComponent =
+			getComponent<components::Glyph>(entityIdentifier);
 		auto &boundComponent =
 			getComponent<components::Bound>(entityIdentifier);
 		auto &transformComponent =
@@ -63,16 +65,15 @@ namespace guillaume::systems
 		auto &colorComponent =
 			getComponent<components::Color>(entityIdentifier);
 
-		const auto content	= textComponent.getContent();
-		const auto fontSize = textComponent.getFontSize();
+		const auto name		= glyphComponent.getName();
+		const auto fontSize = glyphComponent.getFontSize();
 
-		if (content.empty()) {
+		if (name.empty()) {
 			return;
 		}
 
-		// We cannot use isValid() here because the criteria (content/size)
+		// We cannot use isValid() here because the criteria (name/size)
 		// is not the same type as the value (width/height).
-		// Instead, we check if we have a cached value for this entity.
 		auto entry = getEntry(entityIdentifier);
 		if (entry && entry->value.has_value()) {
 			boundComponent.setWidth(entry->value->x).setHeight(entry->value->y);
@@ -81,7 +82,7 @@ namespace guillaume::systems
 
 		utility::graphic::Text text(
 			_ressourceProvider, transformComponent.getPose(),
-			colorComponent.getColor(), content, fontSize, _defaultFontPath);
+			colorComponent.getColor(), name, fontSize, _defaultFontPath);
 		text.setColor(utility::graphic::Color32Bit());
 
 		auto textSize = _engine->measureText(text);

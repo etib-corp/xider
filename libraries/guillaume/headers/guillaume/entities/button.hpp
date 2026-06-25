@@ -62,11 +62,6 @@ namespace guillaume::entities
 			components::Transform, components::Bound, components::Color,
 			components::Borders, components::Focus,
 			components::HandButtonInteraction, components::HandHoverInteraction,
-			components::HandPinchInteraction, components::HandPokeInteraction,
-			components::HandSqueezeInteraction,
-			components::HandThumbRestInteraction,
-			components::HandThumbStickInteraction,
-			components::HandTriggerInteraction,
 			components::MouseHoverInteraction,
 			components::MouseButtonInteraction>
 	{
@@ -96,6 +91,8 @@ namespace guillaume::entities
 				_button;	///< Unique pointer to the Button entity being built
 			std::string
 				_iconGlyphName;	   ///< Icon glyph name to attach to the button
+			components::Glyph::Style
+				_iconStyle;	   ///< Style of the icon to attach to the button
 			std::string
 				_labelContent;	  ///< Label content to attach to the button
 			std::function<void(void)>
@@ -139,6 +136,13 @@ namespace guillaume::entities
 			 * @return Reference to the builder for chaining.
 			 */
 			Builder &withIcon(const std::string &iconGlyphName);
+
+			/**
+			 * @brief Set the style of the icon for the button.
+			 * @param iconStyle The style of the icon to attach.
+			 * @return Reference to the builder for chaining.
+			 */
+			Builder &withIconStyle(const components::Glyph::Style &iconStyle);
 
 			/**
 			 * @brief Set the label text for the button.
@@ -242,13 +246,17 @@ namespace guillaume::entities
 			ecs::Entity::Identifier makeIconButton(
 				Builder &builder, const std::string &labelContent,
 				const std::string &iconGlyphName,
+				const components::Glyph::Style &iconStyle,
 				std::function<void(void)> onClick, Color colorStyle,
 				Shape shape, Size size, bool isMorph);
 		};
 
 		private:
 		std::string _iconGlyphName {};	  ///< Icon glyph name to attach.
-		std::string _labelContent {};	  ///< Label content to attach.
+		components::Glyph::Style _iconStyle {
+			components::Glyph::Style::Outlined
+		};	  ///< Style of the icon to attach.
+		std::string _labelContent {};	 ///< Label content to attach.
 		ecs::Entity::Identifier _iconIdentifier {
 			ecs::Entity::InvalidIdentifier
 		};	  ///< Internal child icon entity identifier.
@@ -293,6 +301,7 @@ namespace guillaume::entities
 		 * @param registry Reference to the component registry for initializing
 		 * components.
 		 * @param iconGlyphName Icon glyph name to attach to the button.
+		 * @param iconStyle Style of the icon to attach to the button.
 		 * @param labelContent Label content to attach to the button.
 		 * @param isToggle Whether the button should be a toggle button.
 		 * @param colorStyle Initial color style for the button.
@@ -303,6 +312,7 @@ namespace guillaume::entities
 		 */
 		Button(ecs::ComponentRegistry &registry,
 			   const std::string &iconGlyphName,
+			   const components::Glyph::Style &iconStyle,
 			   const std::string &labelContent, bool isToggle, Color colorStyle,
 			   Shape shape, Size size, bool isMorph,
 			   std::function<void(void)> onClick);
@@ -318,6 +328,13 @@ namespace guillaume::entities
 		 * @return Reference to this Button for chaining.
 		 */
 		Button &setIconGlyphName(const std::string &iconGlyphName);
+
+		/**
+		 * @brief Set the style of the icon for the button.
+		 * @param iconStyle The style of the icon to attach.
+		 * @return Reference to this Button for chaining.
+		 */
+		Button &setIconStyle(const components::Glyph::Style &iconStyle);
 
 		/**
 		 * @brief Set the label content for the button.

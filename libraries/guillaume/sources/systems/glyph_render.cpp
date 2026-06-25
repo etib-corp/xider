@@ -107,6 +107,12 @@ namespace guillaume::systems
 
 		const std::string glyphName = glyphComponent.getName();
 
+		if (glyphName.empty()) {
+			getLogger().debug() << "GlyphRender: Empty glyph name for entity "
+								<< entityIdentifier << ". Skipping rendering.";
+			return;
+		}
+
 		getLogger().debug() << "Rendering glyph '" << glyphName
 							<< "' for entity " << entityIdentifier;
 		getLogger().debug() << "Glyph code found for '" << glyphName
@@ -120,18 +126,19 @@ namespace guillaume::systems
 			glyphCode = '?';
 		}
 
-		auto &cacheEntry = _cache[entityIdentifier];
+		auto &cacheEntry = getOrCreateEntry(entityIdentifier);
 		cacheEntry.used	 = true;
 
-		const auto &currentPose	  = transformComponent.getPose();
-		const auto &currentHeight = boundComponent.getHeight();
-		const auto &currentColor  = colorComponent.getColor();
+		const auto &currentPose		= transformComponent.getPose();
+		const auto &currentColor	= colorComponent.getColor();
+		const auto &currentFontSize = glyphComponent.getFontSize();
+
+		auto &extra = _extraCache[entityIdentifier];
 
 		// If properties match cached values, skip Text object creation
-		if (cacheEntry.objectId != 0 && cacheEntry.cachedGlyphName == glyphName
-			&& cacheEntry.cachedHeight == currentHeight
-			&& cacheEntry.cachedColor == currentColor
-			&& cacheEntry.pose == currentPose) {
+		if (cacheEntry.objectId != 0 && extra.cachedGlyphName == glyphName
+			&& extra.cachedFontSize == currentFontSize
+			&& extra.cachedColor == currentColor && extra.pose == currentPose) {
 			getLogger().debug()
 				<< "GlyphRender: Skipping entity " << entityIdentifier
 				<< " - properties unchanged";
@@ -141,27 +148,26 @@ namespace guillaume::systems
 		getLogger().info()
 			<< "GlyphRender: Creating new Text object for entity "
 			<< entityIdentifier << " (glyph: '" << glyphName
-			<< "', height: " << currentHeight << ")";
+			<< "', font size: " << currentFontSize << ")";
 
 		utility::graphic::Text glyphText(
 			_ressourceProvider, currentPose, currentColor,
-			utility::graphic::CodePoints::toUtf8(glyphCode), currentHeight,
+			utility::graphic::CodePoints::toUtf8(glyphCode), currentFontSize,
 			_defaultFontPath);
 
 		if (cacheEntry.objectId != 0) {
 			_engine->removeObject(cacheEntry.objectId);
 		}
 
-		cacheEntry.objectId = _engine->addText(glyphText);
+		cacheEntry.objectId = _engine->addText(std::move(glyphText));
 
-		cacheEntry.text = glyphText;
-		cacheEntry.pose = currentPose;
+		cacheEntry.value = std::move(glyphText);
 
 		// Update cached properties
-		cacheEntry.cachedGlyphName = glyphName;
-		cacheEntry.cachedHeight	   = currentHeight;
-		cacheEntry.cachedColor	   = currentColor;
-		cacheEntry.pose			   = currentPose;
+		extra.cachedGlyphName = glyphName;
+		extra.cachedFontSize  = currentFontSize;
+		extra.cachedColor	  = currentColor;
+		extra.pose			  = currentPose;
 	}
 
 }	 // namespace guillaume::systems

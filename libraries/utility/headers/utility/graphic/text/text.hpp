@@ -43,13 +43,16 @@
 #include <utility/graphic/text/font.hpp>
 
 #include <utility/graphic/color.hpp>
+#include <utility/graphic/size.hpp>
 #include <utility/math/vector.hpp>
 
 #include <utility/system_io/file.hpp>
 #include <utility/ressource_provider.hpp>
 
-// Types
 #include <utility/graphic/text/code_point.hpp>
+
+#include <utility/logging/loggable.hpp>
+#include <utility/logging/default_logger.hpp>
 
 /**
  * @brief Default font color (white).
@@ -66,7 +69,9 @@ namespace utility::graphic
 	 * Encapsulates all properties needed to render text, including content,
 	 * font information and size.
 	 */
-	class Text: public Renderable
+	class Text:
+		public Renderable,
+		protected logging::Loggable<Text, logging::DefaultLogger>
 	{
 		private:
 		std::string _content;	  ///< Text content to display
@@ -134,7 +139,7 @@ namespace utility::graphic
 		 * @brief Copy constructor.
 		 * @param other The Text object to copy from.
 		 */
-		Text(const Text &other) = default;
+		Text(const Text &other) = delete;
 
 		/**
 		 * @brief Move constructor.
@@ -174,7 +179,7 @@ namespace utility::graphic
 		 * @param other The Text object to copy from.
 		 * @return A reference to this Text object.
 		 */
-		Text &operator=(const Text &other) = default;
+		Text &operator=(const Text &other) = delete;
 
 		/**
 		 * @brief Move assignment operator.
@@ -210,10 +215,10 @@ namespace utility::graphic
 		 * Font class to retrieve the glyph information for the text content and
 		 * computes the overall width and height of the text as it would be
 		 * rendered, which can be useful for layout and positioning purposes.
-		 * @return A Vector2F containing the width and height of the rendered
+		 * @return A SizeF containing the width and height of the rendered
 		 * text.
 		 */
-		math::Vector2F getTextDimensions(void) const;
+		graphic::SizeF getTextDimensions(void) const;
 
 		/**
 		 * @brief Set the font size.

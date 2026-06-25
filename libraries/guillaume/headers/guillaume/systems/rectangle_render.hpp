@@ -26,6 +26,7 @@
 #include <optional>
 
 #include "guillaume/ecs/system_filler.hpp"
+#include "guillaume/systems/cache_system.hpp"
 
 #include "guillaume/components/borders.hpp"
 #include "guillaume/components/bound.hpp"
@@ -45,19 +46,12 @@ namespace guillaume::systems
 	 * @see components::Borders
 	 */
 	class RectangleRender:
+		public CacheSystem<ecs::Entity::Identifier, utility::graphic::Mesh>,
 		public ecs::SystemFiller<components::Transform, components::Bound,
 								 components::Color, components::Borders>
 	{
 		private:
-		struct CacheEntry {
-			std::optional<utility::graphic::Mesh> mesh;
-			size_t objectId { 0 };
-			bool used { false };
-		};
-
-		private:
 		std::unique_ptr<Engine> &_engine;	 ///< Engine instance
-		std::map<ecs::Entity::Identifier, CacheEntry> _cache;
 
 		private:
 		/**

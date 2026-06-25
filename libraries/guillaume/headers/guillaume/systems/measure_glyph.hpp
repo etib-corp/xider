@@ -28,7 +28,7 @@
 #include "guillaume/ecs/system_filler.hpp"
 
 #include "guillaume/components/bound.hpp"
-#include "guillaume/components/text.hpp"
+#include "guillaume/components/glyph.hpp"
 #include "guillaume/components/transform.hpp"
 #include "guillaume/components/color.hpp"
 
@@ -38,14 +38,14 @@ namespace guillaume::systems
 {
 
 	/**
-	 * @brief System measuring text and synchronizing it to bound sizes.
-	 * @see components::Text
+	 * @brief System measuring glyphs and synchronizing them to bound sizes.
+	 * @see components::Glyph
 	 * @see components::Bound
 	 * @see components::Transform
 	 */
-	class MeasureText:
+	class MeasureGlyph:
 		public CacheSystem<ecs::Entity::Identifier, utility::math::Vector2F>,
-		public ecs::SystemFiller<components::Text, components::Bound,
+		public ecs::SystemFiller<components::Glyph, components::Bound,
 								 components::Transform, components::Color>
 	{
 		private:
@@ -59,22 +59,22 @@ namespace guillaume::systems
 
 		public:
 		/**
-		 * @brief Construct a text measuring system.
+		 * @brief Construct a glyph measuring system.
 		 * @param ressourceProvider Shared resource provider for loading fonts
 		 * and glyphs.
 		 * @param engine The engine used to measure text.
 		 */
-		MeasureText(
+		MeasureGlyph(
 			std::shared_ptr<utility::RessourceProvider> ressourceProvider,
 			std::unique_ptr<Engine> &engine);
 
 		/**
 		 * @brief Default destructor.
 		 */
-		~MeasureText(void);
+		~MeasureGlyph(void);
 
 		/**
-		 * @brief Update the MeasureText system for one entity.
+		 * @brief Update the MeasureGlyph system for one entity.
 		 * @param entityIdentifier The target entity identifier.
 		 */
 		virtual void

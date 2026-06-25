@@ -46,11 +46,6 @@ namespace guillaume::entities
 	{
 		public:
 		/**
-		 * @brief Style of the icon, which can be Outlined, Rounded, or Sharp.
-		 */
-		enum class Style { Outlined, Rounded, Sharp };
-
-		/**
 		 * @brief Builder used to configure and create `Icon` entities.
 		 */
 		class Builder: public ecs::EntityBuilder
@@ -59,10 +54,11 @@ namespace guillaume::entities
 			std::unique_ptr<Icon>
 				_icon;	  ///< Unique pointer to the Icon entity being built
 			std::string _glyphName;	   ///< Name of the glyph to be used
-			float _size;			   ///< Size of the icon to be used
+			float _fontSize;		   ///< Font size of the icon to be used
 			utility::graphic::Color32Bit
-				_color;		 ///< Color of the icon to be used (RGBA)
-			Style _style;	 ///< Style of the icon to be used
+				_color;	   ///< Color of the icon to be used (RGBA)
+			components::Glyph::Style
+				_style;	   ///< Style of the glyph to be used
 
 			public:
 			/**
@@ -101,11 +97,12 @@ namespace guillaume::entities
 			Builder &withGlyphName(const std::string &glyphName);
 
 			/**
-			 * @brief Set the size of the icon to be used for the Icon entity.
-			 * @param size The size of the icon to set.
+			 * @brief Set the font size of the icon to be used for the Icon
+			 * entity.
+			 * @param size The fontsize of the icon to set.
 			 * @return Reference to the builder for chaining.
 			 */
-			Builder &withSize(float size);
+			Builder &withFontSize(float fontSize);
 
 			/**
 			 * @brief Set the color of the icon to be used for the Icon entity.
@@ -119,7 +116,7 @@ namespace guillaume::entities
 			 * @param style The style of the glyph to set.
 			 * @return Reference to the builder for chaining.
 			 */
-			Builder &withStyle(const Style &style);
+			Builder &withStyle(const components::Glyph::Style &style);
 		};
 
 		/**
@@ -148,19 +145,22 @@ namespace guillaume::entities
 			 * @see components::Glyph::getName
 			 */
 			ecs::Entity::Identifier
-				makeDefaultIcon(Builder &builder, const std::string &iconName);
+				makeIcon(Builder &builder, const std::string &iconName,
+						 const float &fontSize,
+						 const utility::graphic::Color32Bit &color,
+						 const components::Glyph::Style &style);
 		};
 
 		private:
 		std::string _glyphName {};	  ///< Name of the glyph to be used for this
 									  ///< Icon entity
-		float _size { 24.0f };	  ///< Size of the icon to be used for this Icon
-								  ///< entity
+		float _fontSize { 24.0f };	  ///< Font size of the icon to be used for
+									  ///< this Icon entity
 		utility::graphic::Color32Bit
 			_color {};	  ///< Color of the icon to be used for this Icon entity
 						  ///< (RGBA)
-		Style _style {
-			Style::Outlined
+		components::Glyph::Style _style {
+			components::Glyph::Style::Outlined
 		};	  ///< Style of the glyph to be used for this Icon entity
 
 		public:
@@ -170,15 +170,16 @@ namespace guillaume::entities
 		 * components.
 		 * @param glyphName The name of the glyph to be used for this Icon
 		 * entity.
-		 * @param size The size of the icon to be used for this Icon entity.
+		 * @param fontSize The font size of the icon to be used for this Icon
+		 * entity.
 		 * @param color The color of the icon to be used for this Icon entity
 		 * (RGBA).
 		 * @param style The style of the icon to be used for this Icon entity.
 		 * @see components::Glyph::getName
 		 */
 		Icon(ecs::ComponentRegistry &registry, const std::string &glyphName,
-			 const float size, const utility::graphic::Color32Bit &color,
-			 const Style &style);
+			 const float &fontSize, const utility::graphic::Color32Bit &color,
+			 const components::Glyph::Style &style);
 
 		/**
 		 * @brief Default destructor for the Icon component.
@@ -194,11 +195,11 @@ namespace guillaume::entities
 		Icon &setGlyphName(const std::string &glyphName);
 
 		/**
-		 * @brief Set the size of the icon for this Icon entity.
-		 * @param size The new size of the icon to set.
+		 * @brief Set the font size of the icon for this Icon entity.
+		 * @param fontSize The new font size of the icon to set.
 		 * @return Reference to this Icon for chaining.
 		 */
-		Icon &setSize(const float size);
+		Icon &setFontSize(const float &fontSize);
 
 		/**
 		 * @brief Set the color of the icon for this Icon entity.
@@ -212,7 +213,7 @@ namespace guillaume::entities
 		 * @param style The new style of the glyph to set.
 		 * @return Reference to this Icon for chaining.
 		 */
-		Icon &setStyle(const Style &style);
+		Icon &setStyle(const components::Glyph::Style &style);
 
 		/**
 		 * @brief Recompute the icon entity's derived state.

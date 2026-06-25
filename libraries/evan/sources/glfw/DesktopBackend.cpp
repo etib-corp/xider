@@ -385,6 +385,11 @@ void evan::DesktopBackend::createInstance(const evan::IPlatform &platform,
 
 		result = vkCreateInstance(&createInfo, nullptr, &_VkInstance);
 		switch (result) {
+			case VK_SUCCESS:
+				this->getLogger().info()
+					<< "Vulkan instance created successfully with "
+					   "VK_KHR_portability_subset enabled!";
+				break;
 			case VK_ERROR_OUT_OF_HOST_MEMORY:
 				this->getLogger().error()
 					<< "Host out of memory while creating Vulkan instance!";
@@ -481,9 +486,9 @@ void evan::DesktopBackend::createLogicalDevice()
 
 	deviceFeatures.samplerAnisotropy = supportedFeatures.samplerAnisotropy;
 	deviceFeatures.sampleRateShading = supportedFeatures.sampleRateShading;
-	#ifdef DEBUG
-		deviceFeatures.fillModeNonSolid = VK_TRUE;
-	#endif
+#ifdef DEBUG
+	deviceFeatures.fillModeNonSolid = VK_TRUE;
+#endif
 
 	this->getLogger().info() << "Setting up extended dynamic state features...";
 	VkPhysicalDeviceExtendedDynamicStateFeaturesEXT extendedDynamicState {};

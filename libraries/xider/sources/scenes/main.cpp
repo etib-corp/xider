@@ -58,6 +58,7 @@ namespace xider::scenes
 			guillaume::entities::Button::Size::Medium, false);
 		buttonDirector.makeIconButton(
 			buttonBuilder, "Icon Button", "settings",
+			guillaume::components::Glyph::Style::Outlined,
 			[]() {
 			},
 			guillaume::entities::Button::Color::Filled,
@@ -66,6 +67,7 @@ namespace xider::scenes
 
 		buttonDirector.makeIconButton(
 			buttonBuilder, "Code Button", "code",
+			guillaume::components::Glyph::Style::Outlined,
 			[]() {
 			},
 			guillaume::entities::Button::Color::Filled,

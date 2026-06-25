@@ -84,19 +84,25 @@ namespace guillaume::systems
 		const auto &colorComponent =
 			getComponent<components::Color>(entityIdentifier);
 
-		auto &cacheEntry = _cache[entityIdentifier];
-		cacheEntry.used	 = true;
-
 		const auto &currentContent	= textComponent.getContent();
 		const auto &currentFontSize = textComponent.getFontSize();
 		const auto &currentColor	= colorComponent.getColor();
 		const auto &currentPose		= transformComponent.getPose();
 
-		if (cacheEntry.objectId != 0
-			&& cacheEntry.cachedContent == currentContent
-			&& cacheEntry.cachedFontSize == currentFontSize
-			&& cacheEntry.cachedColor == currentColor
-			&& cacheEntry.pose == currentPose) {
+		if (currentContent.empty()) {
+			getLogger().debug() << "TextRender: Skipping entity "
+								<< entityIdentifier << " - empty content";
+			return;
+		}
+
+		auto &cacheEntry = getOrCreateEntry(entityIdentifier);
+		cacheEntry.used	 = true;
+
+		auto &extra = _extraCache[entityIdentifier];
+
+		if (cacheEntry.objectId != 0 && extra.cachedContent == currentContent
+			&& extra.cachedFontSize == currentFontSize
+			&& extra.cachedColor == currentColor && extra.pose == currentPose) {
 			getLogger().debug()
 				<< "TextRender: Skipping entity " << entityIdentifier
 				<< " - properties unchanged";
@@ -116,15 +122,14 @@ namespace guillaume::systems
 			_engine->removeObject(cacheEntry.objectId);
 		}
 
-		cacheEntry.objectId = _engine->addText(text);
-		cacheEntry.text		= text;
-		cacheEntry.pose		= currentPose;
+		cacheEntry.objectId = _engine->addText(std::move(text));
+		cacheEntry.value	= std::move(text);
 
 		// Update cached properties
-		cacheEntry.cachedContent  = currentContent;
-		cacheEntry.cachedFontSize = currentFontSize;
-		cacheEntry.cachedColor	  = currentColor;
-		cacheEntry.pose			  = currentPose;
+		extra.cachedContent	 = currentContent;
+		extra.cachedFontSize = currentFontSize;
+		extra.cachedColor	 = currentColor;
+		extra.pose			 = currentPose;
 	}
 
 }	 // namespace guillaume::systems

@@ -292,8 +292,17 @@ namespace guillaume::systems
 		const auto height	   = boundComponent.getHeight();
 		const auto color	   = colorComponent.getColor();
 		const float radius	   = extractAverageRadius(bordersComponent);
-		auto &cacheEntry	   = _cache[entityIdentifier];
-		cacheEntry.used		   = true;
+
+		if (width <= 0.0f || height <= 0.0f) {
+			getLogger().debug()
+				<< "Skipping rendering for entity " << entityIdentifier
+				<< " due to non-positive dimensions (width: " << width
+				<< ", height: " << height << ")";
+			return;
+		}
+
+		auto &cacheEntry = getOrCreateEntry(entityIdentifier);
+		cacheEntry.used	 = true;
 
 		const utility::graphic::PositionF center(
 			position[0], position[1] - (height / 2.0f), position[2]);
@@ -305,7 +314,7 @@ namespace guillaume::systems
 									std::vector<uint32_t> {});
 		buildTriangleFanVertices(mesh, center, roundedVertices, color);
 
-		if (cacheEntry.mesh.has_value() && *cacheEntry.mesh == mesh) {
+		if (cacheEntry.value.has_value() && *cacheEntry.value == mesh) {
 			return;
 		}
 
@@ -314,7 +323,7 @@ namespace guillaume::systems
 		}
 
 		cacheEntry.objectId = _engine->addMesh(mesh, "mesh_material");
-		cacheEntry.mesh		= mesh;
+		cacheEntry.value	= mesh;
 	}
 
 }	 // namespace guillaume::systems

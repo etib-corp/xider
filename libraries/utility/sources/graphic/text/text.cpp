@@ -21,6 +21,7 @@
  */
 
 #include <utility/graphic/text/text.hpp>
+#include <utility/graphic/size.hpp>
 
 #include <algorithm>
 #include <cstdint>
@@ -34,6 +35,7 @@ namespace utility::graphic
 			   const std::string &content, uint32_t fontSize,
 			   const std::string &font)
 		: Renderable(pose, color)
+		, logging::Loggable<Text, logging::DefaultLogger>()
 		, _content(content)
 		, _fontSize(fontSize)
 		, _fontPath(font)
@@ -80,9 +82,9 @@ namespace utility::graphic
 		return *this;
 	}
 
-	math::Vector2F Text::getTextDimensions(void) const
+	graphic::SizeF Text::getTextDimensions(void) const
 	{
-		math::Vector2F dimensions({ 0.0, 0.0 });
+		graphic::SizeF dimensions({ 0.0, 0.0 });
 
 		std::vector<uint32_t> codepoints = utf8ToCodepoints(_content);
 		std::vector<Glyph> glyphs =
@@ -92,14 +94,20 @@ namespace utility::graphic
 		double maxBottom = 0.0;
 
 		for (const auto &g: glyphs) {
-			dimensions[VEC_X] += g.advance;
+			dimensions.setWidth(dimensions.getWidth() + g.advance);
 			maxTop = std::max(maxTop, static_cast<double>(g.bearing[VEC_Y]));
 			maxBottom =
 				std::max(maxBottom,
 						 static_cast<double>(g.size[VEC_Y] - g.bearing[VEC_Y]));
 		}
 
-		dimensions[VEC_Y] = maxTop + maxBottom;
+		dimensions.setHeight(maxTop + maxBottom);
+
+		getLogger().debug() << "Calculated text dimensions for content '"
+							<< _content << "' with font size " << _fontSize
+							<< ": width = " << dimensions.getWidth()
+							<< ", height = " << dimensions.getHeight();
+
 		return dimensions;
 	}
 

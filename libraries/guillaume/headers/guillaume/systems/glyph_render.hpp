@@ -25,6 +25,7 @@
 #include <map>
 #include <optional>
 
+#include "guillaume/systems/cache_system.hpp"
 #include <utility/ressource_provider.hpp>
 #include <utility/graphic/text/text.hpp>
 
@@ -46,17 +47,15 @@ namespace guillaume::systems
 	 * @see components::Transform
 	 */
 	class GlyphRender:
+		public CacheSystem<ecs::Entity::Identifier, utility::graphic::Text>,
 		public ecs::SystemFiller<components::Transform, components::Bound,
 								 components::Glyph, components::Color>
 	{
 		private:
-		struct CacheEntry {
-			std::optional<utility::graphic::Text> text;
+		struct ExtraCacheData {
 			utility::graphic::PoseF pose;
-			size_t objectId { 0 };
-			bool used { false };
 			std::string cachedGlyphName;
-			uint32_t cachedHeight { 0 };
+			float cachedFontSize { 0.0f };
 			utility::graphic::Color32Bit cachedColor;
 		};
 
@@ -68,7 +67,7 @@ namespace guillaume::systems
 		std::string _defaultFontPath;	 ///< Default font for glyph rendering
 		std::string _glyphCodePath;		 ///< Path to glyph code mapping file
 		std::shared_ptr<utility::graphic::CodePoints> _codePoints;
-		std::map<ecs::Entity::Identifier, CacheEntry> _cache;
+		std::map<ecs::Entity::Identifier, ExtraCacheData> _extraCache;
 		bool _glyphCodesLoaded {
 			false
 		};	  ///< Whether glyph codes have been loaded

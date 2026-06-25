@@ -36,9 +36,17 @@ namespace guillaume::components
 	 */
 	class Glyph: public ecs::Component
 	{
+		public:
+		/**
+		 * @brief Style of the glyph, which can be Outlined, Rounded, or Sharp.
+		 */
+		enum class Style { Outlined, Rounded, Sharp };
+
 		private:
-		uint32_t _code { 0 };	 ///< Glyph code (e.g., Unicode code point)
-		std::string _name {};	 ///< Glyph name (for font lookup)
+		uint32_t _code { 0 };		  ///< Glyph code (e.g., Unicode code point)
+		std::string _name {};		  ///< Glyph name (for font lookup)
+		float _fontSize { 24.0f };	  ///< Font size of the glyph
+		Style _style { Style::Outlined };	 ///< Style of the glyph
 
 		public:
 		/**
@@ -76,6 +84,32 @@ namespace guillaume::components
 		 * @return The Glyph component for chaining.
 		 */
 		Glyph &setName(const std::string &name);
+
+		/**
+		 * @brief Get the font size of the glyph.
+		 * @return The font size.
+		 */
+		const float &getFontSize(void) const;
+
+		/**
+		 * @brief Set the font size of the glyph.
+		 * @param fontSize The new font size.
+		 * @return The Glyph component for chaining.
+		 */
+		Glyph &setFontSize(const float &fontSize);
+
+		/**
+		 * @brief Get the style of the glyph.
+		 * @return The glyph style.
+		 */
+		const Style &getStyle(void) const;
+
+		/**
+		 * @brief Set the style of the glyph.
+		 * @param style The new glyph style.
+		 * @return The Glyph component for chaining.
+		 */
+		Glyph &setStyle(const Style &style);
 	};
 
 }	 // namespace guillaume::components

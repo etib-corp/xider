@@ -41,8 +41,8 @@ namespace
 	class EngineStub: public guillaume::Engine
 	{
 		public:
-		mutable utility::math::Vector<float, 2> measurement = { 0.0f, 0.0f };
-		mutable std::size_t measureCallCount				= 0;
+		mutable utility::math::Vector2F measurement = { 0.0f, 0.0f };
+		mutable std::size_t measureCallCount		= 0;
 		mutable std::string lastContent;
 
 		ViewportSize getViewportSize(void) const override
@@ -113,11 +113,11 @@ namespace
 		{
 			auto entity		 = std::make_unique<guillaume::ecs::Entity>();
 			entityIdentifier = entity->getIdentifier();
-			entity->setSignature(guillaume::ecs::Entity::getSignatureFromTypes<
-								 guillaume::components::Transform,
-								 guillaume::components::Text,
-								 guillaume::components::Bound,
-								 guillaume::components::Color>());
+			entity->setSignature(
+				guillaume::ecs::Entity::getSignatureFromTypes<
+					guillaume::components::Transform,
+					guillaume::components::Text, guillaume::components::Bound,
+					guillaume::components::Color>());
 			entityRegistry.addEntity(std::move(entity));
 
 			componentRegistry.addComponent<guillaume::components::Transform>(
