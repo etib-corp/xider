@@ -15,12 +15,18 @@ layout(binding = 0) uniform UBO {
 
 void main()
 {
-    fragColor = inColor;
-    fragUV = inTexCoord;
-
     gl_Position =
         ubo.proj *
         ubo.view *
         ubo.model *
         vec4(inPosition, 1.0);
+
+    vec3 debugPalette[3] = vec3[](
+        vec3(0.2, 0.4, 1.0),
+        vec3(0.7, 0.2, 1.0),
+        vec3(0.1, 1.0, 1.0)
+    );
+
+    fragColor = debugPalette[gl_VertexIndex % 3];
+    fragUV = inTexCoord;
 }

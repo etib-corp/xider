@@ -68,6 +68,12 @@ FetchContent_Declare(stb
 )
 FetchContent_MakeAvailable(stb)
 
+# Disable building examples, tests, and utilities for OpenAL Soft
+set(ALSOFT_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(ALSOFT_TESTS OFF CACHE BOOL "" FORCE)
+set(ALSOFT_UTILS OFF CACHE BOOL "" FORCE)
+set(ALSOFT_INSTALL OFF CACHE BOOL "" FORCE)
+
 FetchContent_Declare(openal
     GIT_REPOSITORY https://github.com/kcat/openal-soft.git
     GIT_TAG master

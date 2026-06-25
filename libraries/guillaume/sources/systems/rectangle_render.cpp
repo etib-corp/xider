@@ -304,8 +304,9 @@ namespace guillaume::systems
 		auto &cacheEntry = getOrCreateEntry(entityIdentifier);
 		cacheEntry.used	 = true;
 
-		const utility::graphic::PositionF center(
-			position[0], position[1] - (height / 2.0f), position[2]);
+		const utility::graphic::PositionF center(position[0] + width / 2.0f,
+												 position[1] + height / 2.0f,
+												 position[2]);
 		const auto roundedVertices = buildRoundedRectVertices(
 			center, orientation, utility::math::Vector2F({ 1.0f, 1.0f }),
 			utility::math::Vector2F({ (float)width, (float)height }), radius);
