@@ -49,16 +49,28 @@ namespace xider::scenes
 			getDirectorManager()
 				.getDirector<guillaume::entities::Button::Director>();
 
-		buttonDirector.makeIconTextButton(buttonBuilder, "settings", "Settings",
-										  [this]() {
-											  this->goToScene<Settings>();
-										  });
-		buttonDirector.makeIconTextButton(buttonBuilder, "list", "Exit", []() {
-			std::exit(0);
-		});
+		buttonDirector.makeButton(
+			buttonBuilder, "Simple Button",
+			[]() {
+			},
+			guillaume::entities::Button::Color::Filled,
+			guillaume::entities::Button::Shape::Round,
+			guillaume::entities::Button::Size::Medium, false);
+		buttonDirector.makeIconButton(
+			buttonBuilder, "Icon Button", "settings",
+			[]() {
+			},
+			guillaume::entities::Button::Color::Filled,
+			guillaume::entities::Button::Shape::Square,
+			guillaume::entities::Button::Size::Small, false);
 
-		buttonDirector.makeIconTextButton(buttonBuilder, "code", "Code", []() {
-		});
+		buttonDirector.makeIconButton(
+			buttonBuilder, "Code Button", "code",
+			[]() {
+			},
+			guillaume::entities::Button::Color::Filled,
+			guillaume::entities::Button::Shape::Round,
+			guillaume::entities::Button::Size::Large, false);
 	}
 
 	Main::~Main(void)
