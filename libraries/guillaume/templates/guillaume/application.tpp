@@ -129,6 +129,7 @@ namespace guillaume
 			_engine->addScene(sceneType.hash_code());
 		}
 		_sceneManager->setEngine(_engine.get());
+			_sceneManager->enterActiveScene();
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
@@ -140,6 +141,7 @@ namespace guillaume
 				(this->runPhase(phaseDefinition), ...);
 			},
 			_systemPhases);
+		_sceneManager->processSceneTransition();
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
@@ -186,14 +188,12 @@ namespace guillaume
 	int Application<DefaultSceneType, SceneTypes...>::run(void)
 	{
 		this->getLogger().info() << "Entering main loop";
-		_sceneManager->enterActiveScene();
 		while (!shouldQuit()) {
 			try {
 				_engine->pollEvents();
 				_engine->clear();
 				_engine->update();
 				routine();
-				_sceneManager->processSceneTransition();
 				_engine->present();
 			} catch (const std::exception &exception) {
 				this->getLogger().error()
