@@ -235,6 +235,7 @@ namespace guillaume::entities
 			 * the icon button.
 			 * @param labelContent The label content to attach to the button.
 			 * @param iconGlyphName The icon glyph name to attach.
+			 * @param iconStyle The style of the icon to attach.
 			 * @param onClick The click event handler for the icon button.
 			 * @param colorStyle The color style of the button.
 			 * @param shape The shape of the button.

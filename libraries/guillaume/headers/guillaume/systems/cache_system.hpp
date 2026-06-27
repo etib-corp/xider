@@ -58,9 +58,15 @@ namespace guillaume::systems
 		 * state.
 		 */
 		struct CacheEntry {
-			std::optional<ValueType> value;
-			size_t objectId { 0 };
-			bool used { false };
+			std::optional<ValueType>
+				value;	  ///< Optional cached value, which may be empty if not
+						  ///< yet computed
+			size_t objectId { 0 };	  ///< Unique identifier for the cached
+									  ///< object, used for engine management
+			bool used {
+				false
+			};	  ///< Flag indicating whether the cached entry was used in the
+				  ///< current frame or cycle
 		};
 
 		protected:

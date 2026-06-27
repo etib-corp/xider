@@ -99,7 +99,7 @@ namespace guillaume::entities
 			/**
 			 * @brief Set the font size of the icon to be used for the Icon
 			 * entity.
-			 * @param size The fontsize of the icon to set.
+			 * @param fontSize The font size to set.
 			 * @return Reference to the builder for chaining.
 			 */
 			Builder &withFontSize(float fontSize);
@@ -141,6 +141,12 @@ namespace guillaume::entities
 			 * @param builder The builder instance used to configure and create
 			 * the default icon.
 			 * @param iconName The icon name to assign to the created entity.
+			 * @param fontSize The font size of the icon to assign to the
+			 * created entity.
+			 * @param color The color of the icon to assign to the created
+			 * entity (RGBA).
+			 * @param style The style of the icon to assign to the created
+			 * entity.
 			 * @return The entity identifier of the newly created icon entity.
 			 * @see components::Glyph::getName
 			 */

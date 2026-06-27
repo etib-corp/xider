@@ -69,6 +69,7 @@ namespace utility::logging
 
 		/**
 		 * @brief Move constructor for Loggable.
+		 * @param other The Loggable instance to move from.
 		 */
 		Loggable(Loggable &&other) noexcept
 			: _name(std::move(other._name))
@@ -78,6 +79,8 @@ namespace utility::logging
 
 		/**
 		 * @brief Move assignment operator for Loggable.
+		 * @param other The Loggable instance to move from.
+		 * @return Reference to this Loggable instance.
 		 */
 		Loggable &operator=(Loggable &&other) noexcept
 		{
