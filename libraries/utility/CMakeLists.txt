@@ -76,7 +76,7 @@ set(ALSOFT_INSTALL OFF CACHE BOOL "" FORCE)
 
 FetchContent_Declare(openal
     GIT_REPOSITORY https://github.com/kcat/openal-soft.git
-    GIT_TAG master
+    GIT_TAG 1.25.2
     GIT_SHALLOW TRUE
     GIT_PROGRESS TRUE
 )
