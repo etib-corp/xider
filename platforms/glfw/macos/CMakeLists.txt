@@ -29,9 +29,10 @@ add_executable(${MACOS_DESKTOP_TARGET} ${MACOS_DESKTOP_SOURCES})
 # Link with xider library
 target_link_libraries(${MACOS_DESKTOP_TARGET} PRIVATE xider)
 
-if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+if (DEV_MODE)
     target_compile_definitions(
         ${MACOS_DESKTOP_TARGET}
         PRIVATE
-        $<$<CONFIG:Debug>:DEBUG>)
+        DEV
+    )
 endif()
