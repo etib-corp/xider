@@ -481,7 +481,7 @@ void evan::DesktopBackend::createLogicalDevice()
 
 	deviceFeatures.samplerAnisotropy = supportedFeatures.samplerAnisotropy;
 	deviceFeatures.sampleRateShading = supportedFeatures.sampleRateShading;
-	#ifdef DEBUG
+	#ifdef DEV
 		deviceFeatures.fillModeNonSolid = VK_TRUE;
 	#endif
 
