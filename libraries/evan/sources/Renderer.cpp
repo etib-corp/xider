@@ -605,9 +605,27 @@ void evan::Renderer::recordCommandBuffer(VkRenderPass renderPass,
 
 		this->getLogger().info() << "Binding vertex buffer for ->..";
 
+		auto vertexBuffer = mesh->getVertexBuffer();
+
+		if (vertexBuffer == VK_NULL_HANDLE) {
+			this->getLogger().warning()
+				<< "Vertex buffer is null for mesh with material ID: "
+				<< mesh->getMaterialID() << ". Skipping mesh.";
+			continue;
+		}
+
 		vkCmdBindVertexBuffers(commandBuffer, 0, 1, &vertexBuffer, offsets);
 
 		this->getLogger().info() << "Binding index buffer for mesh...";
+
+		auto indexBuffer = mesh->getIndexBuffer();
+
+		if (indexBuffer == VK_NULL_HANDLE) {
+			this->getLogger().warning()
+				<< "Index buffer is null for mesh with material ID: "
+				<< mesh->getMaterialID() << ". Skipping mesh.";
+			continue;
+		}
 
 		vkCmdBindIndexBuffer(commandBuffer, mesh->getIndexBuffer(), 0,
 							 VK_INDEX_TYPE_UINT32);
