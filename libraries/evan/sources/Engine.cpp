@@ -35,7 +35,7 @@ evan::Engine::Engine(
 
 	std::string shaderPrefix = "shaders/";
 
-	#ifdef DEBUG
+	#ifdef DEV
 		shaderPrefix = "shaders/debug/";
 		this->getLogger().info() << "Debug mode enabled. Using debug shader prefix: "
 								 << shaderPrefix;
