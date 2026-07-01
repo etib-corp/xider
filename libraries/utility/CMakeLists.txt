@@ -13,6 +13,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # 01. Policy & standard setup
 
+set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -Wno-error=function-effects") 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=function-effects") 
 
 # 02. Options & configuration
 
@@ -25,7 +27,7 @@ include(FetchContent)
 FetchContent_Declare(
     tinyobjloader
     GIT_REPOSITORY https://github.com/tinyobjloader/tinyobjloader.git
-    GIT_TAG 966edceaf8cdca7996c4e9a1c5ced2938de63366
+    GIT_TAG release
 )
 # tinyobjloader may call add_sanitizers() even when the helper module is unavailable.
 if(NOT COMMAND add_sanitizers)
@@ -56,7 +58,7 @@ set(FT_REQUIRE_HARFBUZZ OFF CACHE BOOL "Do not require HarfBuzz in FreeType" FOR
 FetchContent_Declare(
     freetype
     GIT_REPOSITORY https://gitlab.freedesktop.org/freetype/freetype.git
-    GIT_TAG VER-2-13-0
+    GIT_TAG VER-2-14-3
 )
 FetchContent_MakeAvailable(freetype)
 
@@ -76,7 +78,7 @@ set(ALSOFT_INSTALL OFF CACHE BOOL "" FORCE)
 
 FetchContent_Declare(openal
     GIT_REPOSITORY https://github.com/kcat/openal-soft.git
-    GIT_TAG 1.25.2
+    GIT_TAG master
     GIT_SHALLOW TRUE
     GIT_PROGRESS TRUE
 )
