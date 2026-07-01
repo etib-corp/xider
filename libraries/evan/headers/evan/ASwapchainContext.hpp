@@ -232,6 +232,23 @@ namespace evan
 		 */
 		virtual glm::mat4 getProjection(int index) const = 0;
 
+		/**
+		 * @brief Retrieves the current viewport size in pixels.
+		 *
+		 * This function returns the current size of the viewport in pixels,
+		 * represented as a utility::math::Vector2F object containing the width
+		 * and height. The viewport size is essential for configuring the
+		 * rendering pipeline and ensuring that rendered content is correctly
+		 * sized for presentation. Implement this function to provide access to
+		 * the current viewport size, which may be determined based on the
+		 * surface capabilities, window size, or other factors that affect the
+		 * rendering area.
+		 *
+		 * @return A utility::math::Vector2F object containing the width and
+		 * height of the viewport in pixels.
+		 */
+		utility::math::Vector2F getViewportSize() const;
+
 		protected:
 		/**
 		 * The Vulkan render pass associated with the swapchain context.

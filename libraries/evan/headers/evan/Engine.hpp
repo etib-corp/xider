@@ -362,6 +362,17 @@ namespace evan
 		void switchScene(size_t sceneIndex);
 
 		/**
+		 * @brief Retrieves the current viewport size in pixels. This method
+		 * returns a 2D vector representing the width and height of the viewport
+		 * in pixels, allowing users to obtain the current dimensions of the
+		 * rendering area.
+		 *
+		 * @return A utility::math::Vector2F object containing the width and
+		 * height of the viewport in pixels.
+		 */
+		utility::math::Vector2F getViewportSize() const;
+
+		/**
 		 * @brief Updates the scene with the specified index using new texture
 		 * paths and mesh data. This method allows users to update an existing
 		 * scene in the engine by providing new data, such as texture paths and
