@@ -16,6 +16,7 @@ option(BUILD_FOR_MACOS "Build for macOS" OFF)
 
 option(BUILD_DOCS "Build documentation" OFF)
 option(BUILD_TESTING "Build the tests" OFF)
+option(DEV_MODE "Enable development mode" OFF)
 
 # Change default output of bin
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/..)
@@ -116,4 +117,9 @@ endif()
 if(BUILD_ALL_DOCS OR BUILD_DOCS_ONLY)
     include(${CMAKE_SOURCE_DIR}/cmake/Docs.cmake)
     add_subdirectory(docs)
+endif()
+
+if (DEV_MODE)
+    message(STATUS "Development mode enabled.")
+    target_compile_definitions(${PROJECT_NAME} PRIVATE DEV)
 endif()
