@@ -235,6 +235,7 @@ void evan::Engine::addScene(size_t sceneIndex)
 
 void evan::Engine::update()
 {
+	this->getViewportSize();
 	updateDeltaTime();
 	this->getLogger().info() << "Updating engine state...";
 
@@ -304,6 +305,11 @@ void evan::Engine::switchScene(size_t sceneIndex)
 		this->getLogger().warning()
 			<< "Scene index " << sceneIndex << " does not exist.";
 	}
+}
+
+utility::math::Vector2F evan::Engine::getViewportSize() const
+{
+	return _swapchainContext->getViewportSize();
 }
 
 void evan::Engine::handleViewportInput(
