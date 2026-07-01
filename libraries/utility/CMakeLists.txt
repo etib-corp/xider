@@ -13,9 +13,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # 01. Policy & standard setup
 
-set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -Wno-error=function-effects") 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=function-effects") 
-
 # 02. Options & configuration
 
 
