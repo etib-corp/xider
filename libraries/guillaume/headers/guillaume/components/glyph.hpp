@@ -43,10 +43,10 @@ namespace guillaume::components
 		enum class Style { Outlined, Rounded, Sharp };
 
 		private:
-		uint32_t _code { 0 };		  ///< Glyph code (e.g., Unicode code point)
-		std::string _name {};		  ///< Glyph name (for font lookup)
-		float _fontSize { 24.0f };	  ///< Font size of the glyph
-		Style _style { Style::Outlined };	 ///< Style of the glyph
+		uint32_t _code {};		 ///< Glyph code (e.g., Unicode code point)
+		std::string _name {};	 ///< Glyph name (for font lookup)
+		float _fontSize {};		 ///< Font size of the glyph
+		Style _style {};		 ///< Style of the glyph
 
 		public:
 		/**

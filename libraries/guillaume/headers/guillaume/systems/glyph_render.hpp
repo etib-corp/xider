@@ -25,9 +25,11 @@
 #include <map>
 #include <optional>
 
-#include "guillaume/systems/cache_system.hpp"
 #include <utility/ressource_provider.hpp>
+
 #include <utility/graphic/text/text.hpp>
+
+#include <utility/cache.hpp>
 
 #include "guillaume/ecs/system_filler.hpp"
 
@@ -40,25 +42,77 @@
 
 namespace guillaume::systems
 {
+	/**
+	 * @brief Key structure for caching glyph rendering results.
+	 *
+	 * This structure is used as a key in the cache system to uniquely identify
+	 * cached glyph rendering results based on the pose, glyph name, and color.
+	 */
+	struct GlyphRenderCacheKey {
+		utility::graphic::PoseF pose;
+		std::string glyphName;
+		float fontSize;
+		components::Glyph::Style glyphStyle;
+		utility::graphic::Color32Bit color;
+
+		bool operator==(const GlyphRenderCacheKey &other) const
+		{
+			if (pose != other.pose) {
+				return false;
+			}
+			if (glyphName != other.glyphName) {
+				return false;
+			}
+			if (fontSize != other.fontSize) {
+				return false;
+			}
+			if (glyphStyle != other.glyphStyle) {
+				return false;
+			}
+			if (color != other.color) {
+				return false;
+			}
+			return true;
+		}
+
+		bool operator!=(const GlyphRenderCacheKey &other) const
+		{
+			return !(*this == other);
+		}
+
+		bool operator<(const GlyphRenderCacheKey &other) const
+		{
+			if (pose != other.pose) {
+				return pose < other.pose;
+			}
+			if (glyphName != other.glyphName) {
+				return glyphName < other.glyphName;
+			}
+			if (fontSize != other.fontSize) {
+				return fontSize < other.fontSize;
+			}
+			if (glyphStyle != other.glyphStyle) {
+				return glyphStyle < other.glyphStyle;
+			}
+			if (color != other.color) {
+				return color < other.color;
+			}
+			return false;
+		}
+	};
 
 	/**
 	 * @brief System handling glyph rendering from ECS components.
-	 * @see components::Glyph
 	 * @see components::Transform
+	 * @see components::Glyph
+	 * @see components::Color
+	 * @see components::Bound
 	 */
 	class GlyphRender:
-		public CacheSystem<ecs::Entity::Identifier, utility::graphic::Text>,
+		protected utility::Cache<GlyphRenderCacheKey, size_t>,
 		public ecs::SystemFiller<components::Transform, components::Bound,
 								 components::Glyph, components::Color>
 	{
-		private:
-		struct ExtraCacheData {
-			utility::graphic::PoseF pose;
-			std::string cachedGlyphName;
-			float cachedFontSize { 0.0f };
-			utility::graphic::Color32Bit cachedColor;
-		};
-
 		private:
 		std::shared_ptr<utility::RessourceProvider>
 			_ressourceProvider;	   //< Shared resource provider for loading
@@ -67,10 +121,6 @@ namespace guillaume::systems
 		std::string _defaultFontPath;	 ///< Default font for glyph rendering
 		std::string _glyphCodePath;		 ///< Path to glyph code mapping file
 		std::shared_ptr<utility::graphic::CodePoints> _codePoints;
-		std::map<ecs::Entity::Identifier, ExtraCacheData> _extraCache;
-		bool _glyphCodesLoaded {
-			false
-		};	  ///< Whether glyph codes have been loaded
 
 		public:
 		/**
@@ -89,15 +139,27 @@ namespace guillaume::systems
 		~GlyphRender(void);
 
 		/**
+		 * @brief Prepare the GlyphRender system for rendering.
+		 *
+		 * This function is called before call update on all entities and can be
+		 * used to set up any necessary state or resources.
+		 */
+		void prepare(void) override;
+
+		/**
+		 * @brief Clean up the GlyphRender system after rendering.
+		 *
+		 * This function is called after call update on all entities and can be
+		 * used to release any resources or reset state.
+		 */
+		void cleanup(void) override;
+
+		/**
 		 * @brief Update the GlyphRender system for one entity.
 		 * @param entityIdentifier The target entity identifier.
 		 */
 		virtual void
 			update(const ecs::Entity::Identifier &entityIdentifier) override;
-
-		void prepare(void) override;
-
-		void cleanup(void) override;
 	};
 
 }	 // namespace guillaume::systems

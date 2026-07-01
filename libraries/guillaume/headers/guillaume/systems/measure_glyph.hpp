@@ -24,7 +24,8 @@
 
 #include <string>
 
-#include "guillaume/systems/cache_system.hpp"
+#include <utility/cache.hpp>
+
 #include "guillaume/ecs/system_filler.hpp"
 
 #include "guillaume/components/bound.hpp"
@@ -36,6 +37,51 @@
 
 namespace guillaume::systems
 {
+	struct MeasureGlyphCacheKey {
+		std::string glyphName;
+		float fontSize;
+		components::Glyph::Style glyphStyle;
+		utility::graphic::Color32Bit color;
+
+		bool operator==(const MeasureGlyphCacheKey &other) const
+		{
+			if (glyphName != other.glyphName) {
+				return false;
+			}
+			if (fontSize != other.fontSize) {
+				return false;
+			}
+			if (glyphStyle != other.glyphStyle) {
+				return false;
+			}
+			if (color != other.color) {
+				return false;
+			}
+			return true;
+		}
+
+		bool operator!=(const MeasureGlyphCacheKey &other) const
+		{
+			return !(*this == other);
+		}
+
+		bool operator<(const MeasureGlyphCacheKey &other) const
+		{
+			if (glyphName != other.glyphName) {
+				return glyphName < other.glyphName;
+			}
+			if (fontSize != other.fontSize) {
+				return fontSize < other.fontSize;
+			}
+			if (glyphStyle != other.glyphStyle) {
+				return glyphStyle < other.glyphStyle;
+			}
+			if (color != other.color) {
+				return color < other.color;
+			}
+			return false;
+		}
+	};
 
 	/**
 	 * @brief System measuring glyphs and synchronizing them to bound sizes.
@@ -44,7 +90,7 @@ namespace guillaume::systems
 	 * @see components::Transform
 	 */
 	class MeasureGlyph:
-		public CacheSystem<ecs::Entity::Identifier, utility::math::Vector2F>,
+		public utility::Cache<MeasureGlyphCacheKey, utility::graphic::SizeF>,
 		public ecs::SystemFiller<components::Glyph, components::Bound,
 								 components::Transform, components::Color>
 	{
@@ -72,6 +118,22 @@ namespace guillaume::systems
 		 * @brief Default destructor.
 		 */
 		~MeasureGlyph(void);
+
+		/**
+		 * @brief Prepare the MeasureGlyph system before measurement.
+		 *
+		 * This function is called before call update on all entities and can be
+		 * used to set up any necessary state or resources.
+		 */
+		void prepare(void) override;
+
+		/**
+		 * @brief Clean up the MeasureGlyph system after measurement.
+		 *
+		 * This function is called after call update on all entities and can be
+		 * used to release any resources or reset state.
+		 */
+		void cleanup(void) override;
 
 		/**
 		 * @brief Update the MeasureGlyph system for one entity.

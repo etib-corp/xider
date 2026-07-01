@@ -25,7 +25,8 @@
 #include <map>
 #include <optional>
 
-#include "guillaume/systems/cache_system.hpp"
+#include <utility/cache.hpp>
+
 #include "guillaume/ecs/system_filler.hpp"
 
 #include "guillaume/components/text.hpp"
@@ -36,6 +37,51 @@
 
 namespace guillaume::systems
 {
+	struct TextRenderCacheKey {
+		utility::graphic::PoseF pose;
+		std::string content;
+		float fontSize;
+		utility::graphic::Color32Bit color;
+
+		bool operator==(const TextRenderCacheKey &other) const
+		{
+			if (pose != other.pose) {
+				return false;
+			}
+			if (content != other.content) {
+				return false;
+			}
+			if (fontSize != other.fontSize) {
+				return false;
+			}
+			if (color != other.color) {
+				return false;
+			}
+			return true;
+		}
+
+		bool operator!=(const TextRenderCacheKey &other) const
+		{
+			return !(*this == other);
+		}
+
+		bool operator<(const TextRenderCacheKey &other) const
+		{
+			if (pose != other.pose) {
+				return pose < other.pose;
+			}
+			if (content != other.content) {
+				return content < other.content;
+			}
+			if (fontSize != other.fontSize) {
+				return fontSize < other.fontSize;
+			}
+			if (color != other.color) {
+				return color < other.color;
+			}
+			return false;
+		}
+	};
 
 	/**
 	 * @brief System handling text rendering from ECS components.
@@ -43,25 +89,16 @@ namespace guillaume::systems
 	 * @see components::Transform
 	 */
 	class TextRender:
-		public CacheSystem<ecs::Entity::Identifier, utility::graphic::Text>,
+		public utility::Cache<TextRenderCacheKey, size_t>,
 		public ecs::SystemFiller<components::Transform, components::Text,
 								 components::Color>
 	{
-		private:
-		struct ExtraCacheData {
-			utility::graphic::PoseF pose;
-			std::string cachedContent;
-			uint32_t cachedFontSize { 0 };
-			utility::graphic::Color32Bit cachedColor;
-		};
-
 		private:
 		std::shared_ptr<utility::RessourceProvider>
 			_ressourceProvider;	   ///< Shared resource provider for loading
 								   ///< fonts and glyphs
 		std::unique_ptr<Engine> &_engine;	 ///< Engine instance
 		std::string _defaultFontPath;	 ///< Default font for text rendering
-		std::map<ecs::Entity::Identifier, ExtraCacheData> _extraCache;
 
 		public:
 		/**
@@ -80,13 +117,27 @@ namespace guillaume::systems
 		~TextRender(void);
 
 		/**
+		 * @brief Prepare the TextRender system before rendering.
+		 *
+		 * This function is called before call update on all entities and can be
+		 * used to set up any necessary state or resources.
+		 */
+		void prepare(void) override;
+
+		/**
+		 * @brief Clean up the TextRender system after rendering.
+		 *
+		 * This function is called after call update on all entities and can be
+		 * used to release any resources or reset state.
+		 */
+		void cleanup(void) override;
+
+		/**
 		 * @brief Update the TextRender system for one entity.
 		 * @param entityIdentifier The target entity identifier.
 		 */
 		virtual void
 			update(const ecs::Entity::Identifier &entityIdentifier) override;
-		void prepare(void) override;
-		void cleanup(void) override;
 	};
 
 }	 // namespace guillaume::systems

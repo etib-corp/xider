@@ -43,18 +43,14 @@ namespace guillaume::components
 		return *this;
 	}
 
-	std::size_t Text::getFontSize(void) const
+	float Text::getFontSize(void) const
 	{
 		return _fontSize;
 	}
 
-	Text &Text::setFontSize(std::size_t fontSize)
+	Text &Text::setFontSize(float fontSize)
 	{
-		const std::size_t resolvedFontSize = (fontSize == 0) ? 24 : fontSize;
-		if (_fontSize == resolvedFontSize) {
-			return *this;
-		}
-		_fontSize = resolvedFontSize;
+		_fontSize = fontSize;
 		setHasChanged(true);
 		return *this;
 	}

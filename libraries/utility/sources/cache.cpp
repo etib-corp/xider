@@ -20,31 +20,8 @@
  SOFTWARE.
  */
 
-#include "utility/graphic/color.hpp"
+#include "utility/cache.hpp"
 
-namespace utility::graphic
+namespace utility
 {
-	std::ostream &operator<<(std::ostream &stream, const Color32Bit &color)
-	{
-		stream << "Color32Bit(" << static_cast<int>(color.getRed()) << ", "
-			   << static_cast<int>(color.getGreen()) << ", "
-			   << static_cast<int>(color.getBlue()) << ", "
-			   << static_cast<int>(color.getAlpha()) << ")";
-		return stream;
-	}
-
-	std::ostream &operator<<(std::ostream &stream, const ColorFloat &color)
-	{
-		stream << "ColorFloat(" << color.getRed() << ", " << color.getGreen()
-			   << ", " << color.getBlue() << ", " << color.getAlpha() << ")";
-		return stream;
-	}
-
-	std::ostream &operator<<(std::ostream &stream, const ColorDouble &color)
-	{
-		stream << "ColorDouble(" << color.getRed() << ", " << color.getGreen()
-			   << ", " << color.getBlue() << ", " << color.getAlpha() << ")";
-		return stream;
-	}
-
-}	 // namespace utility::graphic
+}	 // namespace utility

@@ -45,6 +45,14 @@ namespace guillaume::systems
 	{
 	}
 
+	void MeasureGlyph::prepare(void)
+	{
+	}
+
+	void MeasureGlyph::cleanup(void)
+	{
+	}
+
 	void MeasureGlyph::update(const ecs::Entity::Identifier &entityIdentifier)
 	{
 		getLogger().debug()
@@ -65,33 +73,48 @@ namespace guillaume::systems
 		auto &colorComponent =
 			getComponent<components::Color>(entityIdentifier);
 
-		const auto name		= glyphComponent.getName();
-		const auto fontSize = glyphComponent.getFontSize();
+		MeasureGlyphCacheKey cacheKey { glyphComponent.getName(),
+										glyphComponent.getFontSize(),
+										glyphComponent.getStyle(),
+										colorComponent.getColor() };
 
-		if (name.empty()) {
+		if (cacheKey.glyphName.empty()) {
 			return;
 		}
 
-		// We cannot use isValid() here because the criteria (name/size)
-		// is not the same type as the value (width/height).
-		auto entry = getEntry(entityIdentifier);
-		if (entry && entry->value.has_value()) {
-			boundComponent.setWidth(entry->value->x).setHeight(entry->value->y);
+		getLogger().debug() << "Measuring glyph '" << cacheKey.glyphName
+							<< "' for entity " << entityIdentifier;
+		getLogger().debug() << "Glyph code found for '" << cacheKey.glyphName
+							<< "': " << glyphComponent.getCode();
+
+		if (contains(cacheKey)) {
+			getLogger().debug() << "Glyph '" << cacheKey.glyphName
+								<< "' already measured, skipping.";
+			auto &cacheValue = getOrCreateEntry(cacheKey);
+			if (cacheValue.value.has_value()) {
+				getComponent<components::Bound>(entityIdentifier)
+					.setWidth(cacheValue.value->getWidth())
+					.setHeight(cacheValue.value->getHeight());
+				cacheValue.used = true;
+			}
 			return;
 		}
 
 		utility::graphic::Text text(
 			_ressourceProvider, transformComponent.getPose(),
-			colorComponent.getColor(), name, fontSize, _defaultFontPath);
+			colorComponent.getColor(), cacheKey.glyphName, cacheKey.fontSize,
+			_defaultFontPath);
 		text.setColor(utility::graphic::Color32Bit());
 
 		auto textSize = _engine->measureText(text);
 
-		boundComponent.setWidth(textSize.getWidth())
+		getComponent<components::Bound>(entityIdentifier)
+			.setWidth(textSize.getWidth())
 			.setHeight(textSize.getHeight());
 
-		getOrCreateEntry(entityIdentifier).value = utility::math::Vector2F(
-			{ (float)textSize.getWidth(), (float)textSize.getHeight() });
+		auto &cacheValue = getOrCreateEntry(cacheKey);
+		cacheValue.value = textSize;
+		cacheValue.used	 = true;
 	}
 
 }	 // namespace guillaume::systems

@@ -25,8 +25,9 @@
 #include <map>
 #include <optional>
 
+#include <utility/cache.hpp>
+
 #include "guillaume/ecs/system_filler.hpp"
-#include "guillaume/systems/cache_system.hpp"
 
 #include "guillaume/components/borders.hpp"
 #include "guillaume/components/bound.hpp"
@@ -37,6 +38,51 @@
 
 namespace guillaume::systems
 {
+	struct RectangleRenderCacheKey {
+		utility::graphic::PoseF pose;
+		utility::graphic::SizeF size;
+		components::Borders borders;
+		utility::graphic::Color32Bit color;
+
+		bool operator==(const RectangleRenderCacheKey &other) const
+		{
+			if (pose != other.pose) {
+				return false;
+			}
+			if (size != other.size) {
+				return false;
+			}
+			if (borders != other.borders) {
+				return false;
+			}
+			if (color != other.color) {
+				return false;
+			}
+			return true;
+		}
+
+		bool operator!=(const RectangleRenderCacheKey &other) const
+		{
+			return !(*this == other);
+		}
+
+		bool operator<(const RectangleRenderCacheKey &other) const
+		{
+			if (pose != other.pose) {
+				return pose < other.pose;
+			}
+			if (size != other.size) {
+				return size < other.size;
+			}
+			if (borders != other.borders) {
+				return borders < other.borders;
+			}
+			if (color != other.color) {
+				return color < other.color;
+			}
+			return false;
+		}
+	};
 
 	/**
 	 * @brief System handling rectangle rendering from ECS components.
@@ -46,7 +92,7 @@ namespace guillaume::systems
 	 * @see components::Borders
 	 */
 	class RectangleRender:
-		public CacheSystem<ecs::Entity::Identifier, utility::graphic::Mesh>,
+		public utility::Cache<RectangleRenderCacheKey, size_t>,
 		public ecs::SystemFiller<components::Transform, components::Bound,
 								 components::Color, components::Borders>
 	{
@@ -138,7 +184,7 @@ namespace guillaume::systems
 			const utility::graphic::PositionF &center,
 			const utility::graphic::OrientationF &orientation,
 			const utility::math::Vector2F &scale,
-			const utility::math::Vector2F &size, float radius,
+			const utility::graphic::SizeF &size, float radius,
 			int arcSegments = 16, float epsilon = 0.001f);
 
 		/**
@@ -177,13 +223,28 @@ namespace guillaume::systems
 		~RectangleRender(void);
 
 		/**
+		 * @brief Prepare the RectangleRender system before rendering.
+		 *
+		 * This function is called before call update on all entities and can be
+		 * used to set up any necessary state or resources.
+		 */
+		void prepare(void) override;
+
+		/**
+		 * @brief Clean up the RectangleRender system after rendering.
+		 *
+		 * This function is called after call update on all entities and can be
+		 * used to release any resources or reset state.
+		 */
+		void cleanup(void) override;
+
+		/**
 		 * @brief Update the RectangleRender system for one entity.
 		 * @param entityIdentifier The target entity identifier.
 		 */
 		virtual void
 			update(const ecs::Entity::Identifier &entityIdentifier) override;
-		void prepare(void) override;
-		void cleanup(void) override;
+
 	};
 
 }	 // namespace guillaume::systems

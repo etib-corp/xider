@@ -281,6 +281,39 @@ namespace utility::graphic
 							(this->y + other.y) / PositionComponentType { 2 },
 							(this->z + other.z) / PositionComponentType { 2 });
 		}
+
+		bool operator==(const Position &other) const noexcept
+		{
+			if (this->x != other.x) {
+				return false;
+			}
+			if (this->y != other.y) {
+				return false;
+			}
+			if (this->z != other.z) {
+				return false;
+			}
+			return true;
+		}
+
+		bool operator!=(const Position &other) const noexcept
+		{
+			return !(*this == other);
+		}
+
+		bool operator<(const Position &other) const noexcept
+		{
+			if (this->x != other.x) {
+				return this->x < other.x;
+			}
+			if (this->y != other.y) {
+				return this->y < other.y;
+			}
+			if (this->z != other.z) {
+				return this->z < other.z;
+			}
+			return false;
+		}
 	};
 
 	/**

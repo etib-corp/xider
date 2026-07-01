@@ -225,6 +225,17 @@ namespace utility::graphic
 		{
 			return !(*this == other);
 		}
+
+		bool operator<(const Pose &other) const noexcept
+		{
+			if (_position != other._position) {
+				return _position < other._position;
+			}
+			if (_orientation != other._orientation) {
+				return _orientation < other._orientation;
+			}
+			return false;
+		}
 	};
 
 	/**

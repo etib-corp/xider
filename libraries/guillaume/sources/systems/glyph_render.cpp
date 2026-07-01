@@ -26,39 +26,6 @@
 
 namespace guillaume::systems
 {
-	void GlyphRender::prepare(void)
-	{
-		for (auto &[_, entry]: _cache) {
-			entry.used = false;
-		}
-
-		if (!_glyphCodesLoaded) {
-			_codePoints = _ressourceProvider->loadCodePoints(_glyphCodePath);
-			if (_codePoints) {
-				getLogger().info()
-					<< "Loaded code points from " + _glyphCodePath;
-			} else {
-				getLogger().error()
-					<< "Failed to load glyph code asset: " << _glyphCodePath;
-			}
-			_glyphCodesLoaded = true;
-		}
-	}
-
-	void GlyphRender::cleanup(void)
-	{
-		for (auto it = _cache.begin(); it != _cache.end();) {
-			if (it->second.used) {
-				++it;
-				continue;
-			}
-			if (it->second.objectId != 0) {
-				_engine->removeObject(it->second.objectId);
-			}
-			it = _cache.erase(it);
-		}
-	}
-
 	GlyphRender::GlyphRender(
 		std::shared_ptr<utility::RessourceProvider> ressourceProvider,
 		std::unique_ptr<Engine> &engine)
@@ -74,14 +41,35 @@ namespace guillaume::systems
 			  "fonts/Material_Symbols_Outlined/"
 			  "MaterialSymbolsOutlined[FILL,GRAD,opsz,wght].codepoints")
 	{
+		_codePoints = _ressourceProvider->loadCodePoints(_glyphCodePath);
+		if (_codePoints) {
+			getLogger().info() << "Loaded code points from " + _glyphCodePath;
+		} else {
+			getLogger().error()
+				<< "Failed to load glyph code asset: " << _glyphCodePath;
+		}
 	}
 
 	GlyphRender::~GlyphRender(void)
 	{
-		for (auto &[_, entry]: _cache) {
-			if (entry.objectId != 0) {
-				_engine->removeObject(entry.objectId);
+		clear();
+	}
+
+	void GlyphRender::prepare(void)
+	{
+		resetUsage();
+	}
+
+	void GlyphRender::cleanup(void)
+	{
+		auto unusedKeys = getUnusedKeys();
+		for (const auto &key: unusedKeys) {
+			if (auto *entry = findEntry(key)) {
+				if (entry->value.has_value()) {
+					_engine->removeObject(entry->value.value());
+				}
 			}
+			erase(key);
 		}
 	}
 
@@ -105,69 +93,42 @@ namespace guillaume::systems
 		const auto &colorComponent =
 			getComponent<components::Color>(entityIdentifier);
 
-		const std::string glyphName = glyphComponent.getName();
+		GlyphRenderCacheKey cacheKey { transformComponent.getPose(),
+									   glyphComponent.getName(),
+									   glyphComponent.getFontSize(),
+									   glyphComponent.getStyle(),
+									   colorComponent.getColor() };
 
-		if (glyphName.empty()) {
-			getLogger().debug() << "GlyphRender: Empty glyph name for entity "
-								<< entityIdentifier << ". Skipping rendering.";
+		if (cacheKey.glyphName.empty()) {
 			return;
 		}
 
-		getLogger().debug() << "Rendering glyph '" << glyphName
+		getLogger().debug() << "Rendering glyph '" << cacheKey.glyphName
 							<< "' for entity " << entityIdentifier;
-		getLogger().debug() << "Glyph code found for '" << glyphName
+		getLogger().debug() << "Glyph code found for '" << cacheKey.glyphName
 							<< "': " << glyphComponent.getCode();
 
-		uint32_t glyphCode = 0;
-		if (_codePoints) {
-			glyphCode = _codePoints->getCode(glyphName);
+		if (contains(cacheKey)) {
+			markAsUsed(cacheKey);
+			getLogger().debug() << "Cache hit for entity " << entityIdentifier;
+			return;
 		}
+
+		uint32_t glyphCode = _codePoints->getCode(cacheKey.glyphName);
+
 		if (glyphCode == 0) {
 			glyphCode = '?';
 		}
 
-		auto &cacheEntry = getOrCreateEntry(entityIdentifier);
-		cacheEntry.used	 = true;
-
-		const auto &currentPose		= transformComponent.getPose();
-		const auto &currentColor	= colorComponent.getColor();
-		const auto &currentFontSize = glyphComponent.getFontSize();
-
-		auto &extra = _extraCache[entityIdentifier];
-
-		// If properties match cached values, skip Text object creation
-		if (cacheEntry.objectId != 0 && extra.cachedGlyphName == glyphName
-			&& extra.cachedFontSize == currentFontSize
-			&& extra.cachedColor == currentColor && extra.pose == currentPose) {
-			getLogger().debug()
-				<< "GlyphRender: Skipping entity " << entityIdentifier
-				<< " - properties unchanged";
-			return;
-		}
-
-		getLogger().info()
-			<< "GlyphRender: Creating new Text object for entity "
-			<< entityIdentifier << " (glyph: '" << glyphName
-			<< "', font size: " << currentFontSize << ")";
-
 		utility::graphic::Text glyphText(
-			_ressourceProvider, currentPose, currentColor,
-			utility::graphic::CodePoints::toUtf8(glyphCode), currentFontSize,
+			_ressourceProvider, cacheKey.pose, cacheKey.color,
+			utility::graphic::CodePoints::toUtf8(glyphCode), cacheKey.fontSize,
 			_defaultFontPath);
 
-		if (cacheEntry.objectId != 0) {
-			_engine->removeObject(cacheEntry.objectId);
-		}
-
-		cacheEntry.objectId = _engine->addText(std::move(glyphText));
-
-		cacheEntry.value = std::move(glyphText);
-
-		// Update cached properties
-		extra.cachedGlyphName = glyphName;
-		extra.cachedFontSize  = currentFontSize;
-		extra.cachedColor	  = currentColor;
-		extra.pose			  = currentPose;
+		auto identifier	 = _engine->addText(std::move(glyphText));
+		auto &cacheValue = getOrCreateEntry(cacheKey);
+		cacheValue.value = identifier;
+		cacheValue.used	 = true;
 	}
 
 }	 // namespace guillaume::systems

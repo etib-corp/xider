@@ -41,7 +41,7 @@ namespace guillaume::components
 	{
 		private:
 		std::string _content {};		 ///< Text content
-		std::size_t _fontSize { 24 };	 ///< Font size of the text
+		float _fontSize { 24 };	 ///< Font size of the text
 		std::size_t _cursorPosition {
 			0
 		};	  ///< Cursor position for text editing
@@ -74,14 +74,14 @@ namespace guillaume::components
 		 * @brief Get the font size of the text.
 		 * @return The font size.
 		 */
-		std::size_t getFontSize(void) const;
+		float getFontSize(void) const;
 
 		/**
 		 * @brief Set the font size of the text.
 		 * @param fontSize The new font size.
 		 * @return The Text component for chaining.
 		 */
-		Text &setFontSize(std::size_t fontSize);
+		Text &setFontSize(float fontSize);
 
 		/**
 		 * @brief Get the cursor position.

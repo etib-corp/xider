@@ -669,14 +669,6 @@ namespace guillaume::entities
 		auto buttonWidth = getWidthPadding(_size) * 2.0f + iconBound.getWidth()
 			+ getSpaceBetweenIconAndLabel(_size) + labelBound.getWidth();
 
-		getLogger().error() << "Entity ID: " << getIdentifier()
-							<< ", width padding: " << getWidthPadding(_size)
-							<< ", icon width: " << iconBound.getWidth()
-							<< ", space between icon and label: "
-							<< getSpaceBetweenIconAndLabel(_size)
-							<< ", label width: " << labelBound.getWidth()
-							<< ", total button width: " << buttonWidth;
-
 		auto buttonHeight = 0.0f;
 
 		buttonHeight = iconBound.getHeight() > buttonHeight
@@ -688,19 +680,10 @@ namespace guillaume::entities
 
 		buttonHeight += getHeightPadding(_size) * 2.0f;
 
-		getLogger().error() << "Entity ID: " << getIdentifier()
-							<< ", height padding: " << getHeightPadding(_size)
-							<< ", icon height: " << iconBound.getHeight()
-							<< ", label height: " << labelBound.getHeight()
-							<< ", total button height: " << buttonHeight;
-
 		getComponentRegistry()
 			.getComponent<components::Bound>(getIdentifier())
 			.setWidth(buttonWidth)
 			.setHeight(buttonHeight);
-
-		getLogger().error()
-			<< "Button width: " << buttonWidth << ", height: " << buttonHeight;
 
 		return *this;
 	}
@@ -728,5 +711,11 @@ namespace guillaume::entities
 		setSize(_size);
 		setMorph(_isMorph);
 		setOnClick(_onClick);
+
+		auto &bound = getComponentRegistry().getComponent<components::Bound>(
+			getIdentifier());
+		getLogger().error()
+			<< "Button entity " << getIdentifier()
+			<< " updated with bound: " << bound;
 	}
 }	 // namespace guillaume::entities

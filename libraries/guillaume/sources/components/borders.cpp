@@ -99,4 +99,52 @@ namespace guillaume::components
 			.setBottomRightRadius(radius)
 			.setBottomLeftRadius(radius);
 	}
+
+	bool Borders::operator==(const Borders &other) const
+	{
+		if (_topLeftRadius != other._topLeftRadius) {
+			return false;
+		}
+		if (_topRightRadius != other._topRightRadius) {
+			return false;
+		}
+		if (_bottomRightRadius != other._bottomRightRadius) {
+			return false;
+		}
+		if (_bottomLeftRadius != other._bottomLeftRadius) {
+			return false;
+		}
+		return true;
+	}
+
+	bool Borders::operator!=(const Borders &other) const
+	{
+		return !(*this == other);
+	}
+
+	bool Borders::operator<(const Borders &other) const
+	{
+		if (_topLeftRadius != other._topLeftRadius) {
+			return _topLeftRadius < other._topLeftRadius;
+		}
+		if (_topRightRadius != other._topRightRadius) {
+			return _topRightRadius < other._topRightRadius;
+		}
+		if (_bottomRightRadius != other._bottomRightRadius) {
+			return _bottomRightRadius < other._bottomRightRadius;
+		}
+		if (_bottomLeftRadius != other._bottomLeftRadius) {
+			return _bottomLeftRadius < other._bottomLeftRadius;
+		}
+		return false;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const Borders &borders)
+	{
+		stream << "Borders(" << borders.getTopLeftRadius() << ", "
+			   << borders.getTopRightRadius() << ", "
+			   << borders.getBottomRightRadius() << ", "
+			   << borders.getBottomLeftRadius() << ")";
+		return stream;
+	}
 }	 // namespace guillaume::components

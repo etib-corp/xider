@@ -24,7 +24,8 @@
 
 #include <string>
 
-#include "guillaume/systems/cache_system.hpp"
+#include <utility/cache.hpp>
+
 #include "guillaume/ecs/system_filler.hpp"
 
 #include "guillaume/components/bound.hpp"
@@ -36,6 +37,44 @@
 
 namespace guillaume::systems
 {
+	struct MeasureTextCacheKey {
+		std::string content;
+		float fontSize;
+		utility::graphic::Color32Bit color;
+
+		bool operator==(const MeasureTextCacheKey &other) const
+		{
+			if (content != other.content) {
+				return false;
+			}
+			if (fontSize != other.fontSize) {
+				return false;
+			}
+			if (color != other.color) {
+				return false;
+			}
+			return true;
+		}
+
+		bool operator!=(const MeasureTextCacheKey &other) const
+		{
+			return !(*this == other);
+		}
+
+		bool operator<(const MeasureTextCacheKey &other) const
+		{
+			if (content != other.content) {
+				return content < other.content;
+			}
+			if (fontSize != other.fontSize) {
+				return fontSize < other.fontSize;
+			}
+			if (color != other.color) {
+				return color < other.color;
+			}
+			return false;
+		}
+	};
 
 	/**
 	 * @brief System measuring text and synchronizing it to bound sizes.
@@ -44,7 +83,7 @@ namespace guillaume::systems
 	 * @see components::Transform
 	 */
 	class MeasureText:
-		public CacheSystem<ecs::Entity::Identifier, utility::math::Vector2F>,
+		public utility::Cache<MeasureTextCacheKey, utility::graphic::SizeF>,
 		public ecs::SystemFiller<components::Text, components::Bound,
 								 components::Transform, components::Color>
 	{
@@ -72,6 +111,22 @@ namespace guillaume::systems
 		 * @brief Default destructor.
 		 */
 		~MeasureText(void);
+
+		/**
+		 * @brief Prepare the MeasureText system before measurement.
+		 *
+		 * This function is called before call update on all entities and can be
+		 * used to set up any necessary state or resources.
+		 */
+		void prepare(void) override;
+
+		/**
+		 * @brief Clean up the MeasureText system after measurement.
+		 *
+		 * This function is called after call update on all entities and can be
+		 * used to release any resources or reset state.
+		 */
+		void cleanup(void) override;
 
 		/**
 		 * @brief Update the MeasureText system for one entity.
