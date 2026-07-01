@@ -67,11 +67,25 @@ FetchContent_Declare(stb
 )
 FetchContent_MakeAvailable(stb)
 
+FetchContent_Declare(
+    fmt
+    GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+    GIT_TAG 12.2.0
+)
+set(FMT_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(FMT_INSTALL OFF CACHE BOOL "" FORCE)
+set(FMT_OS_X_VERSION 10.15 CACHE STRING "" FORCE)
+FetchContent_MakeAvailable(fmt)
+
 # Disable building examples, tests, and utilities for OpenAL Soft
 set(ALSOFT_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(ALSOFT_TESTS OFF CACHE BOOL "" FORCE)
 set(ALSOFT_UTILS OFF CACHE BOOL "" FORCE)
 set(ALSOFT_INSTALL OFF CACHE BOOL "" FORCE)
+
+# Force OpenAL to NOT use its bundled fmt and instead use the project-wide fmt
+set(ALSOFT_USE_BUNDLED_FMT OFF CACHE BOOL "" FORCE)
+set(ALSOFT_CONFIG_FMT "fmt" CACHE STRING "" FORCE)
 
 FetchContent_Declare(openal
     GIT_REPOSITORY https://github.com/kcat/openal-soft.git
@@ -119,6 +133,7 @@ target_link_libraries(${PROJECT_NAME}
         tinyobjloader
         glm
         freetype
+        fmt::fmt
         OpenAL::OpenAL
 )
 
