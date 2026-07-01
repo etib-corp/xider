@@ -243,3 +243,20 @@ VkFormat evan::ASwapchainContext::findSupportedFormat(
 		   "and feature criteria.";
 	return VK_FORMAT_UNDEFINED;
 }
+
+utility::math::Vector2F evan::ASwapchainContext::getViewportSize() const
+{
+	utility::math::Vector2F viewportSize{0.0f, 0.0f};
+	if (_swapchainImages.empty()) {
+		this->getLogger().warning()
+			<< "No swapchain images available. Returning zero viewport size.";
+		return viewportSize;
+	}
+	VkExtent2D extent = _swapchainImages[0]->getExtent();
+	viewportSize.x = static_cast<float>(extent.width);
+	viewportSize.y = static_cast<float>(extent.height);
+	getLogger().info()
+		<< "Retrieved viewport size from swapchain image: Width = "
+		<< viewportSize.x << ", Height = " << viewportSize.y;
+	return viewportSize;
+}
