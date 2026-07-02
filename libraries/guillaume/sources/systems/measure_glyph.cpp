@@ -13,7 +13,7 @@
 
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT IN NO EVENT SHALL THE
  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
@@ -22,48 +22,50 @@
 
 #include <utility/graphic/text/text.hpp>
 
-#include "guillaume/systems/measure_text.hpp"
+#include "guillaume/systems/measure_glyph.hpp"
 
 namespace guillaume::systems
 {
 
-	MeasureText::MeasureText(
+	MeasureGlyph::MeasureGlyph(
 		std::shared_ptr<utility::RessourceProvider> ressourceProvider,
 		std::unique_ptr<Engine> &engine)
-		: ecs::SystemFiller<components::Text, components::Bound,
+		: ecs::SystemFiller<components::Glyph, components::Bound,
 							components::Transform, components::Color>(
 			  ecs::Phase::Measure)
 		, _ressourceProvider(ressourceProvider)
 		, _engine(engine)
-		, _defaultFontPath("fonts/Roboto-Regular.ttf")
+		, _defaultFontPath(
+			  "fonts/Material_Symbols_Outlined/"
+			  "MaterialSymbolsOutlined-VariableFont_FILL,GRAD,opsz,wght.ttf")
 	{
 	}
 
-	MeasureText::~MeasureText(void)
+	MeasureGlyph::~MeasureGlyph(void)
 	{
 	}
 
-	void MeasureText::prepare(void)
+	void MeasureGlyph::prepare(void)
 	{
 	}
 
-	void MeasureText::cleanup(void)
+	void MeasureGlyph::cleanup(void)
 	{
 	}
 
-	void MeasureText::update(const ecs::Entity::Identifier &entityIdentifier)
+	void MeasureGlyph::update(const ecs::Entity::Identifier &entityIdentifier)
 	{
 		getLogger().debug()
-			<< "Updating MeasureText system for entity " << entityIdentifier;
-		if (!requireComponent<components::Text>(entityIdentifier)
+			<< "Updating MeasureGlyph system for entity " << entityIdentifier;
+		if (!requireComponent<components::Glyph>(entityIdentifier)
 			|| !requireComponent<components::Bound>(entityIdentifier)
 			|| !requireComponent<components::Transform>(entityIdentifier)
 			|| !requireComponent<components::Color>(entityIdentifier)) {
 			return;
 		}
 
-		const auto &textComponent =
-			getComponent<components::Text>(entityIdentifier);
+		const auto &glyphComponent =
+			getComponent<components::Glyph>(entityIdentifier);
 		auto &boundComponent =
 			getComponent<components::Bound>(entityIdentifier);
 		auto &transformComponent =
@@ -71,19 +73,22 @@ namespace guillaume::systems
 		auto &colorComponent =
 			getComponent<components::Color>(entityIdentifier);
 
-		MeasureTextCacheKey cacheKey { textComponent.getContent(),
-									   textComponent.getFontSize(),
-									   colorComponent.getColor() };
+		MeasureGlyphCacheKey cacheKey { glyphComponent.getName(),
+										glyphComponent.getFontSize(),
+										glyphComponent.getStyle(),
+										colorComponent.getColor() };
 
-		if (cacheKey.content.empty()) {
+		if (cacheKey.glyphName.empty()) {
 			return;
 		}
 
-		getLogger().debug() << "Measuring text '" << cacheKey.content
+		getLogger().debug() << "Measuring glyph '" << cacheKey.glyphName
 							<< "' for entity " << entityIdentifier;
+		getLogger().debug() << "Glyph code found for '" << cacheKey.glyphName
+							<< "': " << glyphComponent.getCode();
 
 		if (contains(cacheKey)) {
-			getLogger().debug() << "Text '" << cacheKey.content
+			getLogger().debug() << "Glyph '" << cacheKey.glyphName
 								<< "' already measured, skipping.";
 			auto &cacheValue = getOrCreateEntry(cacheKey);
 			if (cacheValue.value.has_value()) {
@@ -95,10 +100,10 @@ namespace guillaume::systems
 			return;
 		}
 
-		utility::graphic::Text text(_ressourceProvider,
-									transformComponent.getPose(),
-									colorComponent.getColor(), cacheKey.content,
-									cacheKey.fontSize, _defaultFontPath);
+		utility::graphic::Text text(
+			_ressourceProvider, transformComponent.getPose(),
+			colorComponent.getColor(), cacheKey.glyphName, cacheKey.fontSize,
+			_defaultFontPath);
 		text.setColor(utility::graphic::Color32Bit());
 
 		auto textSize = _engine->measureText(text);

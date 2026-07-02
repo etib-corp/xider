@@ -161,6 +161,22 @@ namespace utility::graphic
 		{
 			return !(*this == other);
 		}
+
+		/**
+		 * @brief Less-than comparison for ordering.
+		 * @param other Size to compare with.
+		 * @return True when this size is less than the other size.
+		 */
+		bool operator<(const Size &other) const noexcept
+		{
+			if (_width != other._width) {
+				return _width < other._width;
+			}
+			if (_height != other._height) {
+				return _height < other._height;
+			}
+			return false;
+		}
 	};
 
 	/**

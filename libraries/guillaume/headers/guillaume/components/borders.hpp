@@ -23,6 +23,7 @@
 #pragma once
 
 #include <cmath>
+#include <ostream>
 
 #include "guillaume/ecs/component.hpp"
 
@@ -117,6 +118,31 @@ namespace guillaume::components
 		 * @return Reference to this Borders component for chaining.
 		 */
 		Borders &setBorderRadius(BorderRadius radius);
+
+		/**
+		 * @brief Equality operator for Borders component.
+		 * @param other The other Borders component to compare with.
+		 * @return True if both Borders components are equal, false otherwise.
+		 */
+		bool operator==(const Borders &other) const;
+
+		/**
+		 * @brief Inequality operator for Borders component.
+		 * @param other The other Borders component to compare with.
+		 * @return True if both Borders components are not equal, false
+		 * otherwise.
+		 */
+		bool operator!=(const Borders &other) const;
+
+		/**
+		 * @brief Less-than operator for Borders component.
+		 * @param other The other Borders component to compare with.
+		 * @return True if this Borders component is less than the other,
+		 * false otherwise.
+		 */
+		bool operator<(const Borders &other) const;
 	};
+
+	std::ostream &operator<<(std::ostream &stream, const Borders &borders);
 
 }	 // namespace guillaume::components

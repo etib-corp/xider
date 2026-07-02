@@ -22,7 +22,9 @@
 
 #pragma once
 
+#include <functional>
 #include <memory>
+#include <optional>
 #include <queue>
 #include <vector>
 
@@ -86,28 +88,74 @@ namespace guillaume::ecs
 		 * @brief Collect all entities in this registry hierarchy using BFS.
 		 * @return Entity pointers in breadth-first traversal order.
 		 */
-		std::vector<Entity *> getEntitiesBreadthFirst(void);
+		std::vector<std::reference_wrapper<std::unique_ptr<Entity>>>
+			getEntitiesBreadthFirst(void);
 
 		/**
 		 * @brief Collect all entities in this registry hierarchy using BFS.
 		 * @return Const entity pointers in breadth-first traversal order.
 		 */
-		std::vector<const Entity *> getEntitiesBreadthFirst(void) const;
+		std::vector<std::reference_wrapper<const std::unique_ptr<Entity>>>
+			getEntitiesBreadthFirst(void) const;
 
 		/**
 		 * @brief Find an entity in this registry hierarchy by identifier.
+		 * @tparam EntityType The expected entity type to cast to.
 		 * @param identifier The entity identifier to search for.
-		 * @return Pointer to the entity if found, nullptr otherwise.
+		 * @return Reference wrapper to the entity.
+		 * @throws std::runtime_error if the entity is not found.
 		 */
-		Entity *getEntity(Entity::Identifier identifier);
+		template<InheritFromEntity EntityType>
+		std::unique_ptr<EntityType> &getEntity(Entity::Identifier identifier)
+		{
+			for (auto &entity: accessDirectEntities()) {
+				if (entity->getIdentifier() == identifier) {
+					auto castEntity = dynamic_cast<EntityType *>(entity.get());
+					if (castEntity != nullptr) {
+						return *reinterpret_cast<std::unique_ptr<EntityType> *>(
+							&entity);
+					} else {
+						throw std::runtime_error(
+							"Entity found for identifier: "
+							+ std::to_string(identifier)
+							+ ", but it is not of the expected type.");
+					}
+				}
+			}
+			throw std::runtime_error("Entity not found for identifier: "
+									 + std::to_string(identifier));
+		}
 
 		/**
 		 * @brief Find an entity in this registry hierarchy by identifier
 		 * (const).
+		 * @tparam EntityType The expected entity type to cast to.
 		 * @param identifier The entity identifier to search for.
-		 * @return Const pointer to the entity if found, nullptr otherwise.
+		 * @return Const reference wrapper to the entity.
+		 * @throws std::runtime_error if the entity is not found.
 		 */
-		const Entity *getEntity(Entity::Identifier identifier) const;
+		template<InheritFromEntity EntityType>
+		const std::unique_ptr<EntityType> &
+			getEntity(Entity::Identifier identifier) const
+		{
+			for (const auto &entity: accessDirectEntities()) {
+				if (entity->getIdentifier() == identifier) {
+					auto castEntity =
+						dynamic_cast<const EntityType *>(entity.get());
+					if (castEntity != nullptr) {
+						return *reinterpret_cast<
+							const std::unique_ptr<EntityType> *>(&entity);
+					} else {
+						throw std::runtime_error(
+							"Entity found for identifier: "
+							+ std::to_string(identifier)
+							+ ", but it is not of the expected type.");
+					}
+				}
+			}
+			throw std::runtime_error("Entity not found for identifier: "
+									 + std::to_string(identifier));
+		}
 
 		/**
 		 * @brief Get all registered entity identifier that match the specified

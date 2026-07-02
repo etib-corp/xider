@@ -302,6 +302,61 @@ namespace utility::graphic
 				&& std::abs(this->w - OrientationComponentType { 1 })
 				<= epsilon;
 		}
+
+		/**
+		 * @brief Equality operator for Orientation.
+		 * @param other The other Orientation to compare with.
+		 * @return True if the orientations are equal, false otherwise.
+		 */
+		bool operator==(const Orientation &other) const noexcept
+		{
+			if (this->x != other.x) {
+				return false;
+			}
+			if (this->y != other.y) {
+				return false;
+			}
+			if (this->z != other.z) {
+				return false;
+			}
+			if (this->w != other.w) {
+				return false;
+			}
+			return true;
+		}
+
+		/**
+		 * @brief Inequality operator for Orientation.
+		 * @param other The other Orientation to compare with.
+		 * @return True if the orientations are not equal, false otherwise.
+		 */
+		bool operator!=(const Orientation &other) const noexcept
+		{
+			return !(*this == other);
+		}
+
+		/**
+		 * @brief Less-than operator for Orientation.
+		 * @param other The other Orientation to compare with.
+		 * @return True if this orientation is less than the other, false
+		 * otherwise.
+		 */
+		bool operator<(const Orientation &other) const noexcept
+		{
+			if (this->x != other.x) {
+				return this->x < other.x;
+			}
+			if (this->y != other.y) {
+				return this->y < other.y;
+			}
+			if (this->z != other.z) {
+				return this->z < other.z;
+			}
+			if (this->w != other.w) {
+				return this->w < other.w;
+			}
+			return false;
+		}
 	};
 
 	/**

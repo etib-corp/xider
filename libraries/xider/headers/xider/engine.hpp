@@ -97,14 +97,14 @@ namespace xider
 		 * @param text The text to render.
 		 * @return A unique identifier for the added text.
 		 */
-		size_t addText(const utility::graphic::Text &text) override;
+		size_t addText(utility::graphic::Text text) override;
 
 		/**
 		 * @brief Measures text dimensions.
 		 * @param text The text to measure.
-		 * @return A Vector2F containing the width and height.
+		 * @return A SizeF containing the width and height.
 		 */
-		utility::math::Vector2F
+		utility::graphic::SizeF
 			measureText(const utility::graphic::Text &text) const override;
 
 		/**

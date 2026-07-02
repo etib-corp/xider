@@ -18,57 +18,41 @@
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  SOFTWARE.
-*/
+ */
 
 #pragma once
 
-#include <map>
-#include <optional>
-
-#include <utility/ressource_provider.hpp>
-
-#include <utility/graphic/text/text.hpp>
+#include <string>
 
 #include <utility/cache.hpp>
 
 #include "guillaume/ecs/system_filler.hpp"
 
+#include "guillaume/components/bound.hpp"
 #include "guillaume/components/glyph.hpp"
 #include "guillaume/components/transform.hpp"
 #include "guillaume/components/color.hpp"
-#include "guillaume/components/bound.hpp"
 
 #include "guillaume/engine.hpp"
 
 namespace guillaume::systems
 {
 	/**
-	 * @brief Key structure for caching glyph rendering results.
-	 *
-	 * This structure is used as a key in the cache system to uniquely identify
-	 * cached glyph rendering results based on the pose, glyph name, and color.
+	 * @brief Structure representing a cache key for measuring glyphs.
 	 */
-	struct GlyphRenderCacheKey {
-		utility::graphic::PoseF pose;	 ///< The pose of the glyph, including
-										 ///< position and orientation
-		std::string glyphName;	  ///< The name of the glyph to be rendered
-		float fontSize;	   ///< The font size used for rendering the glyph
-		components::Glyph::Style
-			glyphStyle;	   ///< The style of the glyph (e.g., filled, outlined)
-		utility::graphic::Color32Bit
-			color;	  ///< The color of the glyph, which may affect its
-					  ///< rendering
+	struct MeasureGlyphCacheKey {
+		std::string glyphName; ///< The name of the glyph to be measured
+		float fontSize; ///< The font size used for measuring the glyph
+		components::Glyph::Style glyphStyle; ///< The style of the glyph (e.g., filled, outlined)
+		utility::graphic::Color32Bit color; ///< The color of the glyph, which may affect its rendering and measurement
 
 		/**
-		 * @brief Equality operator for GlyphRenderCacheKey.
-		 * @param other The other GlyphRenderCacheKey to compare with.
+		 * @brief Equality operator for MeasureGlyphCacheKey.
+		 * @param other The other MeasureGlyphCacheKey to compare with.
 		 * @return True if the keys are equal, false otherwise.
 		 */
-		bool operator==(const GlyphRenderCacheKey &other) const
+		bool operator==(const MeasureGlyphCacheKey &other) const
 		{
-			if (pose != other.pose) {
-				return false;
-			}
 			if (glyphName != other.glyphName) {
 				return false;
 			}
@@ -85,25 +69,22 @@ namespace guillaume::systems
 		}
 
 		/**
-		 * @brief Inequality operator for GlyphRenderCacheKey.
-		 * @param other The other GlyphRenderCacheKey to compare with.
+		 * @brief Inequality operator for MeasureGlyphCacheKey.
+		 * @param other The other MeasureGlyphCacheKey to compare with.
 		 * @return True if the keys are not equal, false otherwise.
 		 */
-		bool operator!=(const GlyphRenderCacheKey &other) const
+		bool operator!=(const MeasureGlyphCacheKey &other) const
 		{
 			return !(*this == other);
 		}
-		
+
 		/**
-		 * @brief Less-than operator for GlyphRenderCacheKey.
-		 * @param other The other GlyphRenderCacheKey to compare with.
+		 * @brief Less-than operator for MeasureGlyphCacheKey.
+		 * @param other The other MeasureGlyphCacheKey to compare with.
 		 * @return True if this key is less than the other, false otherwise.
 		 */
-		bool operator<(const GlyphRenderCacheKey &other) const
+		bool operator<(const MeasureGlyphCacheKey &other) const
 		{
-			if (pose != other.pose) {
-				return pose < other.pose;
-			}
 			if (glyphName != other.glyphName) {
 				return glyphName < other.glyphName;
 			}
@@ -121,44 +102,43 @@ namespace guillaume::systems
 	};
 
 	/**
-	 * @brief System handling glyph rendering from ECS components.
-	 * @see components::Transform
+	 * @brief System measuring glyphs and synchronizing them to bound sizes.
 	 * @see components::Glyph
-	 * @see components::Color
 	 * @see components::Bound
+	 * @see components::Transform
 	 */
-	class GlyphRender:
-		protected utility::Cache<GlyphRenderCacheKey, size_t>,
-		public ecs::SystemFiller<components::Transform, components::Bound,
-								 components::Glyph, components::Color>
+	class MeasureGlyph:
+		public utility::Cache<MeasureGlyphCacheKey, utility::graphic::SizeF>,
+		public ecs::SystemFiller<components::Glyph, components::Bound,
+								 components::Transform, components::Color>
 	{
 		private:
 		std::shared_ptr<utility::RessourceProvider>
-			_ressourceProvider;	   //< Shared resource provider for loading
-								   // fonts and glyphs
-		std::unique_ptr<Engine> &_engine;	 ///< Engine instance
-		std::string _defaultFontPath;	 ///< Default font for glyph rendering
-		std::string _glyphCodePath;		 ///< Path to glyph code mapping file
-		std::shared_ptr<utility::graphic::CodePoints> _codePoints;
+			_ressourceProvider;	   ///< Shared resource provider for loading
+								   ///< fonts and glyphs
+		std::unique_ptr<Engine>
+			&_engine;	 ///< Engine instance for text measurement
+		std::string
+			_defaultFontPath;	 ///< Default font used for text measurement
 
 		public:
 		/**
-		 * @brief Construct a glyph rendering system.
+		 * @brief Construct a glyph measuring system.
 		 * @param ressourceProvider Shared resource provider for loading fonts
 		 * and glyphs.
-		 * @param engine The engine used to draw glyph.
+		 * @param engine The engine used to measure text.
 		 */
-		GlyphRender(
+		MeasureGlyph(
 			std::shared_ptr<utility::RessourceProvider> ressourceProvider,
 			std::unique_ptr<Engine> &engine);
 
 		/**
 		 * @brief Default destructor.
 		 */
-		~GlyphRender(void);
+		~MeasureGlyph(void);
 
 		/**
-		 * @brief Prepare the GlyphRender system for rendering.
+		 * @brief Prepare the MeasureGlyph system before measurement.
 		 *
 		 * This function is called before call update on all entities and can be
 		 * used to set up any necessary state or resources.
@@ -166,7 +146,7 @@ namespace guillaume::systems
 		void prepare(void) override;
 
 		/**
-		 * @brief Clean up the GlyphRender system after rendering.
+		 * @brief Clean up the MeasureGlyph system after measurement.
 		 *
 		 * This function is called after call update on all entities and can be
 		 * used to release any resources or reset state.
@@ -174,7 +154,7 @@ namespace guillaume::systems
 		void cleanup(void) override;
 
 		/**
-		 * @brief Update the GlyphRender system for one entity.
+		 * @brief Update the MeasureGlyph system for one entity.
 		 * @param entityIdentifier The target entity identifier.
 		 */
 		virtual void

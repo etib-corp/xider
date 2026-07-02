@@ -59,16 +59,11 @@ namespace guillaume::entities
 	 */
 	class Button:
 		public ecs::ParentEntityFiller<
-			components::Transform, components::Bound,
+			components::Transform, components::Bound, components::Color,
+			components::Borders, components::Focus,
 			components::HandButtonInteraction, components::HandHoverInteraction,
-			components::HandPinchInteraction, components::HandPokeInteraction,
-			components::HandSqueezeInteraction,
-			components::HandThumbRestInteraction,
-			components::HandThumbStickInteraction,
-			components::HandTriggerInteraction,
 			components::MouseHoverInteraction,
-			components::MouseButtonInteraction, components::Color,
-			components::Borders, components::Focus>
+			components::MouseButtonInteraction>
 	{
 		public:
 		/**
@@ -96,6 +91,8 @@ namespace guillaume::entities
 				_button;	///< Unique pointer to the Button entity being built
 			std::string
 				_iconGlyphName;	   ///< Icon glyph name to attach to the button
+			components::Glyph::Style
+				_iconStyle;	   ///< Style of the icon to attach to the button
 			std::string
 				_labelContent;	  ///< Label content to attach to the button
 			std::function<void(void)>
@@ -139,6 +136,13 @@ namespace guillaume::entities
 			 * @return Reference to the builder for chaining.
 			 */
 			Builder &withIcon(const std::string &iconGlyphName);
+
+			/**
+			 * @brief Set the style of the icon for the button.
+			 * @param iconStyle The style of the icon to attach.
+			 * @return Reference to the builder for chaining.
+			 */
+			Builder &withIconStyle(const components::Glyph::Style &iconStyle);
 
 			/**
 			 * @brief Set the label text for the button.
@@ -213,49 +217,47 @@ namespace guillaume::entities
 			 * the text button.
 			 * @param labelContent The label content to attach to the button.
 			 * @param onClick The click event handler for the text button.
+			 * @param colorStyle The color style of the button.
+			 * @param shape The shape of the button.
+			 * @param size The size of the button.
+			 * @param isMorph Whether the button is in a morph state.
 			 * @return The entity identifier of the newly created text button
 			 * entity.
 			 */
 			ecs::Entity::Identifier
-				makeTextButton(Builder &builder,
-							   const std::string &labelContent,
-							   std::function<void(void)> onClick);
+				makeButton(Builder &builder, const std::string &labelContent,
+						   std::function<void(void)> onClick, Color colorStyle,
+						   Shape shape, Size size, bool isMorph);
 
 			/**
 			 * @brief Create an icon button entity using the builder.
 			 * @param builder The builder instance used to configure and create
 			 * the icon button.
+			 * @param labelContent The label content to attach to the button.
 			 * @param iconGlyphName The icon glyph name to attach.
+			 * @param iconStyle The style of the icon to attach.
 			 * @param onClick The click event handler for the icon button.
+			 * @param colorStyle The color style of the button.
+			 * @param shape The shape of the button.
+			 * @param size The size of the button.
+			 * @param isMorph Whether the button is in a morph state.
 			 * @return The entity identifier of the newly created icon button
 			 * entity.
 			 */
-			ecs::Entity::Identifier
-				makeIconButton(Builder &builder,
-							   const std::string &iconGlyphName,
-							   std::function<void(void)> onClick);
-
-			/**
-			 * @brief Create an icon text button entity using the
-			 * builder.
-			 * @param builder The builder instance used to configure
-			 * and create the icon text button.
-			 * @param iconGlyphName The icon glyph name to attach to the button.
-			 * @param labelContent The label content to attach to the button.
-			 * @param onClick The click event handler for the button.
-			 * @return The entity identifier of the newly created icon text
-			 * button entity.
-			 */
-			ecs::Entity::Identifier
-				makeIconTextButton(Builder &builder,
-								   const std::string &iconGlyphName,
-								   const std::string &labelContent,
-								   std::function<void(void)> onClick);
+			ecs::Entity::Identifier makeIconButton(
+				Builder &builder, const std::string &labelContent,
+				const std::string &iconGlyphName,
+				const components::Glyph::Style &iconStyle,
+				std::function<void(void)> onClick, Color colorStyle,
+				Shape shape, Size size, bool isMorph);
 		};
 
 		private:
 		std::string _iconGlyphName {};	  ///< Icon glyph name to attach.
-		std::string _labelContent {};	  ///< Label content to attach.
+		components::Glyph::Style _iconStyle {
+			components::Glyph::Style::Outlined
+		};	  ///< Style of the icon to attach.
+		std::string _labelContent {};	 ///< Label content to attach.
 		ecs::Entity::Identifier _iconIdentifier {
 			ecs::Entity::InvalidIdentifier
 		};	  ///< Internal child icon entity identifier.
@@ -294,64 +296,13 @@ namespace guillaume::entities
 		 */
 		void leftClickReleaseHandler(void);
 
-		/**
-		 * @brief Apply the current Material button state to components.
-		 */
-		void applyState(void);
-
-		/**
-		 * @brief Calculate the pose for the button's text child when no
-		 * icon is present. This method computes the appropriate position and
-		 * orientation for the text based on the button's current properties
-		 * and returns it as a PoseF object.
-		 * @return The calculated PoseF for the text child without an icon.
-		 */
-		utility::graphic::PoseF calculTextPoseWithoutIcon(void);
-
-		/**
-		 * @brief Calculate the pose for the button's text child when an
-		 * icon is present. This method computes the appropriate position and
-		 * orientation for the text based on the button's current properties,
-		 * including the presence of an icon, and returns it as a PoseF object.
-		 * @return The calculated PoseF for the text child with an icon.
-		 */
-		utility::graphic::PoseF calculTextPoseWithIcon(void);
-
-		/**
-		 * @brief Calculate the width of the button based on its size and
-		 * other properties. This method determines the appropriate width for
-		 * the button by considering factors such as the button's size category
-		 * and any additional margins or padding that may be required.
-		 * @return The calculated width of the button.
-		 */
-		std::size_t calculWidth(void);
-
-		/**
-		 * @brief Push a pose toward the camera based on an entity's layer.
-		 * @param pose The base pose to offset.
-		 * @param entityIdentifier The entity whose layer determines the offset.
-		 * @return The offset pose.
-		 */
-		utility::graphic::PoseF
-			applyLayerOffset(const utility::graphic::PoseF &pose,
-							 ecs::Entity::Identifier entityIdentifier) const;
-
-		/**
-		 * @brief Push a pose toward the camera by a fixed amount per layer.
-		 * @param pose The base pose to offset.
-		 * @param layer The layer value to apply.
-		 * @return The offset pose.
-		 */
-		utility::graphic::PoseF
-			applyLayerOffset(const utility::graphic::PoseF &pose,
-							 std::int32_t layer) const;
-
 		public:
 		/**
 		 * @brief Default constructor for the Button entity.
 		 * @param registry Reference to the component registry for initializing
 		 * components.
 		 * @param iconGlyphName Icon glyph name to attach to the button.
+		 * @param iconStyle Style of the icon to attach to the button.
 		 * @param labelContent Label content to attach to the button.
 		 * @param isToggle Whether the button should be a toggle button.
 		 * @param colorStyle Initial color style for the button.
@@ -362,6 +313,7 @@ namespace guillaume::entities
 		 */
 		Button(ecs::ComponentRegistry &registry,
 			   const std::string &iconGlyphName,
+			   const components::Glyph::Style &iconStyle,
 			   const std::string &labelContent, bool isToggle, Color colorStyle,
 			   Shape shape, Size size, bool isMorph,
 			   std::function<void(void)> onClick);
@@ -377,6 +329,13 @@ namespace guillaume::entities
 		 * @return Reference to this Button for chaining.
 		 */
 		Button &setIconGlyphName(const std::string &iconGlyphName);
+
+		/**
+		 * @brief Set the style of the icon for the button.
+		 * @param iconStyle The style of the icon to attach.
+		 * @return Reference to this Button for chaining.
+		 */
+		Button &setIconStyle(const components::Glyph::Style &iconStyle);
 
 		/**
 		 * @brief Set the label content for the button.
@@ -426,18 +385,6 @@ namespace guillaume::entities
 		 * @return Reference to this Button for chaining.
 		 */
 		Button &setOnClick(const std::function<void(void)> &onClick);
-
-		/**
-		 * @brief Get the internal child icon entity identifier.
-		 * @return The icon entity identifier, or InvalidIdentifier if none.
-		 */
-		ecs::Entity::Identifier getIconIdentifier(void) const;
-
-		/**
-		 * @brief Get the internal child label entity identifier.
-		 * @return The label entity identifier, or InvalidIdentifier if none.
-		 */
-		ecs::Entity::Identifier getLabelIdentifier(void) const;
 
 		/**
 		 * @brief Recompute the button entity's derived state.

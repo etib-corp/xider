@@ -26,27 +26,6 @@
 
 namespace guillaume::systems
 {
-	void TextRender::prepare(void)
-	{
-		for (auto &[_, entry]: _cache) {
-			entry.used = false;
-		}
-	}
-
-	void TextRender::cleanup(void)
-	{
-		for (auto it = _cache.begin(); it != _cache.end();) {
-			if (it->second.used) {
-				++it;
-				continue;
-			}
-			if (it->second.objectId != 0) {
-				_engine->removeObject(it->second.objectId);
-			}
-			it = _cache.erase(it);
-		}
-	}
-
 	TextRender::TextRender(
 		std::shared_ptr<utility::RessourceProvider> ressourceProvider,
 		std::unique_ptr<Engine> &engine)
@@ -60,10 +39,24 @@ namespace guillaume::systems
 
 	TextRender::~TextRender(void)
 	{
-		for (auto &[_, entry]: _cache) {
-			if (entry.objectId != 0) {
-				_engine->removeObject(entry.objectId);
+		clear();
+	}
+
+	void TextRender::prepare(void)
+	{
+		resetUsage();
+	}
+
+	void TextRender::cleanup(void)
+	{
+		auto unusedKeys = getUnusedKeys();
+		for (const auto &key: unusedKeys) {
+			if (auto *entry = findEntry(key)) {
+				if (entry->value.has_value()) {
+					_engine->removeObject(entry->value.value());
+				}
 			}
+			erase(key);
 		}
 	}
 
@@ -84,47 +77,34 @@ namespace guillaume::systems
 		const auto &colorComponent =
 			getComponent<components::Color>(entityIdentifier);
 
-		auto &cacheEntry = _cache[entityIdentifier];
-		cacheEntry.used	 = true;
+		TextRenderCacheKey cacheKey { transformComponent.getPose(),
+									  textComponent.getContent(),
+									  textComponent.getFontSize(),
+									  colorComponent.getColor() };
 
-		const auto &currentContent	= textComponent.getContent();
-		const auto &currentFontSize = textComponent.getFontSize();
-		const auto &currentColor	= colorComponent.getColor();
-		const auto &currentPose		= transformComponent.getPose();
-
-		if (cacheEntry.objectId != 0
-			&& cacheEntry.cachedContent == currentContent
-			&& cacheEntry.cachedFontSize == currentFontSize
-			&& cacheEntry.cachedColor == currentColor
-			&& cacheEntry.pose == currentPose) {
-			getLogger().debug()
-				<< "TextRender: Skipping entity " << entityIdentifier
-				<< " - properties unchanged";
+		if (cacheKey.content.empty()) {
 			return;
 		}
 
-		getLogger().info() << "TextRender: Creating new Text object for entity "
-						   << entityIdentifier << " (content: '"
-						   << currentContent
-						   << "', fontSize: " << currentFontSize << ")";
+		getLogger().debug() << "Rendering text for entity " << entityIdentifier
+							<< " (content: '" << cacheKey.content
+							<< "', fontSize: " << cacheKey.fontSize
+							<< ", color: " << cacheKey.color << ")";
 
-		utility::graphic::Text text(_ressourceProvider, currentPose,
-									currentColor, currentContent,
-									currentFontSize, _defaultFontPath);
-
-		if (cacheEntry.objectId != 0) {
-			_engine->removeObject(cacheEntry.objectId);
+		if (contains(cacheKey)) {
+			markAsUsed(cacheKey);
+			getLogger().debug() << "Cache hit for entity " << entityIdentifier;
+			return;
 		}
 
-		cacheEntry.objectId = _engine->addText(text);
-		cacheEntry.text		= text;
-		cacheEntry.pose		= currentPose;
+		utility::graphic::Text text(_ressourceProvider, cacheKey.pose,
+									cacheKey.color, cacheKey.content,
+									cacheKey.fontSize, _defaultFontPath);
 
-		// Update cached properties
-		cacheEntry.cachedContent  = currentContent;
-		cacheEntry.cachedFontSize = currentFontSize;
-		cacheEntry.cachedColor	  = currentColor;
-		cacheEntry.pose			  = currentPose;
+		auto identifier	 = _engine->addText(std::move(text));
+		auto &cacheValue = getOrCreateEntry(cacheKey);
+		cacheValue.value = identifier;
+		cacheValue.used	 = true;
 	}
 
 }	 // namespace guillaume::systems

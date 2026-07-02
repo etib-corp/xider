@@ -60,8 +60,7 @@ namespace guillaume::entities
 				_text;	  ///< Unique pointer to the Text entity being built
 			std::string
 				_content;	 ///< Text content to be set in the Text component
-			std::size_t
-				_fontSize;	  ///< Font size to be set in the Text component
+			float _fontSize;	///< Font size to be set in the Text component
 			utility::graphic::Color32Bit
 				_color;	   ///< Color to be set in the Text component (RGBA)
 
@@ -105,7 +104,7 @@ namespace guillaume::entities
 			 * @param fontSize The font size to set.
 			 * @return Reference to the builder for chaining.
 			 */
-			Builder &withFontSize(const std::size_t &fontSize);
+			Builder &withFontSize(const float &fontSize);
 
 			/**
 			 * @brief Set the color for the Text component.
@@ -137,16 +136,20 @@ namespace guillaume::entities
 			 * @param builder The builder instance used to configure and create
 			 * the default text
 			 * @param content The text content for the default Text entity.
+			 * @param fontSize The font size for the default Text entity.
+			 * @param color The color for the default Text entity (RGBA).
 			 * @return The entity identifier of the newly created text entity.
 			 */
-			ecs::Entity::Identifier makeDefaultText(Builder &builder,
-													const std::string &content);
+			ecs::Entity::Identifier
+				makeText(Builder &builder, const std::string &content,
+						 const float &fontSize,
+						 const utility::graphic::Color32Bit &color);
 		};
 
 		private:
 		std::string
 			_content {};	///< Text content to be set in the Text component
-		std::size_t _fontSize { 24 };
+		float _fontSize { 24.0f };
 		utility::graphic::Color32Bit _color {};
 
 		public:
@@ -157,11 +160,10 @@ namespace guillaume::entities
 		 * @param content The text content to initialize the Text component
 		 * with.
 		 * @param fontSize The font size to initialize the Text component with.
-		 * @param color The color to initialize the Text component with (RGBA).F
+		 * @param color The color to initialize the Text component with (RGBA).
 		 */
 		Text(ecs::ComponentRegistry &registry, const std::string &content,
-			 const std::size_t &fontSize,
-			 const utility::graphic::Color32Bit &color);
+			 const float &fontSize, const utility::graphic::Color32Bit &color);
 
 		/**
 		 * @brief Default destructor for the Text component.
@@ -180,14 +182,14 @@ namespace guillaume::entities
 		 * @param fontSize The new font size to set.
 		 * @return Reference to this Text component for chaining.
 		 */
-		Text &setFontSize(std::size_t fontSize);
+		Text &setFontSize(const float &fontSize);
 
 		/**
 		 * @brief Set the color for this Text component.
 		 * @param color The new color to set (RGBA).
 		 * @return Reference to this Text component for chaining.
 		 */
-		Text &setColor(utility::graphic::Color32Bit color);
+		Text &setColor(const utility::graphic::Color32Bit &color);
 
 		/**
 		 * @brief Recompute the text entity's derived state.

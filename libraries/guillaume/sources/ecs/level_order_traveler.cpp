@@ -30,13 +30,25 @@ namespace guillaume::ecs
 	std::vector<Entity *>
 		LevelOrderTraveler::travel(EntityRegistry &entityRegistry) const
 	{
-		return entityRegistry.getEntitiesBreadthFirst();
+		auto entitiesRefs = entityRegistry.getEntitiesBreadthFirst();
+		std::vector<Entity *> result;
+		result.reserve(entitiesRefs.size());
+		for (auto &entityRef: entitiesRefs) {
+			result.push_back(entityRef.get().get());
+		}
+		return result;
 	}
 
 	std::vector<const Entity *>
 		LevelOrderTraveler::travel(const EntityRegistry &entityRegistry) const
 	{
-		return entityRegistry.getEntitiesBreadthFirst();
+		auto entitiesRefs = entityRegistry.getEntitiesBreadthFirst();
+		std::vector<const Entity *> result;
+		result.reserve(entitiesRefs.size());
+		for (auto &entityRef: entitiesRefs) {
+			result.push_back(entityRef.get().get());
+		}
+		return result;
 	}
 
 }	 // namespace guillaume::ecs

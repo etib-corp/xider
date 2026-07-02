@@ -73,14 +73,14 @@ void android_main(struct android_app *android_app)
 	// Initialize XIDER application with Evan engine
 	xider::XIDER app(xrPlatform, ressourceProvider);
 
-	static auto source = ressourceProvider->loadAudioSource(
+	static auto source_audio = ressourceProvider->loadAudioSource(
 		"sound/nastelbom-background-music-486996.mp3");
 
-	source->setGain(0.5f);
-	source->play();
+	source_audio->setGain(0.5f);
+	source_audio->play();
 
 	commandHandler.setOnPauseCallback([&]() mutable {
-		source->pause();
+		source_audio->pause();
 	});
 
 	while (!android_app->destroyRequested) {
@@ -104,11 +104,7 @@ void android_main(struct android_app *android_app)
 		}
 
 		// Application lifecycle
-		app.pollEvents();
-		app.update();
-		app.clear();
 		app.routine();
-		app.present();
 	}
 }
 }

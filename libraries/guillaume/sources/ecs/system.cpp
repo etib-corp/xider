@@ -113,8 +113,8 @@ namespace guillaume::ecs
 		_activeComponentRegistry = nullptr;
 	}
 
-
-	void System::bindComponentRegistry(ecs::ComponentRegistry &componentRegistry)
+	void
+		System::bindComponentRegistry(ecs::ComponentRegistry &componentRegistry)
 	{
 		_activeComponentRegistry = &componentRegistry;
 	}

@@ -30,13 +30,13 @@ namespace utility::graphic
 		/**
 		 * @brief Size of the glyph in pixels (width and height).
 		 */
-		math::Vector<float, 2> size;
+		math::Vector2F size;
 
 		/**
 		 * @brief Bearing of the glyph, representing the offset from the
 		 * baseline to the top-left corner of the glyph.
 		 */
-		math::Vector<float, 2> bearing;
+		math::Vector2F bearing;
 
 		/**
 		 * @brief Advance value, specifying the horizontal distance to advance

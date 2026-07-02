@@ -46,8 +46,8 @@ namespace guillaume::entities::tests
 		ASSERT_NE(iconIdentifier, ecs::Entity::InvalidIdentifier);
 		ASSERT_NE(labelIdentifier, ecs::Entity::InvalidIdentifier);
 
-		const auto *iconEntity	= button.getEntity(iconIdentifier);
-		const auto *labelEntity = button.getEntity(labelIdentifier);
+		const auto iconEntity  = button.getEntity(iconIdentifier);
+		const auto labelEntity = button.getEntity(labelIdentifier);
 		ASSERT_NE(iconEntity, nullptr);
 		ASSERT_NE(labelEntity, nullptr);
 
@@ -92,7 +92,7 @@ namespace guillaume::entities::tests
 		EXPECT_EQ(iconIdentifier, ecs::Entity::InvalidIdentifier);
 		ASSERT_NE(labelIdentifier, ecs::Entity::InvalidIdentifier);
 
-		const auto *labelEntity = button.getEntity(labelIdentifier);
+		const auto labelEntity = button.getEntity(labelIdentifier);
 		ASSERT_NE(labelEntity, nullptr);
 		EXPECT_EQ(labelEntity->getLayer(), 2);
 
@@ -126,7 +126,7 @@ namespace guillaume::entities::tests
 		ASSERT_NE(iconIdentifier, ecs::Entity::InvalidIdentifier);
 		EXPECT_EQ(labelIdentifier, ecs::Entity::InvalidIdentifier);
 
-		const auto *iconEntity = button.getEntity(iconIdentifier);
+		const auto iconEntity = button.getEntity(iconIdentifier);
 		ASSERT_NE(iconEntity, nullptr);
 		EXPECT_EQ(iconEntity->getLayer(), 1);
 

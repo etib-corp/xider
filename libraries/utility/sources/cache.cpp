@@ -20,39 +20,8 @@
  SOFTWARE.
  */
 
-#include "guillaume/ecs/reverse_level_order_traveler.hpp"
+#include "utility/cache.hpp"
 
-#include <algorithm>
-
-#include "guillaume/ecs/entity_registry.hpp"
-
-namespace guillaume::ecs
+namespace utility
 {
-
-	std::vector<Entity *>
-		ReverseLevelOrderTraveler::travel(EntityRegistry &entityRegistry) const
-	{
-		auto entitiesRefs = entityRegistry.getEntitiesBreadthFirst();
-		std::vector<Entity *> result;
-		result.reserve(entitiesRefs.size());
-		for (auto &entityRef: entitiesRefs) {
-			result.push_back(entityRef.get().get());
-		}
-		std::reverse(result.begin(), result.end());
-		return result;
-	}
-
-	std::vector<const Entity *> ReverseLevelOrderTraveler::travel(
-		const EntityRegistry &entityRegistry) const
-	{
-		auto entitiesRefs = entityRegistry.getEntitiesBreadthFirst();
-		std::vector<const Entity *> result;
-		result.reserve(entitiesRefs.size());
-		for (auto &entityRef: entitiesRefs) {
-			result.push_back(entityRef.get().get());
-		}
-		std::reverse(result.begin(), result.end());
-		return result;
-	}
-
-}	 // namespace guillaume::ecs
+}	 // namespace utility
