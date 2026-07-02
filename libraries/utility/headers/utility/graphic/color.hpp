@@ -492,6 +492,11 @@ namespace utility::graphic
 				/ static_cast<double>(maxValue());
 		}
 
+		/**
+		 * @brief Less-than operator for Color.
+		 * @param other The other Color to compare with.
+		 * @return True if this color is less than the other, false otherwise.
+		 */
 		bool operator<(const Color &other) const
 		{
 			if (_red != other._red) {

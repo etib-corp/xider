@@ -37,12 +37,20 @@
 
 namespace guillaume::systems
 {
+	/**
+	 * @brief Structure representing a cache key for measuring glyphs.
+	 */
 	struct MeasureGlyphCacheKey {
-		std::string glyphName;
-		float fontSize;
-		components::Glyph::Style glyphStyle;
-		utility::graphic::Color32Bit color;
+		std::string glyphName; ///< The name of the glyph to be measured
+		float fontSize; ///< The font size used for measuring the glyph
+		components::Glyph::Style glyphStyle; ///< The style of the glyph (e.g., filled, outlined)
+		utility::graphic::Color32Bit color; ///< The color of the glyph, which may affect its rendering and measurement
 
+		/**
+		 * @brief Equality operator for MeasureGlyphCacheKey.
+		 * @param other The other MeasureGlyphCacheKey to compare with.
+		 * @return True if the keys are equal, false otherwise.
+		 */
 		bool operator==(const MeasureGlyphCacheKey &other) const
 		{
 			if (glyphName != other.glyphName) {
@@ -60,11 +68,21 @@ namespace guillaume::systems
 			return true;
 		}
 
+		/**
+		 * @brief Inequality operator for MeasureGlyphCacheKey.
+		 * @param other The other MeasureGlyphCacheKey to compare with.
+		 * @return True if the keys are not equal, false otherwise.
+		 */
 		bool operator!=(const MeasureGlyphCacheKey &other) const
 		{
 			return !(*this == other);
 		}
 
+		/**
+		 * @brief Less-than operator for MeasureGlyphCacheKey.
+		 * @param other The other MeasureGlyphCacheKey to compare with.
+		 * @return True if this key is less than the other, false otherwise.
+		 */
 		bool operator<(const MeasureGlyphCacheKey &other) const
 		{
 			if (glyphName != other.glyphName) {

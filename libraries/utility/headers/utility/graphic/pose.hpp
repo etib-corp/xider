@@ -226,6 +226,11 @@ namespace utility::graphic
 			return !(*this == other);
 		}
 
+		/**
+		 * @brief Less-than comparison for ordering.
+		 * @param other Pose to compare with.
+		 * @return True when this pose is less than the other pose.
+		 */
 		bool operator<(const Pose &other) const noexcept
 		{
 			if (_position != other._position) {

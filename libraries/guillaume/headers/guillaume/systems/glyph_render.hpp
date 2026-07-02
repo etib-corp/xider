@@ -49,12 +49,21 @@ namespace guillaume::systems
 	 * cached glyph rendering results based on the pose, glyph name, and color.
 	 */
 	struct GlyphRenderCacheKey {
-		utility::graphic::PoseF pose;
-		std::string glyphName;
-		float fontSize;
-		components::Glyph::Style glyphStyle;
-		utility::graphic::Color32Bit color;
+		utility::graphic::PoseF pose;	 ///< The pose of the glyph, including
+										 ///< position and orientation
+		std::string glyphName;	  ///< The name of the glyph to be rendered
+		float fontSize;	   ///< The font size used for rendering the glyph
+		components::Glyph::Style
+			glyphStyle;	   ///< The style of the glyph (e.g., filled, outlined)
+		utility::graphic::Color32Bit
+			color;	  ///< The color of the glyph, which may affect its
+					  ///< rendering
 
+		/**
+		 * @brief Equality operator for GlyphRenderCacheKey.
+		 * @param other The other GlyphRenderCacheKey to compare with.
+		 * @return True if the keys are equal, false otherwise.
+		 */
 		bool operator==(const GlyphRenderCacheKey &other) const
 		{
 			if (pose != other.pose) {
@@ -75,11 +84,21 @@ namespace guillaume::systems
 			return true;
 		}
 
+		/**
+		 * @brief Inequality operator for GlyphRenderCacheKey.
+		 * @param other The other GlyphRenderCacheKey to compare with.
+		 * @return True if the keys are not equal, false otherwise.
+		 */
 		bool operator!=(const GlyphRenderCacheKey &other) const
 		{
 			return !(*this == other);
 		}
-
+		
+		/**
+		 * @brief Less-than operator for GlyphRenderCacheKey.
+		 * @param other The other GlyphRenderCacheKey to compare with.
+		 * @return True if this key is less than the other, false otherwise.
+		 */
 		bool operator<(const GlyphRenderCacheKey &other) const
 		{
 			if (pose != other.pose) {

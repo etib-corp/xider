@@ -282,6 +282,11 @@ namespace utility::graphic
 							(this->z + other.z) / PositionComponentType { 2 });
 		}
 
+		/**
+		 * @brief Equality comparison.
+		 * @param other The position to compare with.
+		 * @return True if all components are equal, false otherwise.
+		 */
 		bool operator==(const Position &other) const noexcept
 		{
 			if (this->x != other.x) {
@@ -296,11 +301,21 @@ namespace utility::graphic
 			return true;
 		}
 
+		/**
+		 * @brief Inequality comparison.
+		 * @param other The position to compare with.
+		 * @return True if any component is not equal, false otherwise.
+		 */
 		bool operator!=(const Position &other) const noexcept
 		{
 			return !(*this == other);
 		}
 
+		/**
+		 * @brief Less-than comparison for ordering.
+		 * @param other The position to compare with.
+		 * @return True if this position is less than the other position.
+		 */
 		bool operator<(const Position &other) const noexcept
 		{
 			if (this->x != other.x) {

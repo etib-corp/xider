@@ -94,24 +94,10 @@ namespace utility
 			}
 		};
 
-		public:
-		using key_type =
-			KeyType;	///< The type of the keys used in the cache.
-		using mapped_type = CacheEntry;	   ///< The type of the values stored in
-										   ///< the cache (CacheEntry).
-		using container_type =
-			std::map<KeyType,
-					 CacheEntry>;	 ///< The underlying container
-									 ///< type used for storing cache
-									 ///< entries.
-		using size_type =
-			typename container_type::size_type;	   ///< The type used for
-												   ///< representing the size of
-												   ///< the cache.
-
 		private:
-		container_type _cache;	  ///< The underlying container that holds the
-								  ///< cache entries.
+		std::map<KeyType, CacheEntry>
+			_cache;	   ///< The underlying container that holds the cache
+					   ///< entries.
 
 		public:
 		/**
@@ -126,14 +112,14 @@ namespace utility
 		 *
 		 * @param other The Cache object to copy from.
 		 */
-		Cache(const Cache &) = default;
+		Cache(const Cache &other) = default;
 
 		/**
 		 * @brief Move constructor for Cache.
 		 *
 		 * @param other The Cache object to move from.
 		 */
-		Cache(Cache &&) noexcept = default;
+		Cache(Cache &&other) noexcept = default;
 
 		/**
 		 * @brief Copy assignment operator for Cache.
@@ -141,7 +127,7 @@ namespace utility
 		 * @param other The Cache object to copy from.
 		 * @return A reference to the current Cache object.
 		 */
-		Cache &operator=(const Cache &) = default;
+		Cache &operator=(const Cache &other) = default;
 
 		/**
 		 * @brief Move assignment operator for Cache.
@@ -149,7 +135,7 @@ namespace utility
 		 * @param other The Cache object to move from.
 		 * @return A reference to the current Cache object.
 		 */
-		Cache &operator=(Cache &&) noexcept = default;
+		Cache &operator=(Cache &&other) noexcept = default;
 
 		/**
 		 * @brief Destructor for Cache.
@@ -309,16 +295,6 @@ namespace utility
 			for (auto &[_, entry]: _cache) {
 				entry.used = false;
 			}
-		}
-
-		/**
-		 * @brief Gets the number of entries in the cache.
-		 *
-		 * @return The number of key-value pairs currently stored in the cache.
-		 */
-		[[nodiscard]] size_type size(void) const noexcept
-		{
-			return _cache.size();
 		}
 
 		/**

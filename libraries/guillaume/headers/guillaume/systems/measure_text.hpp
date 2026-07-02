@@ -37,11 +37,21 @@
 
 namespace guillaume::systems
 {
+	/**
+	 * @brief Structure representing a cache key for measuring text.
+	 */
 	struct MeasureTextCacheKey {
-		std::string content;
-		float fontSize;
-		utility::graphic::Color32Bit color;
+		std::string content;	///< The text content to be measured
+		float fontSize;			///< The font size used for measuring the text
+		utility::graphic::Color32Bit
+			color;	  ///< The color of the text, which may affect its rendering
+					  ///< and measurement
 
+		/**
+		 * @brief Equality operator for MeasureTextCacheKey.
+		 * @param other The other MeasureTextCacheKey to compare with.
+		 * @return True if the keys are equal, false otherwise.
+		 */
 		bool operator==(const MeasureTextCacheKey &other) const
 		{
 			if (content != other.content) {
@@ -56,11 +66,21 @@ namespace guillaume::systems
 			return true;
 		}
 
+		/**
+		 * @brief Inequality operator for MeasureTextCacheKey.
+		 * @param other The other MeasureTextCacheKey to compare with.
+		 * @return True if the keys are not equal, false otherwise.
+		 */
 		bool operator!=(const MeasureTextCacheKey &other) const
 		{
 			return !(*this == other);
 		}
 
+		/**
+		 * @brief Less-than operator for MeasureTextCacheKey.
+		 * @param other The other MeasureTextCacheKey to compare with.
+		 * @return True if this key is less than the other, false otherwise.
+		 */
 		bool operator<(const MeasureTextCacheKey &other) const
 		{
 			if (content != other.content) {

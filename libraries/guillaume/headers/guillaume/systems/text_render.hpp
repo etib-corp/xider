@@ -37,12 +37,22 @@
 
 namespace guillaume::systems
 {
+	/**
+	 * @brief Key structure for caching text rendering results.
+	 */
 	struct TextRenderCacheKey {
-		utility::graphic::PoseF pose;
-		std::string content;
-		float fontSize;
-		utility::graphic::Color32Bit color;
+		utility::graphic::PoseF pose;	 ///< The pose of the text, including
+										 ///< position and orientation
+		std::string content;			 ///< The text content to be rendered
+		float fontSize;	   ///< The font size used for rendering the text
+		utility::graphic::Color32Bit
+			color;	  ///< The color of the text, which may affect its rendering
 
+		/**
+		 * @brief Equality operator for TextRenderCacheKey.
+		 * @param other The other TextRenderCacheKey to compare with.
+		 * @return True if the keys are equal, false otherwise.
+		 */
 		bool operator==(const TextRenderCacheKey &other) const
 		{
 			if (pose != other.pose) {
@@ -60,11 +70,21 @@ namespace guillaume::systems
 			return true;
 		}
 
+		/**
+		 * @brief Inequality operator for TextRenderCacheKey.
+		 * @param other The other TextRenderCacheKey to compare with.
+		 * @return True if the keys are not equal, false otherwise.
+		 */
 		bool operator!=(const TextRenderCacheKey &other) const
 		{
 			return !(*this == other);
 		}
 
+		/**
+		 * @brief Less-than operator for TextRenderCacheKey.
+		 * @param other The other TextRenderCacheKey to compare with.
+		 * @return True if this key is less than the other, false otherwise.
+		 */
 		bool operator<(const TextRenderCacheKey &other) const
 		{
 			if (pose != other.pose) {

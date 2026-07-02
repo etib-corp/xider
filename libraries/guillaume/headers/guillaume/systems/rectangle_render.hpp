@@ -38,12 +38,24 @@
 
 namespace guillaume::systems
 {
+	/**
+	 * @brief Key structure for caching rectangle rendering results.
+	 */
 	struct RectangleRenderCacheKey {
-		utility::graphic::PoseF pose;
-		utility::graphic::SizeF size;
-		components::Borders borders;
-		utility::graphic::Color32Bit color;
+		utility::graphic::PoseF pose;	 ///< The pose of the rectangle,
+										 ///< including position and orientation
+		utility::graphic::SizeF
+			size;	 ///< The size of the rectangle, including width and height
+		components::Borders borders;	///< The borders of the rectangle,
+										///< including corner radius
+		utility::graphic::Color32Bit
+			color;	  ///< The color of the rectangle, including RGBA values
 
+		/**
+		 * @brief Equality operator for RectangleRenderCacheKey.
+		 * @param other The other RectangleRenderCacheKey to compare with.
+		 * @return True if the keys are equal, false otherwise.
+		 */
 		bool operator==(const RectangleRenderCacheKey &other) const
 		{
 			if (pose != other.pose) {
@@ -61,11 +73,21 @@ namespace guillaume::systems
 			return true;
 		}
 
+		/**
+		 * @brief Inequality operator for RectangleRenderCacheKey.
+		 * @param other The other RectangleRenderCacheKey to compare with.
+		 * @return True if the keys are not equal, false otherwise.
+		 */
 		bool operator!=(const RectangleRenderCacheKey &other) const
 		{
 			return !(*this == other);
 		}
 
+		/**
+		 * @brief Less-than operator for RectangleRenderCacheKey.
+		 * @param other The other RectangleRenderCacheKey to compare with.
+		 * @return True if this key is less than the other, false otherwise.
+		 */
 		bool operator<(const RectangleRenderCacheKey &other) const
 		{
 			if (pose != other.pose) {
@@ -244,7 +266,6 @@ namespace guillaume::systems
 		 */
 		virtual void
 			update(const ecs::Entity::Identifier &entityIdentifier) override;
-
 	};
 
 }	 // namespace guillaume::systems

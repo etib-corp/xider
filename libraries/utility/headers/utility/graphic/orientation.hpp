@@ -303,6 +303,11 @@ namespace utility::graphic
 				<= epsilon;
 		}
 
+		/**
+		 * @brief Equality operator for Orientation.
+		 * @param other The other Orientation to compare with.
+		 * @return True if the orientations are equal, false otherwise.
+		 */
 		bool operator==(const Orientation &other) const noexcept
 		{
 			if (this->x != other.x) {
@@ -320,11 +325,22 @@ namespace utility::graphic
 			return true;
 		}
 
+		/**
+		 * @brief Inequality operator for Orientation.
+		 * @param other The other Orientation to compare with.
+		 * @return True if the orientations are not equal, false otherwise.
+		 */
 		bool operator!=(const Orientation &other) const noexcept
 		{
 			return !(*this == other);
 		}
 
+		/**
+		 * @brief Less-than operator for Orientation.
+		 * @param other The other Orientation to compare with.
+		 * @return True if this orientation is less than the other, false
+		 * otherwise.
+		 */
 		bool operator<(const Orientation &other) const noexcept
 		{
 			if (this->x != other.x) {
