@@ -30,8 +30,8 @@ namespace guillaume
 {
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
-	    requires IsOneOf<DefaultSceneType, SceneTypes...>
-	    template<typename PhaseType>
+		requires IsOneOf<DefaultSceneType, SceneTypes...>
+	template<typename PhaseType>
 	void Application<DefaultSceneType, SceneTypes...>::runPhase(
 		PhaseType &phaseDefinition)
 	{
@@ -49,7 +49,7 @@ namespace guillaume
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
-	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+		requires IsOneOf<DefaultSceneType, SceneTypes...>
 	void Application<DefaultSceneType, SceneTypes...>::registerCoreSystems()
 	{
 		_systemRegistry.registerNewSystem(
@@ -91,7 +91,7 @@ namespace guillaume
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
-	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+		requires IsOneOf<DefaultSceneType, SceneTypes...>
 	Application<DefaultSceneType, SceneTypes...>::Application(
 		std::shared_ptr<utility::RessourceProvider> ressourceProvider)
 		: _ressourceProvider(std::move(ressourceProvider))
@@ -108,13 +108,13 @@ namespace guillaume
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
-	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+		requires IsOneOf<DefaultSceneType, SceneTypes...>
 	Application<DefaultSceneType, SceneTypes...>::~Application(void)
 	{
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
-	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+		requires IsOneOf<DefaultSceneType, SceneTypes...>
 	void Application<DefaultSceneType, SceneTypes...>::setEngine(
 		std::unique_ptr<Engine> engine)
 	{
@@ -129,51 +129,55 @@ namespace guillaume
 			_engine->addScene(sceneType.hash_code());
 		}
 		_sceneManager->setEngine(_engine.get());
-			_sceneManager->enterActiveScene();
+		_sceneManager->enterActiveScene();
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
-	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+		requires IsOneOf<DefaultSceneType, SceneTypes...>
 	void Application<DefaultSceneType, SceneTypes...>::routine(void)
 	{
+		_engine->pollEvents();
+		_engine->clear();
+		_engine->update();
 		std::apply(
 			[this](auto &...phaseDefinition) {
 				(this->runPhase(phaseDefinition), ...);
 			},
 			_systemPhases);
 		_sceneManager->processSceneTransition();
+		_engine->present();
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
-	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+		requires IsOneOf<DefaultSceneType, SceneTypes...>
 	void Application<DefaultSceneType, SceneTypes...>::pollEvents(void)
 	{
 		_engine->pollEvents();
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
-	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+		requires IsOneOf<DefaultSceneType, SceneTypes...>
 	void Application<DefaultSceneType, SceneTypes...>::update(void)
 	{
 		_engine->update();
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
-	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+		requires IsOneOf<DefaultSceneType, SceneTypes...>
 	void Application<DefaultSceneType, SceneTypes...>::clear(void)
 	{
 		_engine->clear();
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
-	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+		requires IsOneOf<DefaultSceneType, SceneTypes...>
 	void Application<DefaultSceneType, SceneTypes...>::present(void)
 	{
 		_engine->present();
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
-	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+		requires IsOneOf<DefaultSceneType, SceneTypes...>
 	bool Application<DefaultSceneType, SceneTypes...>::shouldQuit(void)
 	{
 		if (_quitEventSubscriber.hasPendingEvents()) {
@@ -184,17 +188,13 @@ namespace guillaume
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
-	    requires IsOneOf<DefaultSceneType, SceneTypes...>
+		requires IsOneOf<DefaultSceneType, SceneTypes...>
 	int Application<DefaultSceneType, SceneTypes...>::run(void)
 	{
 		this->getLogger().info() << "Entering main loop";
 		while (!shouldQuit()) {
 			try {
-				_engine->pollEvents();
-				_engine->clear();
-				_engine->update();
 				routine();
-				_engine->present();
 			} catch (const std::exception &exception) {
 				this->getLogger().error()
 					<< std::string("Application error: ") << exception.what();
@@ -204,4 +204,4 @@ namespace guillaume
 		this->getLogger().info() << "Exiting main loop";
 		return EXIT_SUCCESS;
 	}
-}  // namespace guillaume
+}	 // namespace guillaume
