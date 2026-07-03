@@ -22,7 +22,10 @@
 
 #pragma once
 
+#define _USE_MATH_DEFINES
 #include <cmath>
+#include <math.h>
+
 #include <stdexcept>
 #include <type_traits>
 #include <utility>

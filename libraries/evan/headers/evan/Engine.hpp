@@ -29,6 +29,7 @@
 #include <utility/event/keyboard_event.hpp>
 #include <utility/event/mouse_motion_event.hpp>
 #include <utility/event/mouse_button_event.hpp>
+#include <utility/event/hand_motion_event.hpp>
 
 #include <utility/logging/loggable.hpp>
 #include <utility/logging/default_logger.hpp>
@@ -636,6 +637,21 @@ namespace evan
 			utility::math::Vector2F &lastMousePosition,
 			utility::graphic::OrientationF &orientation, float rotationSpeed,
 			float deltaTime);
+
+		/**
+		 * @brief Processes hand motion events for camera movement and rotation.
+		 * @param handMotionEvent The hand motion event to process.
+		 * @param position Current camera position (modified in place).
+		 * @param orientation Current camera orientation (modified in place).
+		 * @param movementSpeed Movement speed multiplier.
+		 * @param rotationSpeed Rotation speed multiplier.
+		 */
+		void handleHandMotionEvent(
+			const std::shared_ptr<utility::event::HandMotionEvent>
+				&handMotionEvent,
+			utility::graphic::PositionF &position,
+			utility::graphic::OrientationF &orientation, float movementSpeed,
+			float rotationSpeed, float deltaTime);
 
 		/**
 		 * @brief Extracts position from view matrix.

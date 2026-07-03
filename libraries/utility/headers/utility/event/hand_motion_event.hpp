@@ -109,6 +109,15 @@ namespace utility::event
 		 * @return Grip-surface pose.
 		 */
 		graphic::PoseF getGripSurface(void) const noexcept;
+
+		/**
+		 * @brief Get the event type.
+		 * @return The type of this event (HandMotion).
+		 */
+		Type getEventType(void) const noexcept override
+		{
+			return Type::HandMotion;
+		}
 	};
 
 }	 // namespace utility::event
