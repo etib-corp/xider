@@ -48,6 +48,7 @@ namespace utility::event
 			CursorEnter,
 			FileDrop,
 			TextInput,
+			HandMotion,
 			Quit
 		};
 

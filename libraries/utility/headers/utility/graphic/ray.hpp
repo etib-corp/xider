@@ -40,6 +40,8 @@
 
 #include "utility/math/vector.hpp"
 
+#include "utility/graphic/mesh.hpp"
+
 namespace utility::graphic
 {
 	/**
@@ -360,6 +362,83 @@ namespace utility::graphic
 
 			return (rightCoord >= -halfWidth && rightCoord <= halfWidth
 					&& upCoord >= -halfHeight && upCoord <= halfHeight);
+		}
+
+		/**
+		 * @brief Convert the ray into a mesh representation for visualization.
+		 * @param length Length of the ray mesh.
+		 * @param radius Radius of the ray mesh.
+		 * @param segments Number of segments around the circumference.
+		 * @return Mesh representing the ray as a cylinder.
+		 */
+		utility::graphic::Mesh convertToMesh(float length, float radius,
+											 int segments) const
+		{
+			utility::graphic::Mesh mesh({}, {});
+
+			auto dir = utility::math::normalize(_direction);
+
+			utility::math::Vector3F up { 0.0f, 1.0f, 0.0f };
+
+			// If the ray is almost parallel to Up, choose another axis.
+			if (std::abs(utility::math::dot(dir, up)) > 0.99f)
+				up = utility::math::Vector3F { 1.0f, 0.0f, 0.0f };
+
+			auto right =
+				utility::math::normalize(utility::math::cross(dir, up));
+			auto realUp = utility::math::cross(right, dir);
+
+			utility::math::Vector3F start = _origin;
+			utility::math::Vector3F end	  = start + dir * length;
+
+			for (int i = 0; i < segments; ++i) {
+				float a0 = 2.0f * M_PI * i / segments;
+				float a1 = 2.0f * M_PI * (i + 1) / segments;
+
+				auto offset0 = right * (std::cos(a0) * radius)
+					+ realUp * (std::sin(a0) * radius);
+
+				auto offset1 = right * (std::cos(a1) * radius)
+					+ realUp * (std::sin(a1) * radius);
+
+				uint32_t base =
+					static_cast<uint32_t>(mesh.getVertices().size());
+
+				utility::graphic::VertexF vertex;
+
+				vertex.setColor({ 255, 255, 255, 255 });
+
+				auto p0 = start + offset0;
+				auto p1 = start + offset1;
+				auto p2 = end + offset0;
+				auto p3 = end + offset1;
+
+				vertex.setPosition(
+					utility::graphic::PositionF(p0.x, p0.y, p0.z));
+				mesh.addVertex(vertex);
+
+				vertex.setPosition(
+					utility::graphic::PositionF(p1.x, p1.y, p1.z));
+				mesh.addVertex(vertex);
+
+				vertex.setPosition(
+					utility::graphic::PositionF(p2.x, p2.y, p2.z));
+				mesh.addVertex(vertex);
+
+				vertex.setPosition(
+					utility::graphic::PositionF(p3.x, p3.y, p3.z));
+				mesh.addVertex(vertex);
+
+				mesh.addIndex(base + 0);
+				mesh.addIndex(base + 1);
+				mesh.addIndex(base + 2);
+
+				mesh.addIndex(base + 2);
+				mesh.addIndex(base + 1);
+				mesh.addIndex(base + 3);
+			}
+
+			return mesh;
 		}
 	};
 
