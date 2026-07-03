@@ -48,14 +48,14 @@ namespace guillaume::ecs
 		 * @brief Access mutable direct child entities owned by this registry.
 		 * @return Mutable reference to the direct child entities storage.
 		 */
-		virtual std::vector<std::unique_ptr<Entity>> &
+		virtual std::vector<std::shared_ptr<Entity>> &
 			accessDirectEntities(void) = 0;
 
 		/**
 		 * @brief Access direct child entities owned by this registry.
 		 * @return Const reference to the direct child entities storage.
 		 */
-		virtual const std::vector<std::unique_ptr<Entity>> &
+		virtual const std::vector<std::shared_ptr<Entity>> &
 			accessDirectEntities(void) const = 0;
 
 		public:
@@ -73,13 +73,13 @@ namespace guillaume::ecs
 		 * @brief Register an entity in the registry.
 		 * @param entity The entity to register.
 		 */
-		void addEntity(std::unique_ptr<Entity> entity);
+		void addEntity(std::shared_ptr<Entity> entity);
 
 		/**
 		 * @brief Get all registered entities.
 		 * @return Const reference to registered entities.
 		 */
-		const std::vector<std::unique_ptr<Entity>> &getEntities(void) const
+		const std::vector<std::shared_ptr<Entity>> &getEntities(void) const
 		{
 			return accessDirectEntities();
 		}
@@ -88,32 +88,31 @@ namespace guillaume::ecs
 		 * @brief Collect all entities in this registry hierarchy using BFS.
 		 * @return Entity pointers in breadth-first traversal order.
 		 */
-		std::vector<std::reference_wrapper<std::unique_ptr<Entity>>>
-			getEntitiesBreadthFirst(void);
+		std::vector<std::shared_ptr<Entity>> getEntitiesBreadthFirst(void);
 
 		/**
 		 * @brief Collect all entities in this registry hierarchy using BFS.
 		 * @return Const entity pointers in breadth-first traversal order.
 		 */
-		std::vector<std::reference_wrapper<const std::unique_ptr<Entity>>>
+		std::vector<std::shared_ptr<Entity>>
 			getEntitiesBreadthFirst(void) const;
 
 		/**
 		 * @brief Find an entity in this registry hierarchy by identifier.
 		 * @tparam EntityType The expected entity type to cast to.
 		 * @param identifier The entity identifier to search for.
-		 * @return Reference wrapper to the entity.
+		 * @return Shared pointer to the entity.
 		 * @throws std::runtime_error if the entity is not found.
 		 */
 		template<InheritFromEntity EntityType>
-		std::unique_ptr<EntityType> &getEntity(Entity::Identifier identifier)
+		std::shared_ptr<EntityType> getEntity(Entity::Identifier identifier)
 		{
 			for (auto &entity: accessDirectEntities()) {
 				if (entity->getIdentifier() == identifier) {
-					auto castEntity = dynamic_cast<EntityType *>(entity.get());
+					auto castEntity =
+						std::dynamic_pointer_cast<EntityType>(entity);
 					if (castEntity != nullptr) {
-						return *reinterpret_cast<std::unique_ptr<EntityType> *>(
-							&entity);
+						return castEntity;
 					} else {
 						throw std::runtime_error(
 							"Entity found for identifier: "
@@ -131,20 +130,18 @@ namespace guillaume::ecs
 		 * (const).
 		 * @tparam EntityType The expected entity type to cast to.
 		 * @param identifier The entity identifier to search for.
-		 * @return Const reference wrapper to the entity.
+		 * @return Const shared pointer to the entity.
 		 * @throws std::runtime_error if the entity is not found.
 		 */
-		template<InheritFromEntity EntityType>
-		const std::unique_ptr<EntityType> &
+		template<InheritFromEntity EntityType> std::shared_ptr<const EntityType>
 			getEntity(Entity::Identifier identifier) const
 		{
 			for (const auto &entity: accessDirectEntities()) {
 				if (entity->getIdentifier() == identifier) {
 					auto castEntity =
-						dynamic_cast<const EntityType *>(entity.get());
+						std::dynamic_pointer_cast<const EntityType>(entity);
 					if (castEntity != nullptr) {
-						return *reinterpret_cast<
-							const std::unique_ptr<EntityType> *>(&entity);
+						return castEntity;
 					} else {
 						throw std::runtime_error(
 							"Entity found for identifier: "

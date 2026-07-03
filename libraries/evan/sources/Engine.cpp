@@ -368,11 +368,14 @@ void evan::Engine::handleViewportInput(
 					mouseMotionEvent, isRightMouseButtonPressed,
 					lastMousePosition, orientation, rotationSpeed, _deltaTime);
 			}
-		}
-		else if (event->getEventType() == utility::event::Event::Type::HandMotion) {
+		} else if (event->getEventType()
+				   == utility::event::Event::Type::HandMotion) {
 			std::shared_ptr<utility::event::HandMotionEvent> handMotionEvent =
-				std::dynamic_pointer_cast<utility::event::HandMotionEvent>(event);
-			if (handMotionEvent && handMotionEvent->getHandType() == utility::event::HandEvent::HandType::Right) {
+				std::dynamic_pointer_cast<utility::event::HandMotionEvent>(
+					event);
+			if (handMotionEvent
+				&& handMotionEvent->getHandType()
+					== utility::event::HandEvent::HandType::Right) {
 				handleHandMotionEvent(handMotionEvent, position, orientation,
 									  movementSpeed, rotationSpeed, _deltaTime);
 			}
@@ -504,7 +507,8 @@ void evan::Engine::handleHandMotionEvent(
 	utility::graphic::OrientationF &orientation, float movementSpeed,
 	float rotationSpeed, float deltaTime)
 {
-	static size_t idObject = -1;	// Store the Ray object ID for the hand motion event
+	static size_t idObject =
+		-1;	   // Store the Ray object ID for the hand motion event
 
 	if (idObject != -1) {
 		this->removeObject(idObject);
@@ -513,9 +517,10 @@ void evan::Engine::handleHandMotionEvent(
 
 	utility::graphic::RayF handRay;
 	handRay.setOrigin(handMotionEvent->getAim().getPosition());
-	handRay.setDirection(handMotionEvent->getAim().getOrientation().getForward());
+	handRay.setDirection(
+		handMotionEvent->getAim().getOrientation().getForward());
 	utility::graphic::Mesh rayMesh = handRay.convertToMesh(10.0f, 0.01f, 16);
-	idObject = this->addMesh(rayMesh, "mesh_material");
+	idObject					   = this->addMesh(rayMesh, "mesh_material");
 }
 
 utility::graphic::PositionF evan::Engine::extractPositionFromViewMatrix(

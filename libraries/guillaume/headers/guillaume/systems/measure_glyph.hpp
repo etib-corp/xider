@@ -41,10 +41,13 @@ namespace guillaume::systems
 	 * @brief Structure representing a cache key for measuring glyphs.
 	 */
 	struct MeasureGlyphCacheKey {
-		std::string glyphName; ///< The name of the glyph to be measured
-		float fontSize; ///< The font size used for measuring the glyph
-		components::Glyph::Style glyphStyle; ///< The style of the glyph (e.g., filled, outlined)
-		utility::graphic::Color32Bit color; ///< The color of the glyph, which may affect its rendering and measurement
+		std::string glyphName;	  ///< The name of the glyph to be measured
+		float fontSize;	   ///< The font size used for measuring the glyph
+		components::Glyph::Style
+			glyphStyle;	   ///< The style of the glyph (e.g., filled, outlined)
+		utility::graphic::Color32Bit
+			color;	  ///< The color of the glyph, which may affect its
+					  ///< rendering and measurement
 
 		/**
 		 * @brief Equality operator for MeasureGlyphCacheKey.

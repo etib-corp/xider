@@ -69,7 +69,7 @@ namespace guillaume::ecs
 		auto traversedEntities = traveler.travel(entityRegistry);
 
 		bool hasPendingChanges = false;
-		for (auto *entity: traversedEntities) {
+		for (const auto &entity: traversedEntities) {
 			if (!componentRegistry.hasChanged(entity->getIdentifier())) {
 				continue;
 			}
@@ -87,7 +87,7 @@ namespace guillaume::ecs
 		// Per-frame setup
 		prepare();
 
-		for (const auto *entity: traversedEntities) {
+		for (const auto &entity: traversedEntities) {
 			if ((entity->getSignature() & getSignature()) != getSignature()) {
 				continue;
 			}

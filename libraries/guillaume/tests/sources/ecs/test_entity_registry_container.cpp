@@ -42,16 +42,16 @@ namespace guillaume::ecs::tests
 	class TestEntityRegistryContainer final: public EntityRegistry
 	{
 		private:
-		std::vector<std::unique_ptr<Entity>> _entities;
+		std::vector<std::shared_ptr<Entity>> _entities;
 
 		protected:
-		std::vector<std::unique_ptr<Entity>> &
+		std::vector<std::shared_ptr<Entity>> &
 			accessDirectEntities(void) override
 		{
 			return _entities;
 		}
 
-		const std::vector<std::unique_ptr<Entity>> &
+		const std::vector<std::shared_ptr<Entity>> &
 			accessDirectEntities(void) const override
 		{
 			return _entities;
@@ -61,7 +61,7 @@ namespace guillaume::ecs::tests
 	TEST_F(TestEntityRegistry, AddEntityStoresIdentifierAndSignature)
 	{
 		TestEntityRegistryContainer registry;
-		auto entity = std::make_unique<DummyEntity>();
+		auto entity = std::make_shared<DummyEntity>();
 
 		Entity::Signature signature;
 		signature.set(3);
@@ -69,9 +69,7 @@ namespace guillaume::ecs::tests
 
 		const auto identifier = entity->getIdentifier();
 
-		registry.addEntity(std::move(entity));
-
-		EXPECT_EQ(entity, nullptr);
+		registry.addEntity(entity);
 
 		ASSERT_EQ(registry.getEntities().size(), 1U);
 		EXPECT_EQ(registry.getEntities().front()->getIdentifier(), identifier);
@@ -84,14 +82,14 @@ namespace guillaume::ecs::tests
 	TEST_F(TestEntityRegistry, AddEntityTracksAllEntityIdentifiersInOrder)
 	{
 		TestEntityRegistryContainer registry;
-		auto firstEntity  = std::make_unique<DummyEntity>();
-		auto secondEntity = std::make_unique<DummyEntity>();
+		auto firstEntity  = std::make_shared<DummyEntity>();
+		auto secondEntity = std::make_shared<DummyEntity>();
 
 		const auto firstIdentifier	= firstEntity->getIdentifier();
 		const auto secondIdentifier = secondEntity->getIdentifier();
 
-		registry.addEntity(std::move(firstEntity));
-		registry.addEntity(std::move(secondEntity));
+		registry.addEntity(firstEntity);
+		registry.addEntity(secondEntity);
 
 		const auto &entities = registry.getEntities();
 		ASSERT_EQ(entities.size(), 2U);
@@ -103,22 +101,22 @@ namespace guillaume::ecs::tests
 	{
 		TestEntityRegistryContainer registry;
 
-		auto rootMatch = std::make_unique<DummyEntity>();
+		auto rootMatch = std::make_shared<DummyEntity>();
 		Entity::Signature rootSignature;
 		rootSignature.set(5);
 		rootMatch->setSignature(rootSignature);
 		const auto rootIdentifier = rootMatch->getIdentifier();
 
-		auto parent					= std::make_unique<DummyParentEntity>();
+		auto parent					= std::make_shared<DummyParentEntity>();
 		const auto parentIdentifier = parent->getIdentifier();
 
-		auto childMatch = std::make_unique<DummyEntity>();
+		auto childMatch = std::make_shared<DummyEntity>();
 		childMatch->setSignature(rootSignature);
 		const auto childIdentifier = childMatch->getIdentifier();
 
-		parent->addEntity(std::move(childMatch));
-		registry.addEntity(std::move(rootMatch));
-		registry.addEntity(std::move(parent));
+		parent->addEntity(childMatch);
+		registry.addEntity(rootMatch);
+		registry.addEntity(parent);
 
 		const auto matchingIdentifiers =
 			registry.getEntityWithSignature(rootSignature);
@@ -134,17 +132,17 @@ namespace guillaume::ecs::tests
 		TestEntityRegistryContainer registry;
 		LevelOrderTraveler traveler;
 
-		auto firstRoot				   = std::make_unique<DummyEntity>();
+		auto firstRoot				   = std::make_shared<DummyEntity>();
 		const auto firstRootIdentifier = firstRoot->getIdentifier();
 
-		auto parent					= std::make_unique<DummyParentEntity>();
-		auto child					= std::make_unique<DummyEntity>();
+		auto parent					= std::make_shared<DummyParentEntity>();
+		auto child					= std::make_shared<DummyEntity>();
 		const auto parentIdentifier = parent->getIdentifier();
 		const auto childIdentifier	= child->getIdentifier();
 
-		parent->addEntity(std::move(child));
-		registry.addEntity(std::move(firstRoot));
-		registry.addEntity(std::move(parent));
+		parent->addEntity(child);
+		registry.addEntity(firstRoot);
+		registry.addEntity(parent);
 
 		const auto entities = traveler.travel(registry);
 
@@ -159,17 +157,17 @@ namespace guillaume::ecs::tests
 		TestEntityRegistryContainer registry;
 		ReverseLevelOrderTraveler traveler;
 
-		auto firstRoot				   = std::make_unique<DummyEntity>();
+		auto firstRoot				   = std::make_shared<DummyEntity>();
 		const auto firstRootIdentifier = firstRoot->getIdentifier();
 
-		auto parent					= std::make_unique<DummyParentEntity>();
-		auto child					= std::make_unique<DummyEntity>();
+		auto parent					= std::make_shared<DummyParentEntity>();
+		auto child					= std::make_shared<DummyEntity>();
 		const auto parentIdentifier = parent->getIdentifier();
 		const auto childIdentifier	= child->getIdentifier();
 
-		parent->addEntity(std::move(child));
-		registry.addEntity(std::move(firstRoot));
-		registry.addEntity(std::move(parent));
+		parent->addEntity(child);
+		registry.addEntity(firstRoot);
+		registry.addEntity(parent);
 
 		const auto entities = traveler.travel(registry);
 
@@ -185,20 +183,20 @@ namespace guillaume::ecs::tests
 		TestEntityRegistryContainer registry;
 		ReverseLevelOrderTraveler traveler;
 
-		auto firstRoot = std::make_unique<DummyEntity>();
+		auto firstRoot = std::make_shared<DummyEntity>();
 		Entity::Signature signature;
 		signature.set(2);
 		firstRoot->setSignature(signature);
 		const auto firstRootIdentifier = firstRoot->getIdentifier();
 
-		auto parent = std::make_unique<DummyParentEntity>();
-		auto child	= std::make_unique<DummyEntity>();
+		auto parent = std::make_shared<DummyParentEntity>();
+		auto child	= std::make_shared<DummyEntity>();
 		child->setSignature(signature);
 		const auto childIdentifier = child->getIdentifier();
 
-		parent->addEntity(std::move(child));
-		registry.addEntity(std::move(firstRoot));
-		registry.addEntity(std::move(parent));
+		parent->addEntity(child);
+		registry.addEntity(firstRoot);
+		registry.addEntity(parent);
 
 		const auto matchingIdentifiers =
 			registry.getEntityWithSignature(signature, traveler);

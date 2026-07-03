@@ -201,24 +201,17 @@ glm::mat4 evan::XrSwapchainContext::getProjection(int index) const
 
 glm::mat4 evan::XrSwapchainContext::getView(int index) const
 {
-    const auto& pose = _views[index].pose;
+	const auto &pose = _views[index].pose;
 
-    glm::quat orientation(
-        pose.orientation.w,
-        pose.orientation.x,
-        pose.orientation.y,
-        pose.orientation.z);
+	glm::quat orientation(pose.orientation.w, pose.orientation.x,
+						  pose.orientation.y, pose.orientation.z);
 
-    glm::vec3 position(
-        pose.position.x,
-        pose.position.y,
-        pose.position.z);
+	glm::vec3 position(pose.position.x, pose.position.y, pose.position.z);
 
-    glm::mat4 head =
-        glm::translate(glm::mat4(1.0f), position) *
-        glm::mat4_cast(orientation);
+	glm::mat4 head =
+		glm::translate(glm::mat4(1.0f), position) * glm::mat4_cast(orientation);
 
-    return glm::inverse(head);
+	return glm::inverse(head);
 }
 
 void evan::XrSwapchainContext::setView(int index, const glm::mat4 &view)

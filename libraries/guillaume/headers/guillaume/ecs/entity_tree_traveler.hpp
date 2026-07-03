@@ -45,17 +45,17 @@ namespace guillaume::ecs
 		/**
 		 * @brief Traverse the entity hierarchy and return mutable entities.
 		 * @param entityRegistry Root entity registry to traverse.
-		 * @return Ordered mutable entity pointers.
+		 * @return Ordered mutable entity shared pointers.
 		 */
-		virtual std::vector<Entity *>
+		virtual std::vector<std::shared_ptr<Entity>>
 			travel(EntityRegistry &entityRegistry) const = 0;
 
 		/**
 		 * @brief Traverse the entity hierarchy and return const entities.
 		 * @param entityRegistry Root entity registry to traverse.
-		 * @return Ordered const entity pointers.
+		 * @return Ordered const entity shared pointers.
 		 */
-		virtual std::vector<const Entity *>
+		virtual std::vector<std::shared_ptr<const Entity>>
 			travel(const EntityRegistry &entityRegistry) const = 0;
 	};
 

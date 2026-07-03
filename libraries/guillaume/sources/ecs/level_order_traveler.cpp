@@ -27,28 +27,17 @@
 namespace guillaume::ecs
 {
 
-	std::vector<Entity *>
+	std::vector<std::shared_ptr<Entity>>
 		LevelOrderTraveler::travel(EntityRegistry &entityRegistry) const
 	{
-		auto entitiesRefs = entityRegistry.getEntitiesBreadthFirst();
-		std::vector<Entity *> result;
-		result.reserve(entitiesRefs.size());
-		for (auto &entityRef: entitiesRefs) {
-			result.push_back(entityRef.get().get());
-		}
-		return result;
+		return entityRegistry.getEntitiesBreadthFirst();
 	}
 
-	std::vector<const Entity *>
+	std::vector<std::shared_ptr<const Entity>>
 		LevelOrderTraveler::travel(const EntityRegistry &entityRegistry) const
 	{
-		auto entitiesRefs = entityRegistry.getEntitiesBreadthFirst();
-		std::vector<const Entity *> result;
-		result.reserve(entitiesRefs.size());
-		for (auto &entityRef: entitiesRefs) {
-			result.push_back(entityRef.get().get());
-		}
-		return result;
+		auto entities = entityRegistry.getEntitiesBreadthFirst();
+		return { entities.begin(), entities.end() };
 	}
 
 }	 // namespace guillaume::ecs

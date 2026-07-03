@@ -27,15 +27,15 @@
 namespace guillaume::ecs
 {
 
-	void EntityRegistry::addEntity(std::unique_ptr<Entity> entity)
+	void EntityRegistry::addEntity(std::shared_ptr<Entity> entity)
 	{
-		accessDirectEntities().push_back(std::move(entity));
+		accessDirectEntities().push_back(entity);
 	}
 
-	std::vector<std::reference_wrapper<std::unique_ptr<Entity>>>
+	std::vector<std::shared_ptr<Entity>>
 		EntityRegistry::getEntitiesBreadthFirst(void)
 	{
-		std::vector<std::reference_wrapper<std::unique_ptr<Entity>>> entities;
+		std::vector<std::shared_ptr<Entity>> entities;
 		std::queue<EntityRegistry *> registries;
 
 		registries.push(this);
@@ -44,7 +44,7 @@ namespace guillaume::ecs
 			registries.pop();
 
 			for (auto &entity: registry->accessDirectEntities()) {
-				entities.push_back(std::ref(entity));
+				entities.push_back(entity);
 
 				auto *childRegistry =
 					dynamic_cast<EntityRegistry *>(entity.get());
@@ -57,11 +57,10 @@ namespace guillaume::ecs
 		return entities;
 	}
 
-	std::vector<std::reference_wrapper<const std::unique_ptr<Entity>>>
+	std::vector<std::shared_ptr<Entity>>
 		EntityRegistry::getEntitiesBreadthFirst(void) const
 	{
-		std::vector<std::reference_wrapper<const std::unique_ptr<Entity>>>
-			entities;
+		std::vector<std::shared_ptr<Entity>> entities;
 		std::queue<const EntityRegistry *> registries;
 
 		registries.push(this);
@@ -70,7 +69,7 @@ namespace guillaume::ecs
 			registries.pop();
 
 			for (const auto &entity: registry->accessDirectEntities()) {
-				entities.push_back(std::cref(entity));
+				entities.push_back(entity);
 
 				auto *childRegistry =
 					dynamic_cast<const EntityRegistry *>(entity.get());
@@ -95,7 +94,7 @@ namespace guillaume::ecs
 		const EntityTreeTraveler &traveler) const
 	{
 		std::vector<Entity::Identifier> matchingIdentifiers;
-		for (const auto *entity: traveler.travel(*this)) {
+		for (const auto &entity: traveler.travel(*this)) {
 			if ((entity->getSignature() & systemSignature) == systemSignature) {
 				matchingIdentifiers.push_back(entity->getIdentifier());
 			}

@@ -40,7 +40,7 @@ namespace guillaume::ecs
 	class ParentEntity: public Entity, public EntityRegistry
 	{
 		private:
-		std::vector<std::unique_ptr<Entity>>
+		std::vector<std::shared_ptr<Entity>>
 			_children;	  ///< Direct child entities owned by this parent.
 
 		protected:
@@ -48,14 +48,14 @@ namespace guillaume::ecs
 		 * @brief Access mutable direct child entities owned by this registry.
 		 * @return Mutable reference to the direct child entities storage.
 		 */
-		std::vector<std::unique_ptr<Entity>> &
+		std::vector<std::shared_ptr<Entity>> &
 			accessDirectEntities(void) override;
 
 		/**
 		 * @brief Access direct child entities owned by this registry.
 		 * @return Const reference to the direct child entities storage.
 		 */
-		const std::vector<std::unique_ptr<Entity>> &
+		const std::vector<std::shared_ptr<Entity>> &
 			accessDirectEntities(void) const override;
 	};
 

@@ -40,8 +40,8 @@ namespace guillaume::components
 	class Text: public ecs::Component
 	{
 		private:
-		std::string _content {};		 ///< Text content
-		float _fontSize { 24 };	 ///< Font size of the text
+		std::string _content {};	///< Text content
+		float _fontSize { 24 };		///< Font size of the text
 		std::size_t _cursorPosition {
 			0
 		};	  ///< Cursor position for text editing
