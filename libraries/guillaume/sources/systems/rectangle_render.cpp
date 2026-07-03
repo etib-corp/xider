@@ -249,7 +249,7 @@ namespace guillaume::systems
 	void RectangleRender::cleanup(void)
 	{
 		erase_if([this](const RectangleRenderCacheKey &key,
-						 const RectangleRenderCacheEntry &entry) {
+						const RectangleRenderCacheEntry &entry) {
 			if (!entry.used) {
 				_engine->removeObject(entry.value);
 				return true;
@@ -295,7 +295,8 @@ namespace guillaume::systems
 			<< ", color: " << cacheKey.color;
 
 		if (const auto &entry = get(cacheKey); entry.has_value()) {
-			RectangleRenderCacheEntry newEntry { .used = true, .value = entry->value };
+			RectangleRenderCacheEntry newEntry { .used	= true,
+												 .value = entry->value };
 			put(cacheKey, std::move(newEntry));
 			getLogger().debug() << "Cache hit for entity " << entityIdentifier;
 			return;
@@ -317,8 +318,10 @@ namespace guillaume::systems
 
 		auto identifier = _engine->addMesh(mesh, "mesh_material");
 
-		RectangleRenderCacheEntry cacheEntry { .value = identifier,
-											   .used  = true };
+		RectangleRenderCacheEntry cacheEntry {
+			.used  = true,
+			.value = identifier,
+		};
 		put(cacheKey, std::move(cacheEntry));
 	}
 
