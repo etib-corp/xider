@@ -605,8 +605,6 @@ void evan::Renderer::recordCommandBuffer(VkRenderPass renderPass,
 
 		this->getLogger().info() << "Binding vertex buffer for ->..";
 
-		auto vertexBuffer = mesh->getVertexBuffer();
-
 		if (vertexBuffer == VK_NULL_HANDLE) {
 			this->getLogger().warning()
 				<< "Vertex buffer is null for mesh with material ID: "
