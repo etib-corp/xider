@@ -44,20 +44,22 @@ namespace guillaume::systems
 
 	void TextRender::prepare(void)
 	{
-		resetUsage();
+		apply(
+			[this](const TextRenderCacheKey &key, TextRenderCacheEntry &entry) {
+				entry.used = false;
+			});
 	}
 
 	void TextRender::cleanup(void)
 	{
-		auto unusedKeys = getUnusedKeys();
-		for (const auto &key: unusedKeys) {
-			if (auto *entry = findEntry(key)) {
-				if (entry->value.has_value()) {
-					_engine->removeObject(entry->value.value());
-				}
+		erase_if([this](const TextRenderCacheKey &key,
+						const TextRenderCacheEntry &entry) {
+			if (!entry.used) {
+				_engine->removeObject(entry.value);
+				return true;
 			}
-			erase(key);
-		}
+			return false;
+		});
 	}
 
 	void TextRender::update(const ecs::Entity::Identifier &entityIdentifier)
@@ -91,8 +93,9 @@ namespace guillaume::systems
 							<< "', fontSize: " << cacheKey.fontSize
 							<< ", color: " << cacheKey.color << ")";
 
-		if (contains(cacheKey)) {
-			markAsUsed(cacheKey);
+		if (const auto &entry = get(cacheKey); entry.has_value()) {
+			TextRenderCacheEntry newEntry { .used = true, .value = entry->value };
+			put(cacheKey, std::move(newEntry));
 			getLogger().debug() << "Cache hit for entity " << entityIdentifier;
 			return;
 		}
@@ -101,10 +104,10 @@ namespace guillaume::systems
 									cacheKey.color, cacheKey.content,
 									cacheKey.fontSize, _defaultFontPath);
 
-		auto identifier	 = _engine->addText(std::move(text));
-		auto &cacheValue = getOrCreateEntry(cacheKey);
-		cacheValue.value = identifier;
-		cacheValue.used	 = true;
+		auto identifier = _engine->addText(std::move(text));
+
+		TextRenderCacheEntry cacheEntry { .used  = true, .value = identifier };
+		put(cacheKey, std::move(cacheEntry));
 	}
 
 }	 // namespace guillaume::systems

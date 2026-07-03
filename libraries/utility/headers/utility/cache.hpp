@@ -22,308 +22,227 @@
 
 #pragma once
 
-#include <concepts>
-#include <cstddef>
-#include <optional>
 #include <map>
+#include <optional>
 #include <utility>
-#include <vector>
+#include <functional>
+#include <concepts>
 
 namespace utility
 {
+
 	/**
-	 * @brief Concept for cache key types.
-	 *
-	 * A type is considered a valid cache key if it is equality comparable and
-	 * can be hashed using std::hash.
-	 *
-	 * @tparam T The type to check.
+	 * @brief Concept to constrain cache entry type.
+	 * @tparam T Candidate entry type.
 	 */
 	template<typename T>
-	concept CacheKey = std::equality_comparable<T> && requires(T a, T b) {
-		{ a < b } -> std::convertible_to<bool>;
+	concept CacheEntry = std::movable<T>;
+
+	/**
+	 * @brief Concept to constrain cache key type.
+	 * @tparam Key Candidate key type.
+	 * @tparam Compare Comparison function type for ordering keys.
+	 */
+	template<typename Key, typename Compare = std::less<Key>>
+	concept CacheKey = requires(const Key &a, const Key &b, Compare comp) {
+		{ comp(a, b) } -> std::convertible_to<bool>;
 	};
 
 	/**
-	 * @brief Concept for cache value types.
+	 * @brief A thread-safe cache for storing key-value pairs.
 	 *
-	 * A type is considered a valid cache value if it is movable.
+	 * This class provides a thread-safe cache that allows storing and
+	 * retrieving key-value pairs. It uses a std::map internally to manage the
+	 * entries and provides methods for adding, retrieving, and removing
+	 * entries.
 	 *
-	 * @tparam T The type to check.
+	 * @tparam Key Type of the keys used in the cache.
+	 * @tparam Entry Type of the values stored in the cache.
+	 * @tparam Compare Comparison function type for ordering keys (default is
+	 * std::less<Key>).
 	 */
-	template<typename T>
-	concept CacheValue = std::movable<T>;
-
-	/**
-	 * @brief A generic cache system that stores key-value pairs.
-	 *
-	 * This class provides a simple caching mechanism for storing and retrieving
-	 * values associated with keys. It supports basic operations such as
-	 * insertion, retrieval, and removal of cache entries.
-	 *
-	 * @tparam KeyType The type of the keys used in the cache. Must satisfy the
-	 * CacheKey concept.
-	 * @tparam ValueType The type of the values stored in the cache. Must
-	 * satisfy the CacheValue concept.
-	 */
-	template<CacheKey KeyType, CacheValue ValueType> class Cache
+	template<typename Key, CacheEntry Entry, typename Compare = std::less<Key>>
+		requires CacheKey<Key, Compare>
+	class Cache
 	{
-		public:
-		public:
-		/**
-		 * @brief Represents a single entry in the cache.
-		 *
-		 * Each cache entry contains an optional value, an object ID, and a
-		 * flag indicating whether the entry has been used.
-		 */
-		struct CacheEntry {
-			std::optional<ValueType>
-				value {};	 ///< The cached value, if present.
-			bool used {
-				false
-			};	  ///< Indicates whether the entry has been used.
-
-			/**
-			 * @brief Checks if the cache entry has a value.
-			 *
-			 * @return true if the entry has a value, false otherwise.
-			 */
-			[[nodiscard]] bool hasValue() const noexcept
-			{
-				return value.has_value();
-			}
-		};
-
 		private:
-		std::map<KeyType, CacheEntry>
-			_cache;	   ///< The underlying container that holds the cache
-					   ///< entries.
+		std::map<Key, Entry, Compare>
+			_entries;	 ///< Internal storage for cache entries, using a
+						 ///< std::map to manage key-value pairs.
 
 		public:
 		/**
-		 * @brief Constructs a new Cache object.
-		 *
-		 * Initializes an empty cache system.
+		 * @brief Default constructor for the Cache class.
 		 */
 		Cache(void) = default;
 
 		/**
-		 * @brief Copy constructor for Cache.
-		 *
-		 * @param other The Cache object to copy from.
+		 * @brief Default destructor for the Cache class.
 		 */
-		Cache(const Cache &other) = default;
+		~Cache(void) = default;
 
 		/**
-		 * @brief Move constructor for Cache.
-		 *
-		 * @param other The Cache object to move from.
+		 * @brief Deleted copy constructor to prevent copying of the cache.
 		 */
-		Cache(Cache &&other) noexcept = default;
+		Cache(const Cache &other) = delete;
 
 		/**
-		 * @brief Copy assignment operator for Cache.
-		 *
-		 * @param other The Cache object to copy from.
-		 * @return A reference to the current Cache object.
+		 * @brief Deleted copy assignment operator to prevent copying of the
+		 * cache.
 		 */
-		Cache &operator=(const Cache &other) = default;
+		Cache &operator=(const Cache &other) = delete;
 
 		/**
-		 * @brief Move assignment operator for Cache.
-		 *
-		 * @param other The Cache object to move from.
-		 * @return A reference to the current Cache object.
+		 * @brief Deleted move constructor to prevent moving of the cache.
 		 */
-		Cache &operator=(Cache &&other) noexcept = default;
+		Cache(Cache &&other) noexcept = delete;
 
 		/**
-		 * @brief Destructor for Cache.
-		 *
-		 * Cleans up any resources used by the cache system.
+		 * @brief Deleted move assignment operator to prevent moving of the
+		 * cache.
 		 */
-		virtual ~Cache(void) = default;
+		Cache &operator=(Cache &&other) noexcept = delete;
 
 		/**
-		 * @brief Checks if the cache contains an entry for the given key.
-		 *
+		 * @brief Check if the cache contains a specific key.
 		 * @param key The key to check for in the cache.
-		 * @return true if the cache contains an entry for the key, false
-		 * otherwise.
+		 * @return True if the key exists in the cache, false otherwise.
 		 */
-		[[nodiscard]] bool contains(const KeyType &key) const
+		bool contains(const Key &key) const
 		{
-			return _cache.contains(key);
+			return _entries.find(key) != _entries.end();
 		}
 
 		/**
-		 * @brief Checks if the cache entry for the given key is valid and
-		 * matches the provided current value.
-		 *
-		 * @param key The key to check in the cache.
-		 * @param currentValue The current value to compare against the cached
-		 * value.
-		 * @return true if the cache entry is valid and matches the current
-		 * value, false otherwise.
+		 * @brief Retrieve the value associated with a specific key.
+		 * @param key The key to look up in the cache.
+		 * @return An optional containing the value if the key exists, or
+		 * std::nullopt if the key is not found.
 		 */
-		[[nodiscard]] bool isValid(const KeyType &key,
-								   const ValueType &currentValue) const
-			requires std::equality_comparable<ValueType>
+		std::optional<Entry> get(const Key &key) const
 		{
-			const auto it = _cache.find(key);
-			return it != _cache.end() && it->second.value.has_value()
-				&& *it->second.value == currentValue;
+			auto it = _entries.find(key);
+			if (it == _entries.end()) {
+				return std::nullopt;
+			}
+			return it->second;
 		}
 
 		/**
-		 * @brief Finds the cache entry for the given key.
-		 *
-		 * @param key The key to find in the cache.
-		 * @return A pointer to the CacheEntry if found, nullptr otherwise.
+		 * @brief Add or update a key-value pair in the cache.
+		 * @param key The key to add or update.
+		 * @param value The value associated with the key.
 		 */
-		[[nodiscard]] CacheEntry *findEntry(const KeyType &key) noexcept
+		void put(const Key &key, const Entry &value)
 		{
-			const auto it = _cache.find(key);
-			return it != _cache.end() ? &it->second : nullptr;
+			_entries.insert_or_assign(key, value);
 		}
 
 		/**
-		 * @brief Finds the cache entry for the given key (const version).
-		 *
-		 * @param key The key to find in the cache.
-		 * @return A pointer to the CacheEntry if found, nullptr otherwise.
+		 * @brief Add or update a key-value pair in the cache using move
+		 * semantics.
+		 * @param key The key to add or update (moved).
+		 * @param value The value associated with the key (moved).
 		 */
-		[[nodiscard]] const CacheEntry *
-			findEntry(const KeyType &key) const noexcept
+		void put(Key &&key, Entry &&value)
 		{
-			const auto it = _cache.find(key);
-			return it != _cache.end() ? &it->second : nullptr;
+			_entries.insert_or_assign(std::move(key), std::move(value));
 		}
 
 		/**
-		 * @brief Gets the cache entry for the given key, creating it if it
-		 * doesn't exist.
-		 *
-		 * @param key The key to get or create in the cache.
-		 * @return A reference to the CacheEntry.
-		 */
-		CacheEntry &getOrCreateEntry(const KeyType &key)
-		{
-			return _cache.try_emplace(key).first->second;
-		}
-
-		/**
-		 * @brief Emplaces a value into the cache for the given key.
-		 *
-		 * If an entry for the key already exists, it will be updated with the
-		 * new value. If no entry exists, a new one will be created.
-		 *
-		 * @tparam Args The types of the arguments to forward to the value's
-		 * constructor.
-		 * @param key The key for which to emplace the value.
-		 * @param args The arguments to forward to the value's constructor.
-		 * @return A reference to the CacheEntry containing the emplaced value.
+		 * @brief Emplace a new entry in the cache with the given key and
+		 * constructor arguments.
+		 * @tparam Args Types of the constructor arguments for the entry.
+		 * @param key The key to associate with the new entry.
+		 * @param args Constructor arguments for the entry.
+		 * @return Reference to the newly emplaced entry.
 		 */
 		template<typename... Args>
-		CacheEntry &emplaceValue(const KeyType &key, Args &&...args)
+		Entry &emplace(const Key &key, Args &&...args)
 		{
-			auto &entry = getOrCreateEntry(key);
-			entry.value.emplace(std::forward<Args>(args)...);
-			entry.used = true;
-			return entry;
+			auto [it, inserted] =
+				_entries.try_emplace(key, std::forward<Args>(args)...);
+			return it->second;
 		}
 
 		/**
-		 * @brief Erases the cache entry for the given key.
-		 *
-		 * @param key The key of the entry to erase.
-		 * @return true if an entry was erased, false if no entry existed for
-		 * the key.
+		 * @brief Emplace a new entry in the cache with the given key and
+		 * constructor arguments using move semantics.
+		 * @tparam Args Types of the constructor arguments for the entry.
+		 * @param key The key to associate with the new entry (moved).
+		 * @param args Constructor arguments for the entry.
+		 * @return Reference to the newly emplaced entry.
 		 */
-		bool erase(const KeyType &key)
+		template<typename... Args> Entry &emplace(Key &&key, Args &&...args)
 		{
-			return _cache.erase(key) > 0;
+			auto [it, inserted] = _entries.try_emplace(
+				std::move(key), std::forward<Args>(args)...);
+			return it->second;
 		}
 
 		/**
-		 * @brief Clears all entries from the cache.
-		 *
-		 * This function removes all key-value pairs from the cache, leaving it
-		 * empty.
+		 * @brief Remove an entry from the cache.
+		 * @param key The key of the entry to remove.
+		 * @return True if the entry was removed, false if it was not found.
 		 */
-		void clear() noexcept
+		bool erase(const Key &key)
 		{
-			_cache.clear();
+			return _entries.erase(key) > 0;
 		}
 
 		/**
-		 * @brief Marks the cache entry for the given key as used.
-		 *
-		 * If an entry for the key exists, its 'used' flag will be set to true.
-		 *
-		 * @param key The key of the entry to mark as used.
+		 * @brief Remove entries from the cache based on a predicate.
+		 * @param predicate A function that takes a key and entry and returns
+		 * true if the entry should be removed.
 		 */
-		void markAsUsed(const KeyType &key)
+		void erase_if(
+			const std::function<bool(const Key &, const Entry &)> &predicate)
 		{
-			if (auto *entry = findEntry(key)) {
-				entry->used = true;
-			}
-		}
-
-		/**
-		 * @brief Marks the cache entry for the given key as unused.
-		 *
-		 * If an entry for the key exists, its 'used' flag will be set to false.
-		 *
-		 * @param key The key of the entry to mark as unused.
-		 */
-		void markAsUnused(const KeyType &key)
-		{
-			if (auto *entry = findEntry(key)) {
-				entry->used = false;
-			}
-		}
-
-		/**
-		 * @brief Resets the 'used' flag for all cache entries to false.
-		 *
-		 * This function iterates through all entries in the cache and sets
-		 * their 'used' flags to false, effectively marking them as unused.
-		 */
-		void resetUsage(void) noexcept
-		{
-			for (auto &[_, entry]: _cache) {
-				entry.used = false;
-			}
-		}
-
-		/**
-		 * @brief Checks if the cache is empty.
-		 *
-		 * @return true if the cache contains no entries, false otherwise.
-		 */
-		[[nodiscard]] bool empty(void) const noexcept
-		{
-			return _cache.empty();
-		}
-
-		/**
-		 * @brief Gets a list of keys for entries that are marked as unused.
-		 *
-		 * This function iterates through the cache and collects the keys of
-		 * entries whose 'used' flag is false.
-		 *
-		 * @return A vector containing the keys of unused cache entries.
-		 */
-		[[nodiscard]] std::vector<KeyType> getUnusedKeys(void) const
-		{
-			std::vector<KeyType> unusedKeys;
-			for (const auto &[key, entry]: _cache) {
-				if (!entry.used) {
-					unusedKeys.push_back(key);
+			for (auto it = _entries.begin(); it != _entries.end();) {
+				if (predicate(it->first, it->second)) {
+					it = _entries.erase(it);
+				} else {
+					++it;
 				}
 			}
-			return unusedKeys;
+		}
+
+		/**
+		 * @brief Apply a function to each entry in the cache.
+		 * @param function A function that takes a key and entry and performs
+		 * an operation on them.
+		 */
+		void apply(const std::function<void(const Key &, Entry &)> &function)
+		{
+			for (auto &[key, entry]: _entries) {
+				function(key, entry);
+			}
+		}
+
+		/**
+		 * @brief Clear all entries from the cache.
+		 */
+		void clear(void)
+		{
+			_entries.clear();
+		}
+
+		/**
+		 * @brief Get the number of entries in the cache.
+		 * @return The number of entries in the cache.
+		 */
+		std::map<Key, Entry, Compare>::size_type size(void) const
+		{
+			return _entries.size();
+		}
+
+		/**
+		 * @brief Check if the cache is empty.
+		 * @return True if the cache is empty, false otherwise.
+		 */
+		bool empty(void) const
+		{
+			return _entries.empty();
 		}
 	};
 

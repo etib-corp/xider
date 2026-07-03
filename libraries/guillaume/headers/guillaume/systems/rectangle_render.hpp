@@ -107,6 +107,16 @@ namespace guillaume::systems
 	};
 
 	/**
+	 * @brief Entry structure for caching rectangle rendering results.
+	 */
+	struct RectangleRenderCacheEntry {
+		bool used;	  ///< Flag indicating whether the cache entry has been used
+					  ///< in the current frame
+		size_t value;	 ///< The cached value associated with the glyph
+						 ///< rendering result
+	};
+
+	/**
 	 * @brief System handling rectangle rendering from ECS components.
 	 * @see components::Transform
 	 * @see components::Bound
@@ -114,7 +124,8 @@ namespace guillaume::systems
 	 * @see components::Borders
 	 */
 	class RectangleRender:
-		public utility::Cache<RectangleRenderCacheKey, size_t>,
+		public utility::Cache<RectangleRenderCacheKey,
+							  RectangleRenderCacheEntry>,
 		public ecs::SystemFiller<components::Transform, components::Bound,
 								 components::Color, components::Borders>
 	{

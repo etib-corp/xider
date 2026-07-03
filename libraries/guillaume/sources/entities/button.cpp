@@ -711,11 +711,5 @@ namespace guillaume::entities
 		setSize(_size);
 		setMorph(_isMorph);
 		setOnClick(_onClick);
-
-		auto &bound = getComponentRegistry().getComponent<components::Bound>(
-			getIdentifier());
-		getLogger().error()
-			<< "Button entity " << getIdentifier()
-			<< " updated with bound: " << bound;
 	}
 }	 // namespace guillaume::entities

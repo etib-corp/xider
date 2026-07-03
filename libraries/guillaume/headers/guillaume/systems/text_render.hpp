@@ -104,12 +104,22 @@ namespace guillaume::systems
 	};
 
 	/**
+	 * @brief Entry structure for caching text rendering results.
+	 */
+	struct TextRenderCacheEntry {
+		bool used;	  ///< Flag indicating whether the cache entry has been used
+					  ///< in the current frame
+		size_t value;	 ///< The cached value associated with the text
+						 ///< rendering result
+	};
+
+	/**
 	 * @brief System handling text rendering from ECS components.
 	 * @see components::Text
 	 * @see components::Transform
 	 */
 	class TextRender:
-		public utility::Cache<TextRenderCacheKey, size_t>,
+		public utility::Cache<TextRenderCacheKey, TextRenderCacheEntry>,
 		public ecs::SystemFiller<components::Transform, components::Text,
 								 components::Color>
 	{

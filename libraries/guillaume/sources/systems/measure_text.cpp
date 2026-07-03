@@ -85,12 +85,11 @@ namespace guillaume::systems
 		if (contains(cacheKey)) {
 			getLogger().debug() << "Text '" << cacheKey.content
 								<< "' already measured, skipping.";
-			auto &cacheValue = getOrCreateEntry(cacheKey);
-			if (cacheValue.value.has_value()) {
+			const auto &cacheValue = get(cacheKey);
+			if (cacheValue.has_value()) {
 				getComponent<components::Bound>(entityIdentifier)
-					.setWidth(cacheValue.value->getWidth())
-					.setHeight(cacheValue.value->getHeight());
-				cacheValue.used = true;
+					.setWidth(cacheValue->getWidth())
+					.setHeight(cacheValue->getHeight());
 			}
 			return;
 		}
@@ -107,9 +106,7 @@ namespace guillaume::systems
 			.setWidth(textSize.getWidth())
 			.setHeight(textSize.getHeight());
 
-		auto &cacheValue = getOrCreateEntry(cacheKey);
-		cacheValue.value = textSize;
-		cacheValue.used	 = true;
+		put(cacheKey, textSize);
 	}
 
 }	 // namespace guillaume::systems

@@ -240,20 +240,22 @@ namespace guillaume::systems
 
 	void RectangleRender::prepare(void)
 	{
-		resetUsage();
+		apply([this](const RectangleRenderCacheKey &key,
+					 RectangleRenderCacheEntry &entry) {
+			entry.used = false;
+		});
 	}
 
 	void RectangleRender::cleanup(void)
 	{
-		auto unusedKeys = getUnusedKeys();
-		for (const auto &key: unusedKeys) {
-			if (auto *entry = findEntry(key)) {
-				if (entry->value.has_value()) {
-					_engine->removeObject(entry->value.value());
-				}
+		erase_if([this](const RectangleRenderCacheKey &key,
+						 const RectangleRenderCacheEntry &entry) {
+			if (!entry.used) {
+				_engine->removeObject(entry.value);
+				return true;
 			}
-			erase(key);
-		}
+			return false;
+		});
 	}
 
 	void
@@ -292,8 +294,9 @@ namespace guillaume::systems
 			<< ", size: " << cacheKey.size << ", borders: " << cacheKey.borders
 			<< ", color: " << cacheKey.color;
 
-		if (contains(cacheKey)) {
-			markAsUsed(cacheKey);
+		if (const auto &entry = get(cacheKey); entry.has_value()) {
+			RectangleRenderCacheEntry newEntry { .used = true, .value = entry->value };
+			put(cacheKey, std::move(newEntry));
 			getLogger().debug() << "Cache hit for entity " << entityIdentifier;
 			return;
 		}
@@ -312,10 +315,11 @@ namespace guillaume::systems
 									std::vector<uint32_t> {});
 		buildTriangleFanVertices(mesh, center, roundedVertices, cacheKey.color);
 
-		auto identifier	 = _engine->addMesh(mesh, "mesh_material");
-		auto &cacheValue = getOrCreateEntry(cacheKey);
-		cacheValue.value = identifier;
-		cacheValue.used	 = true;
+		auto identifier = _engine->addMesh(mesh, "mesh_material");
+
+		RectangleRenderCacheEntry cacheEntry { .value = identifier,
+											   .used  = true };
+		put(cacheKey, std::move(cacheEntry));
 	}
 
 }	 // namespace guillaume::systems

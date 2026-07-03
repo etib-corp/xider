@@ -57,20 +57,22 @@ namespace guillaume::systems
 
 	void GlyphRender::prepare(void)
 	{
-		resetUsage();
+		apply([this](const GlyphRenderCacheKey &key,
+					 GlyphRenderCacheEntry &entry) {
+			entry.used = false;
+		});
 	}
 
 	void GlyphRender::cleanup(void)
 	{
-		auto unusedKeys = getUnusedKeys();
-		for (const auto &key: unusedKeys) {
-			if (auto *entry = findEntry(key)) {
-				if (entry->value.has_value()) {
-					_engine->removeObject(entry->value.value());
-				}
+		erase_if([this](const GlyphRenderCacheKey &key,
+						const GlyphRenderCacheEntry &entry) {
+			if (!entry.used) {
+				_engine->removeObject(entry.value);
+				return true;
 			}
-			erase(key);
-		}
+			return false;
+		});
 	}
 
 	void GlyphRender::update(const ecs::Entity::Identifier &entityIdentifier)
@@ -108,8 +110,10 @@ namespace guillaume::systems
 		getLogger().debug() << "Glyph code found for '" << cacheKey.glyphName
 							<< "': " << glyphComponent.getCode();
 
-		if (contains(cacheKey)) {
-			markAsUsed(cacheKey);
+		if (const auto &entry = get(cacheKey); entry.has_value()) {
+			GlyphRenderCacheEntry newEntry { .used	= true,
+											 .value = entry->value };
+			put(cacheKey, std::move(newEntry));
 			getLogger().debug() << "Cache hit for entity " << entityIdentifier;
 			return;
 		}
@@ -125,10 +129,10 @@ namespace guillaume::systems
 			utility::graphic::CodePoints::toUtf8(glyphCode), cacheKey.fontSize,
 			_defaultFontPath);
 
-		auto identifier	 = _engine->addText(std::move(glyphText));
-		auto &cacheValue = getOrCreateEntry(cacheKey);
-		cacheValue.value = identifier;
-		cacheValue.used	 = true;
+		auto identifier = _engine->addText(std::move(glyphText));
+
+		GlyphRenderCacheEntry cacheEntry { .used = true, .value = identifier };
+		put(cacheKey, std::move(cacheEntry));
 	}
 
 }	 // namespace guillaume::systems

@@ -93,7 +93,7 @@ namespace guillaume::systems
 		{
 			return !(*this == other);
 		}
-		
+
 		/**
 		 * @brief Less-than operator for GlyphRenderCacheKey.
 		 * @param other The other GlyphRenderCacheKey to compare with.
@@ -121,6 +121,16 @@ namespace guillaume::systems
 	};
 
 	/**
+	 * @brief Cache entry structure for glyph rendering results.
+	 */
+	struct GlyphRenderCacheEntry {
+		bool used;	  ///< Flag indicating whether the cache entry has been used
+					  ///< in the current frame
+		size_t value;	 ///< The cached value associated with the glyph
+						 ///< rendering result
+	};
+
+	/**
 	 * @brief System handling glyph rendering from ECS components.
 	 * @see components::Transform
 	 * @see components::Glyph
@@ -128,7 +138,7 @@ namespace guillaume::systems
 	 * @see components::Bound
 	 */
 	class GlyphRender:
-		protected utility::Cache<GlyphRenderCacheKey, size_t>,
+		public utility::Cache<GlyphRenderCacheKey, GlyphRenderCacheEntry>,
 		public ecs::SystemFiller<components::Transform, components::Bound,
 								 components::Glyph, components::Color>
 	{
