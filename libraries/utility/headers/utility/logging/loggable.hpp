@@ -68,6 +68,30 @@ namespace utility::logging
 		}
 
 		/**
+		 * @brief Move constructor for Loggable.
+		 * @param other The Loggable instance to move from.
+		 */
+		Loggable(Loggable &&other) noexcept
+			: _name(std::move(other._name))
+			, _logger(std::move(other._logger))
+		{
+		}
+
+		/**
+		 * @brief Move assignment operator for Loggable.
+		 * @param other The Loggable instance to move from.
+		 * @return Reference to this Loggable instance.
+		 */
+		Loggable &operator=(Loggable &&other) noexcept
+		{
+			if (this != &other) {
+				_name	= std::move(other._name);
+				_logger = std::move(other._logger);
+			}
+			return *this;
+		}
+
+		/**
 		 * @brief Get the internal logger.
 		 * @return Reference to the internal Logger instance.
 		 */

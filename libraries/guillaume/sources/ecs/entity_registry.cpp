@@ -32,9 +32,10 @@ namespace guillaume::ecs
 		accessDirectEntities().push_back(std::move(entity));
 	}
 
-	std::vector<Entity *> EntityRegistry::getEntitiesBreadthFirst(void)
+	std::vector<std::reference_wrapper<std::unique_ptr<Entity>>>
+		EntityRegistry::getEntitiesBreadthFirst(void)
 	{
-		std::vector<Entity *> entities;
+		std::vector<std::reference_wrapper<std::unique_ptr<Entity>>> entities;
 		std::queue<EntityRegistry *> registries;
 
 		registries.push(this);
@@ -43,10 +44,10 @@ namespace guillaume::ecs
 			registries.pop();
 
 			for (auto &entity: registry->accessDirectEntities()) {
-				Entity *rawEntity = entity.get();
-				entities.push_back(rawEntity);
+				entities.push_back(std::ref(entity));
 
-				auto *childRegistry = dynamic_cast<EntityRegistry *>(rawEntity);
+				auto *childRegistry =
+					dynamic_cast<EntityRegistry *>(entity.get());
 				if (childRegistry != nullptr) {
 					registries.push(childRegistry);
 				}
@@ -56,10 +57,11 @@ namespace guillaume::ecs
 		return entities;
 	}
 
-	std::vector<const Entity *>
+	std::vector<std::reference_wrapper<const std::unique_ptr<Entity>>>
 		EntityRegistry::getEntitiesBreadthFirst(void) const
 	{
-		std::vector<const Entity *> entities;
+		std::vector<std::reference_wrapper<const std::unique_ptr<Entity>>>
+			entities;
 		std::queue<const EntityRegistry *> registries;
 
 		registries.push(this);
@@ -68,11 +70,10 @@ namespace guillaume::ecs
 			registries.pop();
 
 			for (const auto &entity: registry->accessDirectEntities()) {
-				const Entity *rawEntity = entity.get();
-				entities.push_back(rawEntity);
+				entities.push_back(std::cref(entity));
 
 				auto *childRegistry =
-					dynamic_cast<const EntityRegistry *>(rawEntity);
+					dynamic_cast<const EntityRegistry *>(entity.get());
 				if (childRegistry != nullptr) {
 					registries.push(childRegistry);
 				}
@@ -101,26 +102,6 @@ namespace guillaume::ecs
 		}
 
 		return matchingIdentifiers;
-	}
-
-	Entity *EntityRegistry::getEntity(Entity::Identifier identifier)
-	{
-		for (auto *entity: getEntitiesBreadthFirst()) {
-			if (entity->getIdentifier() == identifier) {
-				return entity;
-			}
-		}
-		return nullptr;
-	}
-
-	const Entity *EntityRegistry::getEntity(Entity::Identifier identifier) const
-	{
-		for (const auto *entity: getEntitiesBreadthFirst()) {
-			if (entity->getIdentifier() == identifier) {
-				return entity;
-			}
-		}
-		return nullptr;
 	}
 
 }	 // namespace guillaume::ecs

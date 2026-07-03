@@ -27,27 +27,6 @@
 
 namespace guillaume::systems
 {
-	void RectangleRender::prepare(void)
-	{
-		for (auto &[_, entry]: _cache) {
-			entry.used = false;
-		}
-	}
-
-	void RectangleRender::cleanup(void)
-	{
-		for (auto it = _cache.begin(); it != _cache.end();) {
-			if (it->second.used) {
-				++it;
-				continue;
-			}
-			if (it->second.objectId != 0) {
-				_engine->removeObject(it->second.objectId);
-			}
-			it = _cache.erase(it);
-		}
-	}
-
 	utility::graphic::PositionF RectangleRender::rotatePositionByQuaternion(
 		const utility::graphic::PositionF &position,
 		const utility::graphic::OrientationF &orientation) const
@@ -183,11 +162,11 @@ namespace guillaume::systems
 			const utility::graphic::PositionF &center,
 			const utility::graphic::OrientationF &orientation,
 			const utility::math::Vector2F &scale,
-			const utility::math::Vector2F &size, float radius, int arcSegments,
+			const utility::graphic::SizeF &size, float radius, int arcSegments,
 			float epsilon)
 	{
-		const float halfWidth	 = (size[0] / 2.0f) * std::abs(scale[0]);
-		const float halfHeight	 = (size[1] / 2.0f) * std::abs(scale[1]);
+		const float halfWidth  = (size.getWidth() / 2.0f) * std::abs(scale[0]);
+		const float halfHeight = (size.getHeight() / 2.0f) * std::abs(scale[1]);
 		const auto localVertices = buildLocalRoundedRectVertices(
 			halfWidth, halfHeight, radius, arcSegments, epsilon);
 		return transformToWorldVertices(localVertices, center, orientation);
@@ -256,11 +235,27 @@ namespace guillaume::systems
 
 	RectangleRender::~RectangleRender(void)
 	{
-		for (auto &[_, entry]: _cache) {
-			if (entry.objectId != 0) {
-				_engine->removeObject(entry.objectId);
+		clear();
+	}
+
+	void RectangleRender::prepare(void)
+	{
+		apply([this](const RectangleRenderCacheKey &key,
+					 RectangleRenderCacheEntry &entry) {
+			entry.used = false;
+		});
+	}
+
+	void RectangleRender::cleanup(void)
+	{
+		erase_if([this](const RectangleRenderCacheKey &key,
+						const RectangleRenderCacheEntry &entry) {
+			if (!entry.used) {
+				_engine->removeObject(entry.value);
+				return true;
 			}
-		}
+			return false;
+		});
 	}
 
 	void
@@ -285,37 +280,49 @@ namespace guillaume::systems
 		const auto &bordersComponent =
 			getComponent<components::Borders>(entityIdentifier);
 
-		const auto pose		   = transformComponent.getPose();
-		const auto position	   = pose.getPosition();
-		const auto orientation = pose.getOrientation();
-		const auto width	   = boundComponent.getWidth();
-		const auto height	   = boundComponent.getHeight();
-		const auto color	   = colorComponent.getColor();
-		const float radius	   = extractAverageRadius(bordersComponent);
-		auto &cacheEntry	   = _cache[entityIdentifier];
-		cacheEntry.used		   = true;
+		RectangleRenderCacheKey cacheKey { transformComponent.getPose(),
+										   boundComponent, bordersComponent,
+										   colorComponent.getColor() };
 
-		const utility::graphic::PositionF center(position[0] + width / 2.0f,
-												 position[1] + height / 2.0f,
-												 position[2]);
-		const auto roundedVertices = buildRoundedRectVertices(
-			center, orientation, utility::math::Vector2F({ 1.0f, 1.0f }),
-			utility::math::Vector2F({ (float)width, (float)height }), radius);
-
-		utility::graphic::Mesh mesh(std::vector<utility::graphic::VertexF> {},
-									std::vector<uint32_t> {});
-		buildTriangleFanVertices(mesh, center, roundedVertices, color);
-
-		if (cacheEntry.mesh.has_value() && *cacheEntry.mesh == mesh) {
+		if (cacheKey.size.getWidth() <= 0.0f
+			|| cacheKey.size.getHeight() <= 0.0f) {
 			return;
 		}
 
-		if (cacheEntry.objectId != 0) {
-			_engine->removeObject(cacheEntry.objectId);
+		getLogger().debug()
+			<< "Rendering rectangle with pose: " << cacheKey.pose
+			<< ", size: " << cacheKey.size << ", borders: " << cacheKey.borders
+			<< ", color: " << cacheKey.color;
+
+		if (const auto &entry = get(cacheKey); entry.has_value()) {
+			RectangleRenderCacheEntry newEntry { .used	= true,
+												 .value = entry->value };
+			put(cacheKey, std::move(newEntry));
+			getLogger().debug() << "Cache hit for entity " << entityIdentifier;
+			return;
 		}
 
-		cacheEntry.objectId = _engine->addMesh(mesh, "mesh_material");
-		cacheEntry.mesh		= mesh;
+		const utility::graphic::PositionF center(
+			cacheKey.pose.getPosition().x + cacheKey.size.getWidth() / 2.0f,
+			cacheKey.pose.getPosition().y + cacheKey.size.getHeight() / 2.0f,
+			cacheKey.pose.getPosition().z);
+
+		const auto roundedVertices = buildRoundedRectVertices(
+			center, cacheKey.pose.getOrientation(),
+			utility::math::Vector2F({ 1.0f, 1.0f }), cacheKey.size,
+			extractAverageRadius(cacheKey.borders), 16, 0.001f);
+
+		utility::graphic::Mesh mesh(std::vector<utility::graphic::VertexF> {},
+									std::vector<uint32_t> {});
+		buildTriangleFanVertices(mesh, center, roundedVertices, cacheKey.color);
+
+		auto identifier = _engine->addMesh(mesh, "mesh_material");
+
+		RectangleRenderCacheEntry cacheEntry {
+			.used  = true,
+			.value = identifier,
+		};
+		put(cacheKey, std::move(cacheEntry));
 	}
 
 }	 // namespace guillaume::systems

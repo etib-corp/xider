@@ -133,9 +133,10 @@ namespace guillaume
 	{
 		getLogger().info() << "Scene entered";
 
-		for (auto *entity: getEntitiesBreadthFirst()) {
-			if (_componentRegistry.hasChanged(entity->getIdentifier())) {
-				entity->update();
+		for (auto &entityRef: getEntitiesBreadthFirst()) {
+			if (_componentRegistry.hasChanged(
+					entityRef.get()->getIdentifier())) {
+				entityRef.get()->update();
 			}
 		}
 		_componentRegistry.resetChangedFlags();

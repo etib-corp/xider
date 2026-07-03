@@ -39,6 +39,7 @@
 #include <utility/graphic/orientation.hpp>
 #include <utility/graphic/text/text.hpp>
 #include <utility/graphic/mesh.hpp>
+#include <utility/graphic/size.hpp>
 
 #include <utility/math/vector.hpp>
 
@@ -160,9 +161,9 @@ namespace guillaume
 		 * rendered with a specific font.
 		 * @param text The text to measure.
 		 * @return A 2D vector containing the width and height of the rendered
-		 * text in pixels in the form of utility::math::Vector<float, 2>.
+		 * text in pixels in the form of utility::math::Vector2F.
 		 */
-		virtual utility::math::Vector2F
+		virtual utility::graphic::SizeF
 			measureText(const utility::graphic::Text &text) const = 0;
 
 		/**
@@ -170,7 +171,7 @@ namespace guillaume
 		 * @param text The text to draw.
 		 * @return A unique identifier for the added text.
 		 */
-		virtual size_t addText(const utility::graphic::Text &text) = 0;
+		virtual size_t addText(utility::graphic::Text text) = 0;
 
 		/**
 		 * @brief Get the full view model.

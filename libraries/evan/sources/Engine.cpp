@@ -35,11 +35,11 @@ evan::Engine::Engine(
 
 	std::string shaderPrefix = "shaders/";
 
-	#ifdef DEV
-		shaderPrefix = "shaders/debug/";
-		this->getLogger().info() << "Debug mode enabled. Using debug shader prefix: "
-								 << shaderPrefix;
-	#endif
+#ifdef DEV
+	shaderPrefix = "shaders/debug/";
+	this->getLogger().info()
+		<< "Debug mode enabled. Using debug shader prefix: " << shaderPrefix;
+#endif
 
 	ressourceProvider->loadShader(shaderPrefix + "text.vert.spv",
 								  shaderPrefix + "text.frag.spv");
@@ -320,8 +320,8 @@ void evan::Engine::handleViewportInput(
 	utility::graphic::OrientationF orientation =
 		extractOrientationFromViewMatrix(_viewMatrix);
 
-	const float movementSpeed = 10.0f;
-	const float rotationSpeed = 0.01f;
+	const float movementSpeed = 100.0f;
+	const float rotationSpeed = 0.1f;
 
 	// Use persistent state (not reset every frame)
 	bool isRightMouseButtonPressed			  = _isRightMouseButtonPressed;

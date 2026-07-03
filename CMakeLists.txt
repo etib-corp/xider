@@ -73,6 +73,10 @@ if(NOT CMAKE_BUILD_TYPE)
     set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
 endif()
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_compile_options(-g)
+endif()
+
 if(NOT _SKIP_PLATFORM_VALIDATION)
     if (BUILD_FOR_OPENXR)
         message(STATUS "Building with OpenXR support")

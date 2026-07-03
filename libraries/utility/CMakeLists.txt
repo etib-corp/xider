@@ -13,7 +13,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 # 01. Policy & standard setup
 
-
 # 02. Options & configuration
 
 
@@ -25,7 +24,7 @@ include(FetchContent)
 FetchContent_Declare(
     tinyobjloader
     GIT_REPOSITORY https://github.com/tinyobjloader/tinyobjloader.git
-    GIT_TAG 966edceaf8cdca7996c4e9a1c5ced2938de63366
+    GIT_TAG release
 )
 # tinyobjloader may call add_sanitizers() even when the helper module is unavailable.
 if(NOT COMMAND add_sanitizers)
@@ -56,7 +55,7 @@ set(FT_REQUIRE_HARFBUZZ OFF CACHE BOOL "Do not require HarfBuzz in FreeType" FOR
 FetchContent_Declare(
     freetype
     GIT_REPOSITORY https://gitlab.freedesktop.org/freetype/freetype.git
-    GIT_TAG VER-2-13-0
+    GIT_TAG VER-2-14-3
 )
 FetchContent_MakeAvailable(freetype)
 
@@ -68,11 +67,25 @@ FetchContent_Declare(stb
 )
 FetchContent_MakeAvailable(stb)
 
+FetchContent_Declare(
+    fmt
+    GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+    GIT_TAG 12.2.0
+)
+set(FMT_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(FMT_INSTALL OFF CACHE BOOL "" FORCE)
+set(FMT_OS_X_VERSION 10.15 CACHE STRING "" FORCE)
+FetchContent_MakeAvailable(fmt)
+
 # Disable building examples, tests, and utilities for OpenAL Soft
 set(ALSOFT_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(ALSOFT_TESTS OFF CACHE BOOL "" FORCE)
 set(ALSOFT_UTILS OFF CACHE BOOL "" FORCE)
 set(ALSOFT_INSTALL OFF CACHE BOOL "" FORCE)
+
+# Force OpenAL to NOT use its bundled fmt and instead use the project-wide fmt
+set(ALSOFT_USE_BUNDLED_FMT OFF CACHE BOOL "" FORCE)
+set(ALSOFT_CONFIG_FMT "fmt" CACHE STRING "" FORCE)
 
 FetchContent_Declare(openal
     GIT_REPOSITORY https://github.com/kcat/openal-soft.git
@@ -120,6 +133,7 @@ target_link_libraries(${PROJECT_NAME}
         tinyobjloader
         glm
         freetype
+        fmt::fmt
         OpenAL::OpenAL
 )
 

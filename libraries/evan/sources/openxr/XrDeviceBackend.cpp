@@ -377,9 +377,9 @@ void evan::XrDeviceBackend::createLogicalDevice()
 
 	VkPhysicalDeviceFeatures deviceFeatures {};
 
-	#ifdef DEV
-		deviceFeatures.fillModeNonSolid = VK_TRUE;
-	#endif
+#ifdef DEV
+	deviceFeatures.fillModeNonSolid = VK_TRUE;
+#endif
 
 	VkDeviceCreateInfo createInfo {};
 	createInfo.sType				= VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;

@@ -53,4 +53,35 @@ namespace guillaume::components
 		setHasChanged(true);
 		return *this;
 	}
+
+	const float &Glyph::getFontSize(void) const
+	{
+		return _fontSize;
+	}
+
+	Glyph &Glyph::setFontSize(const float &fontSize)
+	{
+		if (_fontSize == fontSize) {
+			return *this;
+		}
+		_fontSize = fontSize;
+		setHasChanged(true);
+		return *this;
+	}
+
+	const Glyph::Style &Glyph::getStyle(void) const
+	{
+		return _style;
+	}
+
+	Glyph &Glyph::setStyle(const Glyph::Style &style)
+	{
+		if (_style == style) {
+			return *this;
+		}
+		_style = style;
+		setHasChanged(true);
+		return *this;
+	}
+
 }	 // namespace guillaume::components

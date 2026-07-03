@@ -336,10 +336,10 @@ void evan::Renderer::createGraphicsPipelines(VkDevice device,
 		rasterizer.cullMode				   = VK_CULL_MODE_BACK_BIT;
 		rasterizer.frontFace			   = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 		rasterizer.depthBiasEnable		   = VK_FALSE;
-		#ifdef DEV
-			rasterizer.polygonMode = VK_POLYGON_MODE_LINE;
-		#endif
 
+#ifdef DEV
+		rasterizer.polygonMode = VK_POLYGON_MODE_LINE;
+#endif
 
 		VkPipelineMultisampleStateCreateInfo multisampling {};
 		multisampling.sType =

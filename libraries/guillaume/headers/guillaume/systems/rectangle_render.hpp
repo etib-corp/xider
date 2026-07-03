@@ -25,6 +25,8 @@
 #include <map>
 #include <optional>
 
+#include <utility/cache.hpp>
+
 #include "guillaume/ecs/system_filler.hpp"
 
 #include "guillaume/components/borders.hpp"
@@ -36,6 +38,83 @@
 
 namespace guillaume::systems
 {
+	/**
+	 * @brief Key structure for caching rectangle rendering results.
+	 */
+	struct RectangleRenderCacheKey {
+		utility::graphic::PoseF pose;	 ///< The pose of the rectangle,
+										 ///< including position and orientation
+		utility::graphic::SizeF
+			size;	 ///< The size of the rectangle, including width and height
+		components::Borders borders;	///< The borders of the rectangle,
+										///< including corner radius
+		utility::graphic::Color32Bit
+			color;	  ///< The color of the rectangle, including RGBA values
+
+		/**
+		 * @brief Equality operator for RectangleRenderCacheKey.
+		 * @param other The other RectangleRenderCacheKey to compare with.
+		 * @return True if the keys are equal, false otherwise.
+		 */
+		bool operator==(const RectangleRenderCacheKey &other) const
+		{
+			if (pose != other.pose) {
+				return false;
+			}
+			if (size != other.size) {
+				return false;
+			}
+			if (borders != other.borders) {
+				return false;
+			}
+			if (color != other.color) {
+				return false;
+			}
+			return true;
+		}
+
+		/**
+		 * @brief Inequality operator for RectangleRenderCacheKey.
+		 * @param other The other RectangleRenderCacheKey to compare with.
+		 * @return True if the keys are not equal, false otherwise.
+		 */
+		bool operator!=(const RectangleRenderCacheKey &other) const
+		{
+			return !(*this == other);
+		}
+
+		/**
+		 * @brief Less-than operator for RectangleRenderCacheKey.
+		 * @param other The other RectangleRenderCacheKey to compare with.
+		 * @return True if this key is less than the other, false otherwise.
+		 */
+		bool operator<(const RectangleRenderCacheKey &other) const
+		{
+			if (pose != other.pose) {
+				return pose < other.pose;
+			}
+			if (size != other.size) {
+				return size < other.size;
+			}
+			if (borders != other.borders) {
+				return borders < other.borders;
+			}
+			if (color != other.color) {
+				return color < other.color;
+			}
+			return false;
+		}
+	};
+
+	/**
+	 * @brief Entry structure for caching rectangle rendering results.
+	 */
+	struct RectangleRenderCacheEntry {
+		bool used;	  ///< Flag indicating whether the cache entry has been used
+					  ///< in the current frame
+		size_t value;	 ///< The cached value associated with the glyph
+						 ///< rendering result
+	};
 
 	/**
 	 * @brief System handling rectangle rendering from ECS components.
@@ -45,19 +124,13 @@ namespace guillaume::systems
 	 * @see components::Borders
 	 */
 	class RectangleRender:
+		public utility::Cache<RectangleRenderCacheKey,
+							  RectangleRenderCacheEntry>,
 		public ecs::SystemFiller<components::Transform, components::Bound,
 								 components::Color, components::Borders>
 	{
 		private:
-		struct CacheEntry {
-			std::optional<utility::graphic::Mesh> mesh;
-			size_t objectId { 0 };
-			bool used { false };
-		};
-
-		private:
 		std::unique_ptr<Engine> &_engine;	 ///< Engine instance
-		std::map<ecs::Entity::Identifier, CacheEntry> _cache;
 
 		private:
 		/**
@@ -144,7 +217,7 @@ namespace guillaume::systems
 			const utility::graphic::PositionF &center,
 			const utility::graphic::OrientationF &orientation,
 			const utility::math::Vector2F &scale,
-			const utility::math::Vector2F &size, float radius,
+			const utility::graphic::SizeF &size, float radius,
 			int arcSegments = 16, float epsilon = 0.001f);
 
 		/**
@@ -183,13 +256,27 @@ namespace guillaume::systems
 		~RectangleRender(void);
 
 		/**
+		 * @brief Prepare the RectangleRender system before rendering.
+		 *
+		 * This function is called before call update on all entities and can be
+		 * used to set up any necessary state or resources.
+		 */
+		void prepare(void) override;
+
+		/**
+		 * @brief Clean up the RectangleRender system after rendering.
+		 *
+		 * This function is called after call update on all entities and can be
+		 * used to release any resources or reset state.
+		 */
+		void cleanup(void) override;
+
+		/**
 		 * @brief Update the RectangleRender system for one entity.
 		 * @param entityIdentifier The target entity identifier.
 		 */
 		virtual void
 			update(const ecs::Entity::Identifier &entityIdentifier) override;
-		void prepare(void) override;
-		void cleanup(void) override;
 	};
 
 }	 // namespace guillaume::systems

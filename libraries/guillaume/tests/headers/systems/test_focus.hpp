@@ -108,7 +108,7 @@ namespace guillaume::systems::tests
 		ecs::ComponentRegistry _componentRegistry;
 		ecs::EntityRegistryContainer _entityRegistry;
 
-		TestFocusSystem(void)			  = default;
+		TestFocusSystem(void)			= default;
 		~TestFocusSystem(void) override = default;
 
 		void SetUp(void) override

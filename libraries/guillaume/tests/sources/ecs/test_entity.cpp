@@ -84,7 +84,7 @@ namespace guillaume::ecs::tests
 
 		registry.addEntity(std::move(entity));
 
-		const auto *foundEntity = registry.getEntity(identifier);
+		const auto foundEntity = registry.getEntity(identifier);
 		ASSERT_NE(foundEntity, nullptr);
 		EXPECT_EQ(foundEntity->getLayer(), 7);
 	}

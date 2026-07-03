@@ -491,6 +491,28 @@ namespace utility::graphic
 			return static_cast<double>(_alpha)
 				/ static_cast<double>(maxValue());
 		}
+
+		/**
+		 * @brief Less-than operator for Color.
+		 * @param other The other Color to compare with.
+		 * @return True if this color is less than the other, false otherwise.
+		 */
+		bool operator<(const Color &other) const
+		{
+			if (_red != other._red) {
+				return _red < other._red;
+			}
+			if (_green != other._green) {
+				return _green < other._green;
+			}
+			if (_blue != other._blue) {
+				return _blue < other._blue;
+			}
+			if (_alpha != other._alpha) {
+				return _alpha < other._alpha;
+			}
+			return false;
+		}
 	};
 
 	/**
@@ -507,5 +529,29 @@ namespace utility::graphic
 	 * @brief Common double-precision RGBA color type with double components.
 	 */
 	using ColorDouble = Color<double>;
+
+	/**
+	 * @brief Stream insertion operator for Color.
+	 * @param stream Output stream.
+	 * @param color Color to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const Color32Bit &color);
+
+	/**
+	 * @brief Stream insertion operator for Color.
+	 * @param stream Output stream.
+	 * @param color Color to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const ColorFloat &color);
+
+	/**
+	 * @brief Stream insertion operator for Color.
+	 * @param stream Output stream.
+	 * @param color Color to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const ColorDouble &color);
 
 }	 // namespace utility::graphic

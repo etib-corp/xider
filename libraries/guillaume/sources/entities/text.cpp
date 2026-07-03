@@ -62,7 +62,7 @@ namespace guillaume::entities
 		return *this;
 	}
 
-	Text::Builder &Text::Builder::withFontSize(const std::size_t &fontSize)
+	Text::Builder &Text::Builder::withFontSize(const float &fontSize)
 	{
 		_fontSize = fontSize;
 		return *this;
@@ -85,15 +85,18 @@ namespace guillaume::entities
 	}
 
 	ecs::Entity::Identifier
-		Text::Director::makeDefaultText(Builder &builder,
-										const std::string &content)
+		Text::Director::makeText(Builder &builder, const std::string &content,
+								 const float &fontSize,
+								 const utility::graphic::Color32Bit &color)
 	{
-		return builder.withContent(content).registerEntity();
+		return builder.withContent(content)
+			.withFontSize(fontSize)
+			.withColor(color)
+			.registerEntity();
 	}
 
 	Text::Text(ecs::ComponentRegistry &registry, const std::string &content,
-			   const std::size_t &fontSize,
-			   const utility::graphic::Color32Bit &color)
+			   const float &fontSize, const utility::graphic::Color32Bit &color)
 		: ecs::EntityFiller<components::Transform, components::Bound,
 							components::Text, components::Color>(registry)
 		, _content(content)
@@ -116,7 +119,7 @@ namespace guillaume::entities
 		return *this;
 	}
 
-	Text &Text::setFontSize(std::size_t fontSize)
+	Text &Text::setFontSize(const float &fontSize)
 	{
 		_fontSize = fontSize;
 		getComponentRegistry()
@@ -125,7 +128,7 @@ namespace guillaume::entities
 		return *this;
 	}
 
-	Text &Text::setColor(utility::graphic::Color32Bit color)
+	Text &Text::setColor(const utility::graphic::Color32Bit &color)
 	{
 		_color = color;
 		getComponentRegistry()
