@@ -32,16 +32,16 @@ namespace guillaume::ecs::tests
 	class LocalEntityRegistry final: public EntityRegistry
 	{
 		private:
-		std::vector<std::unique_ptr<Entity>> _entities;
+		std::vector<std::shared_ptr<Entity>> _entities;
 
 		protected:
-		std::vector<std::unique_ptr<Entity>> &
+		std::vector<std::shared_ptr<Entity>> &
 			accessDirectEntities(void) override
 		{
 			return _entities;
 		}
 
-		const std::vector<std::unique_ptr<Entity>> &
+		const std::vector<std::shared_ptr<Entity>> &
 			accessDirectEntities(void) const override
 		{
 			return _entities;
@@ -78,11 +78,11 @@ namespace guillaume::ecs::tests
 	TEST_F(TestEntity, LayerIsPreservedWhenMovedIntoRegistry)
 	{
 		LocalEntityRegistry registry;
-		auto entity = std::make_unique<Entity>();
+		auto entity = std::make_shared<Entity>();
 		entity->setLayer(7);
 		const auto identifier = entity->getIdentifier();
 
-		registry.addEntity(std::move(entity));
+		registry.addEntity(entity);
 
 		const auto foundEntity = registry.getEntity(identifier);
 		ASSERT_NE(foundEntity, nullptr);

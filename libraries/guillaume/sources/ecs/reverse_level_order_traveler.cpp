@@ -29,30 +29,21 @@
 namespace guillaume::ecs
 {
 
-	std::vector<Entity *>
+	std::vector<std::shared_ptr<Entity>>
 		ReverseLevelOrderTraveler::travel(EntityRegistry &entityRegistry) const
 	{
-		auto entitiesRefs = entityRegistry.getEntitiesBreadthFirst();
-		std::vector<Entity *> result;
-		result.reserve(entitiesRefs.size());
-		for (auto &entityRef: entitiesRefs) {
-			result.push_back(entityRef.get().get());
-		}
-		std::reverse(result.begin(), result.end());
-		return result;
+		auto entities = entityRegistry.getEntitiesBreadthFirst();
+		std::reverse(entities.begin(), entities.end());
+		return entities;
 	}
 
-	std::vector<const Entity *> ReverseLevelOrderTraveler::travel(
-		const EntityRegistry &entityRegistry) const
+	std::vector<std::shared_ptr<const Entity>>
+		ReverseLevelOrderTraveler::travel(
+			const EntityRegistry &entityRegistry) const
 	{
-		auto entitiesRefs = entityRegistry.getEntitiesBreadthFirst();
-		std::vector<const Entity *> result;
-		result.reserve(entitiesRefs.size());
-		for (auto &entityRef: entitiesRefs) {
-			result.push_back(entityRef.get().get());
-		}
-		std::reverse(result.begin(), result.end());
-		return result;
+		auto entities = entityRegistry.getEntitiesBreadthFirst();
+		std::reverse(entities.begin(), entities.end());
+		return { entities.begin(), entities.end() };
 	}
 
 }	 // namespace guillaume::ecs

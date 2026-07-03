@@ -94,7 +94,8 @@ namespace guillaume::systems
 							<< ", color: " << cacheKey.color << ")";
 
 		if (const auto &entry = get(cacheKey); entry.has_value()) {
-			TextRenderCacheEntry newEntry { .used = true, .value = entry->value };
+			TextRenderCacheEntry newEntry { .used  = true,
+											.value = entry->value };
 			put(cacheKey, std::move(newEntry));
 			getLogger().debug() << "Cache hit for entity " << entityIdentifier;
 			return;
@@ -106,7 +107,7 @@ namespace guillaume::systems
 
 		auto identifier = _engine->addText(std::move(text));
 
-		TextRenderCacheEntry cacheEntry { .used  = true, .value = identifier };
+		TextRenderCacheEntry cacheEntry { .used = true, .value = identifier };
 		put(cacheKey, std::move(cacheEntry));
 	}
 

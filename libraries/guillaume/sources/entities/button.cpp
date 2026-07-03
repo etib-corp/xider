@@ -545,7 +545,7 @@ namespace guillaume::entities
 	{
 		_iconGlyphName = iconGlyphName;
 
-		if (auto &icon = getEntity<Icon>(_iconIdentifier)) {
+		if (auto icon = getEntity<Icon>(_iconIdentifier)) {
 			icon->setGlyphName(_iconGlyphName);
 		}
 
@@ -556,7 +556,7 @@ namespace guillaume::entities
 	{
 		_iconStyle = iconStyle;
 
-		if (auto &icon = getEntity<Icon>(_iconIdentifier)) {
+		if (auto icon = getEntity<Icon>(_iconIdentifier)) {
 			icon->setStyle(_iconStyle);
 		}
 
@@ -567,7 +567,7 @@ namespace guillaume::entities
 	{
 		_labelContent = labelContent;
 
-		if (auto &label = getEntity<Text>(_labelIdentifier)) {
+		if (auto label = getEntity<Text>(_labelIdentifier)) {
 			label->setContent(_labelContent);
 		}
 
@@ -585,11 +585,11 @@ namespace guillaume::entities
 	{
 		_colorStyle = colorStyle;
 
-		if (auto &icon = getEntity<Icon>(_iconIdentifier)) {
+		if (auto icon = getEntity<Icon>(_iconIdentifier)) {
 			icon->setColor(getContentColor(_colorStyle));
 		}
 
-		if (auto &label = getEntity<Text>(_labelIdentifier)) {
+		if (auto label = getEntity<Text>(_labelIdentifier)) {
 			label->setColor(getContentColor(_colorStyle));
 		}
 
@@ -632,11 +632,11 @@ namespace guillaume::entities
 	{
 		_size = size;
 
-		if (auto &icon = getEntity<Icon>(_iconIdentifier)) {
+		if (auto icon = getEntity<Icon>(_iconIdentifier)) {
 			icon->setFontSize(getFontSize(_size));
 		}
 
-		if (auto &label = getEntity<Text>(_labelIdentifier)) {
+		if (auto label = getEntity<Text>(_labelIdentifier)) {
 			label->setFontSize(getFontSize(_size));
 		}
 

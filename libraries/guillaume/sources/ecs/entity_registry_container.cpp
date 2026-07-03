@@ -24,13 +24,13 @@
 
 namespace guillaume::ecs
 {
-	std::vector<std::unique_ptr<Entity>> &
+	std::vector<std::shared_ptr<Entity>> &
 		EntityRegistryContainer::accessDirectEntities(void)
 	{
 		return _entities;
 	}
 
-	const std::vector<std::unique_ptr<Entity>> &
+	const std::vector<std::shared_ptr<Entity>> &
 		EntityRegistryContainer::accessDirectEntities(void) const
 	{
 		return _entities;

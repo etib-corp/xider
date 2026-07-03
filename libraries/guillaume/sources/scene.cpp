@@ -110,7 +110,7 @@ namespace guillaume
 		float startOffset		   = -totalSpread / 2.0f;
 
 		for (std::size_t i = 0; i < entityCount; ++i) {
-			const ecs::Entity *entity = directEntities[i].get();
+			const auto entity = directEntities[i];
 			if (!_componentRegistry.hasComponent<components::Transform>(
 					entity->getIdentifier())) {
 				continue;
