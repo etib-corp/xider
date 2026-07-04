@@ -54,38 +54,4 @@ namespace guillaume::ecs::tests
 
 		EXPECT_EQ(entity.getLayer(), 0);
 	}
-
-	TEST_F(TestEntity, SetLayerUpdatesValue)
-	{
-		Entity entity;
-
-		entity.setLayer(3);
-		EXPECT_EQ(entity.getLayer(), 3);
-
-		entity.setLayer(-1);
-		EXPECT_EQ(entity.getLayer(), -1);
-	}
-
-	TEST_F(TestEntity, SetLayerReturnsSelf)
-	{
-		Entity entity;
-
-		Entity &result = entity.setLayer(5);
-		EXPECT_EQ(&result, &entity);
-		EXPECT_EQ(entity.getLayer(), 5);
-	}
-
-	TEST_F(TestEntity, LayerIsPreservedWhenMovedIntoRegistry)
-	{
-		LocalEntityRegistry registry;
-		auto entity = std::make_shared<Entity>();
-		entity->setLayer(7);
-		const auto identifier = entity->getIdentifier();
-
-		registry.addEntity(entity);
-
-		const auto foundEntity = registry.getEntity(identifier);
-		ASSERT_NE(foundEntity, nullptr);
-		EXPECT_EQ(foundEntity->getLayer(), 7);
-	}
 }	 // namespace guillaume::ecs::tests

@@ -27,6 +27,7 @@
 #include <string>
 #include <type_traits>
 #include <utility>
+#include <ostream>
 
 #include <glm/exponential.hpp>
 #include <glm/geometric.hpp>
@@ -41,6 +42,7 @@
 #define VEC_X 0
 #define VEC_Y 1
 #define VEC_Z 2
+#define VEC_W 3
 
 namespace utility::math
 {
@@ -468,5 +470,101 @@ namespace utility::math
 	 * @brief Type alias for 4D unsigned integer vector.
 	 */
 	using Vector4UI = Vector<unsigned int, 4>;
+
+	/**
+	 * @brief Stream insertion operator for Vector.
+	 * @param stream Output stream.
+	 * @param vector Vector to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const Vector2F &vector);
+
+	/**
+	 * @brief Stream insertion operator for Vector.
+	 * @param stream Output stream.
+	 * @param vector Vector to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const Vector2D &vector);
+
+	/**
+	 * @brief Stream insertion operator for Vector.
+	 * @param stream Output stream.
+	 * @param vector Vector to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const Vector2I &vector);
+
+	/**
+	 * @brief Stream insertion operator for Vector.
+	 * @param stream Output stream.
+	 * @param vector Vector to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const Vector2UI &vector);
+
+	/**
+	 * @brief Stream insertion operator for Vector.
+	 * @param stream Output stream.
+	 * @param vector Vector to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const Vector3F &vector);
+
+	/**
+	 * @brief Stream insertion operator for Vector.
+	 * @param stream Output stream.
+	 * @param vector Vector to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const Vector3D &vector);
+
+	/**
+	 * @brief Stream insertion operator for Vector.
+	 * @param stream Output stream.
+	 * @param vector Vector to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const Vector3I &vector);
+
+	/**
+	 * @brief Stream insertion operator for Vector.
+	 * @param stream Output stream.
+	 * @param vector Vector to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const Vector3UI &vector);
+
+	/**
+	 * @brief Stream insertion operator for Vector.
+	 * @param stream Output stream.
+	 * @param vector Vector to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const Vector4F &vector);
+
+	/**
+	 * @brief Stream insertion operator for Vector.
+	 * @param stream Output stream.
+	 * @param vector Vector to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const Vector4D &vector);
+
+	/**
+	 * @brief Stream insertion operator for Vector.
+	 * @param stream Output stream.
+	 * @param vector Vector to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const Vector4I &vector);
+
+	/**
+	 * @brief Stream insertion operator for Vector.
+	 * @param stream Output stream.
+	 * @param vector Vector to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const Vector4UI &vector);
 
 }	 // namespace utility::math
