@@ -107,6 +107,12 @@ evan::Engine::~Engine()
 
 size_t evan::Engine::addText(std::shared_ptr<utility::graphic::Text> text)
 {
+	if (text->getContent().empty()) {
+		this->getLogger().warning()
+			<< "Attempted to add text with empty content. Skipping.";
+		return 0;	 // Skip adding empty text
+	}
+
 	this->getLogger().info() << "Drawing text: " << text->getContent();
 
 	std::map<uint32_t, utility::graphic::Mesh> rawObjects;
