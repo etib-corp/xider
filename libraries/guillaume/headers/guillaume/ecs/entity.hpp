@@ -25,6 +25,7 @@
 #include <bitset>
 #include <cstddef>
 #include <cstdint>
+#include <memory>
 
 #include <utility/logging/loggable.hpp>
 #include <utility/logging/default_logger.hpp>
@@ -77,9 +78,10 @@ namespace guillaume::ecs
 		static Signature getSignatureFromTypes(void);
 
 		private:
-		const Identifier _identifier;	 ///< Unique identifier
-		Signature _signature;			 ///< Entity signature
-		std::int32_t _layer { 0 };		 ///< Rendering/depth layer
+		const Identifier _identifier;		///< Unique identifier
+		Signature _signature;				///< Entity signature
+		std::int32_t _layer { 0 };			///< Rendering/depth layer
+		std::shared_ptr<Entity> _parent;	///< Parent entity (if any)
 
 		protected:
 		/**
@@ -134,13 +136,35 @@ namespace guillaume::ecs
 		std::int32_t getLayer(void) const;
 
 		/**
+		 * @brief Set the parent entity.
+		 * @param parent The new parent entity.
+		 * @return Reference to this Entity for chaining.
+		 */
+		Entity &setParent(std::shared_ptr<Entity> parent);
+
+		/**
+		 * @brief Get the parent entity.
+		 * @return The parent entity, or nullptr if there is no parent.
+		 */
+		std::shared_ptr<Entity> getParent(void) const;
+
+		/**
+		 * @brief Initialize the entity's derived state.
+		 *
+		 * This method is called after the entity is constructed and its
+		 * components are set up. Derived entities can override this method to
+		 * perform any necessary initialization based on their components.
+		 */
+		virtual void initialize(void) = 0;
+
+		/**
 		 * @brief Recompute the entity's derived state.
 		 *
 		 * The default implementation is a no-op. Derived entities can override
 		 * this method to synchronize cached state or dependent components when
 		 * their component data changes.
 		 */
-		virtual void update(void);
+		virtual void update(void) = 0;
 	};
 
 	/**

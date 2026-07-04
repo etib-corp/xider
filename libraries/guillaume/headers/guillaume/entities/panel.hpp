@@ -41,6 +41,7 @@ namespace guillaume::entities
 	 * @brief Panel component
 	 */
 	class Panel:
+		public std::enable_shared_from_this<Panel>,
 		public ecs::ParentEntityFiller<components::Transform, components::Bound,
 									   components::Color, components::Borders>
 	{
@@ -51,7 +52,7 @@ namespace guillaume::entities
 		class Builder: public ecs::EntityBuilder
 		{
 			private:
-			std::unique_ptr<Panel>
+			std::shared_ptr<Panel>
 				_panel;	   ///< Unique pointer to the Panel entity being built
 			utility::graphic::PoseF _pose;	  ///< Pose of the panel to be used
 											  ///< (position, rotation, scale)
@@ -81,7 +82,8 @@ namespace guillaume::entities
 			 * @brief Build and register the panel entity.
 			 * @return The entity identifier of the newly created panel entity.
 			 */
-			ecs::Entity::Identifier registerEntity(void) override;
+			ecs::Entity::Identifier
+				registerEntity(std::shared_ptr<Entity> parent) override;
 
 			/**
 			 * @brief Reset the builder to its initial state for creating a new
@@ -150,7 +152,8 @@ namespace guillaume::entities
 			 * @return The entity identifier of the newly created panel entity.
 			 */
 			ecs::Entity::Identifier makeDefaultPanel(
-				Builder &builder, const utility::graphic::PoseF &pose,
+				Builder &builder, std::shared_ptr<Entity> parent,
+				const utility::graphic::PoseF &pose,
 				const std::vector<ecs::Entity::Identifier> &entities);
 
 			/**
@@ -164,7 +167,8 @@ namespace guillaume::entities
 			 * entity.
 			 */
 			ecs::Entity::Identifier makeColorPanel(
-				Builder &builder, const utility::graphic::PoseF &pose,
+				Builder &builder, std::shared_ptr<Entity> parent,
+				const utility::graphic::PoseF &pose,
 				const utility::graphic::Color32Bit &color,
 				const std::vector<ecs::Entity::Identifier> &entities);
 		};
@@ -234,6 +238,11 @@ namespace guillaume::entities
 		 */
 		Panel &
 			setEntities(const std::vector<ecs::Entity::Identifier> &entities);
+
+		/**
+		 * @brief Initialize the panel entity's derived state.
+		 */
+		void initialize(void) override;
 
 		/**
 		 * @brief Recompute the panel entity's derived state.

@@ -58,6 +58,7 @@ namespace guillaume::entities
 	 * components.
 	 */
 	class Button:
+		public std::enable_shared_from_this<Button>,
 		public ecs::ParentEntityFiller<
 			components::Transform, components::Bound, components::Color,
 			components::Borders, components::Focus,
@@ -87,7 +88,7 @@ namespace guillaume::entities
 		class Builder: public ecs::EntityBuilder
 		{
 			private:
-			std::unique_ptr<Button>
+			std::shared_ptr<Button>
 				_button;	///< Unique pointer to the Button entity being built
 			std::string
 				_iconGlyphName;	   ///< Icon glyph name to attach to the button
@@ -122,7 +123,8 @@ namespace guillaume::entities
 			 * @brief Build and register the button entity.
 			 * @return The entity identifier of the newly created button entity.
 			 */
-			ecs::Entity::Identifier registerEntity(void) override;
+			ecs::Entity::Identifier
+				registerEntity(std::shared_ptr<Entity> parent) override;
 
 			/**
 			 * @brief Reset the builder to its initial state for creating a new
@@ -225,7 +227,8 @@ namespace guillaume::entities
 			 * entity.
 			 */
 			ecs::Entity::Identifier
-				makeButton(Builder &builder, const std::string &labelContent,
+				makeButton(Builder &builder, std::shared_ptr<Entity> parent,
+						   const std::string &labelContent,
 						   std::function<void(void)> onClick, Color colorStyle,
 						   Shape shape, Size size, bool isMorph);
 
@@ -244,12 +247,14 @@ namespace guillaume::entities
 			 * @return The entity identifier of the newly created icon button
 			 * entity.
 			 */
-			ecs::Entity::Identifier makeIconButton(
-				Builder &builder, const std::string &labelContent,
-				const std::string &iconGlyphName,
-				const components::Glyph::Style &iconStyle,
-				std::function<void(void)> onClick, Color colorStyle,
-				Shape shape, Size size, bool isMorph);
+			ecs::Entity::Identifier
+				makeIconButton(Builder &builder, std::shared_ptr<Entity> parent,
+							   const std::string &labelContent,
+							   const std::string &iconGlyphName,
+							   const components::Glyph::Style &iconStyle,
+							   std::function<void(void)> onClick,
+							   Color colorStyle, Shape shape, Size size,
+							   bool isMorph);
 		};
 
 		private:
@@ -269,6 +274,7 @@ namespace guillaume::entities
 		Shape _shape { Shape::Round };			///< Shape of the button
 		Size _size { Size::Small };				///< Size of the button
 		bool _isMorph { false };	///< Whether the button is in a morph state
+		bool _isHovered { false };	///< Whether the button is currently hovered.
 		std::function<void(void)>
 			_onClick {};	///< Click event handler for the button
 		static constexpr float _layerDepthStep {
@@ -385,6 +391,11 @@ namespace guillaume::entities
 		 * @return Reference to this Button for chaining.
 		 */
 		Button &setOnClick(const std::function<void(void)> &onClick);
+
+		/**
+		 * @brief Initialize the button entity's derived state.
+		 */
+		void initialize(void) override;
 
 		/**
 		 * @brief Recompute the button entity's derived state.

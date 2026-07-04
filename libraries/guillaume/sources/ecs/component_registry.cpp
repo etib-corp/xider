@@ -20,6 +20,8 @@
  SOFTWARE.
  */
 
+#include <utility/demangle.hpp>
+
 #include "guillaume/ecs/component_registry.hpp"
 
 namespace guillaume::ecs
@@ -28,7 +30,6 @@ namespace guillaume::ecs
 		const Entity::Identifier &entityIdentifier) const
 	{
 		for (const auto &[typeIndex, storage]: _storages) {
-			(void)typeIndex;
 			if (storage->hasChanged(entityIdentifier)) {
 				return true;
 			}

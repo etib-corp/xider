@@ -66,49 +66,35 @@ namespace guillaume::ecs
 		_activeComponentRegistry = &componentRegistry;
 		getLogger().debug() << "System routine started";
 
-		auto traversedEntities = traveler.travel(entityRegistry);
-
-		bool hasPendingChanges = false;
-		for (const auto &entity: traversedEntities) {
-			if (!componentRegistry.hasChanged(entity->getIdentifier())) {
-				continue;
-			}
-			hasPendingChanges = true;
-			entity->update();
-		}
-
-		if (hasPendingChanges) {
-			componentRegistry.resetChangedFlags();
-			getLogger().debug() << "System routine applied pending component "
-								   "changes";
-		}
-
-		std::size_t matchingEntities = 0;
-		// Per-frame setup
 		prepare();
+
+		auto traversedEntities = traveler.travel(entityRegistry);
 
 		for (const auto &entity: traversedEntities) {
 			if ((entity->getSignature() & getSignature()) != getSignature()) {
 				continue;
 			}
-			++matchingEntities;
+
+			const bool entityWasChanged =
+				componentRegistry.hasChanged(entity->getIdentifier());
+			if (entityWasChanged) {
+				entity->update();
+			}
+
 			update(entity->getIdentifier());
+
+			if ((entityWasChanged
+				 || componentRegistry.hasChanged(entity->getIdentifier()))
+				&& entity->getParent() != nullptr) {
+				entity->getParent()->update();
+			}
 		}
 
-		// If no entities match but system has no requirements, still call
-		// update once
-		if (matchingEntities == 0 && getSignature().none()) {
-			getLogger().debug() << "System has no entity requirements, calling "
-								   "update with dummy identifier";
-			update(0);
-		}
-
-		// Per-frame cleanup
 		cleanup();
 
 		getLogger().debug() << "System routine finished. Visited entities: "
-							<< traversedEntities.size()
-							<< ", matching entities: " << matchingEntities;
+							<< traversedEntities.size();
+
 
 		_activeComponentRegistry = nullptr;
 	}

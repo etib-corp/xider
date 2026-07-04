@@ -36,15 +36,15 @@ namespace guillaume::entities
 	{
 	}
 
-	ecs::Entity::Identifier Text::Builder::registerEntity(void)
+	ecs::Entity::Identifier
+		Text::Builder::registerEntity(std::shared_ptr<Entity> parent)
 	{
-		ecs::Entity::Identifier identifier = ecs::Entity::InvalidIdentifier;
-
-		_text = std::make_unique<Text>(this->getComponentRegistry(), _content,
+		_text = std::make_shared<Text>(this->getComponentRegistry(), _content,
 									   _fontSize, _color);
 
-		identifier = _text->getIdentifier();
-		this->getEntityRegistry().addEntity(std::move(_text));
+		_text->setParent(parent);
+		ecs::Entity::Identifier identifier = _text->getIdentifier();
+		this->getEntityRegistry().addEntity(_text);
 		return identifier;
 	}
 
@@ -84,15 +84,15 @@ namespace guillaume::entities
 	{
 	}
 
-	ecs::Entity::Identifier
-		Text::Director::makeText(Builder &builder, const std::string &content,
-								 const float &fontSize,
-								 const utility::graphic::Color32Bit &color)
+	ecs::Entity::Identifier Text::Director::makeText(
+		Builder &builder, std::shared_ptr<Entity> parent,
+		const std::string &content, const float &fontSize,
+		const utility::graphic::Color32Bit &color)
 	{
 		return builder.withContent(content)
 			.withFontSize(fontSize)
 			.withColor(color)
-			.registerEntity();
+			.registerEntity(parent);
 	}
 
 	Text::Text(ecs::ComponentRegistry &registry, const std::string &content,
@@ -103,7 +103,6 @@ namespace guillaume::entities
 		, _fontSize(fontSize)
 		, _color(color)
 	{
-		update();
 	}
 
 	Text::~Text()
@@ -135,6 +134,10 @@ namespace guillaume::entities
 			.getComponent<components::Color>(getIdentifier())
 			.setColor(color);
 		return *this;
+	}
+
+	void Text::initialize(void)
+	{
 	}
 
 	void Text::update(void)

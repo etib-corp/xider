@@ -57,8 +57,8 @@ namespace guillaume::ecs
 		 * already exists
 		 */
 		template<InheritFromEntityBuilder BuilderType>
-		BuilderType &addBuilder(ComponentRegistry &componentRegistry,
-								EntityRegistry &entityRegistry);
+		void addBuilder(ComponentRegistry &componentRegistry,
+						EntityRegistry &entityRegistry);
 
 		public:
 		/**

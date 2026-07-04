@@ -74,9 +74,15 @@ namespace guillaume::ecs
     bool ComponentStorage<ComponentType>::hasChanged(
         const Entity::Identifier &entityIdentifier) const
     {
-        auto iterator = _components.find(entityIdentifier);
-        return iterator != _components.end()
-            && iterator->second.hasChanged();
+        for (const auto &[id, component]: _components) {
+            if (id != entityIdentifier) {
+                continue;
+            }
+            if (component.hasChanged()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     template<InheritFromComponent ComponentType>
