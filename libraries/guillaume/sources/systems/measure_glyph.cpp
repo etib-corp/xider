@@ -89,9 +89,6 @@ namespace guillaume::systems
 										glyphComponent.getStyle(),
 										colorComponent.getColor() };
 
-		if (cacheKey.glyphName.empty()) {
-			return;
-		}
 
 		getLogger().debug() << "Measuring glyph '" << cacheKey.glyphName
 							<< "' for entity " << entityIdentifier;

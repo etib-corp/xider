@@ -51,6 +51,7 @@ namespace guillaume::entities
 
 		ecs::Entity::Identifier identifier = _button->getIdentifier();
 		this->getEntityRegistry().addEntity(_button);
+		reset();
 		return identifier;
 	}
 
@@ -88,7 +89,7 @@ namespace guillaume::entities
 	}
 
 	Button::Builder &
-		Button::Builder::withOnClick(const std::function<void(void)> &onClick)
+		Button::Builder::withOnClick(std::function<void(void)> onClick)
 	{
 		_onClick = std::move(onClick);
 		return *this;
@@ -393,19 +394,20 @@ namespace guillaume::entities
 
 	void Button::hoverHandler(void)
 	{
-		_isHovered = true;
 		setShape(_shape);
+		setColorStyle(_colorStyle);
 	}
 
 	void Button::unHoverHandler(void)
 	{
-		_isHovered = false;
 		setShape(_shape);
+		setColorStyle(_colorStyle);
 	}
 
 	void Button::leftClickPressHandler()
 	{
 		setShape(_shape);
+		setColorStyle(_colorStyle);
 		if (_onClick) {
 			_onClick();
 		}
@@ -414,6 +416,7 @@ namespace guillaume::entities
 	void Button::leftClickReleaseHandler()
 	{
 		setShape(_shape);
+		setColorStyle(_colorStyle);
 	}
 
 	Button::Button(ecs::ComponentRegistry &registry,
@@ -465,9 +468,10 @@ namespace guillaume::entities
 					const Button::Size &size, const std::uint32_t &buttonLayer)
 	{
 		const float widthPadding  = getWidthPadding(size);
+		const float heightPadding = getHeightPadding(size);
 
 		const float iconX = buttonPose.getPosition().x + widthPadding;
-		const float iconY = buttonPose.getPosition().y;
+		const float iconY = buttonPose.getPosition().y + heightPadding;
 		const float iconZ = buttonPose.getPosition().z;
 
 		const utility::graphic::PositionF iconPosition(iconX, iconY, iconZ);
@@ -483,29 +487,30 @@ namespace guillaume::entities
 	}
 
 	static const utility::graphic::PoseF
-		getIconPose(const utility::graphic::PoseF &buttonPose,
-					const Button::Size &size, const std::uint32_t &buttonLayer,
-					const float &iconWidth)
+		getLabelPose(const utility::graphic::PoseF &buttonPose,
+					 const Button::Size &size, const std::uint32_t &buttonLayer,
+					 const float &iconWidth)
 	{
-		const float widthPadding  = getWidthPadding(size);
+		const float widthPadding = getWidthPadding(size);
 		const float spaceBetweenIconAndLabel =
 			getSpaceBetweenIconAndLabel(size);
+		const float heightPadding = getHeightPadding(size);
 
-		const float iconX = buttonPose.getPosition().x + widthPadding
+		const float labelX = buttonPose.getPosition().x + widthPadding
 			+ iconWidth + spaceBetweenIconAndLabel;
-		const float iconY = buttonPose.getPosition().y;
-		const float iconZ = buttonPose.getPosition().z;
+		const float labelY = buttonPose.getPosition().y + heightPadding;
+		const float labelZ = buttonPose.getPosition().z;
 
-		const utility::graphic::PositionF iconPosition(iconX, iconY, iconZ);
+		const utility::graphic::PositionF labelPosition(labelX, labelY, labelZ);
 
-		const utility::graphic::OrientationF iconOrientation =
+		const utility::graphic::OrientationF labelOrientation =
 			buttonPose.getOrientation();
 
-		utility::graphic::PoseF iconPose(iconPosition, iconOrientation);
-		auto iconPoseWithLayer = applyLayerToPosition(
-			iconPose.getPosition(), iconPose.getOrientation(), buttonLayer);
+		utility::graphic::PoseF labelPose(labelPosition, labelOrientation);
+		auto labelPoseWithLayer = applyLayerToPosition(
+			labelPose.getPosition(), labelPose.getOrientation(), buttonLayer);
 
-		return iconPoseWithLayer;
+		return labelPoseWithLayer;
 	}
 
 	Button &Button::setIconGlyphName(const std::string &iconGlyphName)
@@ -565,9 +570,24 @@ namespace guillaume::entities
 
 	Button &Button::setShape(const Shape &shape)
 	{
+		bool isHovered = false;
 		bool isPressed = false;
 
 		_shape = shape;
+
+		isHovered =
+			getComponentRegistry()
+				.getComponent<components::HandHoverInteraction>(getIdentifier())
+				.isHovered()
+			? true
+			: isHovered;
+
+		isHovered = getComponentRegistry()
+						.getComponent<components::MouseHoverInteraction>(
+							getIdentifier())
+						.isHovered()
+			? true
+			: isHovered;
 
 		isPressed =
 			getComponentRegistry()
@@ -590,7 +610,7 @@ namespace guillaume::entities
 
 		getComponentRegistry()
 			.getComponent<components::Color>(getIdentifier())
-			.setColor(getContainerColor(_colorStyle, _isHovered, isPressed));
+			.setColor(getContainerColor(_colorStyle, isHovered, isPressed));
 
 		return *this;
 	}
@@ -623,7 +643,7 @@ namespace guillaume::entities
 				_iconIdentifier);
 
 		auto labelPose =
-			getIconPose(buttonPose, _size, getLayer(), iconBound.getWidth());
+			getLabelPose(buttonPose, _size, getLayer(), iconBound.getWidth());
 
 		getComponentRegistry()
 			.getComponent<components::Transform>(_labelIdentifier)
@@ -661,7 +681,7 @@ namespace guillaume::entities
 		return *this;
 	}
 
-	Button &Button::setOnClick(const std::function<void(void)> &onClick)
+	Button &Button::setOnClick(std::function<void(void)> onClick)
 	{
 		_onClick = onClick;
 		return *this;
@@ -712,7 +732,7 @@ namespace guillaume::entities
 	}
 
 	void Button::update(void)
-	{	
+	{
 		setIconGlyphName(_iconGlyphName);
 		setIconStyle(_iconStyle);
 		setLabelContent(_labelContent);

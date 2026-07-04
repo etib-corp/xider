@@ -44,6 +44,7 @@ namespace guillaume::entities
 		_panel->setParent(parent);
 		ecs::Entity::Identifier identifier = _panel->getIdentifier();
 		this->getEntityRegistry().addEntity(_panel);
+		reset();
 		return identifier;
 	}
 

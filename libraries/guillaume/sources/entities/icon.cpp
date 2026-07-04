@@ -45,6 +45,7 @@ namespace guillaume::entities
 
 		ecs::Entity::Identifier identifier = _icon->getIdentifier();
 		this->getEntityRegistry().addEntity(std::move(_icon));
+		reset();
 		return identifier;
 	}
 

@@ -284,11 +284,6 @@ namespace guillaume::systems
 										   boundComponent, bordersComponent,
 										   colorComponent.getColor() };
 
-		if (cacheKey.size.getWidth() <= 0.0f
-			|| cacheKey.size.getHeight() <= 0.0f) {
-			return;
-		}
-
 		getLogger().debug()
 			<< "Rendering rectangle with pose: " << cacheKey.pose
 			<< ", size: " << cacheKey.size << ", borders: " << cacheKey.borders
