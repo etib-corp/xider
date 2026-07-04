@@ -58,23 +58,23 @@ namespace xider::scenes
 			guillaume::entities::Button::Shape::Square,
 			guillaume::entities::Button::Size::Small, false);
 
-		buttonDirector.makeIconButton(
-			buttonBuilder, nullptr, "Button 1", "counter_1",
-			guillaume::components::Glyph::Style::Outlined,
-			[]() {
-			},
-			guillaume::entities::Button::Color::Filled,
-			guillaume::entities::Button::Shape::Square,
-			guillaume::entities::Button::Size::Small, false);
+		// buttonDirector.makeIconButton(
+		// 	buttonBuilder, nullptr, "Button 1", "counter_1",
+		// 	guillaume::components::Glyph::Style::Outlined,
+		// 	[]() {
+		// 	},
+		// 	guillaume::entities::Button::Color::Filled,
+		// 	guillaume::entities::Button::Shape::Square,
+		// 	guillaume::entities::Button::Size::Small, false);
 
-		buttonDirector.makeIconButton(
-			buttonBuilder, nullptr, "Button 2", "counter_2",
-			guillaume::components::Glyph::Style::Outlined,
-			[]() {
-			},
-			guillaume::entities::Button::Color::Filled,
-			guillaume::entities::Button::Shape::Square,
-			guillaume::entities::Button::Size::Small, false);
+		// buttonDirector.makeIconButton(
+		// 	buttonBuilder, nullptr, "Button 2", "counter_2",
+		// 	guillaume::components::Glyph::Style::Outlined,
+		// 	[]() {
+		// 	},
+		// 	guillaume::entities::Button::Color::Filled,
+		// 	guillaume::entities::Button::Shape::Square,
+		// 	guillaume::entities::Button::Size::Small, false);
 	}
 
 	Main::~Main(void)

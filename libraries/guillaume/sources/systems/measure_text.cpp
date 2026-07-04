@@ -75,9 +75,6 @@ namespace guillaume::systems
 									   textComponent.getFontSize(),
 									   colorComponent.getColor() };
 
-		if (cacheKey.content.empty()) {
-			return;
-		}
 
 		getLogger().debug() << "Measuring text '" << cacheKey.content
 							<< "' for entity " << entityIdentifier;

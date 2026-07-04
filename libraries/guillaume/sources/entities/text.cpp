@@ -45,6 +45,7 @@ namespace guillaume::entities
 		_text->setParent(parent);
 		ecs::Entity::Identifier identifier = _text->getIdentifier();
 		this->getEntityRegistry().addEntity(_text);
+		reset();
 		return identifier;
 	}
 

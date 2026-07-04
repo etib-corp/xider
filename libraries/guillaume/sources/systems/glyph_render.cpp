@@ -101,10 +101,6 @@ namespace guillaume::systems
 									   glyphComponent.getStyle(),
 									   colorComponent.getColor() };
 
-		if (cacheKey.glyphName.empty()) {
-			return;
-		}
-
 		getLogger().debug() << "Rendering glyph '" << cacheKey.glyphName
 							<< "' for entity " << entityIdentifier;
 		getLogger().debug() << "Glyph code found for '" << cacheKey.glyphName

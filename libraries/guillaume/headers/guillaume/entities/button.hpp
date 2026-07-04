@@ -158,7 +158,7 @@ namespace guillaume::entities
 			 * @param onClick The new click event handler to set.
 			 * @return Reference to the builder for chaining.
 			 */
-			Builder &withOnClick(const std::function<void(void)> &onClick);
+			Builder &withOnClick(std::function<void(void)> onClick);
 
 			/**
 			 * @brief Set if the button is a toggle button.
@@ -274,7 +274,6 @@ namespace guillaume::entities
 		Shape _shape { Shape::Round };			///< Shape of the button
 		Size _size { Size::Small };				///< Size of the button
 		bool _isMorph { false };	///< Whether the button is in a morph state
-		bool _isHovered { false };	///< Whether the button is currently hovered.
 		std::function<void(void)>
 			_onClick {};	///< Click event handler for the button
 		static constexpr float _layerDepthStep {
@@ -390,7 +389,7 @@ namespace guillaume::entities
 		 * @param onClick The new click event handler to set.
 		 * @return Reference to this Button for chaining.
 		 */
-		Button &setOnClick(const std::function<void(void)> &onClick);
+		Button &setOnClick(std::function<void(void)> onClick);
 
 		/**
 		 * @brief Initialize the button entity's derived state.
