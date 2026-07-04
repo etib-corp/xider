@@ -78,6 +78,8 @@ namespace guillaume::entities
 
 			/**
 			 * @brief Build and register the icon entity.
+			 * @param parent The parent entity to which the new icon entity will
+			 * be attached.
 			 * @return The entity identifier of the newly created icon entity.
 			 */
 			ecs::Entity::Identifier
@@ -141,6 +143,8 @@ namespace guillaume::entities
 			 * @brief Create a default icon entity using the builder.
 			 * @param builder The builder instance used to configure and create
 			 * the default icon.
+			 * @param parent The parent entity to which the new icon entity will
+			 * be attached.
 			 * @param iconName The icon name to assign to the created entity.
 			 * @param fontSize The font size of the icon to assign to the
 			 * created entity.

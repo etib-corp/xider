@@ -79,6 +79,8 @@ namespace guillaume::ecs
 
 		/**
 		 * @brief Build and register the entity in the entity registry.
+		 * @param parent The parent entity to which the new entity will be
+		 * attached.
 		 * @return The entity identifier of the newly created entity.
 		 */
 		virtual ecs::Entity::Identifier
