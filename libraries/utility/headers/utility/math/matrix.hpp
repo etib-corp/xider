@@ -438,5 +438,4 @@ namespace utility::math
 	 * @brief Type alias for 4x4 double-precision matrix.
 	 */
 	using Matrix4x4D = Matrix<double, 4, 4>;
-
 }	 // namespace utility::math

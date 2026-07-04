@@ -123,13 +123,6 @@ namespace guillaume::ecs
 		void setSignature(const Signature &signature);
 
 		/**
-		 * @brief Set the entity's rendering layer.
-		 * @param layer The new layer value.
-		 * @return Reference to this Entity for chaining.
-		 */
-		Entity &setLayer(std::int32_t layer);
-
-		/**
 		 * @brief Get the entity's rendering layer.
 		 * @return The layer value.
 		 */

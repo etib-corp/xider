@@ -24,4 +24,83 @@
 
 namespace utility::math
 {
+	std::ostream &operator<<(std::ostream &stream, const Vector2F &vector)
+	{
+		stream << "Vector2F(" << vector[VEC_X] << ", " << vector[VEC_Y] << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const Vector2D &vector)
+	{
+		stream << "Vector2D(" << vector[VEC_X] << ", " << vector[VEC_Y] << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const Vector2I &vector)
+	{
+		stream << "Vector2I(" << vector[VEC_X] << ", " << vector[VEC_Y] << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const Vector2UI &vector)
+	{
+		stream << "Vector2UI(" << vector[VEC_X] << ", " << vector[VEC_Y] << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const Vector3F &vector)
+	{
+		stream << "Vector3F(" << vector[VEC_X] << ", " << vector[VEC_Y] << ", "
+			   << vector[VEC_Z] << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const Vector3D &vector)
+	{
+		stream << "Vector3D(" << vector[VEC_X] << ", " << vector[VEC_Y] << ", "
+			   << vector[VEC_Z] << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const Vector3I &vector)
+	{
+		stream << "Vector3I(" << vector[VEC_X] << ", " << vector[VEC_Y] << ", "
+			   << vector[VEC_Z] << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const Vector3UI &vector)
+	{
+		stream << "Vector3UI(" << vector[VEC_X] << ", " << vector[VEC_Y] << ", "
+			   << vector[VEC_Z] << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const Vector4F &vector)
+	{
+		stream << "Vector4F(" << vector[VEC_X] << ", " << vector[VEC_Y] << ", "
+			   << vector[VEC_Z] << ", " << vector[VEC_W] << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const Vector4D &vector)
+	{
+		stream << "Vector4D(" << vector[VEC_X] << ", " << vector[VEC_Y] << ", "
+			   << vector[VEC_Z] << ", " << vector[VEC_W] << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const Vector4I &vector)
+	{
+		stream << "Vector4I(" << vector[VEC_X] << ", " << vector[VEC_Y] << ", "
+			   << vector[VEC_Z] << ", " << vector[VEC_W] << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const Vector4UI &vector)
+	{
+		stream << "Vector4UI(" << vector[VEC_X] << ", " << vector[VEC_Y] << ", "
+			   << vector[VEC_Z] << ", " << vector[VEC_W] << ")";
+		return stream;
+	}
 }	 // namespace utility::math

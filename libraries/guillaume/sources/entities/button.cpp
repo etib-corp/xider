@@ -20,6 +20,8 @@
  SOFTWARE.
  */
 
+#include <iostream>
+
 #include "guillaume/entities/button.hpp"
 
 #include "guillaume/theme.hpp"
@@ -458,8 +460,10 @@ namespace guillaume::entities
 	{
 		const auto forwardVector					= orientation.getForward();
 		utility::graphic::PositionF forwardPosition = position;
+
 		forwardPosition.translate(utility::graphic::PositionF(
-			-forwardVector * static_cast<float>(layer) * 1.0f));
+			-forwardVector * static_cast<float>(layer + 1) * 0.1f));
+
 		return utility::graphic::PoseF(forwardPosition, orientation);
 	}
 

@@ -52,12 +52,6 @@ namespace guillaume::ecs
 		_signature = signature;
 	}
 
-	Entity &Entity::setLayer(std::int32_t layer)
-	{
-		_layer = layer;
-		return *this;
-	}
-
 	std::int32_t Entity::getLayer(void) const
 	{
 		return _layer;
@@ -66,6 +60,11 @@ namespace guillaume::ecs
 	Entity &Entity::setParent(std::shared_ptr<Entity> parent)
 	{
 		_parent = parent;
+		if (parent != nullptr) {
+			_layer = parent->getLayer() + 1;
+		} else {
+			_layer = 0;
+		}
 		return *this;
 	}
 
