@@ -56,7 +56,7 @@ namespace guillaume::entities
 		{
 			public:
 			private:
-			std::unique_ptr<Text>
+			std::shared_ptr<Text>
 				_text;	  ///< Unique pointer to the Text entity being built
 			std::string
 				_content;	 ///< Text content to be set in the Text component
@@ -84,7 +84,8 @@ namespace guillaume::entities
 			 * @brief Build and register the text entity.
 			 * @return The entity identifier of the newly created text entity.
 			 */
-			ecs::Entity::Identifier registerEntity(void) override;
+			ecs::Entity::Identifier
+				registerEntity(std::shared_ptr<Entity> parent) override;
 
 			/**
 			 * @brief Reset the builder to its initial state for creating a new
@@ -141,8 +142,8 @@ namespace guillaume::entities
 			 * @return The entity identifier of the newly created text entity.
 			 */
 			ecs::Entity::Identifier
-				makeText(Builder &builder, const std::string &content,
-						 const float &fontSize,
+				makeText(Builder &builder, std::shared_ptr<Entity> parent,
+						 const std::string &content, const float &fontSize,
 						 const utility::graphic::Color32Bit &color);
 		};
 
@@ -190,6 +191,11 @@ namespace guillaume::entities
 		 * @return Reference to this Text component for chaining.
 		 */
 		Text &setColor(const utility::graphic::Color32Bit &color);
+
+		/**
+		 * @brief Initialize the text entity's derived state.
+		 */
+		void initialize(void) override;
 
 		/**
 		 * @brief Recompute the text entity's derived state.

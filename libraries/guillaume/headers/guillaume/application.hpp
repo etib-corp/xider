@@ -62,6 +62,7 @@
 #include "guillaume/systems/mouse_button.hpp"
 #include "guillaume/systems/mouse_motion.hpp"
 #include "guillaume/systems/keyboard_control.hpp"
+#include "guillaume/systems/measure_glyph.hpp"
 #include "guillaume/systems/measure_text.hpp"
 #include "guillaume/systems/rectangle_render.hpp"
 #include "guillaume/systems/text_input.hpp"

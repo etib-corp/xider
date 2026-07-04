@@ -21,6 +21,7 @@
  */
 
 #include <utility/graphic/text/text.hpp>
+#include <utility/ressource_provider.hpp>
 
 #include "guillaume/systems/measure_glyph.hpp"
 
@@ -38,7 +39,17 @@ namespace guillaume::systems
 		, _defaultFontPath(
 			  "fonts/Material_Symbols_Outlined/"
 			  "MaterialSymbolsOutlined-VariableFont_FILL,GRAD,opsz,wght.ttf")
+		, _glyphCodePath(
+			  "fonts/Material_Symbols_Outlined/"
+			  "MaterialSymbolsOutlined[FILL,GRAD,opsz,wght].codepoints")
 	{
+		_codePoints = _ressourceProvider->loadCodePoints(_glyphCodePath);
+		if (_codePoints) {
+			getLogger().info() << "Loaded code points from " + _glyphCodePath;
+		} else {
+			getLogger().error()
+				<< "Failed to load glyph code asset: " << _glyphCodePath;
+		}
 	}
 
 	MeasureGlyph::~MeasureGlyph(void)
@@ -99,9 +110,15 @@ namespace guillaume::systems
 			return;
 		}
 
+		uint32_t glyphCode = _codePoints->getCode(cacheKey.glyphName);
+		if (glyphCode == 0) {
+			glyphCode = '?';
+		}
+
 		utility::graphic::Text text(
 			_ressourceProvider, transformComponent.getPose(),
-			colorComponent.getColor(), cacheKey.glyphName, cacheKey.fontSize,
+			colorComponent.getColor(),
+			utility::graphic::CodePoints::toUtf8(glyphCode), cacheKey.fontSize,
 			_defaultFontPath);
 		text.setColor(utility::graphic::Color32Bit());
 

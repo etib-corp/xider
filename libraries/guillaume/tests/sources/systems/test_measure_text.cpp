@@ -111,7 +111,7 @@ namespace
 
 		void SetUp(void) override
 		{
-			auto entity		 = std::make_unique<guillaume::ecs::Entity>();
+			auto entity		 = std::make_shared<guillaume::ecs::Entity>();
 			entityIdentifier = entity->getIdentifier();
 			entity->setSignature(
 				guillaume::ecs::Entity::getSignatureFromTypes<

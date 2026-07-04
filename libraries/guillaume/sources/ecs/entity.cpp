@@ -63,8 +63,14 @@ namespace guillaume::ecs
 		return _layer;
 	}
 
-	void Entity::update(void)
+	Entity &Entity::setParent(std::shared_ptr<Entity> parent)
 	{
+		_parent = parent;
+		return *this;
 	}
 
+	std::shared_ptr<Entity> Entity::getParent(void) const
+	{
+		return _parent;
+	}
 }	 // namespace guillaume::ecs

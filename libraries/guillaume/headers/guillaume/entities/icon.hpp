@@ -51,7 +51,7 @@ namespace guillaume::entities
 		class Builder: public ecs::EntityBuilder
 		{
 			private:
-			std::unique_ptr<Icon>
+			std::shared_ptr<Icon>
 				_icon;	  ///< Unique pointer to the Icon entity being built
 			std::string _glyphName;	   ///< Name of the glyph to be used
 			float _fontSize;		   ///< Font size of the icon to be used
@@ -80,7 +80,8 @@ namespace guillaume::entities
 			 * @brief Build and register the icon entity.
 			 * @return The entity identifier of the newly created icon entity.
 			 */
-			ecs::Entity::Identifier registerEntity(void) override;
+			ecs::Entity::Identifier
+				registerEntity(std::shared_ptr<Entity> parent) override;
 
 			/**
 			 * @brief Reset the builder to its initial state for creating a new
@@ -151,8 +152,8 @@ namespace guillaume::entities
 			 * @see components::Glyph::getName
 			 */
 			ecs::Entity::Identifier
-				makeIcon(Builder &builder, const std::string &iconName,
-						 const float &fontSize,
+				makeIcon(Builder &builder, std::shared_ptr<Entity> parent,
+						 const std::string &iconName, const float &fontSize,
 						 const utility::graphic::Color32Bit &color,
 						 const components::Glyph::Style &style);
 		};
@@ -220,6 +221,11 @@ namespace guillaume::entities
 		 * @return Reference to this Icon for chaining.
 		 */
 		Icon &setStyle(const components::Glyph::Style &style);
+
+		/**
+		 * @brief Initialize the icon entity's derived state.
+		 */
+		void initialize(void) override;
 
 		/**
 		 * @brief Recompute the icon entity's derived state.

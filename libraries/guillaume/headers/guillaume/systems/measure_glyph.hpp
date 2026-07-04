@@ -22,9 +22,14 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 
+#include <utility/ressource_provider.hpp>
+
 #include <utility/cache.hpp>
+
+#include <utility/graphic/text/code_points.hpp>
 
 #include "guillaume/ecs/system_filler.hpp"
 
@@ -123,6 +128,8 @@ namespace guillaume::systems
 			&_engine;	 ///< Engine instance for text measurement
 		std::string
 			_defaultFontPath;	 ///< Default font used for text measurement
+		std::string _glyphCodePath; 	///< Path to glyph code mapping file
+		std::shared_ptr<utility::graphic::CodePoints> _codePoints;
 
 		public:
 		/**

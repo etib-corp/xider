@@ -44,8 +44,6 @@ namespace guillaume
 			system->routine(_sceneManager->getActiveComponentRegistry(),
 							_sceneManager->getActiveEntityRegistry(), traveler);
 		}
-		this->getLogger().debug()
-			<< "Finished systems for phase: " << static_cast<int>(phase);
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
@@ -55,6 +53,9 @@ namespace guillaume
 		_systemRegistry.registerNewSystem(
 			std::make_unique<systems::MeasureText>(_ressourceProvider,
 												   _engine));
+		_systemRegistry.registerNewSystem(
+			std::make_unique<systems::MeasureGlyph>(_ressourceProvider,
+												  _engine));
 		_systemRegistry.registerNewSystem(
 			std::make_unique<systems::MouseMotion>(_eventBus, _engine));
 		_systemRegistry.registerNewSystem(

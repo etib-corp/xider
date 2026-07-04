@@ -94,52 +94,74 @@ namespace guillaume
 
 	void Scene::placeEntitiesInFrontOfView(const utility::graphic::ViewF &view)
 	{
-		constexpr float distance   = 300.0f;
-		constexpr float spreadStep = 150.0f;
+		constexpr float distance = 300.0f;
+		constexpr float gap		 = 50.0f;
 
 		const auto centerRay = view.centerRay();
 		const auto origin	 = centerRay.origin();
 		const auto forward	 = centerRay.direction();
 		const auto right	 = view.right();
 
+		const auto anchor		   = origin + forward * distance;
 		const auto &directEntities = accessDirectEntities();
-		std::size_t entityCount	   = directEntities.size();
-		float totalSpread		   = (entityCount > 1)
-			? static_cast<float>(entityCount - 1) * spreadStep
-			: 0.0f;
-		float startOffset		   = -totalSpread / 2.0f;
 
-		for (std::size_t i = 0; i < entityCount; ++i) {
-			const auto entity = directEntities[i];
-			if (!_componentRegistry.hasComponent<components::Transform>(
-					entity->getIdentifier())) {
+		std::vector<const ecs::Entity *> placeableEntities;
+		placeableEntities.reserve(directEntities.size());
+
+		float totalSpread = 0.0f;
+
+		for (const auto &entity: directEntities) {
+			const auto id = entity->getIdentifier();
+
+			if (!_componentRegistry.hasComponent<components::Bound>(id)
+				|| !_componentRegistry.hasComponent<components::Transform>(
+					id)) {
 				continue;
 			}
 
-			float horizontalOffset =
-				startOffset + static_cast<float>(i) * spreadStep;
-			auto newPosition = utility::graphic::PositionF(
-				origin + forward * distance + right * horizontalOffset);
+			placeableEntities.push_back(entity.get());
+
+			const auto &bound =
+				_componentRegistry.getComponent<components::Bound>(id);
+
+			totalSpread += bound.getWidth();
+		}
+
+		if (placeableEntities.empty()) {
+			return;
+		}
+
+		totalSpread += static_cast<float>(placeableEntities.size() - 1) * gap;
+
+		float cursor = -totalSpread / 2.0f;
+
+		for (const auto *entity: placeableEntities) {
+			const auto id = entity->getIdentifier();
+
+			const auto &bound =
+				_componentRegistry.getComponent<components::Bound>(id);
+
+			const float width		 = bound.getWidth();
+			const float centerOffset = cursor + width * 0.5f;
+
+			utility::graphic::PositionF entityPosition(anchor
+													   + right * centerOffset);
+
 			auto &transform =
-				_componentRegistry.getComponent<components::Transform>(
-					entity->getIdentifier());
+				_componentRegistry.getComponent<components::Transform>(id);
+
 			auto pose = transform.getPose();
-			pose.setPosition(newPosition);
+			pose.setPosition(entityPosition);
+			pose.setOrientation(view.getPose().getOrientation());
 			transform.setPose(pose);
+
+			cursor += width + gap;
 		}
 	}
 
 	void Scene::onEnter(void)
 	{
 		getLogger().info() << "Scene entered";
-
-		for (auto &entityRef: getEntitiesBreadthFirst()) {
-			if (_componentRegistry.hasChanged(
-					entityRef.get()->getIdentifier())) {
-				entityRef.get()->update();
-			}
-		}
-		_componentRegistry.resetChangedFlags();
 	}
 
 	void Scene::onExit(void)

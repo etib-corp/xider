@@ -42,7 +42,7 @@ namespace xider::scenes
 				.getDirector<guillaume::entities::Button::Director>();
 
 		buttonDirector.makeButton(
-			buttonBuilder, "Back to Main",
+			buttonBuilder, nullptr, "Back to Main",
 			[this]() {
 				this->goToScene<Main>();
 			},
