@@ -82,6 +82,8 @@ namespace guillaume::entities
 
 			/**
 			 * @brief Build and register the text entity.
+			 * @param parent The parent entity to which the new text entity will
+			 * be attached.
 			 * @return The entity identifier of the newly created text entity.
 			 */
 			ecs::Entity::Identifier
@@ -135,7 +137,9 @@ namespace guillaume::entities
 			/**
 			 * @brief Create a default Text entity using the builder.
 			 * @param builder The builder instance used to configure and create
-			 * the default text
+			 * the default text entity.
+			 * @param parent The parent entity to which the new text entity will
+			 * be attached.
 			 * @param content The text content for the default Text entity.
 			 * @param fontSize The font size for the default Text entity.
 			 * @param color The color for the default Text entity (RGBA).

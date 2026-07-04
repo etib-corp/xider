@@ -121,6 +121,8 @@ namespace guillaume::entities
 
 			/**
 			 * @brief Build and register the button entity.
+			 * @param parent The parent entity to which the new button entity
+			 * will be attached.
 			 * @return The entity identifier of the newly created button entity.
 			 */
 			ecs::Entity::Identifier
@@ -217,6 +219,8 @@ namespace guillaume::entities
 			 * @brief Create a text button entity using the builder.
 			 * @param builder The builder instance used to configure and create
 			 * the text button.
+			 * @param parent The parent entity to which the new button entity
+			 * will be attached.
 			 * @param labelContent The label content to attach to the button.
 			 * @param onClick The click event handler for the text button.
 			 * @param colorStyle The color style of the button.
@@ -236,6 +240,8 @@ namespace guillaume::entities
 			 * @brief Create an icon button entity using the builder.
 			 * @param builder The builder instance used to configure and create
 			 * the icon button.
+			 * @param parent The parent entity to which the new button entity
+			 * will be attached.
 			 * @param labelContent The label content to attach to the button.
 			 * @param iconGlyphName The icon glyph name to attach.
 			 * @param iconStyle The style of the icon to attach.

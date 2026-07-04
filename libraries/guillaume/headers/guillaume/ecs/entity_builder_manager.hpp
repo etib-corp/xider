@@ -51,8 +51,6 @@ namespace guillaume::ecs
 		 * constructor.
 		 * @param entityRegistry Entity registry passed to the builder
 		 * constructor.
-		 * @return Reference to the added builder for chaining configuration
-		 * calls
 		 * @throws std::runtime_error if a builder for the specified entity type
 		 * already exists
 		 */

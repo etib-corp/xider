@@ -80,6 +80,8 @@ namespace guillaume::entities
 
 			/**
 			 * @brief Build and register the panel entity.
+			 * @param parent The parent entity to which the new panel entity
+			 * will be attached.
 			 * @return The entity identifier of the newly created panel entity.
 			 */
 			ecs::Entity::Identifier
@@ -146,6 +148,8 @@ namespace guillaume::entities
 			 * @brief Create a default panel entity using the builder.
 			 * @param builder The builder instance used to configure and create
 			 * the default panel.
+			 * @param parent The parent entity to which the new panel entity
+			 * will be attached.
 			 * @param pose The pose to set for the default panel.
 			 * @param entities The entities to attach to the default
 			 * panel.
@@ -160,6 +164,8 @@ namespace guillaume::entities
 			 * @brief Create a color panel entity using the builder.
 			 * @param builder The builder instance used to configure and create
 			 * the color panel.
+			 * @param parent The parent entity to which the new color panel
+			 * entity will be attached.
 			 * @param pose The pose to set for the color panel.
 			 * @param color The color to set for the color panel.
 			 * @param entities The entities to attach to the color panel.
