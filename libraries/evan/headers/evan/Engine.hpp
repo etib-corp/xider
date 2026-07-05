@@ -161,12 +161,6 @@ namespace evan
 		utility::graphic::ViewF getView(void) const;
 
 		/**
-		 * @brief Get the view matrix.
-		 * @return The current view matrix.
-		 */
-		glm::mat4 getViewMatrix(void) const;
-
-		/**
 		 * @brief Adds a primitive object to the scene. This method takes a
 		 * shared pointer to a Primitive object, which contains the necessary
 		 * information for rendering the primitive, such as the mesh data,
@@ -361,17 +355,6 @@ namespace evan
 		 * @param sceneIndex The index of the scene to switch to.
 		 */
 		void switchScene(size_t sceneIndex);
-
-		/**
-		 * @brief Retrieves the current viewport size in pixels. This method
-		 * returns a 2D vector representing the width and height of the viewport
-		 * in pixels, allowing users to obtain the current dimensions of the
-		 * rendering area.
-		 *
-		 * @return A utility::math::Vector2F object containing the width and
-		 * height of the viewport in pixels.
-		 */
-		utility::math::Vector2F getViewportSize() const;
 
 		/**
 		 * @brief Updates the scene with the specified index using new texture

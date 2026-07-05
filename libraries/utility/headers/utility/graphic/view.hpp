@@ -62,51 +62,6 @@ namespace utility::graphic
 			_viewportSize;	  ///< Viewport size in pixels (width, height)
 
 		/**
-		 * @brief Validate perspective parameter constraints.
-		 * @param verticalFovDegrees Vertical field-of-view in degrees.
-		 * @param aspectRatio Aspect ratio (width/height).
-		 * @throws std::invalid_argument if any perspective parameter is
-		 * invalid.
-		 */
-		static void validatePerspective(ViewComponentType verticalFovDegrees,
-										ViewComponentType aspectRatio)
-		{
-			if (verticalFovDegrees <= ViewComponentType {}
-				|| verticalFovDegrees >= ViewComponentType { 180 }) {
-				throw std::invalid_argument(
-					"View vertical FOV must be in range (0, 180)");
-			}
-			if (aspectRatio <= ViewComponentType {}) {
-				throw std::invalid_argument(
-					"View aspect ratio must be positive");
-			}
-		}
-
-		/**
-		 * @brief Build symmetric per-direction FOV from vertical angle and
-		 * aspect.
-		 * @param verticalFovDegrees Vertical field-of-view in degrees.
-		 * @param aspectRatio Aspect ratio (width/height).
-		 * @return Symmetric field-of-view values for all directions.
-		 */
-		static FieldOfView<ViewComponentType>
-			makeSymmetricFieldOfView(ViewComponentType verticalFovDegrees,
-									 ViewComponentType aspectRatio)
-		{
-			const ViewComponentType halfVertical =
-				verticalFovDegrees / ViewComponentType { 2 };
-			const ViewComponentType halfVerticalRad = halfVertical
-				* std::numbers::pi_v<ViewComponentType>
-				/ ViewComponentType { 180 };
-			const ViewComponentType halfHorizontalRad =
-				std::atan(std::tan(halfVerticalRad) * aspectRatio);
-
-			return FieldOfView<ViewComponentType>(
-				halfVerticalRad, halfVerticalRad, halfHorizontalRad,
-				halfHorizontalRad);
-		}
-
-		/**
 		 * @brief Validate orientation vectors for use as view basis.
 		 * @param forward Forward direction candidate.
 		 * @param up Up direction candidate.
@@ -245,25 +200,25 @@ namespace utility::graphic
 		View(void)
 			: _pose()
 			, _fieldOfView()
+			, _viewportSize()
 		{
 		}
 
 		/**
 		 * @brief Construct view from explicit quaternion orientation.
 		 * @param pose View world-space position and orientation.
-		 * @param verticalFovDegrees Vertical field-of-view in degrees.
-		 * @param aspectRatio Aspect ratio (width/height).
+		 * @param fov View field-of-view parameters.
 		 * @param viewportSize Viewport size in pixels (width, height).
 		 * @throws std::invalid_argument if perspective values or quaternion are
 		 * invalid.
 		 */
-		View(Pose<ViewComponentType> pose, ViewComponentType verticalFovDegrees,
-			 ViewComponentType aspectRatio, math::Vector2F viewportSize)
+		View(Pose<ViewComponentType> pose,
+			 utility::graphic::FieldOfView<ViewComponentType> fov,
+			 math::Vector2F viewportSize)
 			: _pose(std::move(pose))
-			, _fieldOfView()
-			, _viewportSize(viewportSize)
+			, _fieldOfView(std::move(fov))
+			, _viewportSize(std::move(viewportSize))
 		{
-			setPerspective(verticalFovDegrees, aspectRatio);
 		}
 
 		/**

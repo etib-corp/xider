@@ -242,6 +242,55 @@ namespace evan
 		void setView(int index, const glm::mat4 &view) override;
 
 		/**
+		 * @brief Retrieves the number of views in the swapchain context.
+		 *
+		 * This method returns the number of views associated with the swapchain
+		 * context, which is essential for configuring the rendering pipeline
+		 * and ensuring that rendering operations are performed correctly for
+		 * each view. Implement this method to return the appropriate number of
+		 * views based on the current view configurations and any changes in the
+		 * VR environment.
+		 *
+		 * @return std::size_t The number of views in the swapchain context,
+		 * which should be calculated based on the current view configurations
+		 * and any changes in the VR environment to ensure accurate rendering of
+		 * the scene in an OpenXR application.
+		 */
+		std::size_t getViewCount(void) const override;
+
+		/**
+		 * @brief Sets the field of view for the swapchain context.
+		 *
+		 * This method sets the field of view (FOV) for the swapchain context,
+		 * which is essential for configuring the rendering pipeline and
+		 * ensuring that rendered content is displayed correctly based on the
+		 * desired viewing angle. Implement this method to allow the rendering
+		 * system to adjust the FOV as needed for different rendering scenarios.
+		 *
+		 * @param fov The desired field of view as a
+		 * utility::graphic::FieldOfViewF object, which contains the horizontal
+		 * and vertical FOV angles in degrees.
+		 */
+		void setFieldOfView(utility::graphic::FieldOfViewF &fov) override;
+
+		/**
+		 * @brief Retrieves the current field of view for the swapchain
+		 * context.
+		 *
+		 * This method returns the current field of view (FOV) for the swapchain
+		 * context, which is essential for configuring the rendering pipeline
+		 * and ensuring that rendered content is displayed correctly based on
+		 * the desired viewing angle. Implement this method to allow the
+		 * rendering system to access the current FOV settings for rendering
+		 * operations.
+		 *
+		 * @return The current field of view as a
+		 * utility::graphic::FieldOfViewF object, which contains the horizontal
+		 * and vertical FOV angles in degrees.
+		 */
+		utility::graphic::FieldOfViewF getFieldOfView(void) const override;
+
+		/**
 		 * Vector of XrView structures for each view configuration.
 		 */
 		std::vector<XrView> _views;

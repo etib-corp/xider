@@ -70,11 +70,6 @@ namespace xider
 		return text.getTextDimensions();
 	}
 
-	guillaume::Engine::ViewportSize Engine::getViewportSize(void) const
-	{
-		return { 0.0f, 0.0f };
-	}
-
 	size_t Engine::addText(utility::graphic::Text text)
 	{
 		return _evanEngine->addText(

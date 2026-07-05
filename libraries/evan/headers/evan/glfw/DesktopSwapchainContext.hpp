@@ -222,5 +222,57 @@ namespace evan
 		 * image index in the swapchain.
 		 */
 		void setView(int index, const glm::mat4 &view) override;
+
+		/**
+		 * @brief Retrieves the number of views in the swapchain context.
+		 *
+		 * This function overrides the pure virtual function from
+		 * ASwapchainContext to return the number of views associated with the
+		 * swapchain context. The number of views is essential for configuring
+		 * the rendering pipeline and ensuring that rendering operations are
+		 * performed correctly for each view.
+		 *
+		 * @return The number of views in the swapchain context.
+		 */
+		std::size_t getViewCount(void) const override;
+
+		/**
+		 * @brief Sets the field of view for the swapchain context.
+		 *
+		 * This function overrides the pure virtual function from
+		 * ASwapchainContext to set the field of view (FOV) for the swapchain
+		 * context. The FOV is essential for configuring the rendering pipeline
+		 * and ensuring that rendered content is displayed correctly based on
+		 * the desired viewing angle.
+		 *
+		 * @param fov The field of view to set for the swapchain context.
+		 */
+		void setFieldOfView(utility::graphic::FieldOfViewF &fov) override;
+
+		/**
+		 * @brief Retrieves the current field of view for the swapchain context.
+		 *
+		 * This function overrides the pure virtual function from
+		 * ASwapchainContext to return the current field of view (FOV) for the
+		 * swapchain context. The FOV is essential for configuring the rendering
+		 * pipeline and ensuring that rendered content is displayed correctly
+		 * based on the desired viewing angle.
+		 *
+		 * @return The current field of view as a
+		 * utility::graphic::FieldOfViewF object, which contains the horizontal
+		 * and vertical FOV angles in degrees.
+		 */
+		utility::graphic::FieldOfViewF getFieldOfView(void) const override;
+
+		private:
+		/**
+		 * @brief View state for the swapchain context
+		 */
+		glm::mat4 _view;
+
+		/**
+		 * @brief Field of view for the swapchain context
+		 */
+		utility::graphic::FieldOfViewF _fov;
 	};
 }	 // namespace evan

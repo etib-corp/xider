@@ -71,12 +71,6 @@ evan::Engine::Engine(
 		_renderer->createFrame(_deviceContext->getCommandPool(),
 							   *deviceBackend);
 	}
-
-	// Debug view setup - create initial view matrix
-	// _viewMatrix =
-	// 	glm::lookAt(glm::vec3(0.0f, 0.0f, 100.0f), glm::vec3(0.0f, 0.0f,
-	// -10.0f), 				glm::vec3(0.0f, 1.0f, 1.0f));
-	// _swapchainContext->setView(0, _viewMatrix);
 }
 
 evan::Engine::~Engine()
@@ -209,24 +203,21 @@ bool evan::Engine::removeObject(size_t objectID)
 
 utility::graphic::ViewF evan::Engine::getView(void) const
 {
-	// Extract position and orientation from view matrix
-	utility::graphic::PositionF position =
-		extractPositionFromViewMatrix(_viewMatrix);
-	utility::graphic::OrientationF orientation =
-		extractOrientationFromViewMatrix(_viewMatrix);
+	glm::mat4 viewMatrix = {};
 
-	// Create Pose from position and orientation
-	utility::graphic::PoseF pose(position, orientation);
+	for (std::size_t i = 0; i < _swapchainContext->getViewCount(); ++i) {
+		viewMatrix += _swapchainContext->getView(i);
+	}
+	viewMatrix /= static_cast<float>(_swapchainContext->getViewCount());
 
-	// Create ViewF with default FOV and viewport (these would need to be stored
-	// separately if needed)
-	utility::math::Vector2F viewportSize { 1920.0f, 1080.0f };
-	return utility::graphic::ViewF(pose, 45.0f, 16.0f / 9.0f, viewportSize);
-}
+	auto pose = utility::graphic::PoseF {
+		extractPositionFromViewMatrix(viewMatrix),
+		extractOrientationFromViewMatrix(viewMatrix)
+	};
+	auto fov		  = _swapchainContext->getFieldOfView();
+	auto viewportSize = _swapchainContext->getViewportSize();
 
-glm::mat4 evan::Engine::getViewMatrix(void) const
-{
-	return _viewMatrix;
+	return utility::graphic::ViewF { pose, fov, viewportSize };
 }
 
 void evan::Engine::addScene(size_t sceneIndex)
@@ -241,7 +232,6 @@ void evan::Engine::addScene(size_t sceneIndex)
 
 void evan::Engine::update()
 {
-	this->getViewportSize();
 	updateDeltaTime();
 	this->getLogger().info() << "Updating engine state...";
 
@@ -311,11 +301,6 @@ void evan::Engine::switchScene(size_t sceneIndex)
 		this->getLogger().warning()
 			<< "Scene index " << sceneIndex << " does not exist.";
 	}
-}
-
-utility::math::Vector2F evan::Engine::getViewportSize() const
-{
-	return _swapchainContext->getViewportSize();
 }
 
 void evan::Engine::handleViewportInput(
@@ -401,56 +386,49 @@ void evan::Engine::handleKeyboardMovement(
 		return;
 	}
 
-	// Use keycode instead of scancode (GLFW callbacks set keycode, not
-	// scancode)
 	auto keycode = keyboardEvent->getKeycode();
 	utility::math::Vector3F movement { 0.0f, 0.0f, 0.0f };
 
-	// Extract forward, right, and up vectors from view matrix
-	// View matrix transforms world to view space, so we need the inverse
-	glm::mat3 viewRotation = glm::mat3(viewMatrix);
-	auto forward =
-		-utility::math::Vector3F { viewRotation[2].x, viewRotation[2].y,
-								   viewRotation[2].z };
-	auto right = utility::math::Vector3F { viewRotation[0].x, viewRotation[0].y,
-										   viewRotation[0].z };
-	auto up	   = utility::math::Vector3F { viewRotation[1].x, viewRotation[1].y,
-										   viewRotation[1].z };
+	auto orientation = extractOrientationFromViewMatrix(viewMatrix);
+	glm::quat q(orientation.w, orientation.x, orientation.y, orientation.z);
+
+	glm::vec3 forward = glm::normalize(q * glm::vec3(0.0f, 0.0f, -1.0f));
+	glm::vec3 right	  = glm::normalize(q * glm::vec3(1.0f, 0.0f, 0.0f));
+	glm::vec3 up	  = glm::normalize(q * glm::vec3(0.0f, 1.0f, 0.0f));
 
 	switch (keycode) {
 		case utility::event::KeyboardEvent::KeyCode::W:
 		case utility::event::KeyboardEvent::KeyCode::Up:
-			movement = forward * movementSpeed * deltaTime;
+			movement = { forward.x, forward.y, forward.z };
 			break;
 		case utility::event::KeyboardEvent::KeyCode::S:
 		case utility::event::KeyboardEvent::KeyCode::Down:
-			movement = -forward * movementSpeed * deltaTime;
+			movement = { -forward.x, -forward.y, -forward.z };
 			break;
 		case utility::event::KeyboardEvent::KeyCode::A:
 		case utility::event::KeyboardEvent::KeyCode::Left:
-			movement = -right * movementSpeed * deltaTime;
+			movement = { -right.x, -right.y, -right.z };
 			break;
 		case utility::event::KeyboardEvent::KeyCode::D:
 		case utility::event::KeyboardEvent::KeyCode::Right:
-			movement = right * movementSpeed * deltaTime;
+			movement = { right.x, right.y, right.z };
 			break;
 		case utility::event::KeyboardEvent::KeyCode::Q:
-			movement = -up * movementSpeed * deltaTime;
+			movement = { -up.x, -up.y, -up.z };
 			break;
 		case utility::event::KeyboardEvent::KeyCode::E:
-			movement = up * movementSpeed * deltaTime;
+			movement = { up.x, up.y, up.z };
 			break;
 		default:
 			return;
 	}
 
-	if (movement != utility::math::Vector3F { 0.0f, 0.0f, 0.0f }) {
-		position = utility::graphic::PositionF(position.getX() + movement.x,
-											   position.getY() + movement.y,
-											   position.getZ() + movement.z);
-	}
-}
+	movement = movement * movementSpeed * deltaTime;
 
+	position = utility::graphic::PositionF(position.getX() + movement.x,
+										   position.getY() + movement.y,
+										   position.getZ() + movement.z);
+}
 void evan::Engine::handleMouseButtonEvent(
 	const std::shared_ptr<utility::event::MouseButtonEvent> &mouseButtonEvent,
 	bool &isRightMouseButtonPressed, utility::math::Vector2F &lastMousePosition)

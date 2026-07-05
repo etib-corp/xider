@@ -81,3 +81,20 @@ void evan::DesktopSwapchainContext::setView(int index, const glm::mat4 &view)
 {
 	_view = view;
 }
+
+std::size_t evan::DesktopSwapchainContext::getViewCount(void) const
+{
+	return 1;
+}
+
+void evan::DesktopSwapchainContext::setFieldOfView(
+	utility::graphic::FieldOfViewF &fov)
+{
+	_fov = fov;
+}
+
+utility::graphic::FieldOfViewF
+	evan::DesktopSwapchainContext::getFieldOfView(void) const
+{
+	return _fov;
+}
