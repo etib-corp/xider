@@ -5,6 +5,9 @@
 ** IDesktopPlatform
 */
 
+#include <cmath>
+#include <math.h>
+
 #include "evan/glfw/IDesktopPlatform.hpp"
 
 evan::IDesktopPlatform::~IDesktopPlatform()
@@ -34,7 +37,14 @@ std::shared_ptr<evan::ASwapchainContext>
 {
 	this->getLogger().info()
 		<< "Creating swapchain context for Desktop platform...";
-	return std::make_shared<DesktopSwapchainContext>(deviceContext, _window);
+	auto swapchainContext =
+		std::make_shared<DesktopSwapchainContext>(deviceContext, _window);
+	utility::graphic::FieldOfViewF fov(
+		M_PI_2, -M_PI_2, -M_PI_2,
+		M_PI_2);	// Set a default FOV for desktop platforms of 90 degrees
+					// (π/2 radians) for horizontal and vertical FOV
+	swapchainContext->setFieldOfView(fov);
+	return swapchainContext;
 }
 
 std::vector<std::shared_ptr<utility::event::Event>>
