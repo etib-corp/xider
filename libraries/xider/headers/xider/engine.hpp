@@ -108,12 +108,6 @@ namespace xider
 			measureText(const utility::graphic::Text &text) const override;
 
 		/**
-		 * @brief Gets the current viewport size.
-		 * @return ViewportSize containing width and height.
-		 */
-		ViewportSize getViewportSize(void) const override;
-
-		/**
 		 * @brief Add a scene to the renderer.
 		 * @param sceneIndex The index of the scene to add.
 		 */

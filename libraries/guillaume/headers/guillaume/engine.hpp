@@ -122,12 +122,6 @@ namespace guillaume
 
 		public:
 		/**
-		 * @brief Get the current viewport size in pixels.
-		 * @return The viewport size vector (width, height).
-		 */
-		virtual ViewportSize getViewportSize(void) const = 0;
-
-		/**
 		 * @brief Clear the current rendering target with the drawing color.
 		 */
 		virtual void clear(void) = 0;

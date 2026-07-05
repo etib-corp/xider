@@ -128,7 +128,7 @@ namespace guillaume::systems
 			&_engine;	 ///< Engine instance for text measurement
 		std::string
 			_defaultFontPath;	 ///< Default font used for text measurement
-		std::string _glyphCodePath; 	///< Path to glyph code mapping file
+		std::string _glyphCodePath;	   ///< Path to glyph code mapping file
 		std::shared_ptr<utility::graphic::CodePoints> _codePoints;
 
 		public:

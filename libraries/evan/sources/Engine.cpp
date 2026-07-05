@@ -71,12 +71,6 @@ evan::Engine::Engine(
 		_renderer->createFrame(_deviceContext->getCommandPool(),
 							   *deviceBackend);
 	}
-
-	// Debug view setup - create initial view matrix
-	// _viewMatrix =
-	// 	glm::lookAt(glm::vec3(0.0f, 0.0f, 100.0f), glm::vec3(0.0f, 0.0f,
-	// -10.0f), 				glm::vec3(0.0f, 1.0f, 1.0f));
-	// _swapchainContext->setView(0, _viewMatrix);
 }
 
 evan::Engine::~Engine()
@@ -209,24 +203,21 @@ bool evan::Engine::removeObject(size_t objectID)
 
 utility::graphic::ViewF evan::Engine::getView(void) const
 {
-	// Extract position and orientation from view matrix
-	utility::graphic::PositionF position =
-		extractPositionFromViewMatrix(_viewMatrix);
-	utility::graphic::OrientationF orientation =
-		extractOrientationFromViewMatrix(_viewMatrix);
+	glm::mat4 viewMatrix = {};
 
-	// Create Pose from position and orientation
-	utility::graphic::PoseF pose(position, orientation);
+	for (std::size_t i = 0; i < _swapchainContext->getViewCount(); ++i) {
+		viewMatrix += _swapchainContext->getView(i);
+	}
+	viewMatrix /= static_cast<float>(_swapchainContext->getViewCount());
 
-	// Create ViewF with default FOV and viewport (these would need to be stored
-	// separately if needed)
-	utility::math::Vector2F viewportSize { 1920.0f, 1080.0f };
-	return utility::graphic::ViewF(pose, 45.0f, 16.0f / 9.0f, viewportSize);
-}
+	auto pose = utility::graphic::PoseF {
+		extractPositionFromViewMatrix(viewMatrix),
+		extractOrientationFromViewMatrix(viewMatrix)
+	};
+	auto fov		  = _swapchainContext->getFieldOfView();
+	auto viewportSize = _swapchainContext->getViewportSize();
 
-glm::mat4 evan::Engine::getViewMatrix(void) const
-{
-	return _viewMatrix;
+	return utility::graphic::ViewF { pose, fov, viewportSize };
 }
 
 void evan::Engine::addScene(size_t sceneIndex)
@@ -241,7 +232,6 @@ void evan::Engine::addScene(size_t sceneIndex)
 
 void evan::Engine::update()
 {
-	this->getViewportSize();
 	updateDeltaTime();
 	this->getLogger().info() << "Updating engine state...";
 
@@ -311,11 +301,6 @@ void evan::Engine::switchScene(size_t sceneIndex)
 		this->getLogger().warning()
 			<< "Scene index " << sceneIndex << " does not exist.";
 	}
-}
-
-utility::math::Vector2F evan::Engine::getViewportSize() const
-{
-	return _swapchainContext->getViewportSize();
 }
 
 void evan::Engine::handleViewportInput(

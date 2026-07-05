@@ -216,5 +216,52 @@ glm::mat4 evan::XrSwapchainContext::getView(int index) const
 
 void evan::XrSwapchainContext::setView(int index, const glm::mat4 &view)
 {
-	_view = view;
+	throw std::runtime_error(
+		"Setting view matrix is not supported in XrSwapchainContext. The view "
+		"matrix is determined by the XR runtime and cannot be modified "
+		"directly.");
+}
+
+std::size_t evan::XrSwapchainContext::getViewCount(void) const
+{
+	return _views.size();
+}
+
+utility::graphic::FieldOfViewF
+	evan::XrSwapchainContext::getFieldOfView(void) const
+{
+	utility::graphic::FieldOfViewF fov {};
+
+	if (_views.empty()) {
+		return fov;
+	}
+
+	float up	= 0.0f;
+	float down	= 0.0f;
+	float left	= 0.0f;
+	float right = 0.0f;
+
+	for (const auto &view: _views) {
+		up += view.fov.angleUp;
+		down += view.fov.angleDown;
+		left += view.fov.angleLeft;
+		right += view.fov.angleRight;
+	}
+
+	const float count = static_cast<float>(_views.size());
+	fov.setUp(up / count);
+	fov.setDown(down / count);
+	fov.setLeft(left / count);
+	fov.setRight(right / count);
+
+	return fov;
+}
+
+void evan::XrSwapchainContext::setFieldOfView(
+	utility::graphic::FieldOfViewF &fov)
+{
+	throw std::runtime_error(
+		"Setting field of view is not supported in XrSwapchainContext. The "
+		"field of view is determined by the XR runtime and cannot be modified "
+		"directly.");
 }

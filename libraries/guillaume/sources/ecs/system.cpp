@@ -95,7 +95,6 @@ namespace guillaume::ecs
 		getLogger().debug() << "System routine finished. Visited entities: "
 							<< traversedEntities.size();
 
-
 		_activeComponentRegistry = nullptr;
 	}
 
