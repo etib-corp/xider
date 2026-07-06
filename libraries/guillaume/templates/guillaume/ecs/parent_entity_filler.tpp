@@ -22,21 +22,21 @@
 
 #pragma once
 
-#include "guillaume/ecs/entity_filler.hpp"
 #include "guillaume/ecs/parent_entity_filler.hpp"
 
 namespace guillaume::ecs
 {
+
 	template<InheritFromComponent... ComponentTypes> ComponentRegistry &
-		EntityFiller<ComponentTypes...>::getComponentRegistry(void)
+		ParentEntityFiller<ComponentTypes...>::getComponentRegistry(void)
 	{
 		return _componentRegistry;
 	}
 
 	template<InheritFromComponent... ComponentTypes>
-	EntityFiller<ComponentTypes...>::EntityFiller(
+	ParentEntityFiller<ComponentTypes...>::ParentEntityFiller(
 		ComponentRegistry &componentRegistry)
-		: Entity()
+		: ParentEntity()
 		, _componentRegistry(componentRegistry)
 	{
 		setSignature<ComponentTypes...>();

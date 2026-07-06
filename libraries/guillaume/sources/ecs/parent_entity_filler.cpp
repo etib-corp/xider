@@ -20,28 +20,8 @@
  SOFTWARE.
  */
 
-#pragma once
-
-#include "guillaume/ecs/entity_filler.hpp"
 #include "guillaume/ecs/parent_entity_filler.hpp"
 
 namespace guillaume::ecs
 {
-	template<InheritFromComponent... ComponentTypes> ComponentRegistry &
-		EntityFiller<ComponentTypes...>::getComponentRegistry(void)
-	{
-		return _componentRegistry;
-	}
-
-	template<InheritFromComponent... ComponentTypes>
-	EntityFiller<ComponentTypes...>::EntityFiller(
-		ComponentRegistry &componentRegistry)
-		: Entity()
-		, _componentRegistry(componentRegistry)
-	{
-		setSignature<ComponentTypes...>();
-		_componentRegistry
-			.template registerComponentsForEntity<ComponentTypes...>(
-				getIdentifier());
-	}
 }	 // namespace guillaume::ecs

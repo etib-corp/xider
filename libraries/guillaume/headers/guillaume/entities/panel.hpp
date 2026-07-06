@@ -27,7 +27,7 @@
 #include "guillaume/ecs/component_registry.hpp"
 #include "guillaume/ecs/entity_director.hpp"
 #include "guillaume/ecs/entity_builder.hpp"
-#include "guillaume/ecs/entity_filler.hpp"
+#include "guillaume/ecs/parent_entity_filler.hpp"
 
 #include "guillaume/components/transform.hpp"
 #include "guillaume/components/bound.hpp"

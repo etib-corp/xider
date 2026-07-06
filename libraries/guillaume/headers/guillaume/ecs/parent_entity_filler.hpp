@@ -24,40 +24,17 @@
 
 #include "guillaume/ecs/component.hpp"
 #include "guillaume/ecs/component_registry.hpp"
-#include "guillaume/ecs/entity.hpp"
+#include "guillaume/ecs/parent_entity.hpp"
 
 namespace guillaume::ecs
 {
-
 	/**
-	 * @brief Templated Entity class that automatically sets its signature based
-	 * on the specified component types.
+	 * @brief Parent-capable entity filler that also owns child entities.
 	 * @tparam ComponentTypes The component types that define the entity's
 	 * signature.
-	 *
-	 * @code
-	 * // UI-style entity composed from common components.
-	 * class ButtonEntity
-	 *     : public ecs::EntityFiller<components::Transform,
-	 *                                components::Bound,
-	 *                                components::Click,
-	 *                                components::Text> {
-	 *   public:
-	 *     ButtonEntity(ecs::ComponentRegistry &registry)
-	 *         : ecs::EntityFiller<components::Transform,
-	 *                             components::Bound,
-	 *                             components::Click,
-	 *                             components::Text>(registry) {}
-	 * };
-	 *
-	 * ButtonEntity button(registry);
-	 * @endcode
-	 *
-	 * @see Entity
-	 * @see ComponentRegistry
 	 */
-	template<InheritFromComponent... ComponentTypes> class EntityFiller:
-		public Entity
+	template<InheritFromComponent... ComponentTypes> class ParentEntityFiller:
+		public ParentEntity
 	{
 		private:
 		ComponentRegistry &_componentRegistry;
@@ -71,20 +48,20 @@ namespace guillaume::ecs
 
 		public:
 		/**
-		 * @brief Construct a new Entity Filler object.
+		 * @brief Construct a new Parent Entity Filler object.
 		 * @param componentRegistry The component registry to register
 		 * components to.
 		 */
-		EntityFiller(ComponentRegistry &componentRegistry);
+		ParentEntityFiller(ComponentRegistry &componentRegistry);
 
 		/**
-		 * @brief Default destructor for the Entity Filler class.
+		 * @brief Default destructor for the Parent Entity Filler class.
 		 */
-		virtual ~EntityFiller(void) = default;
+		virtual ~ParentEntityFiller(void) = default;
 	};
 
 }	 // namespace guillaume::ecs
 
-// Include the implementation of the EntityFiller
+// Include the implementation of the EntityFiller and ParentEntityFiller
 // template classes
-#include "guillaume/ecs/entity_filler.tpp"
+#include "guillaume/ecs/parent_entity_filler.tpp"
