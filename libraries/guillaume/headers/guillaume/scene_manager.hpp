@@ -71,13 +71,6 @@ namespace guillaume
 			_sessionStorage;	///< Session storage for temporary data
 		Engine *_engine;	///< Pointer to the application engine (non-owning)
 
-		/**
-		 * @brief Get the active scene.
-		 * @return Pointer to the active scene, or nullptr if no active scene
-		 * is set.
-		 */
-		std::unique_ptr<Scene> &getActiveScene(void);
-
 		protected:
 		/**
 		 * @brief Add a scene to the scene manager.
@@ -95,6 +88,13 @@ namespace guillaume
 		 * @brief Default destructor for the SceneManager class.
 		 */
 		~SceneManager(void);
+
+		/**
+		 * @brief Get the active scene.
+		 * @return Pointer to the active scene, or nullptr if no active scene
+		 * is set.
+		 */
+		std::unique_ptr<Scene> &getActiveScene(void);
 
 		/**
 		 * @brief Check whether at least one scene is registered.

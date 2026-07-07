@@ -27,6 +27,7 @@
 #include <stdexcept>
 #include <string>
 #include <type_traits>
+#include <ostream>
 
 namespace utility::graphic
 {
@@ -216,5 +217,21 @@ namespace utility::graphic
 	 * @brief Type alias for double-precision field-of-view component.
 	 */
 	using FieldOfViewD = FieldOfView<double>;
+
+	/**
+	 * @brief Stream insertion operator for FieldOfView.
+	 * @param stream Output stream.
+	 * @param fov Field of view to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const FieldOfViewF &fov);
+
+	/**
+	 * @brief Stream insertion operator for FieldOfView.
+	 * @param stream Output stream.
+	 * @param fov Field of view to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const FieldOfViewD &fov);
 
 }	 // namespace utility::graphic

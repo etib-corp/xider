@@ -55,7 +55,7 @@ namespace guillaume
 												   _engine));
 		_systemRegistry.registerNewSystem(
 			std::make_unique<systems::MeasureGlyph>(_ressourceProvider,
-												  _engine));
+													_engine));
 		_systemRegistry.registerNewSystem(
 			std::make_unique<systems::MouseMotion>(_eventBus, _engine));
 		_systemRegistry.registerNewSystem(
@@ -137,6 +137,11 @@ namespace guillaume
 		requires IsOneOf<DefaultSceneType, SceneTypes...>
 	void Application<DefaultSceneType, SceneTypes...>::routine(void)
 	{
+		static auto firstView = _engine->getView();
+		_sceneManager->getActiveScene()->placeEntitiesInFrontOfView(firstView);
+
+		this->getLogger().error() << firstView;
+
 		_engine->pollEvents();
 		_engine->clear();
 		_engine->update();

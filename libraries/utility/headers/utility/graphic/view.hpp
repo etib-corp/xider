@@ -28,6 +28,7 @@
 #include <stdexcept>
 #include <type_traits>
 #include <utility>
+#include <ostream>
 
 #include "utility/graphic/field_of_view.hpp"
 #include "utility/graphic/pose.hpp"
@@ -544,5 +545,21 @@ namespace utility::graphic
 	 * @brief Type alias for double-precision view component.
 	 */
 	using ViewD = View<double>;
+
+	/**
+	 * @brief Stream insertion operator for View.
+	 * @param stream Output stream.
+	 * @param view View to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const ViewF &view);
+
+	/**
+	 * @brief Stream insertion operator for View.
+	 * @param stream Output stream.
+	 * @param view View to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const ViewD &view);
 
 }	 // namespace utility::graphic

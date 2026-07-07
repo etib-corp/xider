@@ -35,6 +35,7 @@
 #include <stdexcept>
 #include <type_traits>
 #include <utility>
+#include <ostream>
 
 #include "utility/graphic/position.hpp"
 
@@ -451,5 +452,21 @@ namespace utility::graphic
 	 * @brief Type alias for double-precision ray component.
 	 */
 	using RayD = Ray<double>;
+
+	/**
+	 * @brief Stream insertion operator for Ray.
+	 * @param stream Output stream.
+	 * @param ray Ray to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const RayF &ray);
+
+	/**
+	 * @brief Stream insertion operator for Ray.
+	 * @param stream Output stream.
+	 * @param ray Ray to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const RayD &ray);
 
 }	 // namespace utility::graphic

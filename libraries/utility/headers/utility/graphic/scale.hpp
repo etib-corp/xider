@@ -25,6 +25,7 @@
 #include <cmath>
 #include <concepts>
 #include <numbers>
+#include <ostream>
 
 #include "utility/math/vector.hpp"
 
@@ -291,4 +292,19 @@ namespace utility::graphic
 	 */
 	using ScaleD = Scale<double>;
 
+	/**
+	 * @brief Stream insertion operator for Scale.
+	 * @param stream Output stream.
+	 * @param scale Scale to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const ScaleF &scale);
+
+	/**
+	 * @brief Stream insertion operator for Scale.
+	 * @param stream Output stream.
+	 * @param scale Scale to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const ScaleD &scale);
 }	 // namespace utility::graphic

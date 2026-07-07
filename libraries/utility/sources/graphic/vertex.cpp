@@ -24,4 +24,21 @@
 
 namespace utility::graphic
 {
+	std::ostream &operator<<(std::ostream &stream, const VertexF &vertex)
+	{
+		stream << "VertexF(position: " << vertex.getPosition()
+			   << ", normal: " << vertex.getNormal()
+			   << ", textureCoordinates: " << vertex.getTextureCoordinates()
+			   << ", color: " << vertex.getColor() << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const VertexD &vertex)
+	{
+		stream << "VertexD(position: " << vertex.getPosition()
+			   << ", normal: " << vertex.getNormal()
+			   << ", textureCoordinates: " << vertex.getTextureCoordinates()
+			   << ", color: " << vertex.getColor() << ")";
+		return stream;
+	}
 }	 // namespace utility::graphic
