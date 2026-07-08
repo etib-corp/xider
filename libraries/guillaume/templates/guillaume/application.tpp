@@ -137,9 +137,14 @@ namespace guillaume
 		requires IsOneOf<DefaultSceneType, SceneTypes...>
 	void Application<DefaultSceneType, SceneTypes...>::routine(void)
 	{
-		static auto lastView = _engine->getView();
+		static auto firstView = _engine->getView();
+		static auto lastView  = firstView;
+		auto currentView	 = _engine->getView();
 
-		_sceneManager->getActiveScene()->placeEntitiesInFrontOfView(lastView);
+		if (currentView != lastView) {
+			_sceneManager->getActiveScene()->placeEntitiesInFrontOfView(firstView);
+			lastView = currentView;
+		}
 
 		_engine->pollEvents();
 		_engine->clear();
