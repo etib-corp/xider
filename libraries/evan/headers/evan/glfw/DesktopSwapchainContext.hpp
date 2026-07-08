@@ -268,7 +268,7 @@ namespace evan
 		/**
 		 * @brief View state for the swapchain context
 		 */
-		glm::mat4 _view;
+		glm::mat4 _view = glm::mat4(0.0f);
 
 		/**
 		 * @brief Field of view for the swapchain context
