@@ -174,7 +174,7 @@ glm::mat4 evan::XrSwapchainContext::getProjection(int index) const
 {
 	const XrFovf &fov = _views[index].fov;
 	float nearZ		  = 0.1f;
-	float farZ		  = 500.0f;
+	float farZ		  = 2000.0f;
 
 	float tanLeft  = tanf(fov.angleLeft);
 	float tanRight = tanf(fov.angleRight);

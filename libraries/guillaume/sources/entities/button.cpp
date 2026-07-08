@@ -462,7 +462,7 @@ namespace guillaume::entities
 		utility::graphic::PositionF forwardPosition = position;
 
 		forwardPosition.translate(utility::graphic::PositionF(
-			-forwardVector * static_cast<float>(layer + 1) * 0.1f));
+			-forwardVector * static_cast<float>(layer + 1) * 1.0f));
 
 		return utility::graphic::PoseF(forwardPosition, orientation);
 	}
