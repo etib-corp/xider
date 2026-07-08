@@ -138,9 +138,9 @@ namespace guillaume
 	void Application<DefaultSceneType, SceneTypes...>::routine(void)
 	{
 		static auto firstView = _engine->getView();
-		_sceneManager->getActiveScene()->placeEntitiesInFrontOfView(firstView);
-
-		this->getLogger().error() << firstView;
+		auto currentView	  = _engine->getView();
+		this->getLogger().error() << "First view: " << firstView;
+		this->getLogger().error() << "Current view: " << currentView;
 
 		_engine->pollEvents();
 		_engine->clear();
