@@ -12,6 +12,7 @@
 #include "evan/openxr/InteractionProfile.hpp"
 
 #include <utility/event/hand_button_event.hpp>
+#include <utility/event/hand_motion_event.hpp>
 
 #include <utility/logging/loggable.hpp>
 #include <utility/logging/default_logger.hpp>
@@ -101,12 +102,18 @@ namespace evan
 		 *
 		 * @param deviceBackend Reference to the `XrDeviceBackend` used to
 		 * communicate with the OpenXR session and query action state.
+		 * @param handMotionEvent Optional shared pointer to a `HandMotionEvent`
+		 * that may be used to provide context for hand-related actions. This
+		 * parameter can be `nullptr` if the action is not related to hand
+		 * motion.
 		 * @return std::vector<std::shared_ptr<utility::event::Event>> A vector
 		 * of allocated events describing input changes; may be empty if no
 		 * changes were detected.
 		 */
 		virtual std::vector<std::shared_ptr<utility::event::Event>>
-			getEvent(XrDeviceBackend &deviceBackend) = 0;
+			getEvent(XrDeviceBackend &deviceBackend,
+					 std::shared_ptr<utility::event::HandMotionEvent>
+						 handMotionEvent) = 0;
 
 		/** @brief Retrieves the XrAction handle associated with this AXrAction.
 		 *

@@ -57,15 +57,16 @@ std::vector<std::shared_ptr<utility::event::Event>>
 		return events;
 	}
 	auto handEvents = _handsMotionActions->getEvents(deviceBackend);
-	events.insert(events.end(), std::make_move_iterator(handEvents.begin()),
-				  std::make_move_iterator(handEvents.end()));
-	auto buttonEvents = _manageButtonsActions->getEvents(deviceBackend);
-	events.insert(events.end(), std::make_move_iterator(buttonEvents.begin()),
-				  std::make_move_iterator(buttonEvents.end()));
+	events.insert(events.end(), handEvents.begin(), handEvents.end());
+
+	auto buttonEvents = _manageButtonsActions->getEvents(
+		deviceBackend, _handsMotionActions->_leftHandEvent,
+		_handsMotionActions->_rightHandEvent);
+	events.insert(events.end(), buttonEvents.begin(), buttonEvents.end());
+
 	auto thumbStickEvents = _manageThumbStickActions->getEvents(deviceBackend);
-	events.insert(events.end(),
-				  std::make_move_iterator(thumbStickEvents.begin()),
-				  std::make_move_iterator(thumbStickEvents.end()));
+	events.insert(events.end(), thumbStickEvents.begin(),
+				  thumbStickEvents.end());
 	return events;
 }
 

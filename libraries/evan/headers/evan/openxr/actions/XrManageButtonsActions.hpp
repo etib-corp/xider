@@ -12,6 +12,8 @@
 
 #include "evan/EvanPlatform.hpp"
 
+#include <utility/event/hand_motion_event.hpp>
+
 #include "evan/openxr/actions/AXrAction.hpp"
 #include "evan/openxr/InteractionProfile.hpp"
 
@@ -65,7 +67,9 @@ namespace evan
 		 * current state of the A button action.
 		 */
 		std::vector<std::shared_ptr<utility::event::Event>>
-			getEvent(XrDeviceBackend &deviceBackend) override;
+			getEvent(XrDeviceBackend &deviceBackend,
+					 std::shared_ptr<utility::event::HandMotionEvent>
+						 handMotionEvent) override;
 
 		private:
 		utility::event::HandButtonEvent::Button
@@ -131,11 +135,17 @@ namespace evan
 		 *
 		 * @param deviceBackend The device backend used for interacting with the
 		 * OpenXR runtime and managing resources.
+		 * @param handMotionLeftEvent The hand motion event for the left hand.
+		 * @param handMotionRightEvent The hand motion event for the right hand.
 		 * @return A vector of shared pointers to events representing the
 		 * current state of the button actions.
 		 */
 		std::vector<std::shared_ptr<utility::event::Event>>
-			getEvents(XrDeviceBackend &deviceBackend);
+			getEvents(XrDeviceBackend &deviceBackend,
+					  std::shared_ptr<utility::event::HandMotionEvent>
+						  handMotionLeftEvent,
+					  std::shared_ptr<utility::event::HandMotionEvent>
+						  handMotionRightEvent);
 
 		/**
 		 * @brief Unique pointer to the action associated with the A button.

@@ -13,6 +13,7 @@
 #include "evan/openxr/InteractionProfile.hpp"
 
 #include <utility/event/hand_thumb_stick_event.hpp>
+#include <utility/event/hand_motion_event.hpp>
 
 #include <utility/logging/loggable.hpp>
 #include <utility/logging/default_logger.hpp>
@@ -68,11 +69,16 @@ namespace evan
 		 *
 		 * @param deviceBackend The device backend used for interacting with the
 		 * OpenXR runtime and managing resources.
+		 * @param handMotionEvent Optional shared pointer to a HandMotionEvent that
+		 * may be used to provide context for hand-related actions. This
+		 * parameter can be nullptr if the action is not related to hand motion.
 		 * @return A vector of unique pointers to Event objects representing the
 		 * thumb stick events.
 		 */
 		std::vector<std::shared_ptr<utility::event::Event>>
-			getEvent(evan::XrDeviceBackend &deviceBackend) override;
+			getEvent(evan::XrDeviceBackend &deviceBackend,
+					 std::shared_ptr<utility::event::HandMotionEvent>
+						 handMotionEvent) override;
 
 		private:
 		/**

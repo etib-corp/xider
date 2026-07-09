@@ -27,7 +27,9 @@ evan::XrHandThumbStickAction::~XrHandThumbStickAction()
 ////////////////////
 
 std::vector<std::shared_ptr<utility::event::Event>>
-	evan::XrHandThumbStickAction::getEvent(evan::XrDeviceBackend &deviceBackend)
+	evan::XrHandThumbStickAction::getEvent(
+		evan::XrDeviceBackend &deviceBackend,
+		std::shared_ptr<utility::event::HandMotionEvent> handMotionEvent)
 {
 	std::vector<std::shared_ptr<utility::event::Event>> events = {};
 
@@ -104,12 +106,13 @@ std::vector<std::shared_ptr<utility::event::Event>>
 	std::vector<std::shared_ptr<utility::event::Event>> events;
 
 	// Get events from left hand thumb stick actions
-	auto leftHandEvents = _leftHandThumbStickActions->getEvent(deviceBackend);
+	auto leftHandEvents = _leftHandThumbStickActions->getEvent(deviceBackend, nullptr);
 	events.insert(events.end(), std::make_move_iterator(leftHandEvents.begin()),
 				  std::make_move_iterator(leftHandEvents.end()));
 
 	// Get events from right hand thumb stick actions
-	auto rightHandEvents = _rightHandThumbStickActions->getEvent(deviceBackend);
+	auto rightHandEvents =
+		_rightHandThumbStickActions->getEvent(deviceBackend, nullptr);
 	events.insert(events.end(),
 				  std::make_move_iterator(rightHandEvents.begin()),
 				  std::make_move_iterator(rightHandEvents.end()));

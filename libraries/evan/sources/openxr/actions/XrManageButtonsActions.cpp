@@ -16,12 +16,18 @@ evan::XrButtonAction::XrButtonAction(
 							 << static_cast<int>(_buttonType);
 }
 
+evan::XrManageButtonsActions::~XrManageButtonsActions()
+{
+	this->getLogger().info() << "Destroying button actions...";
+}
+
 ////////////////////
 // Public Methods //
 ////////////////////
 
 std::vector<std::shared_ptr<utility::event::Event>>
-	evan::XrButtonAction::getEvent(evan::XrDeviceBackend &deviceBackend)
+	evan::XrButtonAction::getEvent(evan::XrDeviceBackend &deviceBackend,
+		std::shared_ptr<utility::event::HandMotionEvent> handMotionEvent)
 {
 	std::vector<std::shared_ptr<utility::event::Event>> events = {};
 
@@ -35,10 +41,15 @@ std::vector<std::shared_ptr<utility::event::Event>>
 		auto buttonEvent = std::make_shared<utility::event::HandButtonEvent>();
 		buttonEvent->setButton(_buttonType);
 		buttonEvent->setButtonPressed(state.currentState);
+		if (handMotionEvent) {
+			buttonEvent->setAim(handMotionEvent->getAim());
+			buttonEvent->setGrip(handMotionEvent->getGrip());
+		}
 
 		this->getLogger().info()
 			<< "Button " << static_cast<int>(_buttonType) << " is "
-			<< (state.currentState ? "pressed" : "not pressed");
+			<< (state.currentState ? "pressed" : "not pressed")
+			<< " at the pose: " << buttonEvent->getGrip();
 
 		events.push_back(std::move(buttonEvent));
 	}
@@ -139,43 +150,36 @@ evan::XrManageButtonsActions::XrManageButtonsActions(
 		<< " and binding path: " << propertiesButtonSystemAction.bindingPath;
 }
 
-evan::XrManageButtonsActions::~XrManageButtonsActions()
-{
-	this->getLogger().info() << "Destroying button actions...";
-}
-
-////////////////////
-// Public Methods //
-////////////////////
-
 std::vector<std::shared_ptr<utility::event::Event>>
 	evan::XrManageButtonsActions::getEvents(
-		evan::XrDeviceBackend &deviceBackend)
+		evan::XrDeviceBackend &deviceBackend,
+		std::shared_ptr<utility::event::HandMotionEvent> handMotionLeftEvent,
+		std::shared_ptr<utility::event::HandMotionEvent> handMotionRightEvent)
 {
 	std::vector<std::shared_ptr<utility::event::Event>> events;
 
-	auto buttonAEvents = _buttonAAction->getEvent(deviceBackend);
+	auto buttonAEvents = _buttonAAction->getEvent(deviceBackend, handMotionRightEvent);
 	events.insert(events.end(), std::make_move_iterator(buttonAEvents.begin()),
 				  std::make_move_iterator(buttonAEvents.end()));
 
-	auto buttonBEvents = _buttonBAction->getEvent(deviceBackend);
+	auto buttonBEvents = _buttonBAction->getEvent(deviceBackend, handMotionRightEvent);
 	events.insert(events.end(), std::make_move_iterator(buttonBEvents.begin()),
 				  std::make_move_iterator(buttonBEvents.end()));
 
-	auto buttonXEvents = _buttonXAction->getEvent(deviceBackend);
+	auto buttonXEvents = _buttonXAction->getEvent(deviceBackend, handMotionLeftEvent);
 	events.insert(events.end(), std::make_move_iterator(buttonXEvents.begin()),
 				  std::make_move_iterator(buttonXEvents.end()));
 
-	auto buttonYEvents = _buttonYAction->getEvent(deviceBackend);
+	auto buttonYEvents = _buttonYAction->getEvent(deviceBackend, handMotionLeftEvent);
 	events.insert(events.end(), std::make_move_iterator(buttonYEvents.begin()),
 				  std::make_move_iterator(buttonYEvents.end()));
 
-	auto buttonMenuEvents = _buttonMenuAction->getEvent(deviceBackend);
+	auto buttonMenuEvents = _buttonMenuAction->getEvent(deviceBackend, handMotionLeftEvent);
 	events.insert(events.end(),
 				  std::make_move_iterator(buttonMenuEvents.begin()),
 				  std::make_move_iterator(buttonMenuEvents.end()));
 
-	auto buttonSystemEvents = _buttonSystemAction->getEvent(deviceBackend);
+	auto buttonSystemEvents = _buttonSystemAction->getEvent(deviceBackend, handMotionRightEvent);
 	events.insert(events.end(),
 				  std::make_move_iterator(buttonSystemEvents.begin()),
 				  std::make_move_iterator(buttonSystemEvents.end()));
