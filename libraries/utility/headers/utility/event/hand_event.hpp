@@ -57,8 +57,10 @@ namespace utility::event
 		HandType _handType {
 			HandType::Unknown
 		}; /**< Type of hand involved in the event */
-		graphic::PoseF _pose {}; /**< Pose of the hand, including position and
-									orientation */
+		graphic::PoseF _pose {};		/**< Pose of the hand */
+		graphic::PoseF _aim {};			/**< Aim pose of the hand */
+		graphic::PoseF _grip {};		/**< Grip pose of the hand */
+		graphic::PoseF _gripSurface {}; /**< Grip-surface pose */
 
 		public:
 		/**
@@ -85,18 +87,56 @@ namespace utility::event
 		HandType getHandType(void) const noexcept;
 
 		/**
-		 * @brief Set the pose of the hand involved in the event.
-		 * @param pose The new pose of the hand, including position and
-		 * orientation.
+		 * @brief Set the pose of the hand.
+		 * @param pose The pose of the hand.
 		 * @return Reference to this HandEvent for method chaining.
 		 */
 		HandEvent &setPose(const graphic::PoseF &pose) noexcept;
 
 		/**
-		 * @brief Get the pose of the hand involved in the event.
-		 * @return The pose of the hand, including position and orientation.
+		 * @brief Get the pose of the hand.
+		 * @return The pose of the hand.
 		 */
 		graphic::PoseF getPose(void) const noexcept;
+
+		/**
+		 * @brief Set aim pose.
+		 * @param aim Aim pose.
+		 * @return Reference to this HandEvent.
+		 */
+		HandEvent &setAim(const graphic::PoseF &aim) noexcept;
+
+		/**
+		 * @brief Get aim pose.
+		 * @return Aim pose.
+		 */
+		graphic::PoseF getAim(void) const noexcept;
+
+		/**
+		 * @brief Set grip pose.
+		 * @param grip Grip pose.
+		 * @return Reference to this HandEvent.
+		 */
+		HandEvent &setGrip(const graphic::PoseF &grip) noexcept;
+
+		/**
+		 * @brief Get grip pose.
+		 * @return Grip pose.
+		 */
+		graphic::PoseF getGrip(void) const noexcept;
+
+		/**
+		 * @brief Set grip_surface pose.
+		 * @param gripSurface Grip-surface pose.
+		 * @return Reference to this HandEvent.
+		 */
+		HandEvent &setGripSurface(const graphic::PoseF &gripSurface) noexcept;
+
+		/**
+		 * @brief Get grip_surface pose.
+		 * @return Grip-surface pose.
+		 */
+		graphic::PoseF getGripSurface(void) const noexcept;
 	};
 
 	/**

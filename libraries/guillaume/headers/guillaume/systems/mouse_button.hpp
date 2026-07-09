@@ -62,7 +62,22 @@ namespace guillaume::systems
 				  std::function<utility::graphic::RayF(
 					  const utility::event::MouseButtonEvent &)>>(
 				  eventBus,
-				  [&engine](const utility::event::MouseButtonEvent &event) {
+				  [this,
+				   &engine](const utility::event::MouseButtonEvent &event) {
+					  this->getLogger().error() << "MouseButton::update: Mouse "
+												   "button event received: "
+												<< event.getPosition();
+
+					  this->getLogger().error()
+						  << "MouseButton::update: Engine view: "
+						  << engine->getView();
+
+					  this->getLogger().error()
+						  << "MouseButton::update: Calculating ray from "
+							 "position: "
+						  << engine->getView().viewPointToRay(
+								 event.getPosition());
+
 					  return engine->getView().viewPointToRay(
 						  event.getPosition());
 				  })

@@ -52,8 +52,18 @@ namespace guillaume::systems
 				  components::HandButtonInteraction,
 				  std::function<utility::graphic::RayF(
 					  const utility::event::HandButtonEvent &)>>(
-				  eventBus, [](const utility::event::HandButtonEvent &event) {
-					  return event.getPose().toForwardRay();
+				  eventBus,
+				  [this](const utility::event::HandButtonEvent &event) {
+					  this->getLogger().error() << "HandButton::update: Hand "
+												   "button event received: "
+												<< event.getAim();
+
+					  this->getLogger().error()
+						  << "HandButton::update: Calculating ray from "
+							 "aim pose: "
+						  << event.getAim().toForwardRay();
+
+					  return event.getAim().toForwardRay();
 				  })
 		{
 		}

@@ -65,9 +65,13 @@ namespace guillaume::systems
 		auto &mouseHoverInteraction =
 			getComponent<components::MouseHoverInteraction>(entityIdentifier);
 
+		const utility::graphic::PositionF center(
+			transform.getPose().getPosition().x + bound.getWidth() / 2.0f,
+			transform.getPose().getPosition().y + bound.getHeight() / 2.0f,
+			transform.getPose().getPosition().z);
+
 		auto centeredPose = transform.getPose();
-		centeredPose.translate(utility::graphic::PositionF(
-			bound.getWidth() / 2.0f, bound.getHeight() / 2.0f, 0.0f));
+		centeredPose.setPosition(center);
 
 		const auto size =
 			utility::math::Vector2F({ bound.getWidth(), bound.getHeight() });
