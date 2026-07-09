@@ -43,7 +43,6 @@ namespace guillaume::systems
 
 	void HandMotion::cleanup(void)
 	{
-
 	}
 
 	void HandMotion::update(const ecs::Entity::Identifier &entityIdentifier)
@@ -52,8 +51,9 @@ namespace guillaume::systems
 		if (!handMotionEvent)
 			return;
 
-		this->getLogger().error() << "HandMotion::update: Hand motion event received: "
-									 << handMotionEvent->getAim();
+		this->getLogger().error()
+			<< "HandMotion::update: Hand motion event received: "
+			<< handMotionEvent->getAim();
 
 		auto ray = handMotionEvent->getAim().toForwardRay();
 
@@ -62,10 +62,13 @@ namespace guillaume::systems
 		auto &handHoverInteraction =
 			getComponent<components::HandHoverInteraction>(entityIdentifier);
 
+		auto centeredPose = transform.getPose();
+		centeredPose.translate(utility::graphic::PositionF(
+			bound.getWidth() / 2.0f, bound.getHeight() / 2.0f, 0.0f));
+
 		const auto size =
 			utility::math::Vector2F({ bound.getWidth(), bound.getHeight() });
-		const bool isIntersecting =
-			ray.intersectRectangle(transform.getPose(), size);
+		const bool isIntersecting = ray.intersectRectangle(centeredPose, size);
 
 		if (isIntersecting) {
 			if (!handHoverInteraction.isHovered()) {

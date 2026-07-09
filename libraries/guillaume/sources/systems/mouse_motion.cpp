@@ -65,10 +65,13 @@ namespace guillaume::systems
 		auto &mouseHoverInteraction =
 			getComponent<components::MouseHoverInteraction>(entityIdentifier);
 
+		auto centeredPose = transform.getPose();
+		centeredPose.translate(utility::graphic::PositionF(
+			bound.getWidth() / 2.0f, bound.getHeight() / 2.0f, 0.0f));
+
 		const auto size =
 			utility::math::Vector2F({ bound.getWidth(), bound.getHeight() });
-		const bool isIntersecting =
-			ray.intersectRectangle(transform.getPose(), size);
+		const bool isIntersecting = ray.intersectRectangle(centeredPose, size);
 
 		if (isIntersecting) {
 			if (!mouseHoverInteraction.isHovered()) {
