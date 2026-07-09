@@ -36,6 +36,15 @@ namespace guillaume::systems
 	{
 	}
 
+	void HandPoke::prepare(void)
+	{
+		consumeNextEvent();
+	}
+
+	void HandPoke::cleanup(void)
+	{
+	}
+
 	void HandPoke::update(const ecs::Entity::Identifier &entityIdentifier)
 	{
 		auto pokeEvent = this->getLastEvent();

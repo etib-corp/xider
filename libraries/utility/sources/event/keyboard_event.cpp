@@ -27,12 +27,12 @@ namespace utility::event
 
 	KeyboardEvent::Factory::~Factory(void) = default;
 
-	std::unique_ptr<Event> KeyboardEvent::Factory::create(void) const
+	std::shared_ptr<Event> KeyboardEvent::Factory::create(void) const
 	{
 		return std::make_unique<KeyboardEvent>();
 	}
 
-	std::unique_ptr<KeyboardEvent>
+	std::shared_ptr<KeyboardEvent>
 		KeyboardEvent::Factory::createTyped(void) const
 	{
 		return std::make_unique<KeyboardEvent>();

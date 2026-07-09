@@ -36,6 +36,15 @@ namespace guillaume::systems
 	{
 	}
 
+	void HandThumbRest::prepare(void)
+	{
+		consumeNextEvent();
+	}
+
+	void HandThumbRest::cleanup(void)
+	{
+	}
+
 	void HandThumbRest::update(const ecs::Entity::Identifier &entityIdentifier)
 	{
 	}

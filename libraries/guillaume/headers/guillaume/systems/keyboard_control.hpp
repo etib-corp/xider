@@ -27,7 +27,7 @@
 #include "guillaume/components/focus.hpp"
 #include "guillaume/components/text.hpp"
 
-#include "guillaume/event/event_subscriber.hpp"
+#include "guillaume/event/event_manager.hpp"
 
 #include <utility/event/event.hpp>
 #include <utility/event/keyboard_event.hpp>
@@ -40,12 +40,9 @@ namespace guillaume::systems
 	 * @see components::Text
 	 */
 	class KeyboardControl:
-		public ecs::SystemFiller<components::Text, components::Focus>
+		public ecs::SystemFiller<components::Text, components::Focus>,
+		public event::EventManager<utility::event::KeyboardEvent>
 	{
-		private:
-		event::EventSubscriber<utility::event::KeyboardEvent>
-			_keyboardSubscriber;
-
 		public:
 		/**
 		 * @brief Default constructor for the KeyboardControl system.
@@ -57,6 +54,18 @@ namespace guillaume::systems
 		 * @brief Default destructor for the KeyboardControl system.
 		 */
 		~KeyboardControl(void) = default;
+
+		/**
+		 * @brief This function is called before call update on all entities and
+		 * can be used to set up any necessary state or resources.
+		 */
+		void prepare(void) override;
+
+		/**
+		 * @brief This function is called after call update on all entities and
+		 * can be used to release any resources or reset state.
+		 */
+		void cleanup(void) override;
 
 		/**
 		 * @brief Update the KeyboardControl system for the specified entity.

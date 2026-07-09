@@ -396,18 +396,25 @@ namespace guillaume::entities
 
 	void Button::hoverHandler(void)
 	{
+		this->getLogger().error() << "Button::hoverHandler: Button hovered";
+
 		setShape(_shape);
 		setColorStyle(_colorStyle);
 	}
 
 	void Button::unHoverHandler(void)
 	{
+		this->getLogger().error() << "Button::unHoverHandler: Button unhovered";
+
 		setShape(_shape);
 		setColorStyle(_colorStyle);
 	}
 
 	void Button::leftClickPressHandler()
 	{
+		this->getLogger().error()
+			<< "Button::leftClickPressHandler: Button clicked";
+
 		setShape(_shape);
 		setColorStyle(_colorStyle);
 		if (_onClick) {
@@ -417,6 +424,9 @@ namespace guillaume::entities
 
 	void Button::leftClickReleaseHandler()
 	{
+		this->getLogger().error()
+			<< "Button::leftClickReleaseHandler: Button released";
+
 		setShape(_shape);
 		setColorStyle(_colorStyle);
 	}

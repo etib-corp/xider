@@ -47,15 +47,15 @@ namespace utility::event
 
 			/**
 			 * @brief Create a QuitEvent as a base Event pointer.
-			 * @return Newly created QuitEvent as std::unique_ptr<Event>.
+			 * @return Newly created QuitEvent as std::shared_ptr<Event>.
 			 */
-			std::unique_ptr<Event> create(void) const override;
+			std::shared_ptr<Event> create(void) const override;
 
 			/**
 			 * @brief Create a strongly-typed QuitEvent.
-			 * @return Newly created QuitEvent as std::unique_ptr<QuitEvent>.
+			 * @return Newly created QuitEvent as std::shared_ptr<QuitEvent>.
 			 */
-			std::unique_ptr<QuitEvent> createTyped(void) const;
+			std::shared_ptr<QuitEvent> createTyped(void) const;
 		};
 
 		/**

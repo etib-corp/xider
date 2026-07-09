@@ -52,47 +52,12 @@ namespace xider::scenes
 		buttonDirector.makeIconButton(
 			buttonBuilder, nullptr, "Button 0", "counter_0",
 			guillaume::components::Glyph::Style::Outlined,
-			[]() {
+			[this]() {
+				this->getLogger().info() << "Button 0 clicked";
 			},
 			guillaume::entities::Button::Color::Filled,
 			guillaume::entities::Button::Shape::Square,
 			guillaume::entities::Button::Size::ExtraSmall, false);
-
-		buttonDirector.makeIconButton(
-			buttonBuilder, nullptr, "Button 1", "counter_1",
-			guillaume::components::Glyph::Style::Outlined,
-			[]() {
-			},
-			guillaume::entities::Button::Color::Filled,
-			guillaume::entities::Button::Shape::Round,
-			guillaume::entities::Button::Size::Small, false);
-
-		buttonDirector.makeIconButton(
-			buttonBuilder, nullptr, "Button 2", "counter_2",
-			guillaume::components::Glyph::Style::Outlined,
-			[]() {
-			},
-			guillaume::entities::Button::Color::Filled,
-			guillaume::entities::Button::Shape::Square,
-			guillaume::entities::Button::Size::Medium, false);
-
-		buttonDirector.makeIconButton(
-			buttonBuilder, nullptr, "Button 3", "counter_3",
-			guillaume::components::Glyph::Style::Outlined,
-			[]() {
-			},
-			guillaume::entities::Button::Color::Filled,
-			guillaume::entities::Button::Shape::Round,
-			guillaume::entities::Button::Size::Large, false);
-
-		buttonDirector.makeIconButton(
-			buttonBuilder, nullptr, "Button 4", "counter_4",
-			guillaume::components::Glyph::Style::Outlined,
-			[]() {
-			},
-			guillaume::entities::Button::Color::Filled,
-			guillaume::entities::Button::Shape::Square,
-			guillaume::entities::Button::Size::ExtraLarge, false);
 	}
 
 	Main::~Main(void)

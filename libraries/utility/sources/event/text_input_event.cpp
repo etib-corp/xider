@@ -27,12 +27,12 @@ namespace utility::event
 
 	TextInputEvent::Factory::~Factory(void) = default;
 
-	std::unique_ptr<Event> TextInputEvent::Factory::create(void) const
+	std::shared_ptr<Event> TextInputEvent::Factory::create(void) const
 	{
 		return std::make_unique<TextInputEvent>();
 	}
 
-	std::unique_ptr<TextInputEvent>
+	std::shared_ptr<TextInputEvent>
 		TextInputEvent::Factory::createTyped(void) const
 	{
 		return std::make_unique<TextInputEvent>();

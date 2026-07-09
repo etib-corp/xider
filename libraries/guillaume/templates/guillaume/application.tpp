@@ -154,13 +154,12 @@ namespace guillaume
 	void Application<DefaultSceneType, SceneTypes...>::routine(void)
 	{
 		static auto firstView = _engine->getView();
-		auto currentView	  = _engine->getView();
 
-		if (hasViewChanged(firstView, currentView)) {
-			firstView = currentView;
-			_sceneManager->getActiveScene()->placeEntitiesInFrontOfView(
-				firstView);
-		}
+		_sceneManager->getActiveScene()->placeEntitiesInFrontOfView(firstView);
+		this->getLogger().debug() << "Current view: " << _engine->getView();
+		this->getLogger().debug()
+			<< "Forward vector: "
+			<< _engine->getView().getPose().getOrientation().getForward();
 
 		_engine->pollEvents();
 		_engine->clear();

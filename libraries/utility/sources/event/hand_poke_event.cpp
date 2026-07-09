@@ -27,12 +27,12 @@ namespace utility::event
 
 	HandPokeEvent::Factory::~Factory(void) = default;
 
-	std::unique_ptr<Event> HandPokeEvent::Factory::create(void) const
+	std::shared_ptr<Event> HandPokeEvent::Factory::create(void) const
 	{
 		return std::make_unique<HandPokeEvent>();
 	}
 
-	std::unique_ptr<HandPokeEvent>
+	std::shared_ptr<HandPokeEvent>
 		HandPokeEvent::Factory::createTyped(void) const
 	{
 		return std::make_unique<HandPokeEvent>();

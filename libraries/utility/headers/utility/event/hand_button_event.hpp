@@ -69,13 +69,13 @@ namespace utility::event
 			 * @brief Create a HandButtonEvent as base Event pointer.
 			 * @return Newly created HandButtonEvent.
 			 */
-			std::unique_ptr<Event> create(void) const override;
+			std::shared_ptr<Event> create(void) const override;
 
 			/**
 			 * @brief Create a strongly-typed HandButtonEvent.
 			 * @return Newly created HandButtonEvent.
 			 */
-			std::unique_ptr<HandButtonEvent> createTyped(void) const;
+			std::shared_ptr<HandButtonEvent> createTyped(void) const;
 		};
 
 		private:

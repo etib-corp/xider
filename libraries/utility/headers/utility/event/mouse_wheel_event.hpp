@@ -49,16 +49,16 @@ namespace utility::event
 
 			/**
 			 * @brief Create a MouseWheelEvent as a base Event pointer.
-			 * @return Newly created MouseWheelEvent as std::unique_ptr<Event>.
+			 * @return Newly created MouseWheelEvent as std::shared_ptr<Event>.
 			 */
-			std::unique_ptr<Event> create(void) const override;
+			std::shared_ptr<Event> create(void) const override;
 
 			/**
 			 * @brief Create a strongly-typed MouseWheelEvent.
 			 * @return Newly created MouseWheelEvent as
-			 * std::unique_ptr<MouseWheelEvent>.
+			 * std::shared_ptr<MouseWheelEvent>.
 			 */
-			std::unique_ptr<MouseWheelEvent> createTyped(void) const;
+			std::shared_ptr<MouseWheelEvent> createTyped(void) const;
 		};
 
 		private:

@@ -525,16 +525,16 @@ namespace utility::event
 
 			/**
 			 * @brief Create a KeyboardEvent as a base Event pointer.
-			 * @return Newly created KeyboardEvent as std::unique_ptr<Event>.
+			 * @return Newly created KeyboardEvent as std::shared_ptr<Event>.
 			 */
-			std::unique_ptr<Event> create(void) const override;
+			std::shared_ptr<Event> create(void) const override;
 
 			/**
 			 * @brief Create a strongly-typed KeyboardEvent.
 			 * @return Newly created KeyboardEvent as
-			 * std::unique_ptr<KeyboardEvent>.
+			 * std::shared_ptr<KeyboardEvent>.
 			 */
-			std::unique_ptr<KeyboardEvent> createTyped(void) const;
+			std::shared_ptr<KeyboardEvent> createTyped(void) const;
 		};
 
 		private:
@@ -556,15 +556,6 @@ namespace utility::event
 		 * @brief Default destructor.
 		 */
 		~KeyboardEvent(void) override;
-
-		/**
-		 * @brief Get the event type.
-		 * @return The type of this event (Keyboard).
-		 */
-		Type getEventType(void) const noexcept override
-		{
-			return Type::Keyboard;
-		}
 
 		/**
 		 * @brief Get the keyboard scancode.

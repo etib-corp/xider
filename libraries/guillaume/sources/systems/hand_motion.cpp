@@ -36,11 +36,24 @@ namespace guillaume::systems
 	{
 	}
 
+	void HandMotion::prepare(void)
+	{
+		consumeNextEvent();
+	}
+
+	void HandMotion::cleanup(void)
+	{
+
+	}
+
 	void HandMotion::update(const ecs::Entity::Identifier &entityIdentifier)
 	{
 		auto handMotionEvent = getLastEvent();
 		if (!handMotionEvent)
 			return;
+
+		this->getLogger().error() << "HandMotion::update: Hand motion event received: "
+									 << handMotionEvent->getPose();
 
 		auto ray = handMotionEvent->getPose().toForwardRay();
 

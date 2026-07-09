@@ -117,6 +117,23 @@ namespace guillaume::systems
 		~ButtonInteractionSystem(void) = default;
 
 		/**
+		 * @brief This function is called before call update on all entities and
+		 * can be used to set up any necessary state or resources.
+		 */
+		void prepare(void) override
+		{
+			this->consumeNextEvent();
+		}
+
+		/**
+		 * @brief This function is called after call update on all entities and
+		 * can be used to release any resources or reset state.
+		 */
+		void cleanup(void) override
+		{
+		}
+
+		/**
 		 * @brief Update function called for each entity with the required
 		 * components. Handles button interaction logic based on events.
 		 * @param entityIdentifier The identifier of the entity being updated.
@@ -127,6 +144,9 @@ namespace guillaume::systems
 			auto buttonEvent = this->getLastEvent();
 			if (!buttonEvent)
 				return;
+
+			this->getLogger().error()
+				<< "ButtonInteractionSystem::update: Button event received";
 
 			const auto button = buttonEvent->getButton();
 			if constexpr (requires { EventType::Button::Unknown; }) {

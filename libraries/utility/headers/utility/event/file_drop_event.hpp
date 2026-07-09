@@ -51,16 +51,16 @@ namespace utility::event
 
 			/**
 			 * @brief Create a FileDropEvent as a base Event pointer.
-			 * @return Newly created FileDropEvent as std::unique_ptr<Event>.
+			 * @return Newly created FileDropEvent as std::shared_ptr<Event>.
 			 */
-			std::unique_ptr<Event> create(void) const override;
+			std::shared_ptr<Event> create(void) const override;
 
 			/**
 			 * @brief Create a strongly-typed FileDropEvent.
 			 * @return Newly created FileDropEvent as
-			 * std::unique_ptr<FileDropEvent>.
+			 * std::shared_ptr<FileDropEvent>.
 			 */
-			std::unique_ptr<FileDropEvent> createTyped(void) const;
+			std::shared_ptr<FileDropEvent> createTyped(void) const;
 		};
 
 		private:

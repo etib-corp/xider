@@ -49,13 +49,13 @@ namespace utility::event
 			 * @brief Create a HandMotionEvent as base Event pointer.
 			 * @return Newly created HandMotionEvent.
 			 */
-			std::unique_ptr<Event> create(void) const override;
+			std::shared_ptr<Event> create(void) const override;
 
 			/**
 			 * @brief Create a strongly-typed HandMotionEvent.
 			 * @return Newly created HandMotionEvent.
 			 */
-			std::unique_ptr<HandMotionEvent> createTyped(void) const;
+			std::shared_ptr<HandMotionEvent> createTyped(void) const;
 		};
 
 		private:
@@ -109,15 +109,6 @@ namespace utility::event
 		 * @return Grip-surface pose.
 		 */
 		graphic::PoseF getGripSurface(void) const noexcept;
-
-		/**
-		 * @brief Get the event type.
-		 * @return The type of this event (HandMotion).
-		 */
-		Type getEventType(void) const noexcept override
-		{
-			return Type::HandMotion;
-		}
 	};
 
 }	 // namespace utility::event

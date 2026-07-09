@@ -51,16 +51,16 @@ namespace utility::event
 
 			/**
 			 * @brief Create a TextEditingEvent as a base Event pointer.
-			 * @return Newly created TextEditingEvent as std::unique_ptr<Event>.
+			 * @return Newly created TextEditingEvent as std::shared_ptr<Event>.
 			 */
-			std::unique_ptr<Event> create(void) const override;
+			std::shared_ptr<Event> create(void) const override;
 
 			/**
 			 * @brief Create a strongly-typed TextEditingEvent.
 			 * @return Newly created TextEditingEvent as
-			 * std::unique_ptr<TextEditingEvent>.
+			 * std::shared_ptr<TextEditingEvent>.
 			 */
-			std::unique_ptr<TextEditingEvent> createTyped(void) const;
+			std::shared_ptr<TextEditingEvent> createTyped(void) const;
 		};
 
 		/**

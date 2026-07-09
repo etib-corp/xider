@@ -36,6 +36,16 @@ namespace guillaume::systems
 	{
 	}
 
+	void HandPinch::prepare(void)
+	{
+		consumeNextEvent();
+	}
+
+	void HandPinch::cleanup(void)
+	{
+
+	}
+
 	void HandPinch::update(const ecs::Entity::Identifier &entityIdentifier)
 	{
 		auto pinchEvent = this->getLastEvent();

@@ -27,12 +27,12 @@ namespace utility::event
 
 	HandPinchEvent::Factory::~Factory(void) = default;
 
-	std::unique_ptr<Event> HandPinchEvent::Factory::create(void) const
+	std::shared_ptr<Event> HandPinchEvent::Factory::create(void) const
 	{
 		return std::make_unique<HandPinchEvent>();
 	}
 
-	std::unique_ptr<HandPinchEvent>
+	std::shared_ptr<HandPinchEvent>
 		HandPinchEvent::Factory::createTyped(void) const
 	{
 		return std::make_unique<HandPinchEvent>();

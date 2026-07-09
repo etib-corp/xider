@@ -5,6 +5,8 @@
 ** Engine
 */
 
+#include <typeindex>
+
 #include <utility/event/quit_event.hpp>
 #include <utility/event/keyboard_event.hpp>
 #include <utility/event/mouse_motion_event.hpp>
@@ -318,20 +320,26 @@ void evan::Engine::handleViewportInput(
 	bool isRightMouseButtonPressed			  = _isRightMouseButtonPressed;
 	utility::math::Vector2F lastMousePosition = _lastMousePosition;
 
+	utility::event::Event *rawEventPtr = nullptr;
+	std::type_index eventType		   = typeid(void);
+
 	for (const auto &event: events) {
+		rawEventPtr = event.get();
+		eventType	= typeid(*rawEventPtr);
+
 		// Handle keyboard events for movement
-		if (event->getEventType() == utility::event::Event::Type::Keyboard) {
+		if (eventType == typeid(utility::event::KeyboardEvent)) {
 			std::shared_ptr<utility::event::KeyboardEvent> keyboardEvent =
 				std::dynamic_pointer_cast<utility::event::KeyboardEvent>(event);
 			if (keyboardEvent) {
 				handleKeyboardMovement(keyboardEvent, _viewMatrix, position,
 									   movementSpeed, _deltaTime);
 			}
+			continue;	 // Skip to next event after handling keyboard event
 		}
 
 		// Handle mouse button events for rotation
-		else if (event->getEventType()
-				 == utility::event::Event::Type::MouseButton) {
+		if (eventType == typeid(utility::event::MouseButtonEvent)) {
 			std::shared_ptr<utility::event::MouseButtonEvent> mouseButtonEvent =
 				std::dynamic_pointer_cast<utility::event::MouseButtonEvent>(
 					event);
@@ -340,11 +348,11 @@ void evan::Engine::handleViewportInput(
 									   isRightMouseButtonPressed,
 									   lastMousePosition);
 			}
+			continue;	 // Skip to next event after handling mouse button event
 		}
 
 		// Handle mouse motion events for rotation
-		else if (event->getEventType()
-				 == utility::event::Event::Type::MouseMotion) {
+		if (eventType == typeid(utility::event::MouseMotionEvent)) {
 			std::shared_ptr<utility::event::MouseMotionEvent> mouseMotionEvent =
 				std::dynamic_pointer_cast<utility::event::MouseMotionEvent>(
 					event);
@@ -353,17 +361,7 @@ void evan::Engine::handleViewportInput(
 					mouseMotionEvent, isRightMouseButtonPressed,
 					lastMousePosition, orientation, rotationSpeed, _deltaTime);
 			}
-		} else if (event->getEventType()
-				   == utility::event::Event::Type::HandMotion) {
-			std::shared_ptr<utility::event::HandMotionEvent> handMotionEvent =
-				std::dynamic_pointer_cast<utility::event::HandMotionEvent>(
-					event);
-			if (handMotionEvent
-				&& handMotionEvent->getHandType()
-					== utility::event::HandEvent::HandType::Right) {
-				handleHandMotionEvent(handMotionEvent, position, orientation,
-									  movementSpeed, rotationSpeed, _deltaTime);
-			}
+			continue;	 // Skip to next event after handling mouse motion event
 		}
 	}
 

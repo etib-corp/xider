@@ -31,12 +31,12 @@ namespace utility::event
 
 	FileDropEvent::Factory::~Factory(void) = default;
 
-	std::unique_ptr<Event> FileDropEvent::Factory::create(void) const
+	std::shared_ptr<Event> FileDropEvent::Factory::create(void) const
 	{
 		return std::make_unique<FileDropEvent>();
 	}
 
-	std::unique_ptr<FileDropEvent>
+	std::shared_ptr<FileDropEvent>
 		FileDropEvent::Factory::createTyped(void) const
 	{
 		return std::make_unique<FileDropEvent>();

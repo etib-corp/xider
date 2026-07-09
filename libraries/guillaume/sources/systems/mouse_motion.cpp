@@ -38,11 +38,24 @@ namespace guillaume::systems
 	{
 	}
 
+	void MouseMotion::prepare(void)
+	{
+		consumeNextEvent();
+	}
+
+	void MouseMotion::cleanup(void)
+	{
+	}
+
 	void MouseMotion::update(const ecs::Entity::Identifier &entityIdentifier)
 	{
 		auto mouseMotionEvent = getLastEvent();
 		if (!mouseMotionEvent)
 			return;
+
+		this->getLogger().error()
+			<< "MouseMotion::update: Mouse motion event received: "
+			<< mouseMotionEvent->getPosition();
 
 		const auto &position = mouseMotionEvent->getPosition();
 		auto ray			 = _engine->getView().viewPointToRay(position);

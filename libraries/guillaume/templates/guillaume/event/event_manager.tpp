@@ -35,7 +35,7 @@ namespace guillaume::event
 	}
 
 	template<utility::event::InheritFromEvent EventType>
-	std::unique_ptr<EventType> EventManager<EventType>::getLastEvent(void)
+	std::shared_ptr<EventType> EventManager<EventType>::getLastEvent(void)
 	{
 		if (!_lastEvent) {
 			return nullptr;

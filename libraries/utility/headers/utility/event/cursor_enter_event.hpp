@@ -49,16 +49,16 @@ namespace utility::event
 
 			/**
 			 * @brief Create a CursorEnterEvent as a base Event pointer.
-			 * @return Newly created CursorEnterEvent as std::unique_ptr<Event>.
+			 * @return Newly created CursorEnterEvent as std::shared_ptr<Event>.
 			 */
-			std::unique_ptr<Event> create(void) const override;
+			std::shared_ptr<Event> create(void) const override;
 
 			/**
 			 * @brief Create a strongly-typed CursorEnterEvent.
 			 * @return Newly created CursorEnterEvent as
-			 * std::unique_ptr<CursorEnterEvent>.
+			 * std::shared_ptr<CursorEnterEvent>.
 			 */
-			std::unique_ptr<CursorEnterEvent> createTyped(void) const;
+			std::shared_ptr<CursorEnterEvent> createTyped(void) const;
 		};
 
 		private:

@@ -51,16 +51,16 @@ namespace utility::event
 
 			/**
 			 * @brief Create a MouseMotionEvent as a base Event pointer.
-			 * @return Newly created MouseMotionEvent as std::unique_ptr<Event>.
+			 * @return Newly created MouseMotionEvent as std::shared_ptr<Event>.
 			 */
-			std::unique_ptr<Event> create(void) const override;
+			std::shared_ptr<Event> create(void) const override;
 
 			/**
 			 * @brief Create a strongly-typed MouseMotionEvent.
 			 * @return Newly created MouseMotionEvent as
-			 * std::unique_ptr<MouseMotionEvent>.
+			 * std::shared_ptr<MouseMotionEvent>.
 			 */
-			std::unique_ptr<MouseMotionEvent> createTyped(void) const;
+			std::shared_ptr<MouseMotionEvent> createTyped(void) const;
 		};
 
 		private:
@@ -76,15 +76,6 @@ namespace utility::event
 		 * @brief Default destructor.
 		 */
 		~MouseMotionEvent(void) override;
-
-		/**
-		 * @brief Get the event type.
-		 * @return The type of this event (MouseMotion).
-		 */
-		Type getEventType(void) const noexcept override
-		{
-			return Type::MouseMotion;
-		}
 
 		/**
 		 * @brief Set the current mouse position.

@@ -77,11 +77,11 @@ namespace guillaume::event
 		EventBus &_eventBus;	///< Reference to the event bus for managing
 								///< event subscriptions and dispatching
 
-		std::unique_ptr<EventSubscriber<EventType>> _subscriber;
+		std::shared_ptr<EventSubscriber<EventType>> _subscriber;
 
-		std::unique_ptr<EventType>
-			_lastEvent;	   ///< Stores the most recent
-						   ///< event for the subscribed type
+		std::shared_ptr<EventType>
+			_lastEvent;	   ///< Stores the most recent event for the subscribed
+						   ///< type
 
 		protected:
 		/**
@@ -128,7 +128,7 @@ namespace guillaume::event
 		 * }
 		 * @endcode
 		 */
-		std::unique_ptr<EventType> getLastEvent(void);
+		std::shared_ptr<EventType> getLastEvent(void);
 
 		public:
 		/**

@@ -36,6 +36,15 @@ namespace guillaume::systems
 	{
 	}
 
+	void HandTrigger::prepare(void)
+	{
+		consumeNextEvent();
+	}
+
+	void HandTrigger::cleanup(void)
+	{
+	}
+
 	void HandTrigger::update(const ecs::Entity::Identifier &entityIdentifier)
 	{
 	}

@@ -49,13 +49,13 @@ namespace utility::event
 			 * @brief Create a HandSqueezeEvent as base Event pointer.
 			 * @return Newly created HandSqueezeEvent.
 			 */
-			std::unique_ptr<Event> create(void) const override;
+			std::shared_ptr<Event> create(void) const override;
 
 			/**
 			 * @brief Create a strongly-typed HandSqueezeEvent.
 			 * @return Newly created HandSqueezeEvent.
 			 */
-			std::unique_ptr<HandSqueezeEvent> createTyped(void) const;
+			std::shared_ptr<HandSqueezeEvent> createTyped(void) const;
 		};
 
 		private:

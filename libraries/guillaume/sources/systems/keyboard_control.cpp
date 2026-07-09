@@ -28,65 +28,71 @@ namespace guillaume::systems
 	KeyboardControl::KeyboardControl(event::EventBus &eventBus)
 		: ecs::SystemFiller<components::Text, components::Focus>(
 			  ecs::Phase::Event)
-		, _keyboardSubscriber(eventBus)
+		, event::EventManager<utility::event::KeyboardEvent>(eventBus)
+	{
+	}
+	
+	void KeyboardControl::prepare(void)
+	{
+		consumeNextEvent();
+	}
+
+	void KeyboardControl::cleanup(void)
 	{
 	}
 
 	void
 		KeyboardControl::update(const ecs::Entity::Identifier &entityIdentifier)
 	{
-		getLogger().debug() << "Updating KeyboardControl system for entity "
-							<< entityIdentifier;
+		auto keyboardEvent = getLastEvent();
+		if (!keyboardEvent)
+			return;
+
 		auto &text = getComponent<components::Text>(entityIdentifier);
 
-		// Process all pending keyboard events
-		while (_keyboardSubscriber.hasPendingEvents()) {
-			auto keyboardEvent = _keyboardSubscriber.getNextEvent();
-			if (!keyboardEvent || !keyboardEvent->getIsDownEvent()) {
-				continue;
-			}
-
-			const auto keycode = keyboardEvent->getKeycode();
-
-			// Handle navigation keys
-			switch (keycode) {
-				case utility::event::KeyboardEvent::KeyCode::Left:
-					text.moveCursorLeft();
-					continue;
-
-				case utility::event::KeyboardEvent::KeyCode::Right:
-					text.moveCursorRight();
-					continue;
-
-				case utility::event::KeyboardEvent::KeyCode::Home:
-					text.setCursorPosition(0);
-					continue;
-
-				case utility::event::KeyboardEvent::KeyCode::End:
-					text.setCursorPosition(text.getContent().size());
-					continue;
-
-				case utility::event::KeyboardEvent::KeyCode::Delete:
-					if (text.deleteCharacterAfter()) {
-						getLogger().debug() << "Deleted character after cursor";
-					}
-					continue;
-
-				case utility::event::KeyboardEvent::KeyCode::Backspace:
-					if (text.deleteCharacterBefore()) {
-						getLogger().debug()
-							<< "Deleted character before cursor";
-					}
-					continue;
-
-				default:
-					break;
-			}
-
-			// Handle character input (printable characters)
-			// These are handled by TextInput system for committed text
-			// KeyboardControl only handles special keys
+		if (!keyboardEvent->getIsDownEvent()) {
+			return;	   // Only handle key down events for control keys
 		}
+
+		const auto keycode = keyboardEvent->getKeycode();
+
+		// Handle navigation keys
+		switch (keycode) {
+			case utility::event::KeyboardEvent::KeyCode::Left:
+				text.moveCursorLeft();
+				break;
+
+			case utility::event::KeyboardEvent::KeyCode::Right:
+				text.moveCursorRight();
+				break;
+
+			case utility::event::KeyboardEvent::KeyCode::Home:
+				text.setCursorPosition(0);
+				break;
+
+			case utility::event::KeyboardEvent::KeyCode::End:
+				text.setCursorPosition(text.getContent().size());
+				break;
+
+			case utility::event::KeyboardEvent::KeyCode::Delete:
+				if (text.deleteCharacterAfter()) {
+					getLogger().debug() << "Deleted character after cursor";
+				}
+				break;
+
+			case utility::event::KeyboardEvent::KeyCode::Backspace:
+				if (text.deleteCharacterBefore()) {
+					getLogger().debug() << "Deleted character before cursor";
+				}
+				break;
+
+			default:
+				break;
+		}
+
+		// Handle character input (printable characters)
+		// These are handled by TextInput system for committed text
+		// KeyboardControl only handles special keys
 	}
 
 }	 // namespace guillaume::systems

@@ -27,12 +27,12 @@ namespace utility::event
 
 	HandMotionEvent::Factory::~Factory(void) = default;
 
-	std::unique_ptr<Event> HandMotionEvent::Factory::create(void) const
+	std::shared_ptr<Event> HandMotionEvent::Factory::create(void) const
 	{
 		return std::make_unique<HandMotionEvent>();
 	}
 
-	std::unique_ptr<HandMotionEvent>
+	std::shared_ptr<HandMotionEvent>
 		HandMotionEvent::Factory::createTyped(void) const
 	{
 		return std::make_unique<HandMotionEvent>();
