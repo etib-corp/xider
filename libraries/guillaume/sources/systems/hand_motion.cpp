@@ -53,9 +53,9 @@ namespace guillaume::systems
 			return;
 
 		this->getLogger().error() << "HandMotion::update: Hand motion event received: "
-									 << handMotionEvent->getPose();
+									 << handMotionEvent->getAim();
 
-		auto ray = handMotionEvent->getPose().toForwardRay();
+		auto ray = handMotionEvent->getAim().toForwardRay();
 
 		auto &transform = getComponent<components::Transform>(entityIdentifier);
 		auto &bound		= getComponent<components::Bound>(entityIdentifier);

@@ -363,6 +363,16 @@ void evan::Engine::handleViewportInput(
 			}
 			continue;	 // Skip to next event after handling mouse motion event
 		}
+
+		if (eventType == typeid(utility::event::HandMotionEvent)) {
+			std::shared_ptr<utility::event::HandMotionEvent> handMotionEvent =
+				std::dynamic_pointer_cast<utility::event::HandMotionEvent>(event);
+			if (handMotionEvent) {
+				handleHandMotionEvent(handMotionEvent, position, orientation,
+									  movementSpeed, rotationSpeed, _deltaTime);
+			}
+			continue;	 // Skip to next event after handling hand motion event
+		}
 	}
 
 	// Update view matrix
