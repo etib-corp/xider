@@ -36,6 +36,15 @@ namespace guillaume::systems
 	{
 	}
 
+	void HandSqueeze::prepare(void)
+	{
+		consumeNextEvent();
+	}
+
+	void HandSqueeze::cleanup(void)
+	{
+	}
+
 	void HandSqueeze::update(const ecs::Entity::Identifier &entityIdentifier)
 	{
 	}

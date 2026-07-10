@@ -47,13 +47,13 @@ namespace utility::event
 			 * @brief Create a HandPinchEvent as base Event pointer.
 			 * @return Newly created HandPinchEvent.
 			 */
-			std::unique_ptr<Event> create(void) const override;
+			std::shared_ptr<Event> create(void) const override;
 
 			/**
 			 * @brief Create a strongly-typed HandPinchEvent.
 			 * @return Newly created HandPinchEvent.
 			 */
-			std::unique_ptr<HandPinchEvent> createTyped(void) const;
+			std::shared_ptr<HandPinchEvent> createTyped(void) const;
 		};
 
 		public:

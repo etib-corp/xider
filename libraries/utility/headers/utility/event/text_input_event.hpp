@@ -49,16 +49,16 @@ namespace utility::event
 
 			/**
 			 * @brief Create a TextInputEvent as a base Event pointer.
-			 * @return Newly created TextInputEvent as std::unique_ptr<Event>.
+			 * @return Newly created TextInputEvent as std::shared_ptr<Event>.
 			 */
-			std::unique_ptr<Event> create(void) const override;
+			std::shared_ptr<Event> create(void) const override;
 
 			/**
 			 * @brief Create a strongly-typed TextInputEvent.
 			 * @return Newly created TextInputEvent as
-			 * std::unique_ptr<TextInputEvent>.
+			 * std::shared_ptr<TextInputEvent>.
 			 */
-			std::unique_ptr<TextInputEvent> createTyped(void) const;
+			std::shared_ptr<TextInputEvent> createTyped(void) const;
 		};
 
 		/**

@@ -27,6 +27,7 @@
 #include <stdexcept>
 #include <string>
 #include <type_traits>
+#include <ostream>
 
 namespace utility::graphic
 {
@@ -39,11 +40,11 @@ namespace utility::graphic
 	concept CanBeFieldOfViewComponent = std::is_floating_point_v<Type>;
 
 	/**
-	 * @brief Field of view representation in degrees for up, down, left, and
+	 * @brief Field of view representation in radians for up, down, left, and
 	 * right directions.
 	 * @tparam Type Floating-point component type used for stored angles.
 	 * @note We store in radians internally for efficient calculations, but the
-	 * interface uses degrees for ease of use.
+	 * interface uses radians for ease of use.
 	 */
 	template<CanBeFieldOfViewComponent Type> class FieldOfView
 	{
@@ -59,7 +60,7 @@ namespace utility::graphic
 
 		public:
 		/**
-		 * @brief Default constructor initializing all FOV angles to 0 degrees.
+		 * @brief Default constructor initializing all FOV angles to 0 radians.
 		 */
 		FieldOfView(void)
 			: FieldOfView(Type { 0 }, Type { 0 }, Type { 0 }, Type { 0 })
@@ -216,5 +217,21 @@ namespace utility::graphic
 	 * @brief Type alias for double-precision field-of-view component.
 	 */
 	using FieldOfViewD = FieldOfView<double>;
+
+	/**
+	 * @brief Stream insertion operator for FieldOfView.
+	 * @param stream Output stream.
+	 * @param fov Field of view to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const FieldOfViewF &fov);
+
+	/**
+	 * @brief Stream insertion operator for FieldOfView.
+	 * @param stream Output stream.
+	 * @param fov Field of view to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const FieldOfViewD &fov);
 
 }	 // namespace utility::graphic

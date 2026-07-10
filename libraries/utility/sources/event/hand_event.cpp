@@ -51,4 +51,38 @@ namespace utility::event
 		return _pose;
 	}
 
+	HandEvent &HandEvent::setAim(const graphic::PoseF &aim) noexcept
+	{
+		_aim = aim;
+		return *this;
+	}
+
+	graphic::PoseF HandEvent::getAim(void) const noexcept
+	{
+		return _aim;
+	}
+
+	HandEvent &HandEvent::setGrip(const graphic::PoseF &grip) noexcept
+	{
+		_grip = grip;
+		return *this;
+	}
+
+	graphic::PoseF HandEvent::getGrip(void) const noexcept
+	{
+		return _grip;
+	}
+
+	HandEvent &
+		HandEvent::setGripSurface(const graphic::PoseF &gripSurface) noexcept
+	{
+		_gripSurface = gripSurface;
+		return *this;
+	}
+
+	graphic::PoseF HandEvent::getGripSurface(void) const noexcept
+	{
+		return _gripSurface;
+	}
+
 }	 // namespace utility::event

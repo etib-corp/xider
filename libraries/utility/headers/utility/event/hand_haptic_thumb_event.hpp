@@ -47,13 +47,13 @@ namespace utility::event
 			 * @brief Create a HandHapticThumbEvent as base Event pointer.
 			 * @return Newly created HandHapticThumbEvent.
 			 */
-			std::unique_ptr<Event> create(void) const override;
+			std::shared_ptr<Event> create(void) const override;
 
 			/**
 			 * @brief Create a strongly-typed HandHapticThumbEvent.
 			 * @return Newly created HandHapticThumbEvent.
 			 */
-			std::unique_ptr<HandHapticThumbEvent> createTyped(void) const;
+			std::shared_ptr<HandHapticThumbEvent> createTyped(void) const;
 		};
 
 		explicit HandHapticThumbEvent(void);

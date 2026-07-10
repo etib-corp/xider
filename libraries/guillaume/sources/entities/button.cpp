@@ -187,9 +187,9 @@ namespace guillaume::entities
 	}
 
 	static float getBorderRadius(Button::Size size, Button::Shape shape,
-								 bool isPressed)
+								 bool isButtonPressed)
 	{
-		if (isPressed) {
+		if (isButtonPressed) {
 			switch (size) {
 				case Button::Size::ExtraSmall:
 				case Button::Size::Small:
@@ -288,7 +288,7 @@ namespace guillaume::entities
 	}
 
 	static utility::graphic::Color32Bit
-		getContainerColor(Button::Color style, bool isHovered, bool isPressed)
+		getContainerColor(Button::Color style, bool isHovered, bool isButtonPressed)
 	{
 		const auto &scheme = guillaume::defaultTheme.getScheme(
 			guillaume::ThemeSchemeRole::Light);
@@ -301,7 +301,7 @@ namespace guillaume::entities
 
 		switch (style) {
 			case Button::Color::Elevated:
-				if (isPressed) {
+				if (isButtonPressed) {
 					return applyStateAlpha(
 						scheme.getColor(SchemeColorRole::SurfaceContainerHigh)
 							.getColor(),
@@ -316,7 +316,7 @@ namespace guillaume::entities
 				return scheme.getColor(SchemeColorRole::SurfaceContainerLow)
 					.getColor();
 			case Button::Color::Filled:
-				if (isPressed) {
+				if (isButtonPressed) {
 					return applyStateAlpha(
 						scheme.getColor(SchemeColorRole::Primary).getColor(),
 						220U);
@@ -328,7 +328,7 @@ namespace guillaume::entities
 				}
 				return scheme.getColor(SchemeColorRole::Primary).getColor();
 			case Button::Color::Tonal:
-				if (isPressed) {
+				if (isButtonPressed) {
 					return applyStateAlpha(
 						scheme.getColor(SchemeColorRole::SecondaryContainer)
 							.getColor(),
@@ -343,7 +343,7 @@ namespace guillaume::entities
 				return scheme.getColor(SchemeColorRole::SecondaryContainer)
 					.getColor();
 			case Button::Color::Outlined:
-				if (isPressed) {
+				if (isButtonPressed) {
 					return applyStateAlpha(
 						scheme.getColor(SchemeColorRole::OnSurfaceVariant)
 							.getColor(),
@@ -357,7 +357,7 @@ namespace guillaume::entities
 				}
 				return utility::graphic::Color32Bit(0, 0, 0, 0);
 			case Button::Color::Text:
-				if (isPressed) {
+				if (isButtonPressed) {
 					return applyStateAlpha(
 						scheme.getColor(SchemeColorRole::Primary).getColor(),
 						48U);
@@ -396,18 +396,25 @@ namespace guillaume::entities
 
 	void Button::hoverHandler(void)
 	{
+		this->getLogger().error() << "Button::hoverHandler: Button hovered";
+
 		setShape(_shape);
 		setColorStyle(_colorStyle);
 	}
 
 	void Button::unHoverHandler(void)
 	{
+		this->getLogger().error() << "Button::unHoverHandler: Button unhovered";
+
 		setShape(_shape);
 		setColorStyle(_colorStyle);
 	}
 
 	void Button::leftClickPressHandler()
 	{
+		this->getLogger().error()
+			<< "Button::leftClickPressHandler: Button clicked";
+
 		setShape(_shape);
 		setColorStyle(_colorStyle);
 		if (_onClick) {
@@ -417,6 +424,9 @@ namespace guillaume::entities
 
 	void Button::leftClickReleaseHandler()
 	{
+		this->getLogger().error()
+			<< "Button::leftClickReleaseHandler: Button released";
+
 		setShape(_shape);
 		setColorStyle(_colorStyle);
 	}
@@ -462,7 +472,7 @@ namespace guillaume::entities
 		utility::graphic::PositionF forwardPosition = position;
 
 		forwardPosition.translate(utility::graphic::PositionF(
-			-forwardVector * static_cast<float>(layer + 1) * 0.1f));
+			-forwardVector * static_cast<float>(layer + 1) * 1.0f));
 
 		return utility::graphic::PoseF(forwardPosition, orientation);
 	}
@@ -575,7 +585,7 @@ namespace guillaume::entities
 	Button &Button::setShape(const Shape &shape)
 	{
 		bool isHovered = false;
-		bool isPressed = false;
+		bool isButtonPressed = false;
 
 		_shape = shape;
 
@@ -593,28 +603,28 @@ namespace guillaume::entities
 			? true
 			: isHovered;
 
-		isPressed =
+		isButtonPressed =
 			getComponentRegistry()
 				.getComponent<components::HandButtonInteraction>(
 					getIdentifier())
 				.isButtonPressed(utility::event::HandButtonEvent::Button::A)
 			? true
-			: isPressed;
-		isPressed =
+			: isButtonPressed;
+		isButtonPressed =
 			getComponentRegistry()
 				.getComponent<components::MouseButtonInteraction>(
 					getIdentifier())
 				.isButtonPressed(utility::event::MouseButtonEvent::Button::Left)
 			? true
-			: isPressed;
+			: isButtonPressed;
 
 		getComponentRegistry()
 			.getComponent<components::Borders>(getIdentifier())
-			.setBorderRadius(getBorderRadius(_size, _shape, isPressed));
+			.setBorderRadius(getBorderRadius(_size, _shape, isButtonPressed));
 
 		getComponentRegistry()
 			.getComponent<components::Color>(getIdentifier())
-			.setColor(getContainerColor(_colorStyle, isHovered, isPressed));
+			.setColor(getContainerColor(_colorStyle, isHovered, isButtonPressed));
 
 		return *this;
 	}

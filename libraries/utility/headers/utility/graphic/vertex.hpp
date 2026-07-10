@@ -220,4 +220,20 @@ namespace utility::graphic
 	 */
 	using VertexD = Vertex<double>;
 
+	/**
+	 * @brief Stream insertion operator for Vertex.
+	 * @param stream Output stream.
+	 * @param vertex Vertex to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const VertexF &vertex);
+
+	/**
+	 * @brief Stream insertion operator for Vertex.
+	 * @param stream Output stream.
+	 * @param vertex Vertex to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const VertexD &vertex);
+
 }	 // namespace utility::graphic

@@ -29,12 +29,12 @@ namespace utility::event
 	{
 	}
 
-	std::unique_ptr<Event> MouseWheelEvent::Factory::create(void) const
+	std::shared_ptr<Event> MouseWheelEvent::Factory::create(void) const
 	{
 		return this->createTyped();
 	}
 
-	std::unique_ptr<MouseWheelEvent>
+	std::shared_ptr<MouseWheelEvent>
 		MouseWheelEvent::Factory::createTyped(void) const
 	{
 		return std::make_unique<MouseWheelEvent>();

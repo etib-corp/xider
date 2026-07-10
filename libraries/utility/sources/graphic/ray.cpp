@@ -24,4 +24,17 @@
 
 namespace utility::graphic
 {
+	std::ostream &operator<<(std::ostream &stream, const RayF &ray)
+	{
+		stream << "RayF(origin: " << ray.getOrigin()
+			   << ", direction: " << ray.getDirection() << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const RayD &ray)
+	{
+		stream << "RayD(origin: " << ray.getOrigin()
+			   << ", direction: " << ray.getDirection() << ")";
+		return stream;
+	}
 }	 // namespace utility::graphic

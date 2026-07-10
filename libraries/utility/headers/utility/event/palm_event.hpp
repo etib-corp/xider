@@ -47,13 +47,13 @@ namespace utility::event
 			 * @brief Create a PalmEvent as base Event pointer.
 			 * @return Newly created PalmEvent.
 			 */
-			std::unique_ptr<Event> create(void) const override;
+			std::shared_ptr<Event> create(void) const override;
 
 			/**
 			 * @brief Create a strongly-typed PalmEvent.
 			 * @return Newly created PalmEvent.
 			 */
-			std::unique_ptr<PalmEvent> createTyped(void) const;
+			std::shared_ptr<PalmEvent> createTyped(void) const;
 		};
 
 		public:

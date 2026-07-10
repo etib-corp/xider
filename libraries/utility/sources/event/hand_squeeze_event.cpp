@@ -29,12 +29,12 @@ namespace utility::event
 
 	HandSqueezeEvent::Factory::~Factory(void) = default;
 
-	std::unique_ptr<Event> HandSqueezeEvent::Factory::create(void) const
+	std::shared_ptr<Event> HandSqueezeEvent::Factory::create(void) const
 	{
 		return std::make_unique<HandSqueezeEvent>();
 	}
 
-	std::unique_ptr<HandSqueezeEvent>
+	std::shared_ptr<HandSqueezeEvent>
 		HandSqueezeEvent::Factory::createTyped(void) const
 	{
 		return std::make_unique<HandSqueezeEvent>();

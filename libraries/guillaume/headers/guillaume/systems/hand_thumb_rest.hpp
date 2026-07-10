@@ -56,6 +56,18 @@ namespace guillaume::systems
 		~HandThumbRest(void);
 
 		/**
+		 * @brief This function is called before call update on all entities and
+		 * can be used to set up any necessary state or resources.
+		 */
+		void prepare(void) override;
+
+		/**
+		 * @brief This function is called after call update on all entities and
+		 * can be used to release any resources or reset state.
+		 */
+		void cleanup(void) override;
+
+		/**
 		 * @brief Update the system for a given entity identifier.
 		 * @param entityIdentifier The identifier of the entity to update.
 		 */

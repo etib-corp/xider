@@ -55,7 +55,7 @@ namespace guillaume
 												   _engine));
 		_systemRegistry.registerNewSystem(
 			std::make_unique<systems::MeasureGlyph>(_ressourceProvider,
-												  _engine));
+													_engine));
 		_systemRegistry.registerNewSystem(
 			std::make_unique<systems::MouseMotion>(_eventBus, _engine));
 		_systemRegistry.registerNewSystem(
@@ -133,10 +133,34 @@ namespace guillaume
 		_sceneManager->enterActiveScene();
 	}
 
+	static bool hasViewChanged(utility::graphic::ViewF &firstView,
+							   utility::graphic::ViewF &currentView)
+	{
+		auto firstViewForward =
+			firstView.getPose().getOrientation().getForward();
+		auto currentViewForward =
+			currentView.getPose().getOrientation().getForward();
+
+		if (utility::math::dot(utility::math::normalize(firstViewForward),
+							   utility::math::normalize(currentViewForward))
+			< 0.0f) {
+			return true;
+		}
+		return false;
+	}
+
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
 		requires IsOneOf<DefaultSceneType, SceneTypes...>
 	void Application<DefaultSceneType, SceneTypes...>::routine(void)
 	{
+		static auto firstView = _engine->getView();
+
+		_sceneManager->getActiveScene()->placeEntitiesInFrontOfView(firstView);
+		this->getLogger().debug() << "Current view: " << _engine->getView();
+		this->getLogger().debug()
+			<< "Forward vector: "
+			<< _engine->getView().getPose().getOrientation().getForward();
+
 		_engine->pollEvents();
 		_engine->clear();
 		_engine->update();

@@ -39,10 +39,13 @@ std::shared_ptr<evan::ASwapchainContext>
 		<< "Creating swapchain context for Desktop platform...";
 	auto swapchainContext =
 		std::make_shared<DesktopSwapchainContext>(deviceContext, _window);
-	utility::graphic::FieldOfViewF fov(
-		M_PI_2, -M_PI_2, -M_PI_2,
-		M_PI_2);	// Set a default FOV for desktop platforms of 90 degrees
-					// (π/2 radians) for horizontal and vertical FOV
+
+	const float aspect		   = 2560.0f / 1440.0f;
+	const float halfVertical   = static_cast<float>(M_PI_4);
+	const float halfHorizontal = std::atan(std::tan(halfVertical) * aspect);
+
+	utility::graphic::FieldOfViewF fov(halfVertical, -halfVertical,
+									   -halfHorizontal, halfHorizontal);
 	swapchainContext->setFieldOfView(fov);
 	return swapchainContext;
 }

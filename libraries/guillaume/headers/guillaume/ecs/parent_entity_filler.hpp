@@ -22,52 +22,46 @@
 
 #pragma once
 
-#include <memory>
+#include "guillaume/ecs/component.hpp"
+#include "guillaume/ecs/component_registry.hpp"
+#include "guillaume/ecs/parent_entity.hpp"
 
-#include "utility/event/hand_event.hpp"
-
-#include "utility/graphic/pose.hpp"
-
-namespace utility::event
+namespace guillaume::ecs
 {
-
 	/**
-	 * @brief Hand motion event containing aim/grip/grip_surface poses.
+	 * @brief Parent-capable entity filler that also owns child entities.
+	 * @tparam ComponentTypes The component types that define the entity's
+	 * signature.
 	 */
-	class HandMotionEvent: public HandEvent
+	template<InheritFromComponent... ComponentTypes> class ParentEntityFiller:
+		public ParentEntity
 	{
-		public:
+		private:
+		ComponentRegistry &_componentRegistry;
+
+		protected:
 		/**
-		 * @brief Factory for creating HandMotionEvent instances.
+		 * @brief Get the Component Registry.
+		 * @return Reference to the component registry.
 		 */
-		class Factory: public Event::AbstractFactory
-		{
-			public:
-			~Factory(void) override;
-
-			/**
-			 * @brief Create a HandMotionEvent as base Event pointer.
-			 * @return Newly created HandMotionEvent.
-			 */
-			std::shared_ptr<Event> create(void) const override;
-
-			/**
-			 * @brief Create a strongly-typed HandMotionEvent.
-			 * @return Newly created HandMotionEvent.
-			 */
-			std::shared_ptr<HandMotionEvent> createTyped(void) const;
-		};
+		ComponentRegistry &getComponentRegistry(void);
 
 		public:
 		/**
-		 * @brief Default constructor.
+		 * @brief Construct a new Parent Entity Filler object.
+		 * @param componentRegistry The component registry to register
+		 * components to.
 		 */
-		explicit HandMotionEvent(void);
+		ParentEntityFiller(ComponentRegistry &componentRegistry);
 
 		/**
-		 * @brief Default destructor.
+		 * @brief Default destructor for the Parent Entity Filler class.
 		 */
-		~HandMotionEvent(void) override;
+		virtual ~ParentEntityFiller(void) = default;
 	};
 
-}	 // namespace utility::event
+}	 // namespace guillaume::ecs
+
+// Include the implementation of the EntityFiller and ParentEntityFiller
+// template classes
+#include "guillaume/ecs/parent_entity_filler.tpp"

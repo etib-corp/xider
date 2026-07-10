@@ -29,12 +29,12 @@ namespace utility::event
 
 	HandTriggerEvent::Factory::~Factory(void) = default;
 
-	std::unique_ptr<Event> HandTriggerEvent::Factory::create(void) const
+	std::shared_ptr<Event> HandTriggerEvent::Factory::create(void) const
 	{
 		return std::make_unique<HandTriggerEvent>();
 	}
 
-	std::unique_ptr<HandTriggerEvent>
+	std::shared_ptr<HandTriggerEvent>
 		HandTriggerEvent::Factory::createTyped(void) const
 	{
 		return std::make_unique<HandTriggerEvent>();

@@ -24,4 +24,19 @@
 
 namespace utility::graphic
 {
+	std::ostream &operator<<(std::ostream &stream, const FieldOfViewF &fov)
+	{
+		stream << "FieldOfViewF(up: " << fov.getUp()
+			   << ", down: " << fov.getDown() << ", left: " << fov.getLeft()
+			   << ", right: " << fov.getRight() << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const FieldOfViewD &fov)
+	{
+		stream << "FieldOfViewD(up: " << fov.getUp()
+			   << ", down: " << fov.getDown() << ", left: " << fov.getLeft()
+			   << ", right: " << fov.getRight() << ")";
+		return stream;
+	}
 }	 // namespace utility::graphic

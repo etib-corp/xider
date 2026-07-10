@@ -42,12 +42,12 @@ namespace utility::event
 
 	HandButtonEvent::Factory::~Factory(void) = default;
 
-	std::unique_ptr<Event> HandButtonEvent::Factory::create(void) const
+	std::shared_ptr<Event> HandButtonEvent::Factory::create(void) const
 	{
 		return std::make_unique<HandButtonEvent>();
 	}
 
-	std::unique_ptr<HandButtonEvent>
+	std::shared_ptr<HandButtonEvent>
 		HandButtonEvent::Factory::createTyped(void) const
 	{
 		return std::make_unique<HandButtonEvent>();

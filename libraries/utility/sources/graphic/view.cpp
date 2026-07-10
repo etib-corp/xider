@@ -24,4 +24,19 @@
 
 namespace utility::graphic
 {
+	std::ostream &operator<<(std::ostream &stream, const ViewF &view)
+	{
+		stream << "ViewF(pose: " << view.getPose()
+			   << ", fieldOfView: " << view.getFieldOfView()
+			   << ", viewportSize: " << view.getViewportSize() << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const ViewD &view)
+	{
+		stream << "ViewD(pose: " << view.getPose()
+			   << ", fieldOfView: " << view.getFieldOfView()
+			   << ", viewportSize: " << view.getViewportSize() << ")";
+		return stream;
+	}
 }	 // namespace utility::graphic

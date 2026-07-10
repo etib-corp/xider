@@ -29,12 +29,12 @@ namespace utility::event
 
 	HandThumbStickEvent::Factory::~Factory(void) = default;
 
-	std::unique_ptr<Event> HandThumbStickEvent::Factory::create(void) const
+	std::shared_ptr<Event> HandThumbStickEvent::Factory::create(void) const
 	{
 		return std::make_unique<HandThumbStickEvent>();
 	}
 
-	std::unique_ptr<HandThumbStickEvent>
+	std::shared_ptr<HandThumbStickEvent>
 		HandThumbStickEvent::Factory::createTyped(void) const
 	{
 		return std::make_unique<HandThumbStickEvent>();

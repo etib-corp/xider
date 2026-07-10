@@ -27,12 +27,12 @@ namespace utility::event
 
 	TextEditingEvent::Factory::~Factory(void) = default;
 
-	std::unique_ptr<Event> TextEditingEvent::Factory::create(void) const
+	std::shared_ptr<Event> TextEditingEvent::Factory::create(void) const
 	{
 		return std::make_unique<TextEditingEvent>();
 	}
 
-	std::unique_ptr<TextEditingEvent>
+	std::shared_ptr<TextEditingEvent>
 		TextEditingEvent::Factory::createTyped(void) const
 	{
 		return std::make_unique<TextEditingEvent>();

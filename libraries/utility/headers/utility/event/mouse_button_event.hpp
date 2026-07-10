@@ -66,16 +66,16 @@ namespace utility::event
 
 			/**
 			 * @brief Create a MouseButtonEvent as a base Event pointer.
-			 * @return Newly created MouseButtonEvent as std::unique_ptr<Event>.
+			 * @return Newly created MouseButtonEvent as std::shared_ptr<Event>.
 			 */
-			std::unique_ptr<Event> create(void) const override;
+			std::shared_ptr<Event> create(void) const override;
 
 			/**
 			 * @brief Create a strongly-typed MouseButtonEvent.
 			 * @return Newly created MouseButtonEvent as
-			 * std::unique_ptr<MouseButtonEvent>.
+			 * std::shared_ptr<MouseButtonEvent>.
 			 */
-			std::unique_ptr<MouseButtonEvent> createTyped(void) const;
+			std::shared_ptr<MouseButtonEvent> createTyped(void) const;
 		};
 
 		private:
@@ -95,15 +95,6 @@ namespace utility::event
 		 * @brief Default destructor.
 		 */
 		~MouseButtonEvent(void) override;
-
-		/**
-		 * @brief Get the event type.
-		 * @return The type of this event (MouseButton).
-		 */
-		Type getEventType(void) const noexcept override
-		{
-			return Type::MouseButton;
-		}
 
 		/**
 		 * @brief Set the current mouse position.
@@ -142,7 +133,7 @@ namespace utility::event
 		 * @brief Get the pressed state of the button.
 		 * @return True if the button is pressed, false otherwise.
 		 */
-		bool isPressed(void) const noexcept;
+		bool isButtonPressed(void) const noexcept;
 	};
 
 }	 // namespace utility::event

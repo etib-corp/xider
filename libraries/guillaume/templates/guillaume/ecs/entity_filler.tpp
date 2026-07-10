@@ -23,6 +23,7 @@
 #pragma once
 
 #include "guillaume/ecs/entity_filler.hpp"
+#include "guillaume/ecs/parent_entity_filler.hpp"
 
 namespace guillaume::ecs
 {
@@ -36,24 +37,6 @@ namespace guillaume::ecs
 	EntityFiller<ComponentTypes...>::EntityFiller(
 		ComponentRegistry &componentRegistry)
 		: Entity()
-		, _componentRegistry(componentRegistry)
-	{
-		setSignature<ComponentTypes...>();
-		_componentRegistry
-			.template registerComponentsForEntity<ComponentTypes...>(
-				getIdentifier());
-	}
-
-	template<InheritFromComponent... ComponentTypes> ComponentRegistry &
-		ParentEntityFiller<ComponentTypes...>::getComponentRegistry(void)
-	{
-		return _componentRegistry;
-	}
-
-	template<InheritFromComponent... ComponentTypes>
-	ParentEntityFiller<ComponentTypes...>::ParentEntityFiller(
-		ComponentRegistry &componentRegistry)
-		: ParentEntity()
 		, _componentRegistry(componentRegistry)
 	{
 		setSignature<ComponentTypes...>();

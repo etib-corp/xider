@@ -24,6 +24,7 @@
 
 #include <memory>
 #include <type_traits>
+#include <ostream>
 
 namespace utility::event
 {
@@ -37,22 +38,6 @@ namespace utility::event
 	{
 		public:
 		/**
-		 * @brief Event type enumeration for reliable type checking.
-		 */
-		enum class Type {
-			Unknown,
-			Keyboard,
-			MouseButton,
-			MouseMotion,
-			MouseWheel,
-			CursorEnter,
-			FileDrop,
-			TextInput,
-			HandMotion,
-			Quit
-		};
-
-		/**
 		 * @brief Abstract factory interface for creating events.
 		 */
 		class AbstractFactory
@@ -64,7 +49,7 @@ namespace utility::event
 			 * @brief Create an event instance.
 			 * @return Polymorphic pointer to a newly created event.
 			 */
-			virtual std::unique_ptr<Event> create(void) const = 0;
+			virtual std::shared_ptr<Event> create(void) const = 0;
 		};
 
 		/**
@@ -76,15 +61,6 @@ namespace utility::event
 		 * @brief Virtual destructor.
 		 */
 		virtual ~Event(void) = default;
-
-		/**
-		 * @brief Get the event type.
-		 * @return The type of this event.
-		 */
-		virtual Type getEventType(void) const noexcept
-		{
-			return Type::Unknown;
-		}
 	};
 
 	/**

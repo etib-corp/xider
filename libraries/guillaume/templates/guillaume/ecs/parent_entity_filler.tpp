@@ -20,51 +20,28 @@
  SOFTWARE.
  */
 
-#include "utility/event/file_drop_event.hpp"
+#pragma once
 
-namespace utility::event
+#include "guillaume/ecs/parent_entity_filler.hpp"
+
+namespace guillaume::ecs
 {
 
-	//////////////////////
-	// Factory methods //
-	////////////////////
-
-	FileDropEvent::Factory::~Factory(void) = default;
-
-	std::shared_ptr<Event> FileDropEvent::Factory::create(void) const
+	template<InheritFromComponent... ComponentTypes> ComponentRegistry &
+		ParentEntityFiller<ComponentTypes...>::getComponentRegistry(void)
 	{
-		return std::make_unique<FileDropEvent>();
+		return _componentRegistry;
 	}
 
-	std::shared_ptr<FileDropEvent>
-		FileDropEvent::Factory::createTyped(void) const
+	template<InheritFromComponent... ComponentTypes>
+	ParentEntityFiller<ComponentTypes...>::ParentEntityFiller(
+		ComponentRegistry &componentRegistry)
+		: ParentEntity()
+		, _componentRegistry(componentRegistry)
 	{
-		return std::make_unique<FileDropEvent>();
+		setSignature<ComponentTypes...>();
+		_componentRegistry
+			.template registerComponentsForEntity<ComponentTypes...>(
+				getIdentifier());
 	}
-
-	////////////////////
-	// Public methods //
-	//////////////////
-
-	FileDropEvent::FileDropEvent(void) = default;
-
-	FileDropEvent::~FileDropEvent(void) = default;
-
-	FileDropEvent &
-		FileDropEvent::setPaths(const std::vector<std::string> &paths)
-	{
-		_paths = paths;
-		return *this;
-	}
-
-	const std::vector<std::string> &FileDropEvent::getPaths(void) const noexcept
-	{
-		return _paths;
-	}
-
-	std::size_t FileDropEvent::getCount(void) const noexcept
-	{
-		return _paths.size();
-	}
-
-}	 // namespace utility::event
+}	 // namespace guillaume::ecs

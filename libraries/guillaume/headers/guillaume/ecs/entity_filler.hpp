@@ -25,7 +25,6 @@
 #include "guillaume/ecs/component.hpp"
 #include "guillaume/ecs/component_registry.hpp"
 #include "guillaume/ecs/entity.hpp"
-#include "guillaume/ecs/parent_entity.hpp"
 
 namespace guillaume::ecs
 {
@@ -84,40 +83,8 @@ namespace guillaume::ecs
 		virtual ~EntityFiller(void) = default;
 	};
 
-	/**
-	 * @brief Parent-capable entity filler that also owns child entities.
-	 * @tparam ComponentTypes The component types that define the entity's
-	 * signature.
-	 */
-	template<InheritFromComponent... ComponentTypes> class ParentEntityFiller:
-		public ParentEntity
-	{
-		private:
-		ComponentRegistry &_componentRegistry;
-
-		protected:
-		/**
-		 * @brief Get the Component Registry.
-		 * @return Reference to the component registry.
-		 */
-		ComponentRegistry &getComponentRegistry(void);
-
-		public:
-		/**
-		 * @brief Construct a new Parent Entity Filler object.
-		 * @param componentRegistry The component registry to register
-		 * components to.
-		 */
-		ParentEntityFiller(ComponentRegistry &componentRegistry);
-
-		/**
-		 * @brief Default destructor for the Parent Entity Filler class.
-		 */
-		virtual ~ParentEntityFiller(void) = default;
-	};
-
 }	 // namespace guillaume::ecs
 
-// Include the implementation of the EntityFiller and ParentEntityFiller
+// Include the implementation of the EntityFiller
 // template classes
 #include "guillaume/ecs/entity_filler.tpp"

@@ -31,12 +31,12 @@ namespace utility::event
 
 	HandHapticEvent::Factory::~Factory(void) = default;
 
-	std::unique_ptr<Event> HandHapticEvent::Factory::create(void) const
+	std::shared_ptr<Event> HandHapticEvent::Factory::create(void) const
 	{
 		return std::make_unique<HandHapticEvent>();
 	}
 
-	std::unique_ptr<HandHapticEvent>
+	std::shared_ptr<HandHapticEvent>
 		HandHapticEvent::Factory::createTyped(void) const
 	{
 		return std::make_unique<HandHapticEvent>();

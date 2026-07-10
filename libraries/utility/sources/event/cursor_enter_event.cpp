@@ -31,12 +31,12 @@ namespace utility::event
 
 	CursorEnterEvent::Factory::~Factory(void) = default;
 
-	std::unique_ptr<Event> CursorEnterEvent::Factory::create(void) const
+	std::shared_ptr<Event> CursorEnterEvent::Factory::create(void) const
 	{
 		return std::make_unique<CursorEnterEvent>();
 	}
 
-	std::unique_ptr<CursorEnterEvent>
+	std::shared_ptr<CursorEnterEvent>
 		CursorEnterEvent::Factory::createTyped(void) const
 	{
 		return std::make_unique<CursorEnterEvent>();

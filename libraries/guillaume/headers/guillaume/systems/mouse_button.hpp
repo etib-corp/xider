@@ -22,25 +22,29 @@
 
 #pragma once
 
-#include "guillaume/engine.hpp"
-#include "guillaume/systems/button_interaction_system.hpp"
+#include "guillaume/ecs/system_filler.hpp"
 
+#include "guillaume/event/event_manager.hpp"
+#include "guillaume/event/event_bus.hpp"
+
+#include "guillaume/components/bound.hpp"
 #include "guillaume/components/mouse_button_interaction.hpp"
+#include "guillaume/components/transform.hpp"
+
+#include "guillaume/engine.hpp"
 
 #include <utility/event/mouse_button_event.hpp>
 
 namespace guillaume::systems
 {
-
 	/**
 	 * @brief System handling mouse button interactions.
 	 */
 	class MouseButton:
-		public ButtonInteractionSystem<
-			utility::event::MouseButtonEvent,
-			components::MouseButtonInteraction,
-			std::function<utility::graphic::RayF(
-				const utility::event::MouseButtonEvent &)>>
+
+		public ecs::SystemFiller<components::MouseButtonInteraction,
+								 components::Transform, components::Bound>,
+		public event::EventManager<utility::event::MouseButtonEvent>
 	{
 		private:
 		std::unique_ptr<Engine>
@@ -52,22 +56,35 @@ namespace guillaume::systems
 		 * @brief Construct the MouseButton system and subscribe to mouse button
 		 * events.
 		 * @param eventBus Reference to the event bus for subscribing to events.
-		 * @param engine Reference to the engine for visual feedback.
+		 * @param engine Reference to the game engine.
 		 */
-		MouseButton(event::EventBus &eventBus, std::unique_ptr<Engine> &engine)
-			: _engine(engine)
-			, ButtonInteractionSystem<
-				  utility::event::MouseButtonEvent,
-				  components::MouseButtonInteraction,
-				  std::function<utility::graphic::RayF(
-					  const utility::event::MouseButtonEvent &)>>(
-				  eventBus,
-				  [&engine](const utility::event::MouseButtonEvent &event) {
-					  return engine->getView().viewPointToRay(
-						  event.getPosition());
-				  })
-		{
-		}
+		MouseButton(event::EventBus &eventBus, std::unique_ptr<Engine> &engine);
+
+		/**
+		 * @brief Default destructor for the MouseButton system.
+		 */
+		~MouseButton(void);
+
+		/**
+		 * @brief This function is called before call update on all entities and
+		 * can be used to set up any necessary state or resources.
+		 */
+		void prepare(void) override;
+
+		/**
+		 * @brief This function is called after call update on all entities and
+		 * can be used to release any resources or reset state.
+		 */
+		void cleanup(void) override;
+
+		/**
+		 * @brief Update method called for each entity with the relevant
+		 * components. Processes mouse button events and updates interaction
+		 * states accordingly.
+		 * @param entityIdentifier Identifier of the entity being updated.
+		 */
+		virtual void
+			update(const ecs::Entity::Identifier &entityIdentifier) override;
 	};
 
 }	 // namespace guillaume::systems

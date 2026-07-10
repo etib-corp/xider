@@ -27,12 +27,12 @@ namespace utility::event
 
 	QuitEvent::Factory::~Factory(void) = default;
 
-	std::unique_ptr<Event> QuitEvent::Factory::create(void) const
+	std::shared_ptr<Event> QuitEvent::Factory::create(void) const
 	{
 		return std::make_unique<QuitEvent>();
 	}
 
-	std::unique_ptr<QuitEvent> QuitEvent::Factory::createTyped(void) const
+	std::shared_ptr<QuitEvent> QuitEvent::Factory::createTyped(void) const
 	{
 		return std::make_unique<QuitEvent>();
 	}

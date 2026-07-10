@@ -27,12 +27,12 @@ namespace utility::event
 
 	MouseMotionEvent::Factory::~Factory(void) = default;
 
-	std::unique_ptr<Event> MouseMotionEvent::Factory::create(void) const
+	std::shared_ptr<Event> MouseMotionEvent::Factory::create(void) const
 	{
 		return std::make_unique<MouseMotionEvent>();
 	}
 
-	std::unique_ptr<MouseMotionEvent>
+	std::shared_ptr<MouseMotionEvent>
 		MouseMotionEvent::Factory::createTyped(void) const
 	{
 		return std::make_unique<MouseMotionEvent>();

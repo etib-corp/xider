@@ -22,23 +22,27 @@
 
 #pragma once
 
-#include "guillaume/systems/button_interaction_system.hpp"
+#include "guillaume/ecs/system_filler.hpp"
 
+#include "guillaume/event/event_manager.hpp"
+#include "guillaume/event/event_bus.hpp"
+
+#include "guillaume/components/bound.hpp"
 #include "guillaume/components/hand_button_interaction.hpp"
+#include "guillaume/components/transform.hpp"
 
 #include <utility/event/hand_button_event.hpp>
 
 namespace guillaume::systems
 {
-
 	/**
 	 * @brief System handling hand button interactions.
 	 */
 	class HandButton:
-		public ButtonInteractionSystem<
-			utility::event::HandButtonEvent, components::HandButtonInteraction,
-			std::function<utility::graphic::RayF(
-				const utility::event::HandButtonEvent &)>>
+
+		public ecs::SystemFiller<components::HandButtonInteraction,
+								 components::Transform, components::Bound>,
+		public event::EventManager<utility::event::HandButtonEvent>
 	{
 		public:
 		/**
@@ -46,22 +50,33 @@ namespace guillaume::systems
 		 * events.
 		 * @param eventBus Reference to the event bus for subscribing to events.
 		 */
-		HandButton(event::EventBus &eventBus)
-			: ButtonInteractionSystem<
-				  utility::event::HandButtonEvent,
-				  components::HandButtonInteraction,
-				  std::function<utility::graphic::RayF(
-					  const utility::event::HandButtonEvent &)>>(
-				  eventBus, [](const utility::event::HandButtonEvent &event) {
-					  return event.getPose().toForwardRay();
-				  })
-		{
-		}
+		HandButton(event::EventBus &eventBus);
 
 		/**
 		 * @brief Default destructor for the HandButton system.
 		 */
-		~HandButton(void) = default;
+		~HandButton(void);
+
+		/**
+		 * @brief This function is called before call update on all entities and
+		 * can be used to set up any necessary state or resources.
+		 */
+		void prepare(void) override;
+
+		/**
+		 * @brief This function is called after call update on all entities and
+		 * can be used to release any resources or reset state.
+		 */
+		void cleanup(void) override;
+
+		/**
+		 * @brief Update method called for each entity with the relevant
+		 * components. Processes hand button events and updates interaction
+		 * states accordingly.
+		 * @param entityIdentifier Identifier of the entity being updated.
+		 */
+		virtual void
+			update(const ecs::Entity::Identifier &entityIdentifier) override;
 	};
 
 }	 // namespace guillaume::systems

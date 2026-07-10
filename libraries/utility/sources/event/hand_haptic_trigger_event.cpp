@@ -27,12 +27,12 @@ namespace utility::event
 
 	HandHapticTriggerEvent::Factory::~Factory(void) = default;
 
-	std::unique_ptr<Event> HandHapticTriggerEvent::Factory::create(void) const
+	std::shared_ptr<Event> HandHapticTriggerEvent::Factory::create(void) const
 	{
 		return std::make_unique<HandHapticTriggerEvent>();
 	}
 
-	std::unique_ptr<HandHapticTriggerEvent>
+	std::shared_ptr<HandHapticTriggerEvent>
 		HandHapticTriggerEvent::Factory::createTyped(void) const
 	{
 		return std::make_unique<HandHapticTriggerEvent>();

@@ -24,4 +24,17 @@
 
 namespace utility::graphic
 {
+	std::ostream &operator<<(std::ostream &stream, const ScaleF &scale)
+	{
+		stream << "ScaleF(x: " << scale.getX() << ", y: " << scale.getY()
+			   << ", z: " << scale.getZ() << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const ScaleD &scale)
+	{
+		stream << "ScaleD(x: " << scale.getX() << ", y: " << scale.getY()
+			   << ", z: " << scale.getZ() << ")";
+		return stream;
+	}
 }	 // namespace utility::graphic

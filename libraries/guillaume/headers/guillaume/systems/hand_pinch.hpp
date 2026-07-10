@@ -57,6 +57,18 @@ namespace guillaume::systems
 		~HandPinch(void);
 
 		/**
+		 * @brief This function is called before call update on all entities and
+		 * can be used to set up any necessary state or resources.
+		 */
+		void prepare(void) override;
+
+		/**
+		 * @brief This function is called after call update on all entities and
+		 * can be used to release any resources or reset state.
+		 */
+		void cleanup(void) override;
+
+		/**
 		 * @brief Update method called for each entity with the relevant
 		 * components. Processes hand motion events and updates interaction
 		 * states accordingly.

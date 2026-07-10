@@ -135,6 +135,27 @@ namespace evan
 		 */
 		void createHandsMotionSpaces(XrDeviceBackend &deviceBackend);
 
+		/** @brief Shared pointer to the left hand motion event.
+		 *
+		 * This member variable holds a shared pointer to the HandMotionEvent
+		 * representing the current state of the left hand motion action. It is
+		 * used to provide context for hand-related actions and can be accessed
+		 * by other components of the application that require information about
+		 * the left hand's position, orientation, and gestures.
+		 */
+		std::shared_ptr<utility::event::HandMotionEvent> _leftHandEvent;
+
+		/** @brief Shared pointer to the right hand motion event.
+		 *
+		 * This member variable holds a shared pointer to the HandMotionEvent
+		 * representing the current state of the right hand motion action. It
+		 * is used to provide context for hand-related actions and can be
+		 * accessed by other components of the application that require
+		 * information about the right hand's position, orientation, and
+		 * gestures.
+		 */
+		std::shared_ptr<utility::event::HandMotionEvent> _rightHandEvent;
+
 		private:
 		/** @brief Creates the hand motion actions based on the provided action
 		 * set and device backend.
@@ -151,5 +172,25 @@ namespace evan
 		 */
 		void createHandsMotionActions(XrActionSet actionSet,
 									  XrDeviceBackend &deviceBackend);
+
+		/** @brief Creates a hand motion event based on the current state of
+		 * the hand motion actions.
+		 *		 * This method queries the OpenXR runtime for the current state
+		 * of the hand motion actions and generates a HandMotionEvent that
+		 * encapsulates the relevant information. The event can be used by the
+		 * application to respond to hand tracking input, such as hand
+		 * positions, orientations, and gestures.
+		 * @param deviceBackend The device backend used for interacting
+		 * with the OpenXR runtime and managing resources.
+		 * @param handIndex The index of the hand (0 for left hand, 1 for right
+		 * hand) for which the event is being created.
+		 * @return A shared pointer to a HandMotionEvent representing the
+		 * current state of the specified hand motion action. If the hand motion
+		 * action is not available or the event cannot be created, a nullptr is
+		 * returned.
+		 */
+		std::shared_ptr<utility::event::HandMotionEvent>
+			createHandMotionEvent(XrDeviceBackend &deviceBackend,
+								  int handIndex);
 	};
 }	 // namespace evan
