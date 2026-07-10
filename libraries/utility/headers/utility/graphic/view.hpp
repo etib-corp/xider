@@ -320,33 +320,33 @@ namespace utility::graphic
 
 		/**
 		 * @brief Set perspective projection parameters.
-		 * @param verticalFovDegrees Vertical field-of-view in degrees.
-		 * @param aspectRatio Aspect ratio (width/height).
+		 * @param verticalFovRadians Total vertical field-of-view in radians.
+		 * @param aspectRatio Aspect ratio (width / height).
 		 * @throws std::invalid_argument if any perspective parameter is
 		 * invalid.
 		 */
-		void setPerspective(ViewComponentType verticalFovDegrees,
+		void setPerspective(ViewComponentType verticalFovRadians,
 							ViewComponentType aspectRatio)
 		{
-			validatePerspective(verticalFovDegrees, aspectRatio);
+			validatePerspective(verticalFovRadians, aspectRatio);
 			_fieldOfView =
-				makeSymmetricFieldOfView(verticalFovDegrees, aspectRatio);
+				makeSymmetricFieldOfView(verticalFovRadians, aspectRatio);
 		}
 
 		/**
 		 * @brief Get aspect ratio (width/height).
 		 * @return Aspect ratio.
 		 */
-		ViewComponentType getAspectRatio(void) const
+		ViewComponentType getAspectRatio() const
 		{
 			const ViewComponentType vertical = std::tan(_fieldOfView.getUp())
-				+ std::tan(_fieldOfView.getDown());
+				- std::tan(_fieldOfView.getDown());
+			const ViewComponentType horizontal =
+				std::tan(_fieldOfView.getRight())
+				- std::tan(_fieldOfView.getLeft());
 			if (vertical == ViewComponentType {}) {
 				return ViewComponentType {};
 			}
-			const ViewComponentType horizontal =
-				std::tan(_fieldOfView.getLeft())
-				+ std::tan(_fieldOfView.getRight());
 			return horizontal / vertical;
 		}
 
@@ -457,7 +457,8 @@ namespace utility::graphic
 		 */
 		Ray<ViewComponentType> viewPointToRay(const math::Vector2F &point) const
 		{
-			if (point.x >= _viewportSize.x || point.y >= _viewportSize.y) {
+			if (point.x < 0 || point.y < 0 || point.x >= _viewportSize.x
+				|| point.y >= _viewportSize.y) {
 				throw std::out_of_range("Point is outside of viewport bounds");
 			}
 
@@ -465,31 +466,32 @@ namespace utility::graphic
 				(static_cast<ViewComponentType>(point.x) / _viewportSize.x)
 					* ViewComponentType { 2 }
 				- ViewComponentType { 1 };
-			const ViewComponentType ndcY =
-				(static_cast<ViewComponentType>(point.y) / _viewportSize.y)
-					* ViewComponentType { 2 }
-				- ViewComponentType { 1 };
+
+			const ViewComponentType ndcY = ViewComponentType { 1 }
+				- (static_cast<ViewComponentType>(point.y) / _viewportSize.y)
+					* ViewComponentType { 2 };
+
 			return viewRay(ndcX, ndcY);
 		}
 
 		/**
-		 * @brief Get total vertical field-of-view in degrees.
-		 * @return Vertical FOV in degrees.
+		 * @brief Get total vertical field-of-view in radians.
+		 * @return Vertical FOV in radians.
 		 */
-		ViewComponentType getVerticalFovDegrees(void) const noexcept
+
+		ViewComponentType getVerticalFovRadians() const noexcept
 		{
-			return _fieldOfView.getVerticalDegrees();
+			return _fieldOfView.getUp() - _fieldOfView.getDown();
 		}
 
 		/**
-		 * @brief Get total horizontal field-of-view in degrees.
-		 * @return Horizontal FOV in degrees.
+		 * @brief Get total horizontal field-of-view in radians.
+		 * @return Horizontal FOV in radians.
 		 */
-		ViewComponentType getHorizontalFovDegrees(void) const noexcept
+		ViewComponentType getHorizontalFovRadians() const noexcept
 		{
-			return _fieldOfView.getHorizontalDegrees();
+			return _fieldOfView.getRight() - _fieldOfView.getLeft();
 		}
-
 		/**
 		 * @brief Check whether current field-of-view is symmetric.
 		 * @param epsilon Absolute tolerance.
@@ -533,6 +535,24 @@ namespace utility::graphic
 		bool operator!=(const View &other) const noexcept
 		{
 			return !(*this == other);
+		}
+
+		/**
+		 * @brief Set viewport size in pixels.
+		 * @param viewportSize Viewport size (width, height).
+		 */
+		void setViewportSize(const math::Vector2F &viewportSize)
+		{
+			_viewportSize = viewportSize;
+		}
+
+		/**
+		 * @brief Get viewport size in pixels.
+		 * @return Viewport size (width, height).
+		 */
+		math::Vector2F getViewportSize(void) const
+		{
+			return _viewportSize;
 		}
 	};
 

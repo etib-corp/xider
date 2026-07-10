@@ -65,17 +65,30 @@ namespace guillaume::systems
 		auto &mouseHoverInteraction =
 			getComponent<components::MouseHoverInteraction>(entityIdentifier);
 
-		const utility::graphic::PositionF center(
-			transform.getPose().getPosition().x + bound.getWidth() / 2.0f,
-			transform.getPose().getPosition().y + bound.getHeight() / 2.0f,
-			transform.getPose().getPosition().z);
-
 		auto centeredPose = transform.getPose();
-		centeredPose.setPosition(center);
+		centeredPose.setPosition(
+			transform.getPose().getPosition()
+			+ transform.getPose().getOrientation().getRight()
+				* (bound.getWidth() * 0.5f)
+			+ transform.getPose().getOrientation().getUp()
+				* (bound.getHeight() * 0.5f));
 
 		const auto size =
 			utility::math::Vector2F({ bound.getWidth(), bound.getHeight() });
 		const bool isIntersecting = ray.intersectRectangle(centeredPose, size);
+
+		getLogger().error() << "MouseMotion::update: TopLeft pose of entity: "
+							<< transform.getPose();
+		getLogger().error()
+			<< "MouseMotion::update: Entity size: " << bound.getWidth() << "x"
+			<< bound.getHeight();
+		getLogger().error()
+			<< "MouseMotion::update: Center pose of entity: " << centeredPose;
+		getLogger().error()
+			<< "MouseMotion::update: View: " << _engine->getView();
+		getLogger().error()
+			<< "MouseMotion::update: Ray origin: " << ray.getOrigin()
+			<< ", direction: " << ray.getDirection();
 
 		if (isIntersecting) {
 			if (!mouseHoverInteraction.isHovered()) {

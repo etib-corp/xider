@@ -24,4 +24,80 @@
 
 namespace guillaume::systems
 {
+	HandButton::HandButton(event::EventBus &eventBus)
+		: ecs::SystemFiller<components::HandButtonInteraction,
+							components::Transform, components::Bound>(
+			  ecs::Phase::Event)
+		, event::EventManager<utility::event::HandButtonEvent>(eventBus)
+	{
+	}
+
+	HandButton::~HandButton(void)
+	{
+	}
+
+	void HandButton::prepare(void)
+	{
+		consumeNextEvent();
+	}
+
+	void HandButton::cleanup(void)
+	{
+	}
+
+	void HandButton::update(const ecs::Entity::Identifier &entityIdentifier)
+	{
+		auto handButtonEvent = getLastEvent();
+		if (!handButtonEvent)
+			return;
+
+		this->getLogger().error()
+			<< "HandButton::update: Hand button event received: "
+			<< handButtonEvent->getAim();
+
+		const auto button = handButtonEvent->getButton();
+		if (button == utility::event::HandButtonEvent::Button::Unknown)
+			return;
+
+		auto ray = handButtonEvent->getAim().toForwardRay();
+
+		auto &transform = this->template getComponent<components::Transform>(
+			entityIdentifier);
+		auto &bound =
+			this->template getComponent<components::Bound>(entityIdentifier);
+		auto &interaction =
+			this->template getComponent<components::HandButtonInteraction>(
+				entityIdentifier);
+
+		const utility::graphic::PositionF center(
+			transform.getPose().getPosition().x + bound.getWidth() / 2.0f,
+			transform.getPose().getPosition().y + bound.getHeight() / 2.0f,
+			transform.getPose().getPosition().z);
+
+		auto centeredPose = transform.getPose();
+		centeredPose.setPosition(center);
+
+		const auto size =
+			utility::math::Vector2F({ bound.getWidth(), bound.getHeight() });
+		const bool isIntersecting  = ray.intersectRectangle(centeredPose, size);
+		const bool isButtonPressed = handButtonEvent->isButtonPressed();
+
+		if (isButtonPressed && isIntersecting) {
+			interaction.setButtonPressed(button, true);
+			const auto &handler = interaction.getOnButtonPressHandler(button);
+			if (handler) {
+				handler();
+			}
+		} else if (!isButtonPressed && interaction.isButtonPressed(button)
+				   && isIntersecting) {
+			interaction.setButtonPressed(button, false);
+			const auto &handler = interaction.getOnButtonReleaseHandler(button);
+			if (handler) {
+				handler();
+			}
+		} else if (!isButtonPressed) {
+			interaction.setButtonPressed(button, false);
+		}
+	}
+
 }	 // namespace guillaume::systems

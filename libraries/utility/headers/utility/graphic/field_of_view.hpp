@@ -40,27 +40,27 @@ namespace utility::graphic
 	concept CanBeFieldOfViewComponent = std::is_floating_point_v<Type>;
 
 	/**
-	 * @brief Field of view representation in degrees for up, down, left, and
+	 * @brief Field of view representation in radians for up, down, left, and
 	 * right directions.
 	 * @tparam Type Floating-point component type used for stored angles.
 	 * @note We store in radians internally for efficient calculations, but the
-	 * interface uses degrees for ease of use.
+	 * interface uses radians for ease of use.
 	 */
 	template<CanBeFieldOfViewComponent Type> class FieldOfView
 	{
 		private:
 		Type _up;	 ///< Vertical FOV above the forward direction in
 					 ///< radians
-		Type _down;		///< Vertical FOV below the forward direction in
-						///< radians
-		Type _left;		///< Horizontal FOV to the left of the forward
-						///< direction in radians
+		Type _down;	   ///< Vertical FOV below the forward direction in
+					   ///< radians
+		Type _left;	   ///< Horizontal FOV to the left of the forward
+					   ///< direction in radians
 		Type _right;	///< Horizontal FOV to the right of the forward
 						///< direction in radians
 
 		public:
 		/**
-		 * @brief Default constructor initializing all FOV angles to 0 degrees.
+		 * @brief Default constructor initializing all FOV angles to 0 radians.
 		 */
 		FieldOfView(void)
 			: FieldOfView(Type { 0 }, Type { 0 }, Type { 0 }, Type { 0 })

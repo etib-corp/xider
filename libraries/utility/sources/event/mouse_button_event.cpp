@@ -72,7 +72,7 @@ namespace utility::event
 		return *this;
 	}
 
-	bool MouseButtonEvent::isPressed(void) const noexcept
+	bool MouseButtonEvent::isButtonPressed(void) const noexcept
 	{
 		return _pressed;
 	}

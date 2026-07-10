@@ -133,7 +133,7 @@ namespace utility::event
 		 * @brief Get the pressed state of the button.
 		 * @return True if the button is pressed, false otherwise.
 		 */
-		bool isPressed(void) const noexcept;
+		bool isButtonPressed(void) const noexcept;
 	};
 
 }	 // namespace utility::event

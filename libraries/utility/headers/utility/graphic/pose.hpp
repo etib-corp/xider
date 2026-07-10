@@ -124,6 +124,17 @@ namespace utility::graphic
 		}
 
 		/**
+		 * @brief Set the position component using a vector.
+		 * @param position New position value as a 3D vector.
+		 * @return Reference to this object for chaining.
+		 */
+		Pose &setPosition(math::Vector<PoseComponentType, 3> position) noexcept
+		{
+			_position = Position<PoseComponentType>(position);
+			return *this;
+		}
+
+		/**
 		 * @brief Get the position component.
 		 * @return Const reference to the position.
 		 */
@@ -141,6 +152,18 @@ namespace utility::graphic
 			const Orientation<PoseComponentType> &orientation) noexcept
 		{
 			_orientation = orientation;
+			return *this;
+		}
+
+		/**
+		 * @brief Set the orientation component using a quaternion.
+		 * @param quaternion New orientation value as a quaternion.
+		 * @return Reference to this object for chaining.
+		 */
+		Pose &setOrientation(
+			math::Quaternion<PoseComponentType> quaternion) noexcept
+		{
+			_orientation = Orientation<PoseComponentType>(quaternion);
 			return *this;
 		}
 

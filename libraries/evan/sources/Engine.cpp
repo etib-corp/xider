@@ -443,7 +443,7 @@ void evan::Engine::handleMouseButtonEvent(
 {
 	if (mouseButtonEvent->getButton()
 		== utility::event::MouseButtonEvent::Button::Right) {
-		isRightMouseButtonPressed = mouseButtonEvent->isPressed();
+		isRightMouseButtonPressed = mouseButtonEvent->isButtonPressed();
 		if (isRightMouseButtonPressed) {
 			lastMousePosition = mouseButtonEvent->getPosition();
 		}
