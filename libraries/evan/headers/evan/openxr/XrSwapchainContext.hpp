@@ -97,7 +97,7 @@ namespace evan
 		 * @param deviceContext A reference to the DeviceContext instance that provides access to Vulkan resources and synchronization mechanisms.
 		 * @param renderpass The Vulkan render pass that will be used with the swapchain images during rendering operations.
 		 */
-		void recreateSwapchain(const DeviceContext &deviceContext, GLFWwindow *window, VkRenderPass renderpass) override;
+		void recreateSwapchain(const DeviceContext &deviceContext, VkRenderPass renderpass) override;
 
 		/**
 		 * @brief Acquires an image from the swapchain for rendering.

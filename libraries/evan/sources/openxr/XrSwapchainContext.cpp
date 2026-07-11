@@ -87,7 +87,7 @@ void evan::XrSwapchainContext::destroy(VkDevice device)
 }
 
 void evan::XrSwapchainContext::recreateSwapchain(
-	const DeviceContext &deviceContext, GLFWwindow *window, VkRenderPass renderpass)
+	const DeviceContext &deviceContext, VkRenderPass renderpass)
 {
 	this->getLogger().info()
 		<< "Recreating swapchain and associated resources for XrSwapchainContext";
