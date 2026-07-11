@@ -206,32 +206,38 @@ bool evan::Engine::removeObject(size_t objectID)
 utility::graphic::ViewF evan::Engine::getView(void) const
 {
 	const std::size_t viewCount = _swapchainContext->getViewCount();
+
 	if (viewCount == 0) {
 		throw std::runtime_error("No views available in swapchain context");
 	}
 
-	const glm::mat4 leftView   = _swapchainContext->getView(0);
-	const auto leftPosition	   = extractPositionFromViewMatrix(leftView);
-	const auto leftOrientation = extractOrientationFromViewMatrix(leftView);
-
-	utility::graphic::PositionF centerPosition		 = leftPosition;
-	utility::graphic::OrientationF centerOrientation = leftOrientation;
-
-	if (viewCount >= 2) {
-		const glm::mat4 rightView = _swapchainContext->getView(1);
-		const auto rightPosition  = extractPositionFromViewMatrix(rightView);
-
-		centerPosition = utility::graphic::PositionF(
-			(leftPosition.getX() + rightPosition.getX()) * 0.5f,
-			(leftPosition.getY() + rightPosition.getY()) * 0.5f,
-			(leftPosition.getZ() + rightPosition.getZ()) * 0.5f);
+	if (viewCount == 1) {
+		return _swapchainContext->getView(0);
 	}
 
-	auto pose = utility::graphic::PoseF { centerPosition, centerOrientation };
-	auto fov  = _swapchainContext->getFieldOfView();
-	auto viewportSize = utility::math::Vector2F { 1280, 720 };
+	auto leftView	= _swapchainContext->getView(0);
+	auto rightView = _swapchainContext->getView(1);
 
-	return utility::graphic::ViewF { pose, fov, viewportSize };
+	utility::graphic::PositionF centerPosition(
+		(leftView.getPose().getPosition() + rightView.getPose().getPosition())
+		* 0.5f);
+
+	float dot = utility::math::dot(
+		dynamic_cast<const glm::quat &>(leftView.getPose().getOrientation()),
+		dynamic_cast<const glm::quat &>(rightView.getPose().getOrientation()));
+
+	auto leftOrientation  = leftView.getPose().getOrientation();
+	auto rightOrientation = rightView.getPose().getOrientation();
+
+	utility::graphic::OrientationF centerOrientation(utility::math::normalize(
+		utility::math::mix(leftOrientation,
+						   dot < 0.0f ? -rightOrientation : rightOrientation,
+						   0.5f)));
+
+	utility::graphic::PoseF pose(centerPosition, centerOrientation);
+
+	return utility::graphic::ViewF { pose, leftView.getFieldOfView(),
+									 leftView.getViewportSize() };
 }
 
 void evan::Engine::addScene(size_t sceneIndex)

@@ -170,7 +170,7 @@ const std::vector<XrCompositionLayerProjectionView> &
 	return _projectionLayerViews;
 }
 
-glm::mat4 evan::XrSwapchainContext::getProjection(int index) const
+glm::mat4 evan::XrSwapchainContext::getProjection(std::size_t index) const
 {
 	const XrFovf &fov = _views[index].fov;
 	float nearZ		  = 0.1f;
@@ -199,61 +199,34 @@ glm::mat4 evan::XrSwapchainContext::getProjection(int index) const
 	return projection;
 }
 
-glm::mat4 evan::XrSwapchainContext::getView(int index) const
+utility::graphic::ViewF &
+	evan::XrSwapchainContext::getView(std::size_t index) const
 {
+	utility::graphic::ViewF view;
 	const auto &pose = _views[index].pose;
+	utility::graphic::PositionF position { pose.position.x, pose.position.y,
+										   pose.position.z };
+	utility::graphic::OrientationF orientation { pose.orientation.x,
+												 pose.orientation.y,
+												 pose.orientation.z,
+												 pose.orientation.w };
+	utility::graphic::PoseF poseF(position, orientation);
+	utility::graphic::FieldOfViewF fov(
+		_views[index].fov.angleUp, _views[index].fov.angleDown,
+		_views[index].fov.angleLeft, _views[index].fov.angleRight);
 
-	glm::quat orientation(pose.orientation.w, pose.orientation.x,
-						  pose.orientation.y, pose.orientation.z);
-
-	glm::vec3 position(pose.position.x, pose.position.y, pose.position.z);
-
-	glm::mat4 head =
-		glm::translate(glm::mat4(1.0f), position) * glm::mat4_cast(orientation);
-
-	return glm::inverse(head);
+	view.setPose(poseF);
+	view.setFieldOfView(fov);
+	return view;
 }
 
-void evan::XrSwapchainContext::setView(int index, const glm::mat4 &view)
+void evan::XrSwapchainContext::setView(std::size_t index,
+									   const utility::graphic::ViewF &view)
+
 {
 }
 
 std::size_t evan::XrSwapchainContext::getViewCount(void) const
 {
 	return _views.size();
-}
-
-utility::graphic::FieldOfViewF
-	evan::XrSwapchainContext::getFieldOfView(void) const
-{
-	utility::graphic::FieldOfViewF fov {};
-
-	if (_views.empty()) {
-		return fov;
-	}
-
-	float up	= 0.0f;
-	float down	= 0.0f;
-	float left	= 0.0f;
-	float right = 0.0f;
-
-	for (const auto &view: _views) {
-		up += view.fov.angleUp;
-		down += view.fov.angleDown;
-		left += view.fov.angleLeft;
-		right += view.fov.angleRight;
-	}
-
-	const float count = static_cast<float>(_views.size());
-	fov.setUp(up / count);
-	fov.setDown(down / count);
-	fov.setLeft(left / count);
-	fov.setRight(right / count);
-
-	return fov;
-}
-
-void evan::XrSwapchainContext::setFieldOfView(
-	utility::graphic::FieldOfViewF &fov)
-{
 }

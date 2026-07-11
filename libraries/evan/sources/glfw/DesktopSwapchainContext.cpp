@@ -21,6 +21,9 @@ evan::DesktopSwapchainContext::DesktopSwapchainContext(
 		<< "Creating swapchain images for DesktopSwapchainContext...";
 	_swapchainImages.push_back(std::make_shared<DesktopSwapchainImage>(
 		deviceContext, window, _renderPass));
+
+	_view.setPerspective(45.0f, 16.0f / 9.0f);
+	_view.setClippingPlanes(0.1f, 4000.0f);
 }
 
 evan::DesktopSwapchainContext::~DesktopSwapchainContext()
@@ -67,17 +70,19 @@ VkResult evan::DesktopSwapchainContext::aquireImage(
 								 &imageIndex);
 }
 
-glm::mat4 evan::DesktopSwapchainContext::getProjection(int index) const
+glm::mat4 evan::DesktopSwapchainContext::getProjection(std::size_t index) const
 {
-	return glm::perspective(glm::radians(45.0f), 16.0f / 9.0f, 0.1f, 4000.0f);
+	return _view.getProjectionMatrix();
 }
 
-glm::mat4 evan::DesktopSwapchainContext::getView(int index) const
+utility::graphic::ViewF
+	evan::DesktopSwapchainContext::getView(std::size_t index) const
 {
 	return _view;
 }
 
-void evan::DesktopSwapchainContext::setView(int index, const glm::mat4 &view)
+void evan::DesktopSwapchainContext::setView(std::size_t index,
+											const utility::graphic::ViewF &view)
 {
 	_view = view;
 }
@@ -85,16 +90,4 @@ void evan::DesktopSwapchainContext::setView(int index, const glm::mat4 &view)
 std::size_t evan::DesktopSwapchainContext::getViewCount(void) const
 {
 	return 1;
-}
-
-void evan::DesktopSwapchainContext::setFieldOfView(
-	utility::graphic::FieldOfViewF &fov)
-{
-	_fov = fov;
-}
-
-utility::graphic::FieldOfViewF
-	evan::DesktopSwapchainContext::getFieldOfView(void) const
-{
-	return _fov;
 }

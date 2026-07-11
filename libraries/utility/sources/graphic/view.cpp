@@ -28,7 +28,9 @@ namespace utility::graphic
 	{
 		stream << "ViewF(pose: " << view.getPose()
 			   << ", fieldOfView: " << view.getFieldOfView()
-			   << ", viewportSize: " << view.getViewportSize() << ")";
+			   << ", viewportSize: " << view.getViewportSize()
+			   << ", nearPlane: " << view.getNearPlane()
+			   << ", farPlane: " << view.getFarPlane() << ")";
 		return stream;
 	}
 
@@ -36,7 +38,9 @@ namespace utility::graphic
 	{
 		stream << "ViewD(pose: " << view.getPose()
 			   << ", fieldOfView: " << view.getFieldOfView()
-			   << ", viewportSize: " << view.getViewportSize() << ")";
+			   << ", viewportSize: " << view.getViewportSize()
+			   << ", nearPlane: " << view.getNearPlane()
+			   << ", farPlane: " << view.getFarPlane() << ")";
 		return stream;
 	}
 }	 // namespace utility::graphic

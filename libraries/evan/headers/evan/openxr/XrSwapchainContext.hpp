@@ -199,7 +199,7 @@ namespace evan
 		 * and any changes in the VR environment to ensure accurate rendering of
 		 * the scene in an OpenXR application.
 		 */
-		glm::mat4 getProjection(int index) const override;
+		glm::mat4 getProjection(std::size_t index) const override;
 
 		/**
 		 * @brief Retrieves the view matrix for a specific view index.
@@ -220,7 +220,7 @@ namespace evan
 		 * interactions, and any changes in the VR environment to ensure
 		 * accurate rendering of the scene in an OpenXR application.
 		 */
-		glm::mat4 getView(int index) const override;
+		utility::graphic::ViewF getView(std::size_t index) const override;
 
 		/**
 		 * @brief Sets the view matrix for a specific view index.
@@ -239,7 +239,8 @@ namespace evan
 		 * in the VR environment to ensure accurate rendering of the scene in an
 		 * OpenXR application.
 		 */
-		void setView(int index, const glm::mat4 &view) override;
+		void setView(std::size_t index,
+					 const utility::graphic::ViewF &view) override;
 
 		/**
 		 * @brief Retrieves the number of views in the swapchain context.
@@ -257,38 +258,6 @@ namespace evan
 		 * the scene in an OpenXR application.
 		 */
 		std::size_t getViewCount(void) const override;
-
-		/**
-		 * @brief Sets the field of view for the swapchain context.
-		 *
-		 * This method sets the field of view (FOV) for the swapchain context,
-		 * which is essential for configuring the rendering pipeline and
-		 * ensuring that rendered content is displayed correctly based on the
-		 * desired viewing angle. Implement this method to allow the rendering
-		 * system to adjust the FOV as needed for different rendering scenarios.
-		 *
-		 * @param fov The desired field of view as a
-		 * utility::graphic::FieldOfViewF object, which contains the horizontal
-		 * and vertical FOV angles in degrees.
-		 */
-		void setFieldOfView(utility::graphic::FieldOfViewF &fov) override;
-
-		/**
-		 * @brief Retrieves the current field of view for the swapchain
-		 * context.
-		 *
-		 * This method returns the current field of view (FOV) for the swapchain
-		 * context, which is essential for configuring the rendering pipeline
-		 * and ensuring that rendered content is displayed correctly based on
-		 * the desired viewing angle. Implement this method to allow the
-		 * rendering system to access the current FOV settings for rendering
-		 * operations.
-		 *
-		 * @return The current field of view as a
-		 * utility::graphic::FieldOfViewF object, which contains the horizontal
-		 * and vertical FOV angles in degrees.
-		 */
-		utility::graphic::FieldOfViewF getFieldOfView(void) const override;
 
 		/**
 		 * Vector of XrView structures for each view configuration.

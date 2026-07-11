@@ -59,8 +59,58 @@ namespace utility::graphic
 		FieldOfView<ViewComponentType>
 			_fieldOfView;	 ///< View field-of-view parameters
 
-		math::Vector2F
+		math::Vector<ViewComponentType, 2>
 			_viewportSize;	  ///< Viewport size in pixels (width, height)
+
+		ViewComponentType _nearPlane;	 ///< Near clipping plane distance
+		ViewComponentType _farPlane;	 ///< Far clipping plane distance
+
+		/**
+		 * @brief Validate perspective parameter constraints.
+		 * @param verticalFovDegrees Vertical field-of-view in degrees.
+		 * @param aspectRatio Aspect ratio (width/height).
+		 * @throws std::invalid_argument if any perspective parameter is
+		 * invalid.
+		 */
+		static void validatePerspective(ViewComponentType verticalFovDegrees,
+										ViewComponentType aspectRatio)
+		{
+			if (verticalFovDegrees <= ViewComponentType {}
+				|| verticalFovDegrees >= ViewComponentType { 180 }) {
+				throw std::invalid_argument(
+					"View vertical FOV must be in range (0, 180)");
+			}
+			if (aspectRatio <= ViewComponentType {}) {
+				throw std::invalid_argument(
+					"View aspect ratio must be positive");
+			}
+		}
+
+		/**
+		 * @brief Build symmetric per-direction FOV from vertical angle and
+		 * aspect.
+		 * @param verticalFovDegrees Vertical field-of-view in degrees.
+		 * @param aspectRatio Aspect ratio (width/height).
+		 * @return Symmetric field-of-view values for all directions.
+		 */
+		static FieldOfView<ViewComponentType>
+			makeSymmetricFieldOfView(ViewComponentType verticalFovDegrees,
+									 ViewComponentType aspectRatio)
+		{
+			const ViewComponentType halfVertical =
+				verticalFovDegrees / ViewComponentType { 2 };
+			const ViewComponentType halfVerticalRad = halfVertical
+				* std::numbers::pi_v<ViewComponentType>
+				/ ViewComponentType { 180 };
+			const ViewComponentType halfHorizontalRad =
+				std::atan(std::tan(halfVerticalRad) * aspectRatio);
+			const ViewComponentType halfHorizontal = halfHorizontalRad
+				* ViewComponentType { 180 }
+				/ std::numbers::pi_v<ViewComponentType>;
+
+			return FieldOfView<ViewComponentType>(
+				halfVertical, halfVertical, halfHorizontal, halfHorizontal);
+		}
 
 		/**
 		 * @brief Validate orientation vectors for use as view basis.
@@ -215,7 +265,7 @@ namespace utility::graphic
 		 */
 		View(Pose<ViewComponentType> pose,
 			 utility::graphic::FieldOfView<ViewComponentType> fov,
-			 math::Vector2F viewportSize)
+			 math::Vector<ViewComponentType, 2> viewportSize)
 			: _pose(std::move(pose))
 			, _fieldOfView(std::move(fov))
 			, _viewportSize(std::move(viewportSize))
@@ -381,6 +431,36 @@ namespace utility::graphic
 		}
 
 		/**
+		 * @brief Set near and far clipping plane distances.
+		 * @param nearDistance Near clipping plane distance.
+		 * @param farDistance Far clipping plane distance.
+		 */
+		void setClippingPlanes(ViewComponentType nearDistance,
+							   ViewComponentType farDistance)
+		{
+			_nearPlane = nearDistance;
+			_farPlane  = farDistance;
+		}
+
+		/**
+		 * @brief Get near clipping plane distance.
+		 * @return Near clipping plane distance.
+		 */
+		ViewComponentType getNearPlane() const noexcept
+		{
+			return _nearPlane;
+		}
+
+		/**
+		 * @brief Get far clipping plane distance.
+		 * @return Far clipping plane distance.
+		 */
+		ViewComponentType getFarPlane() const noexcept
+		{
+			return _farPlane;
+		}
+
+		/**
 		 * @brief Translate view position by an offset.
 		 * @param offset Translation vector.
 		 */
@@ -461,7 +541,8 @@ namespace utility::graphic
 		 * @return Ray originating at view position toward projected direction.
 		 * @throws std::out_of_range if point is outside of viewport bounds.
 		 */
-		Ray<ViewComponentType> viewPointToRay(const math::Vector2F &point) const
+		Ray<ViewComponentType> viewPointToRay(
+			const math::Vector<ViewComponentType, 2> &point) const
 		{
 			if (point.x < 0 || point.y < 0 || point.x >= _viewportSize.x
 				|| point.y >= _viewportSize.y) {
@@ -548,7 +629,8 @@ namespace utility::graphic
 		 * @brief Set viewport size in pixels.
 		 * @param viewportSize Viewport size (width, height).
 		 */
-		void setViewportSize(const math::Vector2F &viewportSize)
+		void setViewportSize(
+			const math::Vector<ViewComponentType, 2> &viewportSize)
 		{
 			_viewportSize = viewportSize;
 		}
@@ -557,7 +639,7 @@ namespace utility::graphic
 		 * @brief Get viewport size in pixels.
 		 * @return Viewport size (width, height).
 		 */
-		math::Vector2F getViewportSize(void) const
+		math::Vector<ViewComponentType, 2> getViewportSize(void) const
 		{
 			return _viewportSize;
 		}
@@ -600,6 +682,72 @@ namespace utility::graphic
 			view[3][3] = static_cast<ViewComponentType>(1);
 
 			return view;
+		}
+
+		/**
+		 * @brief Build a perspective projection matrix from per-side field of
+		 * view angles.
+		 * @param nearPlane Positive distance to the near clipping plane.
+		 * @param farPlane Positive distance to the far clipping plane.
+		 * @return 4x4 projection matrix in column-major order.
+		 * @throws std::invalid_argument if clipping planes are invalid or FOV
+		 * produces a degenerate frustum.
+		 */
+		utility::math::Matrix<ViewComponentType, 4, 4>
+			getProjectionMatrix() const
+		{
+			const ViewComponentType left =
+				_nearPlane * std::tan(_fieldOfView.getLeft());
+			;
+			const ViewComponentType right =
+				_nearPlane * std::tan(_fieldOfView.getRight());
+			const ViewComponentType bottom =
+				_nearPlane * std::tan(_fieldOfView.getDown());
+			const ViewComponentType top =
+				_nearPlane * std::tan(_fieldOfView.getUp());
+
+			const ViewComponentType width  = right - left;
+			const ViewComponentType height = top - bottom;
+			const ViewComponentType depth  = _farPlane - _nearPlane;
+
+			if (width == ViewComponentType {}) {
+				throw std::invalid_argument(
+					"View projection width must be non-zero");
+			}
+			if (height == ViewComponentType {}) {
+				throw std::invalid_argument(
+					"View projection height must be non-zero");
+			}
+			if (depth == ViewComponentType {}) {
+				throw std::invalid_argument(
+					"View projection depth must be non-zero");
+			}
+
+			utility::math::Matrix<ViewComponentType, 4, 4> projection;
+
+			// Column-major layout: matrix[column][row]
+			projection[0][0] = (ViewComponentType { 2 } * _nearPlane) / width;
+			projection[0][1] = ViewComponentType {};
+			projection[0][2] = ViewComponentType {};
+			projection[0][3] = ViewComponentType {};
+
+			projection[1][0] = ViewComponentType {};
+			projection[1][1] = (ViewComponentType { 2 } * _nearPlane) / height;
+			projection[1][2] = ViewComponentType {};
+			projection[1][3] = ViewComponentType {};
+
+			projection[2][0] = (right + left) / width;
+			projection[2][1] = (top + bottom) / height;
+			projection[2][2] = -(_farPlane + _nearPlane) / depth;
+			projection[2][3] = -ViewComponentType { 1 };
+
+			projection[3][0] = ViewComponentType {};
+			projection[3][1] = ViewComponentType {};
+			projection[3][2] =
+				-(ViewComponentType { 2 } * _farPlane * _nearPlane) / depth;
+			projection[3][3] = ViewComponentType {};
+
+			return projection;
 		}
 	};
 

@@ -46,7 +46,10 @@ std::shared_ptr<evan::ASwapchainContext>
 
 	utility::graphic::FieldOfViewF fov(halfVertical, -halfVertical,
 									   -halfHorizontal, halfHorizontal);
-	swapchainContext->setFieldOfView(fov);
+
+	for (std::size_t i = 0; i < swapchainContext->getViewCount(); ++i) {
+		swapchainContext->getView(i).setFieldOfView(fov);
+	}
 	return swapchainContext;
 }
 

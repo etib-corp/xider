@@ -496,7 +496,7 @@ void evan::Renderer::updateUniformBuffer(const Scene &scene,
 
 	Frame::UniformBufferObject ubo {};
 	ubo.model = glm::mat4(1.0f);
-	ubo.view  = swapchainContext.getView(currentIndex);
+	ubo.view  = swapchainContext.getView(currentIndex).toViewMatrix();
 	ubo.proj  = swapchainContext.getProjection(currentIndex);
 
 	memcpy(_frames[_currentFrameIndex]->_uniformBufferMapped, &ubo,

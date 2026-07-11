@@ -195,7 +195,7 @@ namespace evan
 		 * @return The view matrix as a glm::mat4 for the specified image index
 		 * in the swapchain.
 		 */
-		virtual glm::mat4 getView(int index) const = 0;
+		virtual utility::graphic::ViewF getView(std::size_t index) const = 0;
 
 		/**
 		 * @brief Sets the view matrix for the specified image index in the
@@ -212,7 +212,8 @@ namespace evan
 		 * @param view The view matrix as a glm::mat4 to set for the specified
 		 * image index in the swapchain.
 		 */
-		virtual void setView(int index, const glm::mat4 &view) = 0;
+		virtual void setView(std::size_t index,
+							 const utility::graphic::ViewF &view) = 0;
 
 		/**
 		 * @brief Retrieves the number of views in the swapchain context.
@@ -226,39 +227,6 @@ namespace evan
 		 * @return The number of views in the swapchain context.
 		 */
 		virtual std::size_t getViewCount(void) const = 0;
-
-		/**
-		 * @brief Sets the field of view for the swapchain context.
-		 *
-		 * This pure virtual function must be implemented by derived classes to
-		 * set the field of view (FOV) for the swapchain context. The FOV is
-		 * essential for configuring the rendering pipeline and ensuring that
-		 * rendered content is displayed correctly based on the desired viewing
-		 * angle. Implement this function to allow the rendering system to
-		 * adjust the FOV as needed for different rendering scenarios.
-		 *
-		 * @param fov The desired field of view as a
-		 * utility::graphic::FieldOfViewF object, which contains the horizontal
-		 * and vertical FOV angles in degrees.
-		 */
-		virtual void setFieldOfView(utility::graphic::FieldOfViewF &fov) = 0;
-
-		/**
-		 * @brief Retrieves the current field of view for the swapchain
-		 * context.
-		 *
-		 * This pure virtual function must be implemented by derived classes to
-		 * return the current field of view (FOV) for the swapchain context. The
-		 * FOV is essential for configuring the rendering pipeline and ensuring
-		 * that rendered content is displayed correctly based on the desired
-		 * viewing angle. Implement this function to allow the rendering system
-		 * to access the current FOV settings for rendering operations.
-		 *
-		 * @return The current field of view as a
-		 * utility::graphic::FieldOfViewF object, which contains the horizontal
-		 * and vertical FOV angles in degrees.
-		 */
-		virtual utility::graphic::FieldOfViewF getFieldOfView(void) const = 0;
 
 		/**
 		 * @brief Retrieves the projection matrix for the specified image index
@@ -276,7 +244,7 @@ namespace evan
 		 * @return The projection matrix as a glm::mat4 for the specified image
 		 * index in the swapchain.
 		 */
-		virtual glm::mat4 getProjection(int index) const = 0;
+		virtual glm::mat4 getProjection(std::size_t index) const = 0;
 
 		/**
 		 * @brief Retrieves the current viewport size in pixels.
