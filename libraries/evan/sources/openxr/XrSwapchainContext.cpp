@@ -86,6 +86,63 @@ void evan::XrSwapchainContext::destroy(VkDevice device)
 	_swapchainImages.clear();
 }
 
+void evan::XrSwapchainContext::recreateSwapchain(
+	const DeviceContext &deviceContext, GLFWwindow *window, VkRenderPass renderpass)
+{
+	this->getLogger().info()
+		<< "Recreating swapchain and associated resources for XrSwapchainContext";
+
+	for (const auto &swapchainImage: _swapchainImages) {
+		this->getLogger().info()
+			<< "Destroying swapchain image and releasing resources";
+		swapchainImage->destroy(deviceContext.getDeviceBackend()->_device);
+	}
+	_swapchainImages.clear();
+
+	for (const auto &viewConfig: _viewsConfigurations) {
+		this->getLogger().info() << "Creating swapchain for view configuration";
+
+		XrSwapchainCreateInfo swapchainCreateInfo {};
+		swapchainCreateInfo.type	  = XR_TYPE_SWAPCHAIN_CREATE_INFO;
+		swapchainCreateInfo.arraySize = 1;
+		swapchainCreateInfo.format	  = selectSwapchainFormat(
+			deviceContext.getDeviceBackend()->enumerateSwapchainFormats(
+				deviceContext.getDeviceBackend()->countSwapchainFormats()));
+		swapchainCreateInfo.width	  = viewConfig.recommendedImageRectWidth;
+		swapchainCreateInfo.height	  = viewConfig.recommendedImageRectHeight;
+		swapchainCreateInfo.mipCount  = 1;
+		swapchainCreateInfo.faceCount = 1;
+		swapchainCreateInfo.sampleCount =
+			viewConfig.recommendedSwapchainSampleCount;
+		swapchainCreateInfo.usageFlags = XR_SWAPCHAIN_USAGE_SAMPLED_BIT
+			| XR_SWAPCHAIN_USAGE_COLOR_ATTACHMENT_BIT;
+
+		XrSwapchain swapchain;
+		auto session = dynamic_cast<evan::XrDeviceBackend *>(
+						   deviceContext.getDeviceBackend().get())
+						   ->_session;
+		XrResult result =
+			xrCreateSwapchain(session, &swapchainCreateInfo, &swapchain);
+		if (result != XR_SUCCESS) {
+			this->getLogger().error()
+				<< "Failed to create swapchain for view configuration "
+				   "with error code: "
+				<< result;
+			continue;
+		}
+		evan::XrSwapchainImage::CreateXrSwapchainImageProperties properties {
+			.swapchain	   = swapchain,
+			.createInfo	   = swapchainCreateInfo,
+			.renderPass	   = _renderPass,
+			.deviceContext = deviceContext
+		};
+		_swapchainImages.push_back(
+			std::make_shared<XrSwapchainImage>(properties));
+	}
+	this->getLogger().info()
+		<< "Finished recreating swapchain and associated resources for XrSwapchainContext";
+}
+
 VkResult evan::XrSwapchainContext::aquireImage(
 	uint32_t index, VkDevice device, VkSemaphore imageAvailableSemaphore,
 	VkFence inFlightFence, uint32_t &imageIndex)

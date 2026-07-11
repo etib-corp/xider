@@ -100,12 +100,8 @@ void evan::Renderer::drawFrame(const DeviceContext &deviceContext,
 		swapchainContext.waitForImage(i);
 
 		if (result == VK_ERROR_OUT_OF_DATE_KHR) {
-			// The swapchain is out of date (e.g. the window was resized) and
-			// must be recreated.
-			this->getLogger().warning()
-				<< "Swapchain is out of date. Continuing frame rendering. "
-				   "Recreate the swapchain to fix this issue.";
-			continue;
+			swapchainContext.recreateSwapchain(deviceContext,
+											 swapchainContext.getRenderPass());
 		} else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
 			this->getLogger().error() << "Failed to acquire swap chain image! "
 										 "Skipping frame rendering.";
