@@ -53,42 +53,30 @@ namespace guillaume::systems
 		if (!mouseMotionEvent)
 			return;
 
-		this->getLogger().error()
+		this->getLogger().info()
 			<< "MouseMotion::update: Mouse motion event received: "
 			<< mouseMotionEvent->getPosition();
 
 		const auto &position = mouseMotionEvent->getPosition();
-		auto ray			 = _engine->getView().viewPointToRay(position);
+
+		utility::graphic::RayF ray;
+		try {
+			ray = _engine->getView().viewPointToRay(position);
+		} catch (const std::out_of_range &exception) {
+			this->getLogger().error()
+				<< "MouseMotion::update: " << exception.what();
+			return;
+		}
 
 		auto &transform = getComponent<components::Transform>(entityIdentifier);
 		auto &bound		= getComponent<components::Bound>(entityIdentifier);
 		auto &mouseHoverInteraction =
 			getComponent<components::MouseHoverInteraction>(entityIdentifier);
 
-		auto centeredPose = transform.getPose();
-		centeredPose.setPosition(
-			transform.getPose().getPosition()
-			+ transform.getPose().getOrientation().getRight()
-				* (bound.getWidth() * 0.5f)
-			+ transform.getPose().getOrientation().getUp()
-				* (bound.getHeight() * 0.5f));
-
 		const auto size =
 			utility::math::Vector2F({ bound.getWidth(), bound.getHeight() });
-		const bool isIntersecting = ray.intersectRectangle(centeredPose, size);
-
-		getLogger().error() << "MouseMotion::update: TopLeft pose of entity: "
-							<< transform.getPose();
-		getLogger().error()
-			<< "MouseMotion::update: Entity size: " << bound.getWidth() << "x"
-			<< bound.getHeight();
-		getLogger().error()
-			<< "MouseMotion::update: Center pose of entity: " << centeredPose;
-		getLogger().error()
-			<< "MouseMotion::update: View: " << _engine->getView();
-		getLogger().error()
-			<< "MouseMotion::update: Ray origin: " << ray.getOrigin()
-			<< ", direction: " << ray.getDirection();
+		const bool isIntersecting =
+			ray.intersectRectangle(transform.getPose(), size);
 
 		if (isIntersecting) {
 			if (!mouseHoverInteraction.isHovered()) {

@@ -433,17 +433,23 @@ namespace utility::graphic
 		Ray<ViewComponentType> viewRay(ViewComponentType ndcX,
 									   ViewComponentType ndcY) const
 		{
-			const ViewComponentType horizontalOffset =
-				ndcX >= ViewComponentType {}
-				? ndcX * std::tan(_fieldOfView.getRight())
-				: ndcX * std::tan(_fieldOfView.getLeft());
-			const ViewComponentType verticalOffset =
-				ndcY >= ViewComponentType {}
-				? ndcY * std::tan(_fieldOfView.getUp())
-				: ndcY * std::tan(_fieldOfView.getDown());
+			const auto tx0 = std::tan(_fieldOfView.getLeft());
+			const auto tx1 = std::tan(_fieldOfView.getRight());
+			const auto ty0 = std::tan(_fieldOfView.getDown());
+			const auto ty1 = std::tan(_fieldOfView.getUp());
 
-			const auto rayDirection = (getForward() + right() * horizontalOffset
-									   + getUp() * verticalOffset);
+			const ViewComponentType horizontalOffset =
+				((ndcX + ViewComponentType { 1 }) * ViewComponentType { 0.5 })
+					* (tx1 - tx0)
+				+ tx0;
+
+			const ViewComponentType verticalOffset =
+				((ndcY + ViewComponentType { 1 }) * ViewComponentType { 0.5 })
+					* (ty1 - ty0)
+				+ ty0;
+
+			const auto rayDirection = getForward() + right() * horizontalOffset
+				+ getUp() * verticalOffset;
 
 			return Ray<ViewComponentType>(_pose.getPosition(),
 										  math::normalize(rayDirection));
@@ -459,7 +465,8 @@ namespace utility::graphic
 		{
 			if (point.x < 0 || point.y < 0 || point.x >= _viewportSize.x
 				|| point.y >= _viewportSize.y) {
-				throw std::out_of_range("Point is outside of viewport bounds");
+				throw std::out_of_range(
+					"View point is outside of viewport bounds");
 			}
 
 			const ViewComponentType ndcX =

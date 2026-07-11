@@ -40,7 +40,7 @@ std::shared_ptr<evan::ASwapchainContext>
 	auto swapchainContext =
 		std::make_shared<DesktopSwapchainContext>(deviceContext, _window);
 
-	const float aspect		   = 2560.0f / 1440.0f;
+	const float aspect		   = 1280.0f / 720.0f;
 	const float halfVertical   = static_cast<float>(M_PI_4);
 	const float halfHorizontal = std::atan(std::tan(halfVertical) * aspect);
 

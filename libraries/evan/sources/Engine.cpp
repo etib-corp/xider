@@ -217,7 +217,7 @@ utility::graphic::ViewF evan::Engine::getView(void) const
 		extractOrientationFromViewMatrix(viewMatrix)
 	};
 	auto fov		  = _swapchainContext->getFieldOfView();
-	auto viewportSize = _swapchainContext->getViewportSize();
+	auto viewportSize = utility::math::Vector2F { 1280, 720 };
 
 	return utility::graphic::ViewF { pose, fov, viewportSize };
 }
@@ -366,7 +366,8 @@ void evan::Engine::handleViewportInput(
 
 		if (eventType == typeid(utility::event::HandMotionEvent)) {
 			std::shared_ptr<utility::event::HandMotionEvent> handMotionEvent =
-				std::dynamic_pointer_cast<utility::event::HandMotionEvent>(event);
+				std::dynamic_pointer_cast<utility::event::HandMotionEvent>(
+					event);
 			if (handMotionEvent) {
 				handleHandMotionEvent(handMotionEvent, position, orientation,
 									  movementSpeed, rotationSpeed, _deltaTime);
@@ -456,6 +457,27 @@ void evan::Engine::handleMouseMotionEvent(
 	utility::graphic::OrientationF &orientation, float rotationSpeed,
 	float deltaTime)
 {
+	static size_t idObject =
+		-1;	   // Store the Ray object ID for the hand motion event
+
+	if (idObject != -1) {
+		this->removeObject(idObject);
+		idObject = -1;
+	}
+
+	utility::graphic::RayF ray;
+	try {
+		ray = getView().viewPointToRay(lastMousePosition);
+	} catch (const std::out_of_range &exception) {
+		this->getLogger().error()
+			<< "MouseButton::update: " << exception.what();
+		return;
+	}
+
+	utility::graphic::Mesh rayMesh =
+		ray.convertToMesh(2.0f, 0.01f, 16, { 255, 0, 0, 255 });
+	idObject = this->addMesh(rayMesh, "mesh_material");
+
 	if (!isRightMouseButtonPressed) {
 		return;
 	}
@@ -505,8 +527,9 @@ void evan::Engine::handleHandMotionEvent(
 	handRay.setOrigin(handMotionEvent->getAim().getPosition());
 	handRay.setDirection(
 		handMotionEvent->getAim().getOrientation().getForward());
-	utility::graphic::Mesh rayMesh = handRay.convertToMesh(10.0f, 0.01f, 16);
-	idObject					   = this->addMesh(rayMesh, "mesh_material");
+	utility::graphic::Mesh rayMesh =
+		handRay.convertToMesh(10.0f, 0.01f, 16, { 0, 255, 0, 255 });
+	idObject = this->addMesh(rayMesh, "mesh_material");
 }
 
 utility::graphic::PositionF evan::Engine::extractPositionFromViewMatrix(

@@ -53,7 +53,7 @@ namespace guillaume::systems
 		if (!mouseButtonEvent)
 			return;
 
-		this->getLogger().error()
+		this->getLogger().info()
 			<< "MouseButton::update: Mouse button event received: "
 			<< mouseButtonEvent->getPosition();
 
@@ -62,7 +62,15 @@ namespace guillaume::systems
 			return;
 
 		const auto &position = mouseButtonEvent->getPosition();
-		auto ray			 = _engine->getView().viewPointToRay(position);
+
+		utility::graphic::RayF ray;
+		try {
+			ray = _engine->getView().viewPointToRay(position);
+		} catch (const std::out_of_range &exception) {
+			this->getLogger().error()
+				<< "MouseButton::update: " << exception.what();
+			return;
+		}
 
 		auto &transform = this->template getComponent<components::Transform>(
 			entityIdentifier);
@@ -72,17 +80,10 @@ namespace guillaume::systems
 			this->template getComponent<components::MouseButtonInteraction>(
 				entityIdentifier);
 
-		const utility::graphic::PositionF center(
-			transform.getPose().getPosition().x + bound.getWidth() / 2.0f,
-			transform.getPose().getPosition().y + bound.getHeight() / 2.0f,
-			transform.getPose().getPosition().z);
-
-		auto centeredPose = transform.getPose();
-		centeredPose.setPosition(center);
-
 		const auto size =
 			utility::math::Vector2F({ bound.getWidth(), bound.getHeight() });
-		const bool isIntersecting  = ray.intersectRectangle(centeredPose, size);
+		const bool isIntersecting =
+			ray.intersectRectangle(transform.getPose(), size);
 		const bool isButtonPressed = mouseButtonEvent->isButtonPressed();
 
 		if (isButtonPressed && isIntersecting) {

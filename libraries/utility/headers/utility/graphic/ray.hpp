@@ -314,28 +314,47 @@ namespace utility::graphic
 		bool intersectRectangle(const RectanglePoseType &rectanglePose,
 								const math::Vector2F &rectangleSize) const
 		{
-			const auto rectangleCenter		= rectanglePose.getPosition();
 			const auto rectangleOrientation = rectanglePose.getOrientation();
 
-			math::Vector<RayComponentType, 3> planeNormal =
+			const math::Vector<RayComponentType, 3> right =
+				rectangleOrientation.getRight();
+			const math::Vector<RayComponentType, 3> up =
+				rectangleOrientation.getUp();
+			const math::Vector<RayComponentType, 3> planeNormal =
 				rectangleOrientation.getForward();
+
+			const RayComponentType halfWidth =
+				static_cast<RayComponentType>(rectangleSize[0])
+				/ RayComponentType { 2 };
+			const RayComponentType halfHeight =
+				static_cast<RayComponentType>(rectangleSize[1])
+				/ RayComponentType { 2 };
+
+			const math::Vector<RayComponentType, 3> topLeft =
+				math::Vector<RayComponentType, 3>(rectanglePose.getPosition());
+
+			// Top-left -> center
+			// Use -up because your UI placement appears to grow downward in Y
+			const math::Vector<RayComponentType, 3> rectangleCenter =
+				topLeft + right * halfWidth - up * halfHeight;
 
 			const RayComponentType denominator =
 				math::dot(_direction, planeNormal);
 
 			if (denominator == RayComponentType {}) {
-				math::Vector<RayComponentType, 3> toOrigin =
+				const math::Vector<RayComponentType, 3> toOrigin =
 					math::Vector<RayComponentType, 3>(_origin)
-					- math::Vector<RayComponentType, 3>(rectangleCenter);
+					- rectangleCenter;
+
 				if (math::dot(toOrigin, planeNormal) == RayComponentType {}) {
 					return true;
 				}
 				return false;
 			}
 
-			math::Vector<RayComponentType, 3> toCenter =
-				math::Vector<RayComponentType, 3>(rectangleCenter)
-				- math::Vector<RayComponentType, 3>(_origin);
+			const math::Vector<RayComponentType, 3> toCenter =
+				rectangleCenter - math::Vector<RayComponentType, 3>(_origin);
+
 			const RayComponentType t =
 				math::dot(toCenter, planeNormal) / denominator;
 
@@ -343,23 +362,13 @@ namespace utility::graphic
 				return false;
 			}
 
-			math::Vector<RayComponentType, 3> intersectionPoint = pointAt(t);
-			math::Vector<RayComponentType, 3> localPoint = intersectionPoint
-				- math::Vector<RayComponentType, 3>(rectangleCenter);
+			const math::Vector<RayComponentType, 3> intersectionPoint =
+				pointAt(t);
+			const math::Vector<RayComponentType, 3> localPoint =
+				intersectionPoint - rectangleCenter;
 
-			math::Vector<RayComponentType, 3> right =
-				rectangleOrientation.getRight();
-			math::Vector<RayComponentType, 3> up = rectangleOrientation.getUp();
-
-			RayComponentType rightCoord = math::dot(localPoint, right);
-			RayComponentType upCoord	= math::dot(localPoint, up);
-
-			RayComponentType halfWidth =
-				static_cast<RayComponentType>(rectangleSize[0])
-				/ RayComponentType { 2 };
-			RayComponentType halfHeight =
-				static_cast<RayComponentType>(rectangleSize[1])
-				/ RayComponentType { 2 };
+			const RayComponentType rightCoord = math::dot(localPoint, right);
+			const RayComponentType upCoord	  = math::dot(localPoint, up);
 
 			return (rightCoord >= -halfWidth && rightCoord <= halfWidth
 					&& upCoord >= -halfHeight && upCoord <= halfHeight);
@@ -372,8 +381,9 @@ namespace utility::graphic
 		 * @param segments Number of segments around the circumference.
 		 * @return Mesh representing the ray as a cylinder.
 		 */
-		utility::graphic::Mesh convertToMesh(float length, float radius,
-											 int segments) const
+		utility::graphic::Mesh convertToMesh(
+			float length, float radius, int segments,
+			utility::graphic::Color32Bit color = { 255, 255, 255, 255 }) const
 		{
 			utility::graphic::Mesh mesh({}, {});
 
@@ -407,7 +417,7 @@ namespace utility::graphic
 
 				utility::graphic::VertexF vertex;
 
-				vertex.setColor({ 255, 255, 255, 255 });
+				vertex.setColor(color);
 
 				auto p0 = start + offset0;
 				auto p1 = start + offset1;

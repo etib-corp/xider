@@ -69,17 +69,9 @@ namespace guillaume::systems
 			this->template getComponent<components::HandButtonInteraction>(
 				entityIdentifier);
 
-		const utility::graphic::PositionF center(
-			transform.getPose().getPosition().x + bound.getWidth() / 2.0f,
-			transform.getPose().getPosition().y + bound.getHeight() / 2.0f,
-			transform.getPose().getPosition().z);
-
-		auto centeredPose = transform.getPose();
-		centeredPose.setPosition(center);
-
 		const auto size =
 			utility::math::Vector2F({ bound.getWidth(), bound.getHeight() });
-		const bool isIntersecting  = ray.intersectRectangle(centeredPose, size);
+		const bool isIntersecting  = ray.intersectRectangle(transform.getPose(), size);
 		const bool isButtonPressed = handButtonEvent->isButtonPressed();
 
 		if (isButtonPressed && isIntersecting) {
