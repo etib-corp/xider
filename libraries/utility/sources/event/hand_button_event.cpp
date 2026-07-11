@@ -96,4 +96,45 @@ namespace utility::event
 		return _isClicked;
 	}
 
+	std::ostream &operator<<(std::ostream &stream,
+							 const HandButtonEvent::Button button)
+	{
+		switch (button) {
+			case HandButtonEvent::Button::Unknown:
+				stream << "Unknown";
+				break;
+			case HandButtonEvent::Button::A:
+				stream << "A";
+				break;
+			case HandButtonEvent::Button::B:
+				stream << "B";
+				break;
+			case HandButtonEvent::Button::X:
+				stream << "X";
+				break;
+			case HandButtonEvent::Button::Y:
+				stream << "Y";
+				break;
+			case HandButtonEvent::Button::Menu:
+				stream << "Menu";
+				break;
+			case HandButtonEvent::Button::System:
+				stream << "System";
+				break;
+		}
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream,
+							 const HandButtonEvent &handButtonEvent)
+	{
+		stream << "HandButtonEvent("
+			   << "HandType: " << handButtonEvent.getHandType() << ", "
+			   << "Button: " << handButtonEvent.getButton() << ", "
+			   << "Touched: "
+			   << (handButtonEvent.isTouched() ? "true" : "false") << ", "
+			   << "Clicked: "
+			   << (handButtonEvent.isButtonPressed() ? "true" : "false") << ")";
+		return stream;
+	}
 }	 // namespace utility::event

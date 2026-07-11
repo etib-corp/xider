@@ -52,8 +52,7 @@ namespace guillaume::systems
 			return;
 
 		this->getLogger().error()
-			<< "HandButton::update: Hand button event received: "
-			<< handButtonEvent->getAim();
+			<< "HandButton::update: event received: " << *handButtonEvent;
 
 		const auto button = handButtonEvent->getButton();
 		if (button == utility::event::HandButtonEvent::Button::Unknown)
@@ -71,7 +70,8 @@ namespace guillaume::systems
 
 		const auto size =
 			utility::math::Vector2F({ bound.getWidth(), bound.getHeight() });
-		const bool isIntersecting  = ray.intersectRectangle(transform.getPose(), size);
+		const bool isIntersecting =
+			ray.intersectRectangle(transform.getPose(), size);
 		const bool isButtonPressed = handButtonEvent->isButtonPressed();
 
 		if (isButtonPressed && isIntersecting) {

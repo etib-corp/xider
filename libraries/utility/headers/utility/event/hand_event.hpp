@@ -25,6 +25,7 @@
 #include <concepts>
 #include <memory>
 #include <type_traits>
+#include <ostream>
 
 #include "utility/event/event.hpp"
 
@@ -49,8 +50,8 @@ namespace utility::event
 		 */
 		enum class HandType {
 			Unknown = 0, /**< Unknown hand */
-			Left	= 0, /**< Left hand */
-			Right	= 1, /**< Right hand */
+			Left	= 1, /**< Left hand */
+			Right	= 2, /**< Right hand */
 		};
 
 		private:
@@ -146,4 +147,11 @@ namespace utility::event
 	template<typename Type>
 	concept InheritFromHandEvent = std::is_base_of_v<HandEvent, Type>;
 
+	/**
+	 * @brief Stream insertion operator for HandEvent::HandType.
+	 * @param stream The output stream.
+	 * @param handType The hand type to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const HandEvent::HandType handType);
 }	 // namespace utility::event

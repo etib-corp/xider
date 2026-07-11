@@ -149,12 +149,6 @@ namespace evan
 		bool removeObject(size_t objectID);
 
 		/**
-		 * @brief Set the mirrored view state.
-		 * @param view The new view.
-		 */
-		void setView(const utility::graphic::ViewF &view);
-
-		/**
 		 * @brief Get the mirrored view state.
 		 * @return The current view.
 		 */
@@ -584,14 +578,18 @@ namespace evan
 		/**
 		 * @brief Processes keyboard events for camera movement.
 		 * @param keyboardEvent The keyboard event to process.
-		 * @param viewMatrix Current view matrix.
+		 * @param orientation Current camera orientation (used for movement
+		 * direction).
 		 * @param position Current camera position (modified in place).
 		 * @param movementSpeed Movement speed multiplier.
+		 * @param deltaTime Time elapsed since the last frame (used for smooth
+		 * movement).
 		 */
 		void handleKeyboardMovement(
 			const std::shared_ptr<utility::event::KeyboardEvent> &keyboardEvent,
-			const glm::mat4 &viewMatrix, utility::graphic::PositionF &position,
-			float movementSpeed, float deltaTime);
+			const utility::graphic::OrientationF &orientation,
+			utility::graphic::PositionF &position, float movementSpeed,
+			float deltaTime);
 
 		/**
 		 * @brief Processes mouse button events for rotation state.

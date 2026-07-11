@@ -23,6 +23,7 @@
 #pragma once
 
 #include <memory>
+#include <ostream>
 
 #include "utility/event/hand_event.hpp"
 
@@ -69,5 +70,14 @@ namespace utility::event
 		 */
 		~HandMotionEvent(void) override;
 	};
+
+	/**
+	 * @brief Stream insertion operator for HandMotionEvent.
+	 * @param stream The output stream.
+	 * @param handMotionEvent The HandMotionEvent to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream,
+							 const HandMotionEvent &handMotionEvent);
 
 }	 // namespace utility::event

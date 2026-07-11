@@ -53,9 +53,8 @@ namespace guillaume::systems
 		if (!mouseMotionEvent)
 			return;
 
-		this->getLogger().info()
-			<< "MouseMotion::update: Mouse motion event received: "
-			<< mouseMotionEvent->getPosition();
+		this->getLogger().error()
+			<< "MouseMotion::update: event received: " << *mouseMotionEvent;
 
 		const auto &position = mouseMotionEvent->getPosition();
 

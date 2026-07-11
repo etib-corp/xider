@@ -372,7 +372,7 @@ namespace utility::graphic
 		 * @brief Compute view right direction from orientation basis.
 		 * @return Normalized right direction vector.
 		 */
-		math::Vector<ViewComponentType, 3> right(void) const
+		math::Vector<ViewComponentType, 3> getRight(void) const
 		{
 			return math::normalize(rotateVectorByRotation(
 				math::Vector<ViewComponentType, 3> { ViewComponentType { 1 },
@@ -448,8 +448,8 @@ namespace utility::graphic
 					* (ty1 - ty0)
 				+ ty0;
 
-			const auto rayDirection = getForward() + right() * horizontalOffset
-				+ getUp() * verticalOffset;
+			const auto rayDirection = getForward()
+				+ getRight() * horizontalOffset + getUp() * verticalOffset;
 
 			return Ray<ViewComponentType>(_pose.getPosition(),
 										  math::normalize(rayDirection));
@@ -560,6 +560,46 @@ namespace utility::graphic
 		math::Vector2F getViewportSize(void) const
 		{
 			return _viewportSize;
+		}
+
+		/**
+		 * @brief Convert view to a GLM-compatible 4x4 view matrix.
+		 * @return 4x4 view matrix in column-major order.
+		 */
+		utility::math::Matrix<ViewComponentType, 4, 4> toViewMatrix(void) const
+		{
+			const auto right	= getRight();
+			const auto up		= getUp();
+			const auto forward	= getForward();
+			const auto position = _pose.getPosition();
+
+			utility::math::Matrix<ViewComponentType, 4, 4> view;
+
+			// GLM is column-major: view[col][row]
+			view[0][0] = static_cast<ViewComponentType>(right[0]);
+			view[0][1] = static_cast<ViewComponentType>(up[0]);
+			view[0][2] = static_cast<ViewComponentType>(-forward[0]);
+			view[0][3] = static_cast<ViewComponentType>(0);
+
+			view[1][0] = static_cast<ViewComponentType>(right[1]);
+			view[1][1] = static_cast<ViewComponentType>(up[1]);
+			view[1][2] = static_cast<ViewComponentType>(-forward[1]);
+			view[1][3] = static_cast<ViewComponentType>(0);
+
+			view[2][0] = static_cast<ViewComponentType>(right[2]);
+			view[2][1] = static_cast<ViewComponentType>(up[2]);
+			view[2][2] = static_cast<ViewComponentType>(-forward[2]);
+			view[2][3] = static_cast<ViewComponentType>(0);
+
+			view[3][0] =
+				-static_cast<ViewComponentType>(math::dot(right, position));
+			view[3][1] =
+				-static_cast<ViewComponentType>(math::dot(up, position));
+			view[3][2] =
+				static_cast<ViewComponentType>(math::dot(forward, position));
+			view[3][3] = static_cast<ViewComponentType>(1);
+
+			return view;
 		}
 	};
 
