@@ -379,6 +379,7 @@ namespace utility::graphic
 		 * @param length Length of the ray mesh.
 		 * @param radius Radius of the ray mesh.
 		 * @param segments Number of segments around the circumference.
+		 * @param color Color of the mesh vertices.
 		 * @return Mesh representing the ray as a cylinder.
 		 */
 		utility::graphic::Mesh convertToMesh(

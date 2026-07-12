@@ -184,6 +184,8 @@ namespace utility::graphic
 		 * @param pose View world-space position and orientation.
 		 * @param fov View field-of-view parameters.
 		 * @param viewportSize Viewport size in pixels (width, height).
+		 * @param nearPlane Near clipping plane distance.
+		 * @param farPlane Far clipping plane distance.
 		 * @throws std::invalid_argument if perspective values or quaternion are
 		 * invalid.
 		 */
@@ -576,8 +578,6 @@ namespace utility::graphic
 		/**
 		 * @brief Build a perspective projection matrix from per-side field of
 		 * view angles.
-		 * @param nearPlane Positive distance to the near clipping plane.
-		 * @param farPlane Positive distance to the far clipping plane.
 		 * @return 4x4 projection matrix in column-major order.
 		 * @throws std::invalid_argument if clipping planes are invalid or FOV
 		 * produces a degenerate frustum.
