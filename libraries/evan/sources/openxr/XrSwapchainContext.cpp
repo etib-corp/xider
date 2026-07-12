@@ -175,17 +175,16 @@ glm::mat4 evan::XrSwapchainContext::getProjection(std::size_t index) const
 	return getView(index).getProjectionMatrix();
 }
 
-utility::graphic::ViewF &
+utility::graphic::ViewF
 	evan::XrSwapchainContext::getView(std::size_t index) const
 {
 	utility::graphic::ViewF view;
 	const auto &xrPose = _views[index].pose;
-	utility::graphic::PositionF position { xrPose.position.x, xrPose.position.y,
-										   xrPose.position.z };
-	utility::graphic::OrientationF orientation { xrPose.orientation.x,
-												 xrPose.orientation.y,
-												 xrPose.orientation.z,
-												 xrPose.orientation.w };
+	utility::graphic::PositionF position(xrPose.position.x, xrPose.position.y,
+										 xrPose.position.z);
+	utility::graphic::OrientationF orientation(
+		xrPose.orientation.x, xrPose.orientation.y, xrPose.orientation.z,
+		xrPose.orientation.w);
 	utility::graphic::PoseF pose(position, orientation);
 	utility::graphic::FieldOfViewF fov(
 		_views[index].fov.angleUp, _views[index].fov.angleDown,
@@ -193,8 +192,7 @@ utility::graphic::ViewF &
 
 	view.setPose(pose);
 	view.setFieldOfView(fov);
-	view.setNearPlane(_nearPlane);
-	view.setFarPlane(_farPlane);
+	view.setClippingPlanes(_nearPlane, _farPlane);
 
 	return view;
 }
