@@ -89,8 +89,8 @@ void evan::XrSwapchainContext::destroy(VkDevice device)
 void evan::XrSwapchainContext::recreateSwapchain(
 	const DeviceContext &deviceContext, VkRenderPass renderpass)
 {
-	this->getLogger().info()
-		<< "Recreating swapchain and associated resources for XrSwapchainContext";
+	this->getLogger().info() << "Recreating swapchain and associated resources "
+								"for XrSwapchainContext";
 
 	for (const auto &swapchainImage: _swapchainImages) {
 		this->getLogger().info()
@@ -139,8 +139,8 @@ void evan::XrSwapchainContext::recreateSwapchain(
 		_swapchainImages.push_back(
 			std::make_shared<XrSwapchainImage>(properties));
 	}
-	this->getLogger().info()
-		<< "Finished recreating swapchain and associated resources for XrSwapchainContext";
+	this->getLogger().info() << "Finished recreating swapchain and associated "
+								"resources for XrSwapchainContext";
 }
 
 VkResult evan::XrSwapchainContext::aquireImage(

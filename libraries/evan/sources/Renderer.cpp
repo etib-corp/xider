@@ -100,8 +100,8 @@ void evan::Renderer::drawFrame(const DeviceContext &deviceContext,
 		swapchainContext.waitForImage(i);
 
 		if (result == VK_ERROR_OUT_OF_DATE_KHR) {
-			swapchainContext.recreateSwapchain(deviceContext,
-											 swapchainContext.getRenderPass());
+			swapchainContext.recreateSwapchain(
+				deviceContext, swapchainContext.getRenderPass());
 		} else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
 			this->getLogger().error() << "Failed to acquire swap chain image! "
 										 "Skipping frame rendering.";

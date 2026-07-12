@@ -336,7 +336,7 @@ namespace utility::graphic
 			// Top-left -> center
 			// Use -up because your UI placement appears to grow downward in Y
 			const math::Vector<RayComponentType, 3> rectangleCenter =
-				topLeft + right * halfWidth - up * halfHeight;
+				topLeft + right * halfWidth + up * halfHeight;
 
 			const RayComponentType denominator =
 				math::dot(_direction, planeNormal);

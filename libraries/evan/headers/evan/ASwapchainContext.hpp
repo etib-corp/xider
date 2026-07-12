@@ -98,18 +98,22 @@ namespace evan
 		 *
 		 * This pure virtual function must be implemented by derived classes to
 		 * handle the recreation of the swapchain and any associated resources
-		 * when the swapchain becomes out of date or needs to be recreated due to
-		 * changes in the window size or other factors. The function takes a
+		 * when the swapchain becomes out of date or needs to be recreated due
+		 * to changes in the window size or other factors. The function takes a
 		 * reference to the DeviceContext instance, which provides access to
-		 * Vulkan resources and synchronization mechanisms, a pointer to the GLFW window,
-		 * and the Vulkan render pass used for rendering operations. Implement
-		 * this function to ensure that the swapchain is properly recreated and that all necessary
-		 * resources are reinitialized for rendering operations.
+		 * Vulkan resources and synchronization mechanisms, a pointer to the
+		 * GLFW window, and the Vulkan render pass used for rendering
+		 * operations. Implement this function to ensure that the swapchain is
+		 * properly recreated and that all necessary resources are reinitialized
+		 * for rendering operations.
 		 *
-		 * @param deviceContext A reference to the DeviceContext instance that provides access to Vulkan resources and synchronization mechanisms.
-		 * @param renderpass The Vulkan render pass that will be used with the swapchain images during rendering operations.
+		 * @param deviceContext A reference to the DeviceContext instance that
+		 * provides access to Vulkan resources and synchronization mechanisms.
+		 * @param renderpass The Vulkan render pass that will be used with the
+		 * swapchain images during rendering operations.
 		 */
-		virtual void recreateSwapchain(const DeviceContext &deviceContext, VkRenderPass renderpass) = 0;
+		virtual void recreateSwapchain(const DeviceContext &deviceContext,
+									   VkRenderPass renderpass) = 0;
 
 		/**
 		 * @brief Retrieves the render pass associated with the swapchain
