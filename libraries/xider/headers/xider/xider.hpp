@@ -28,7 +28,7 @@
 #include <evan/Engine.hpp>
 
 #include "xider/engine.hpp"
-#include "scenes/main.hpp"
+#include "scenes/home.hpp"
 #include "scenes/settings.hpp"
 
 namespace xider
@@ -44,7 +44,7 @@ namespace xider
 	 * event handling across all platforms.
 	 */
 	class XIDER:
-		public guillaume::Application<scenes::Main, scenes::Main,
+		public guillaume::Application<scenes::Home, scenes::Home,
 									  scenes::Settings>
 	{
 		public:

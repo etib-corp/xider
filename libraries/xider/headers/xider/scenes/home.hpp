@@ -28,26 +28,26 @@ namespace xider::scenes
 {
 
 	/**
-	 * @brief Main application scene.
+	 * @brief Home application scene.
 	 *
 	 * Represents the primary scene used by the application, responsible for
 	 * initializing core UI and game elements.
 	 */
-	class Main: public guillaume::Scene
+	class Home: public guillaume::Scene
 	{
 		public:
 		/**
-		 * @brief Construct a new Main scene
+		 * @brief Construct a new Home scene
 		 * @param localStorage Reference to persistent local storage
 		 * @param sessionStorage Reference to per-session storage
 		 */
-		Main(guillaume::LocalStorage &localStorage,
+		Home(guillaume::LocalStorage &localStorage,
 			 guillaume::SessionStorage &sessionStorage);
 
 		/**
-		 * @brief Destroy the Main scene
+		 * @brief Destroy the Home scene
 		 */
-		~Main(void);
+		~Home(void);
 	};
 
 }	 // namespace xider::scenes

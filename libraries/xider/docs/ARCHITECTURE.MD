@@ -13,7 +13,7 @@ XIDER is the application composition layer above Utility, Evan, and Guillaume.
 
 - `xider::XIDER` owns the application shell and the shared engine pointer.
 - `xider::Engine` adapts Evan to the Guillaume engine interface (rendering + events).
-- `xider::scenes::Main` and `xider::scenes::Settings` define the app screens.
+- `xider::scenes::Home` and `xider::scenes::Settings` define the app screens.
 
 ## Runtime Flow
 
