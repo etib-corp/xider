@@ -51,7 +51,7 @@ namespace guillaume::systems
 		if (!handButtonEvent)
 			return;
 
-		this->getLogger().error()
+		this->getLogger().info()
 			<< "HandButton::update: event received: " << *handButtonEvent;
 
 		const auto button = handButtonEvent->getButton();

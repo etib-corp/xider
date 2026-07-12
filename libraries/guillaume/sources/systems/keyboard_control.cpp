@@ -31,7 +31,7 @@ namespace guillaume::systems
 		, event::EventManager<utility::event::KeyboardEvent>(eventBus)
 	{
 	}
-	
+
 	void KeyboardControl::prepare(void)
 	{
 		consumeNextEvent();

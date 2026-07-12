@@ -51,7 +51,7 @@ namespace guillaume::systems
 		if (!handMotionEvent)
 			return;
 
-		this->getLogger().error()
+		this->getLogger().info()
 			<< "HandMotion::update: event received: " << *handMotionEvent;
 
 		auto ray = handMotionEvent->getAim().toForwardRay();

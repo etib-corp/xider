@@ -27,6 +27,7 @@
 #include <string>
 #include <type_traits>
 #include <utility>
+#include <ostream>
 
 #include <glm/matrix.hpp>
 
@@ -95,7 +96,8 @@ namespace utility::math
 		 * square) or zero (if not square).
 		 */
 		Matrix(void)
-			: glm::mat<Cols, Rows, MatrixComponentType>(Cols == Rows ? 1 : 0)
+			: glm::mat<Cols, Rows, MatrixComponentType>(
+				  MatrixComponentType { 0 })
 		{
 		}
 
@@ -438,4 +440,165 @@ namespace utility::math
 	 * @brief Type alias for 4x4 double-precision matrix.
 	 */
 	using Matrix4x4D = Matrix<double, 4, 4>;
+
+	/**
+	 * @brief Stream insertion operator for Matrix2x2F.
+	 * @param stream Output stream.
+	 * @param matrix Matrix to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const Matrix2x2F &matrix);
+
+	/**
+	 * @brief Stream insertion operator for Matrix2x2D.
+	 * @param stream Output stream.
+	 * @param matrix Matrix to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const Matrix2x2D &matrix);
+
+	/**
+	 * @brief Stream insertion operator for Matrix4x4F.
+	 * @param stream Output stream.
+	 * @param matrix Matrix to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const Matrix4x4F &matrix);
+
+	/**
+	 * @brief Stream insertion operator for Matrix4x4D.
+	 * @param stream Output stream.
+	 * @param matrix Matrix to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const Matrix4x4D &matrix);
+
+	/**
+	 * @brief Stream insertion operator for Matrix3x3F.
+	 * @param stream Output stream.
+	 * @param matrix Matrix to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const Matrix3x3F &matrix);
+
+	/**
+	 * @brief Stream insertion operator for Matrix3x3D.
+	 * @param stream Output stream.
+	 * @param matrix Matrix to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const Matrix3x3D &matrix);
+
+	/**
+	 * @brief Stream insertion operator for Matrix3x4F.
+	 * @param stream Output stream.
+	 * @param matrix Matrix to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const Matrix3x4F &matrix);
+
+	/**
+	 * @brief Stream insertion operator for Matrix3x4D.
+	 * @param stream Output stream.
+	 * @param matrix Matrix to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const Matrix3x4D &matrix);
+
+	/**
+	 * @brief Stream insertion operator for Matrix4x3F.
+	 * @param stream Output stream.
+	 * @param matrix Matrix to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const Matrix4x3F &matrix);
+
+	/**
+	 * @brief Stream insertion operator for Matrix4x3D.
+	 * @param stream Output stream.
+	 * @param matrix Matrix to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const Matrix4x3D &matrix);
+
+	/**
+	 * @brief Stream insertion operator for Matrix2x3F.
+	 * @param stream Output stream.
+	 * @param matrix Matrix to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const Matrix2x3F &matrix);
+
+	/**
+	 * @brief Stream insertion operator for Matrix2x3D.
+	 * @param stream Output stream.
+	 * @param matrix Matrix to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const Matrix2x3D &matrix);
+
+	/**
+	 * @brief Stream insertion operator for Matrix2x4F.
+	 * @param stream Output stream.
+	 * @param matrix Matrix to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const Matrix2x4F &matrix);
+
+	/**
+	 * @brief Stream insertion operator for Matrix2x4D.
+	 * @param stream Output stream.
+	 * @param matrix Matrix to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const Matrix2x4D &matrix);
+
+	/**
+	 * @brief Stream insertion operator for Matrix3x2F.
+	 * @param stream Output stream.
+	 * @param matrix Matrix to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const Matrix3x2F &matrix);
+
+	/**
+	 * @brief Stream insertion operator for Matrix3x2D.
+	 * @param stream Output stream.
+	 * @param matrix Matrix to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const Matrix3x2D &matrix);
+
+	/**
+	 * @brief Stream insertion operator for Matrix4x2F.
+	 * @param stream Output stream.
+	 * @param matrix Matrix to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const Matrix4x2F &matrix);
+
+	/**
+	 * @brief Stream insertion operator for Matrix4x2D.
+	 * @param stream Output stream.
+	 * @param matrix Matrix to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const Matrix4x2D &matrix);
+
+	/**
+	 * @brief Stream insertion operator for Matrix4x4F.
+	 * @param stream Output stream.
+	 * @param matrix Matrix to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const Matrix4x4F &matrix);
+
+	/**
+	 * @brief Stream insertion operator for Matrix4x4D.
+	 * @param stream Output stream.
+	 * @param matrix Matrix to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream, const Matrix4x4D &matrix);
+
 }	 // namespace utility::math

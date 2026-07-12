@@ -24,4 +24,324 @@
 
 namespace utility::math
 {
+	std::ostream &operator<<(std::ostream &stream, const Matrix2x2F &matrix)
+	{
+		stream << "Matrix2x2F(";
+		for (std::size_t row = 0; row < 2; ++row) {
+			stream << "[";
+			for (std::size_t col = 0; col < 2; ++col) {
+				stream << matrix[col][row];
+				if (col < 1) {
+					stream << ", ";
+				}
+			}
+			stream << "]";
+			if (row < 1) {
+				stream << ", ";
+			}
+		}
+		stream << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const Matrix2x2D &matrix)
+	{
+		stream << "Matrix2x2D(";
+		for (std::size_t row = 0; row < 2; ++row) {
+			stream << "[";
+			for (std::size_t col = 0; col < 2; ++col) {
+				stream << matrix[col][row];
+				if (col < 1) {
+					stream << ", ";
+				}
+			}
+			stream << "]";
+			if (row < 1) {
+				stream << ", ";
+			}
+		}
+		stream << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const Matrix2x3F &matrix)
+	{
+		stream << "Matrix2x3F(";
+		for (std::size_t row = 0; row < 2; ++row) {
+			stream << "[";
+			for (std::size_t col = 0; col < 3; ++col) {
+				stream << matrix[col][row];
+				if (col < 2) {
+					stream << ", ";
+				}
+			}
+			stream << "]";
+			if (row < 1) {
+				stream << ", ";
+			}
+		}
+		stream << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const Matrix2x3D &matrix)
+	{
+		stream << "Matrix2x3D(";
+		for (std::size_t row = 0; row < 2; ++row) {
+			stream << "[";
+			for (std::size_t col = 0; col < 3; ++col) {
+				stream << matrix[col][row];
+				if (col < 2) {
+					stream << ", ";
+				}
+			}
+			stream << "]";
+			if (row < 1) {
+				stream << ", ";
+			}
+		}
+		stream << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const Matrix3x2F &matrix)
+	{
+		stream << "Matrix3x2F(";
+		for (std::size_t row = 0; row < 3; ++row) {
+			stream << "[";
+			for (std::size_t col = 0; col < 2; ++col) {
+				stream << matrix[col][row];
+				if (col < 1) {
+					stream << ", ";
+				}
+			}
+			stream << "]";
+			if (row < 2) {
+				stream << ", ";
+			}
+		}
+		stream << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const Matrix3x2D &matrix)
+	{
+		stream << "Matrix3x2D(";
+		for (std::size_t row = 0; row < 3; ++row) {
+			stream << "[";
+			for (std::size_t col = 0; col < 2; ++col) {
+				stream << matrix[col][row];
+				if (col < 1) {
+					stream << ", ";
+				}
+			}
+			stream << "]";
+			if (row < 2) {
+				stream << ", ";
+			}
+		}
+		stream << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const Matrix3x3F &matrix)
+	{
+		stream << "Matrix3x3F(";
+		for (std::size_t row = 0; row < 3; ++row) {
+			stream << "[";
+			for (std::size_t col = 0; col < 3; ++col) {
+				stream << matrix[col][row];
+				if (col < 2) {
+					stream << ", ";
+				}
+			}
+			stream << "]";
+			if (row < 2) {
+				stream << ", ";
+			}
+		}
+		stream << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const Matrix3x3D &matrix)
+	{
+		stream << "Matrix3x3D(";
+		for (std::size_t row = 0; row < 3; ++row) {
+			stream << "[";
+			for (std::size_t col = 0; col < 3; ++col) {
+				stream << matrix[col][row];
+				if (col < 2) {
+					stream << ", ";
+				}
+			}
+			stream << "]";
+			if (row < 2) {
+				stream << ", ";
+			}
+		}
+		stream << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const Matrix3x4F &matrix)
+	{
+		stream << "Matrix3x4F(";
+		for (std::size_t row = 0; row < 3; ++row) {
+			stream << "[";
+			for (std::size_t col = 0; col < 4; ++col) {
+				stream << matrix[col][row];
+				if (col < 3) {
+					stream << ", ";
+				}
+			}
+			stream << "]";
+			if (row < 2) {
+				stream << ", ";
+			}
+		}
+		stream << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const Matrix3x4D &matrix)
+	{
+		stream << "Matrix3x4D(";
+		for (std::size_t row = 0; row < 3; ++row) {
+			stream << "[";
+			for (std::size_t col = 0; col < 4; ++col) {
+				stream << matrix[col][row];
+				if (col < 3) {
+					stream << ", ";
+				}
+			}
+			stream << "]";
+			if (row < 2) {
+				stream << ", ";
+			}
+		}
+		stream << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const Matrix4x2F &matrix)
+	{
+		stream << "Matrix4x2F(";
+		for (std::size_t row = 0; row < 4; ++row) {
+			stream << "[";
+			for (std::size_t col = 0; col < 2; ++col) {
+				stream << matrix[col][row];
+				if (col < 1) {
+					stream << ", ";
+				}
+			}
+			stream << "]";
+			if (row < 3) {
+				stream << ", ";
+			}
+		}
+		stream << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const Matrix4x2D &matrix)
+	{
+		stream << "Matrix4x2D(";
+		for (std::size_t row = 0; row < 4; ++row) {
+			stream << "[";
+			for (std::size_t col = 0; col < 2; ++col) {
+				stream << matrix[col][row];
+				if (col < 1) {
+					stream << ", ";
+				}
+			}
+			stream << "]";
+			if (row < 3) {
+				stream << ", ";
+			}
+		}
+		stream << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const Matrix4x3F &matrix)
+	{
+		stream << "Matrix4x3F(";
+		for (std::size_t row = 0; row < 4; ++row) {
+			stream << "[";
+			for (std::size_t col = 0; col < 3; ++col) {
+				stream << matrix[col][row];
+				if (col < 2) {
+					stream << ", ";
+				}
+			}
+			stream << "]";
+			if (row < 3) {
+				stream << ", ";
+			}
+		}
+		stream << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const Matrix4x3D &matrix)
+	{
+		stream << "Matrix4x3D(";
+		for (std::size_t row = 0; row < 4; ++row) {
+			stream << "[";
+			for (std::size_t col = 0; col < 3; ++col) {
+				stream << matrix[col][row];
+				if (col < 2) {
+					stream << ", ";
+				}
+			}
+			stream << "]";
+			if (row < 3) {
+				stream << ", ";
+			}
+		}
+		stream << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const Matrix4x4F &matrix)
+	{
+		stream << "Matrix4x4F(";
+		for (std::size_t row = 0; row < 4; ++row) {
+			stream << "[";
+			for (std::size_t col = 0; col < 4; ++col) {
+				stream << matrix[col][row];
+				if (col < 3) {
+					stream << ", ";
+				}
+			}
+			stream << "]";
+			if (row < 3) {
+				stream << ", ";
+			}
+		}
+		stream << ")";
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream, const Matrix4x4D &matrix)
+	{
+		stream << "Matrix4x4D(";
+		for (std::size_t row = 0; row < 4; ++row) {
+			stream << "[";
+			for (std::size_t col = 0; col < 4; ++col) {
+				stream << matrix[col][row];
+				if (col < 3) {
+					stream << ", ";
+				}
+			}
+			stream << "]";
+			if (row < 3) {
+				stream << ", ";
+			}
+		}
+		stream << ")";
+		return stream;
+	}
+
 }	 // namespace utility::math

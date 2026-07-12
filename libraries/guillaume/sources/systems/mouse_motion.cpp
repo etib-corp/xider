@@ -53,7 +53,7 @@ namespace guillaume::systems
 		if (!mouseMotionEvent)
 			return;
 
-		this->getLogger().error()
+		this->getLogger().info()
 			<< "MouseMotion::update: event received: " << *mouseMotionEvent;
 
 		const auto &position = mouseMotionEvent->getPosition();
@@ -62,7 +62,7 @@ namespace guillaume::systems
 		try {
 			ray = _engine->getView().viewPointToRay(position);
 		} catch (const std::out_of_range &exception) {
-			this->getLogger().error()
+			this->getLogger().warning()
 				<< "MouseMotion::update: " << exception.what();
 			return;
 		}

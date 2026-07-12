@@ -21,9 +21,6 @@ evan::DesktopSwapchainContext::DesktopSwapchainContext(
 		<< "Creating swapchain images for DesktopSwapchainContext...";
 	_swapchainImages.push_back(std::make_shared<DesktopSwapchainImage>(
 		deviceContext, window, _renderPass));
-
-	_view.setPerspective(45.0f, 16.0f / 9.0f);
-	_view.setClippingPlanes(0.1f, 4000.0f);
 }
 
 evan::DesktopSwapchainContext::~DesktopSwapchainContext()

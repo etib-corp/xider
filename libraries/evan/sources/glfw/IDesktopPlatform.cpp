@@ -40,16 +40,15 @@ std::shared_ptr<evan::ASwapchainContext>
 	auto swapchainContext =
 		std::make_shared<DesktopSwapchainContext>(deviceContext, _window);
 
-	const float aspect		   = 1280.0f / 720.0f;
-	const float halfVertical   = static_cast<float>(M_PI_4);
-	const float halfHorizontal = std::atan(std::tan(halfVertical) * aspect);
+	auto viewportSize = swapchainContext->getViewportSize();
+	utility::graphic::ViewF view;
+	view.setViewportSize({ 1280.0f, 720.0f });
+	view.setClippingPlanes(1.0f, 4000.0f);
+	view.setPerspective(M_PI_2, viewportSize.x / viewportSize.y);
 
-	utility::graphic::FieldOfViewF fov(halfVertical, -halfVertical,
-									   -halfHorizontal, halfHorizontal);
+	this->getLogger().error() << "Created view for Desktop platform: " << view;
 
-	for (std::size_t i = 0; i < swapchainContext->getViewCount(); ++i) {
-		swapchainContext->getView(i).setFieldOfView(fov);
-	}
+	swapchainContext->setView(0, view);
 	return swapchainContext;
 }
 

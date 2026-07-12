@@ -277,5 +277,21 @@ namespace evan
 		 * projection layer view.
 		 */
 		std::vector<XrCompositionLayerProjectionView> _projectionLayerViews;
+
+		/**
+		 * The near clipping plane distance for the projection matrix, which is
+		 * used to determine the minimum distance at which objects are rendered
+		 * in the scene. Objects closer than this distance will not be visible
+		 * in the rendered output.
+		 */
+		float _nearPlane;
+
+		/**
+		 * The far clipping plane distance for the projection matrix, which is
+		 * used to determine the maximum distance at which objects are rendered
+		 * in the scene. Objects beyond this distance will not be visible in the
+		 * rendered output.
+		 */
+		float _farPlane;
 	};
 }	 // namespace evan

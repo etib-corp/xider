@@ -17,14 +17,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
 
-void evan::Engine::updateDeltaTime(void)
-{
-	auto currentTime					   = std::chrono::steady_clock::now();
-	std::chrono::duration<float> deltaTime = currentTime - _lastFrameTime;
-	_deltaTime							   = deltaTime.count();
-	_lastFrameTime						   = currentTime;
-}
-
 evan::Engine::Engine(
 	std::shared_ptr<utility::RessourceProvider> ressourceProvider,
 	std::shared_ptr<IPlatform> platform)
@@ -215,29 +207,35 @@ utility::graphic::ViewF evan::Engine::getView(void) const
 		return _swapchainContext->getView(0);
 	}
 
-	auto leftView	= _swapchainContext->getView(0);
-	auto rightView = _swapchainContext->getView(1);
+	const auto leftView	 = _swapchainContext->getView(0);
+	const auto rightView = _swapchainContext->getView(1);
+
+	const auto &leftPose  = leftView.getPose();
+	const auto &rightPose = rightView.getPose();
 
 	utility::graphic::PositionF centerPosition(
-		(leftView.getPose().getPosition() + rightView.getPose().getPosition())
-		* 0.5f);
+		(leftPose.getPosition().getX() + rightPose.getPosition().getX()) * 0.5f,
+		(leftPose.getPosition().getY() + rightPose.getPosition().getY()) * 0.5f,
+		(leftPose.getPosition().getZ() + rightPose.getPosition().getZ())
+			* 0.5f);
 
-	float dot = utility::math::dot(
-		dynamic_cast<const glm::quat &>(leftView.getPose().getOrientation()),
-		dynamic_cast<const glm::quat &>(rightView.getPose().getOrientation()));
+	glm::quat leftQ(leftPose.getOrientation().w, leftPose.getOrientation().x,
+					leftPose.getOrientation().y, leftPose.getOrientation().z);
 
-	auto leftOrientation  = leftView.getPose().getOrientation();
-	auto rightOrientation = rightView.getPose().getOrientation();
+	glm::quat rightQ(rightPose.getOrientation().w, rightPose.getOrientation().x,
+					 rightPose.getOrientation().y,
+					 rightPose.getOrientation().z);
 
-	utility::graphic::OrientationF centerOrientation(utility::math::normalize(
-		utility::math::mix(leftOrientation,
-						   dot < 0.0f ? -rightOrientation : rightOrientation,
-						   0.5f)));
+	glm::quat centerQ = glm::normalize(glm::slerp(leftQ, rightQ, 0.5f));
 
-	utility::graphic::PoseF pose(centerPosition, centerOrientation);
+	utility::graphic::OrientationF centerOrientation(centerQ.x, centerQ.y,
+													 centerQ.z, centerQ.w);
 
-	return utility::graphic::ViewF { pose, leftView.getFieldOfView(),
-									 leftView.getViewportSize() };
+	utility::graphic::PoseF centerPose(centerPosition, centerOrientation);
+
+	return utility::graphic::ViewF(
+		centerPose, leftView.getFieldOfView(), leftView.getViewportSize(),
+		leftView.getNearPlane(), leftView.getFarPlane());
 }
 
 void evan::Engine::addScene(size_t sceneIndex)
@@ -326,13 +324,12 @@ void evan::Engine::switchScene(size_t sceneIndex)
 void evan::Engine::handleViewportInput(
 	const std::vector<std::shared_ptr<utility::event::Event>> &events)
 {
-	auto position	 = extractPositionFromViewMatrix(_viewMatrix);
-	auto orientation = extractOrientationFromViewMatrix(_viewMatrix);
+	auto currentView = getView();
+	auto position	 = currentView.getPose().getPosition();
+	auto orientation = currentView.getPose().getOrientation();
 
-	bool isRightMouseButtonPressed				 = _isRightMouseButtonPressed;
-	auto lastMousePosition						 = _lastMousePosition;
-	utility::math::Vector2F currentMousePosition = lastMousePosition;
-	bool hasMousePosition						 = false;
+	bool isRightMouseButtonPressed = _isRightMouseButtonPressed;
+	auto lastMousePosition		   = _lastMousePosition;
 
 	for (const auto &event: events) {
 		if (auto keyboardEvent =
@@ -354,8 +351,6 @@ void evan::Engine::handleViewportInput(
 		if (auto mouseMotionEvent =
 				std::dynamic_pointer_cast<utility::event::MouseMotionEvent>(
 					event)) {
-			currentMousePosition = mouseMotionEvent->getPosition();
-
 			handleMouseMotionEvent(mouseMotionEvent, isRightMouseButtonPressed,
 								   lastMousePosition, orientation, 0.1f,
 								   _deltaTime);
@@ -371,12 +366,17 @@ void evan::Engine::handleViewportInput(
 		}
 	}
 
-	_viewMatrix				   = buildViewMatrix(position, orientation);
 	_isRightMouseButtonPressed = isRightMouseButtonPressed;
 	_lastMousePosition		   = lastMousePosition;
 
+	utility::graphic::PoseF updatedPose(position, orientation);
+
 	for (size_t i = 0; i < _swapchainContext->getViewCount(); ++i) {
-		_swapchainContext->setView(i, _viewMatrix);
+		auto view = _swapchainContext->getView(i);
+		utility::graphic::ViewF updatedView(
+			updatedPose, view.getFieldOfView(), view.getViewportSize(),
+			view.getNearPlane(), view.getFarPlane());
+		_swapchainContext->setView(i, updatedView);
 	}
 }
 
@@ -467,8 +467,11 @@ void evan::Engine::handleMouseMotionEvent(
 		return;
 	}
 
+	this->getLogger().error() << getView();
+	this->getLogger().error() << ray;
+
 	utility::graphic::Mesh rayMesh =
-		ray.convertToMesh(2.0f, 0.001f, 64, { 255, 0, 0, 255 });
+		ray.convertToMesh(10.0f, 0.01f, 16, { 0, 255, 0, 255 });
 	idObject = this->addMesh(rayMesh, "mesh_material");
 
 	if (!isRightMouseButtonPressed) {
@@ -525,46 +528,15 @@ void evan::Engine::handleHandMotionEvent(
 	idObject = this->addMesh(rayMesh, "mesh_material");
 }
 
-utility::graphic::PositionF evan::Engine::extractPositionFromViewMatrix(
-	const glm::mat4 &viewMatrix) const
+void evan::Engine::updateDeltaTime(void)
 {
-	// Position is in the 4th column of the inverse view matrix
-	// For a view matrix V = [R | -R*P], where R is rotation and P is position
-	// The inverse is V^-1 = [R^T | P], so position is in the translation part
-	glm::mat3 rotation	  = glm::mat3(viewMatrix);
-	glm::vec3 translation = glm::vec3(viewMatrix[3]);
-
-	// Extract position by applying inverse rotation to negative translation
-	glm::vec3 position = -glm::transpose(rotation) * translation;
-	return utility::graphic::PositionF(position.x, position.y, position.z);
+	auto currentTime					   = std::chrono::steady_clock::now();
+	std::chrono::duration<float> deltaTime = currentTime - _lastFrameTime;
+	_deltaTime							   = deltaTime.count();
+	_lastFrameTime						   = currentTime;
 }
 
-utility::graphic::OrientationF evan::Engine::extractOrientationFromViewMatrix(
-	const glm::mat4 &viewMatrix) const
+float evan::Engine::getDeltaTime(void) const
 {
-	// Extract rotation matrix from view matrix
-	glm::mat3 rotation = glm::mat3(viewMatrix);
-
-	// View matrix rotation is the inverse of camera orientation
-	// So we need to transpose it to get the camera orientation
-	glm::mat3 cameraRotation = glm::transpose(rotation);
-
-	// Convert to quaternion
-	glm::quat quat = glm::quat(cameraRotation);
-	return utility::graphic::OrientationF(quat.x, quat.y, quat.z, quat.w);
-}
-
-glm::mat4 evan::Engine::buildViewMatrix(
-	const utility::graphic::PositionF &position,
-	const utility::graphic::OrientationF &orientation) const
-{
-	// Build view matrix from position and orientation
-	// View matrix = inverse of camera world matrix
-	glm::quat quat(orientation.w, orientation.x, orientation.y, orientation.z);
-	glm::mat4 cameraWorld = glm::mat4_cast(quat);
-	cameraWorld[3] =
-		glm::vec4(position.getX(), position.getY(), position.getZ(), 1.0f);
-
-	// Return inverse (view matrix)
-	return glm::inverse(cameraWorld);
+	return _deltaTime;
 }

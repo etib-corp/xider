@@ -53,7 +53,7 @@ namespace guillaume::systems
 		if (!mouseButtonEvent)
 			return;
 
-		this->getLogger().error()
+		this->getLogger().info()
 			<< "MouseButton::update: event received: " << *mouseButtonEvent;
 
 		const auto button = mouseButtonEvent->getButton();
@@ -64,9 +64,9 @@ namespace guillaume::systems
 
 		utility::graphic::RayF ray;
 		try {
-			ray = _engine->getView().viewPointToRay(position);	
+			ray = _engine->getView().viewPointToRay(position);
 		} catch (const std::out_of_range &exception) {
-			this->getLogger().error()
+			this->getLogger().warning()
 				<< "MouseButton::update: " << exception.what();
 			return;
 		}

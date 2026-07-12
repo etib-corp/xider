@@ -635,37 +635,6 @@ namespace evan
 			float rotationSpeed, float deltaTime);
 
 		/**
-		 * @brief Extracts position from view matrix.
-		 * @param viewMatrix The view matrix to extract position from.
-		 * @return Camera position in world space.
-		 */
-		utility::graphic::PositionF
-			extractPositionFromViewMatrix(const glm::mat4 &viewMatrix) const;
-
-		/**
-		 * @brief Extracts orientation from view matrix.
-		 * @param viewMatrix The view matrix to extract orientation from.
-		 * @return Camera orientation as quaternion.
-		 */
-		utility::graphic::OrientationF
-			extractOrientationFromViewMatrix(const glm::mat4 &viewMatrix) const;
-
-		/**
-		 * @brief Builds view matrix from position and orientation.
-		 * @param position Camera position.
-		 * @param orientation Camera orientation.
-		 * @return View matrix.
-		 */
-		glm::mat4 buildViewMatrix(
-			const utility::graphic::PositionF &position,
-			const utility::graphic::OrientationF &orientation) const;
-
-		/**
-		 * @brief The current view matrix.
-		 */
-		glm::mat4 _viewMatrix;
-
-		/**
 		 * @brief Tracks the last frame time for delta time calculation.
 		 */
 		std::chrono::steady_clock::time_point _lastFrameTime;
@@ -675,15 +644,11 @@ namespace evan
 		 */
 		float _deltaTime { 0.0f };
 
-		public:
 		/**
 		 * @brief Get the delta time from the last frame in seconds.
 		 * @return Delta time in seconds.
 		 */
-		float getDeltaTime(void) const
-		{
-			return _deltaTime;
-		}
+		float getDeltaTime(void) const;
 
 		/**
 		 * @brief Update the delta time based on current time.

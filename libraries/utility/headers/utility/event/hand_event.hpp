@@ -153,5 +153,6 @@ namespace utility::event
 	 * @param handType The hand type to output.
 	 * @return Reference to the output stream.
 	 */
-	std::ostream &operator<<(std::ostream &stream, const HandEvent::HandType handType);
+	std::ostream &operator<<(std::ostream &stream,
+							 const HandEvent::HandType handType);
 }	 // namespace utility::event

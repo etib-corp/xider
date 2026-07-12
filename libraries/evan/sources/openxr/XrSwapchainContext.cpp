@@ -172,51 +172,30 @@ const std::vector<XrCompositionLayerProjectionView> &
 
 glm::mat4 evan::XrSwapchainContext::getProjection(std::size_t index) const
 {
-	const XrFovf &fov = _views[index].fov;
-	float nearZ		  = 0.1f;
-	float farZ		  = 2000.0f;
-
-	float tanLeft  = tanf(fov.angleLeft);
-	float tanRight = tanf(fov.angleRight);
-	float tanUp	   = tanf(fov.angleUp);
-	float tanDown  = tanf(fov.angleDown);
-
-	float width	 = tanRight - tanLeft;
-	float height = tanUp - tanDown;
-
-	glm::mat4 projection(0.0f);
-	projection[0][0] = 2.0f / width;
-	projection[1][1] = 2.0f / height;
-	projection[2][0] = (tanRight + tanLeft) / width;
-	projection[2][1] = (tanUp + tanDown) / height;
-	projection[2][2] = -farZ / (farZ - nearZ);
-	projection[2][3] = -1.0f;
-	projection[3][2] = -(farZ * nearZ) / (farZ - nearZ);
-
-	// Invert the Y axis for Vulkan's coordinate system
-	projection[1][1] *= -1;
-
-	return projection;
+	return getView(index).getProjectionMatrix();
 }
 
 utility::graphic::ViewF &
 	evan::XrSwapchainContext::getView(std::size_t index) const
 {
 	utility::graphic::ViewF view;
-	const auto &pose = _views[index].pose;
-	utility::graphic::PositionF position { pose.position.x, pose.position.y,
-										   pose.position.z };
-	utility::graphic::OrientationF orientation { pose.orientation.x,
-												 pose.orientation.y,
-												 pose.orientation.z,
-												 pose.orientation.w };
-	utility::graphic::PoseF poseF(position, orientation);
+	const auto &xrPose = _views[index].pose;
+	utility::graphic::PositionF position { xrPose.position.x, xrPose.position.y,
+										   xrPose.position.z };
+	utility::graphic::OrientationF orientation { xrPose.orientation.x,
+												 xrPose.orientation.y,
+												 xrPose.orientation.z,
+												 xrPose.orientation.w };
+	utility::graphic::PoseF pose(position, orientation);
 	utility::graphic::FieldOfViewF fov(
 		_views[index].fov.angleUp, _views[index].fov.angleDown,
 		_views[index].fov.angleLeft, _views[index].fov.angleRight);
 
-	view.setPose(poseF);
+	view.setPose(pose);
 	view.setFieldOfView(fov);
+	view.setNearPlane(_nearPlane);
+	view.setFarPlane(_farPlane);
+
 	return view;
 }
 
@@ -224,6 +203,8 @@ void evan::XrSwapchainContext::setView(std::size_t index,
 									   const utility::graphic::ViewF &view)
 
 {
+	_nearPlane = view.getNearPlane();
+	_farPlane  = view.getFarPlane();
 }
 
 std::size_t evan::XrSwapchainContext::getViewCount(void) const
