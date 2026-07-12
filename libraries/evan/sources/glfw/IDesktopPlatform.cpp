@@ -46,7 +46,7 @@ std::shared_ptr<evan::ASwapchainContext>
 	view.setClippingPlanes(1.0f, 4000.0f);
 	view.setPerspective(M_PI_2, viewportSize.x / viewportSize.y);
 
-	this->getLogger().error() << "Created view for Desktop platform: " << view;
+	this->getLogger().info() << "Created view for Desktop platform: " << view;
 
 	swapchainContext->setView(0, view);
 	return swapchainContext;

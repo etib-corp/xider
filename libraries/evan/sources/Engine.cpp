@@ -462,13 +462,10 @@ void evan::Engine::handleMouseMotionEvent(
 	try {
 		ray = getView().viewPointToRay(currentPosition);
 	} catch (const std::out_of_range &exception) {
-		this->getLogger().error()
+		this->getLogger().warning()
 			<< "MouseButton::update: " << exception.what();
 		return;
 	}
-
-	this->getLogger().error() << getView();
-	this->getLogger().error() << ray;
 
 	utility::graphic::Mesh rayMesh =
 		ray.convertToMesh(10.0f, 0.01f, 16, { 0, 255, 0, 255 });

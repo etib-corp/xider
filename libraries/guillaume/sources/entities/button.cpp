@@ -437,16 +437,12 @@ namespace guillaume::entities
 	{
 		setShape(_shape);
 		setColorStyle(_colorStyle);
-
-		this->getLogger().error() << "Button::hoverHandler called";
 	}
 
 	void Button::unHoverHandler(void)
 	{
 		setShape(_shape);
 		setColorStyle(_colorStyle);
-
-		this->getLogger().error() << "Button::unHoverHandler called";
 	}
 
 	void Button::buttonPressHandler()
