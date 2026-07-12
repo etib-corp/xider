@@ -10,7 +10,7 @@
 #include "evan/DeviceContext.hpp"
 
 evan::DesktopSwapchainContext::DesktopSwapchainContext(
-	const DeviceContext &deviceContext, GLFWwindow *window)
+	const DeviceContext &deviceContext, GLFWwindow *window) : _referenceWindow(window)
 {
 	this->getLogger().info() << "Initializing DesktopSwapchainContext...";
 
@@ -48,6 +48,30 @@ void evan::DesktopSwapchainContext::destroy(VkDevice device)
 									"associated resources...";
 		swapchainImage->destroy(device);
 	}
+}
+
+void evan::DesktopSwapchainContext::recreateSwapchain(
+	const DeviceContext &deviceContext, VkRenderPass renderpass)
+{
+	this->getLogger().info() << "Recreating swapchain and associated resources "
+								"for DesktopSwapchainContext...";
+
+	this->getLogger().info()
+		<< "Destroying existing swapchain images for DesktopSwapchainContext...";
+	for (const auto &swapchainImage: _swapchainImages) {
+		this->getLogger().info() << "Destroying swapchain image and releasing "
+									"associated resources...";
+		swapchainImage->destroy(deviceContext.getDeviceBackend()->_device);
+	}
+
+	this->getLogger().info()
+		<< "Creating new swapchain images for DesktopSwapchainContext...";
+	_swapchainImages.clear();
+
+	auto newSwapchainImage = std::make_shared<DesktopSwapchainImage>(
+		deviceContext, _referenceWindow, renderpass);
+
+	_swapchainImages.push_back(newSwapchainImage);
 }
 
 VkResult evan::DesktopSwapchainContext::aquireImage(

@@ -89,6 +89,26 @@ namespace evan
 		void destroy(VkDevice device) override;
 
 		/**
+		 * @brief Recreates the swapchain and associated resources.
+		 *
+		 * This function is responsible for recreating the swapchain and any
+		 * associated resources when the swapchain becomes out of date or needs
+		 * to be recreated due to changes in the window size or other factors.
+		 * It takes a reference to the DeviceContext instance, which provides
+		 * access to Vulkan resources and synchronization mechanisms. Implement
+		 * this function to ensure that the swapchain is properly recreated and
+		 * that all necessary resources are reinitialized for rendering
+		 * operations.
+		 *
+		 * @param deviceContext A reference to the DeviceContext instance that
+		 * provides access to Vulkan resources and synchronization mechanisms.
+		 * @param renderpass The Vulkan render pass that will be used with the
+		 * swapchain images during rendering operations.
+		 */
+		void recreateSwapchain(const DeviceContext &deviceContext,
+							   VkRenderPass renderpass) override;
+
+		/**
 		 * @brief Acquires the next available image from the swapchain for
 		 * rendering.
 		 *
@@ -242,5 +262,10 @@ namespace evan
 		 * @brief View state for the swapchain context
 		 */
 		utility::graphic::ViewF _view;
+
+		/**
+		 * @brief GLFW reference window for the swapchain context
+		 */
+		GLFWwindow *_referenceWindow;
 	};
 }	 // namespace evan
