@@ -535,42 +535,78 @@ namespace utility::graphic
 			return _viewportSize;
 		}
 
+		inline static utility::math::Matrix<ViewComponentType, 4, 4>
+			InvertRigidBody(
+				const utility::math::Matrix<ViewComponentType, 4, 4> src)
+		{
+			utility::math::Matrix<ViewComponentType, 4, 4> result {};
+			auto result_ptr = &result[0][0];
+			auto src_ptr	= &src[0][0];
+			result_ptr[0]	= src_ptr[0];
+			result_ptr[1]	= src_ptr[4];
+			result_ptr[2]	= src_ptr[8];
+			result_ptr[3]	= 0.0f;
+			result_ptr[4]	= src_ptr[1];
+			result_ptr[5]	= src_ptr[5];
+			result_ptr[6]	= src_ptr[9];
+			result_ptr[7]	= 0.0f;
+			result_ptr[8]	= src_ptr[2];
+			result_ptr[9]	= src_ptr[6];
+			result_ptr[10]	= src_ptr[10];
+			result_ptr[11]	= 0.0f;
+			result_ptr[12] =
+				-(src_ptr[0] * src_ptr[12] + src_ptr[1] * src_ptr[13]
+				  + src_ptr[2] * src_ptr[14]);
+			result_ptr[13] =
+				-(src_ptr[4] * src_ptr[12] + src_ptr[5] * src_ptr[13]
+				  + src_ptr[6] * src_ptr[14]);
+			result_ptr[14] =
+				-(src_ptr[8] * src_ptr[12] + src_ptr[9] * src_ptr[13]
+				  + src_ptr[10] * src_ptr[14]);
+			result_ptr[15] = 1.0f;
+			return result;
+		}
+
 		/**
 		 * @brief Convert view to a GLM-compatible 4x4 view matrix.
 		 * @return 4x4 view matrix in column-major order.
 		 */
 		utility::math::Matrix<ViewComponentType, 4, 4> toViewMatrix(void) const
 		{
-			const auto right	= getRight();
-			const auto up		= getUp();
-			const auto forward	= getForward();
-			const auto position = _pose.getPosition();
+			const auto orientation = _pose.getOrientation();
+			const auto position	   = _pose.getPosition();
 
-			utility::math::Matrix<ViewComponentType, 4, 4> view;
+			utility::math::Matrix<ViewComponentType, 4, 4> view =
+				InvertRigidBody(
+					glm::translate(
+						glm::identity<glm::mat4>(),
+						glm::vec3(position.x, position.y, position.z))
+					* glm::mat4_cast(glm::quat(orientation.w, orientation.x,
+											   orientation.y, orientation.z)));
 
 			// GLM is column-major: view[col][row]
-			view[0][0] = static_cast<ViewComponentType>(right[0]);
-			view[0][1] = static_cast<ViewComponentType>(up[0]);
-			view[0][2] = static_cast<ViewComponentType>(-forward[0]);
-			view[0][3] = static_cast<ViewComponentType>(0);
+			// view[0][0] = static_cast<ViewComponentType>(right[0]);
+			// view[0][1] = static_cast<ViewComponentType>(up[0]);
+			// view[0][2] = static_cast<ViewComponentType>(-forward[0]);
+			// view[0][3] = static_cast<ViewComponentType>(0);
 
-			view[1][0] = static_cast<ViewComponentType>(right[1]);
-			view[1][1] = static_cast<ViewComponentType>(up[1]);
-			view[1][2] = static_cast<ViewComponentType>(-forward[1]);
-			view[1][3] = static_cast<ViewComponentType>(0);
+			// view[1][0] = static_cast<ViewComponentType>(right[1]);
+			// view[1][1] = static_cast<ViewComponentType>(up[1]);
+			// view[1][2] = static_cast<ViewComponentType>(-forward[1]);
+			// view[1][3] = static_cast<ViewComponentType>(0);
 
-			view[2][0] = static_cast<ViewComponentType>(right[2]);
-			view[2][1] = static_cast<ViewComponentType>(up[2]);
-			view[2][2] = static_cast<ViewComponentType>(-forward[2]);
-			view[2][3] = static_cast<ViewComponentType>(0);
+			// view[2][0] = static_cast<ViewComponentType>(right[2]);
+			// view[2][1] = static_cast<ViewComponentType>(up[2]);
+			// view[2][2] = static_cast<ViewComponentType>(-forward[2]);
+			// view[2][3] = static_cast<ViewComponentType>(0);
 
-			view[3][0] =
-				-static_cast<ViewComponentType>(math::dot(right, position));
-			view[3][1] =
-				-static_cast<ViewComponentType>(math::dot(up, position));
-			view[3][2] =
-				static_cast<ViewComponentType>(math::dot(forward, position));
-			view[3][3] = static_cast<ViewComponentType>(1);
+			// view[3][0] =
+			// 	-static_cast<ViewComponentType>(math::dot(right, position));
+			// view[3][1] =
+			// 	-static_cast<ViewComponentType>(math::dot(up, position));
+			// view[3][2] =
+			// 	static_cast<ViewComponentType>(math::dot(forward, position));
+			// view[3][3] = static_cast<ViewComponentType>(1);
 
 			return view;
 		}
@@ -594,7 +630,7 @@ namespace utility::graphic
 			const ViewComponentType width  = tanRight - tanLeft;
 			const ViewComponentType height = tanUp - tanDown;
 
-			utility::math::Matrix<ViewComponentType, 4, 4> projection;
+			utility::math::Matrix<ViewComponentType, 4, 4> projection = {};
 
 			projection[0][0] = static_cast<ViewComponentType>(2) / width;
 			projection[1][1] = static_cast<ViewComponentType>(2) / height;
