@@ -418,9 +418,7 @@ namespace utility::graphic
 				+ ty0;
 
 			const auto rayDirection = getForward()
-				+ getRight() * horizontalOffset
-				+ getUp()
-					* -verticalOffset;	  // Invert Y for NDC to view space
+				+ getRight() * horizontalOffset + getUp() * verticalOffset;
 
 			return Ray<ViewComponentType>(_pose.getPosition(),
 										  math::normalize(rayDirection));
@@ -608,8 +606,8 @@ namespace utility::graphic
 				-(_farPlane * _nearPlane) / (_farPlane - _nearPlane);
 			projection[3][3] = static_cast<ViewComponentType>(0);
 
-			// projection[1][1] *=
-			// 	static_cast<ViewComponentType>(-1);	   // Invert Y for Vulkan
+			projection[1][1] *=
+				static_cast<ViewComponentType>(-1);	   // Invert Y for Vulkan
 
 			return projection;
 		}
