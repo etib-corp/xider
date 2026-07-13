@@ -22,6 +22,7 @@
 
 #include <guillaume/entities/button.hpp>
 #include <guillaume/entities/text.hpp>
+#include <guillaume/entities/model.hpp>
 
 #include "xider/scenes/home.hpp"
 #include "xider/scenes/settings.hpp"
@@ -42,9 +43,19 @@ namespace xider::scenes
 		auto &buttonDirector =
 			getDirectorManager().getDirector<Button::Director>();
 
-		auto &textBuilder = getBuilderManager().getBuilder<guillaume::entities::Text::Builder>();
+		auto &textBuilder =
+			getBuilderManager()
+				.getBuilder<guillaume::entities::Text::Builder>();
+		auto &textDirector =
+			getDirectorManager()
+				.getDirector<guillaume::entities::Text::Director>();
 
-		auto &textDirector = getDirectorManager().getDirector<guillaume::entities::Text::Director>();
+		auto &modelBuilder =
+			getBuilderManager()
+				.getBuilder<guillaume::entities::Model::Builder>();
+		auto &modelDirector =
+			getDirectorManager()
+				.getDirector<guillaume::entities::Model::Director>();
 
 		buttonDirector.makeIconButton(
 			buttonBuilder, nullptr, "Go to Settings", "settings",
@@ -57,6 +68,8 @@ namespace xider::scenes
 
 		textDirector.makeText(textBuilder, nullptr, "Home Scene", 18,
 							  utility::graphic::Color32Bit(255, 255, 255, 255));
+
+		modelDirector.makeModel(modelBuilder, nullptr, "models/teapot.obj");
 	}
 
 	Home::~Home(void)

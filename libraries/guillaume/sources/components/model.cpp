@@ -20,37 +20,22 @@
  SOFTWARE.
  */
 
-#include "guillaume/components/transform.hpp"
+#include "guillaume/components/model.hpp"
 
 namespace guillaume::components
 {
-	Transform &Transform::setPose(const utility::graphic::PoseF &pose)
+	Model &Model::setModelPath(const std::string &path)
 	{
-		if (_pose == pose) {
+		if (_modelPath == path) {
 			return *this;
 		}
-		_pose = pose;
+		_modelPath = path;
 		setHasChanged(true);
 		return *this;
 	}
 
-	Transform &Transform::setScale(const utility::graphic::ScaleF &scale)
+	std::string Model::getModelPath(void) const
 	{
-		if (_scale == scale) {
-			return *this;
-		}
-		_scale = scale;
-		setHasChanged(true);
-		return *this;
-	}
-
-	utility::graphic::PoseF Transform::getPose(void) const
-	{
-		return _pose;
-	}
-
-	utility::graphic::ScaleF Transform::getScale(void) const
-	{
-		return _scale;
+		return _modelPath;
 	}
 }	 // namespace guillaume::components

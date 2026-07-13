@@ -17,6 +17,7 @@
 #include <utility/system_io/file.hpp>
 
 #include <utility/graphic/renderable.hpp>
+#include <utility/graphic/size.hpp>
 
 #include <utility/logging/loggable.hpp>
 #include <utility/logging/default_logger.hpp>
@@ -100,6 +101,13 @@ namespace utility::graphic
 		 */
 		[[nodiscard]] ModelType type() const;
 
+		/**
+		 * @brief Computes the bounding size of the model.
+		 *
+		 * @return The bounding size of the model.
+		 */
+		utility::graphic::SizeF computeBoundingSize(void);
+
 		protected:
 		/**
 		 * @brief Loads a model from a given File containing the model data.
@@ -119,6 +127,8 @@ namespace utility::graphic
 		void loadOBJ(std::shared_ptr<utility::File> modelAsset);
 
 		ModelType _type;	///< The type of the model (e.g., OBJ, FBX, GLTF)
+		utility::graphic::SizeF
+			_boundingBox {};	///< The bounding box of the model
 
 		using Loggable::getLogger;
 	};
