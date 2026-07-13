@@ -535,38 +535,6 @@ namespace utility::graphic
 			return _viewportSize;
 		}
 
-		inline static utility::math::Matrix<ViewComponentType, 4, 4>
-			InvertRigidBody(
-				const utility::math::Matrix<ViewComponentType, 4, 4> src)
-		{
-			utility::math::Matrix<ViewComponentType, 4, 4> result {};
-			auto result_ptr = &result[0][0];
-			auto src_ptr	= &src[0][0];
-			result_ptr[0]	= src_ptr[0];
-			result_ptr[1]	= src_ptr[4];
-			result_ptr[2]	= src_ptr[8];
-			result_ptr[3]	= 0.0f;
-			result_ptr[4]	= src_ptr[1];
-			result_ptr[5]	= src_ptr[5];
-			result_ptr[6]	= src_ptr[9];
-			result_ptr[7]	= 0.0f;
-			result_ptr[8]	= src_ptr[2];
-			result_ptr[9]	= src_ptr[6];
-			result_ptr[10]	= src_ptr[10];
-			result_ptr[11]	= 0.0f;
-			result_ptr[12] =
-				-(src_ptr[0] * src_ptr[12] + src_ptr[1] * src_ptr[13]
-				  + src_ptr[2] * src_ptr[14]);
-			result_ptr[13] =
-				-(src_ptr[4] * src_ptr[12] + src_ptr[5] * src_ptr[13]
-				  + src_ptr[6] * src_ptr[14]);
-			result_ptr[14] =
-				-(src_ptr[8] * src_ptr[12] + src_ptr[9] * src_ptr[13]
-				  + src_ptr[10] * src_ptr[14]);
-			result_ptr[15] = 1.0f;
-			return result;
-		}
-
 		/**
 		 * @brief Convert view to a GLM-compatible 4x4 view matrix.
 		 * @return 4x4 view matrix in column-major order.
@@ -576,13 +544,11 @@ namespace utility::graphic
 			const auto orientation = _pose.getOrientation();
 			const auto position	   = _pose.getPosition();
 
-			utility::math::Matrix<ViewComponentType, 4, 4> view =
-				InvertRigidBody(
-					glm::translate(
-						glm::identity<glm::mat4>(),
-						glm::vec3(position.x, position.y, position.z))
-					* glm::mat4_cast(glm::quat(orientation.w, orientation.x,
-											   orientation.y, orientation.z)));
+			utility::math::Matrix<ViewComponentType, 4, 4> view = glm::inverse(
+				glm::translate(glm::identity<glm::mat4>(),
+							   glm::vec3(position.x, position.y, position.z))
+				* glm::mat4_cast(glm::quat(orientation.w, orientation.x,
+										   orientation.y, orientation.z)));
 
 			// GLM is column-major: view[col][row]
 			// view[0][0] = static_cast<ViewComponentType>(right[0]);
