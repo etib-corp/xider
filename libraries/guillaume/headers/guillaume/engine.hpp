@@ -168,6 +168,14 @@ namespace guillaume
 		virtual size_t addText(utility::graphic::Text text) = 0;
 
 		/**
+		 * @brief Add a model to the engine for rendering.
+		 * @param model A shared pointer to the model to add.
+		 * @return A unique identifier for the added model.
+		 */
+		virtual size_t
+			addModel(std::shared_ptr<utility::graphic::Model> model) = 0;
+
+		/**
 		 * @brief Get the full view model.
 		 * @return The view instance.
 		 */

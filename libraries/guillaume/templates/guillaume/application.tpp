@@ -24,7 +24,8 @@
 
 #include <functional>
 
-#include "guillaume/application.hpp"
+#include "guillaume/systems/measure_model.hpp"
+#include "guillaume/systems/model_render.hpp"
 
 namespace guillaume
 {
@@ -89,6 +90,12 @@ namespace guillaume
 			std::make_unique<systems::RectangleRender>(_engine));
 		_systemRegistry.registerNewSystem(
 			std::make_unique<systems::Focus>(_eventBus, _engine));
+		_systemRegistry.registerNewSystem(
+			std::make_unique<systems::MeasureModel>(_ressourceProvider,
+													_engine));
+		_systemRegistry.registerNewSystem(
+			std::make_unique<systems::ModelRender>(_ressourceProvider,
+												   _engine));
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>

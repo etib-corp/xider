@@ -100,6 +100,14 @@ namespace xider
 		size_t addText(utility::graphic::Text text) override;
 
 		/**
+		 * @brief Adds a model to the renderer.
+		 * @param model A shared pointer to the model to add.
+		 * @return A unique identifier for the added model.
+		 */
+		size_t
+			addModel(std::shared_ptr<utility::graphic::Model> model) override;
+
+		/**
 		 * @brief Measures text dimensions.
 		 * @param text The text to measure.
 		 * @return A SizeF containing the width and height.
