@@ -68,7 +68,20 @@ std::shared_ptr<evan::ASwapchainContext>
 	evan::IXrPlatform::createSwapchainContext(
 		const DeviceContext &deviceContext) const
 {
-	return std::make_shared<XrSwapchainContext>(deviceContext);
+	auto swapchainContext =
+
+		std::make_shared<XrSwapchainContext>(deviceContext);
+
+	utility::graphic::ViewF view;
+	view.setClippingPlanes(1.0f, 4000.0f);
+
+	this->getLogger().error()
+		<< "Created swapchain context with view: " << view;
+
+	swapchainContext->setView(0, view);
+	swapchainContext->setView(1, view);
+
+	return swapchainContext;
 }
 
 ///////////////////////

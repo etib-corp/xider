@@ -106,7 +106,8 @@ std::vector<std::shared_ptr<utility::event::Event>>
 	std::vector<std::shared_ptr<utility::event::Event>> events;
 
 	// Get events from left hand thumb stick actions
-	auto leftHandEvents = _leftHandThumbStickActions->getEvent(deviceBackend, nullptr);
+	auto leftHandEvents =
+		_leftHandThumbStickActions->getEvent(deviceBackend, nullptr);
 	events.insert(events.end(), std::make_move_iterator(leftHandEvents.begin()),
 				  std::make_move_iterator(leftHandEvents.end()));
 

@@ -23,6 +23,7 @@
 #pragma once
 
 #include <memory>
+#include <ostream>
 
 #include "utility/event/hand_event.hpp"
 
@@ -40,12 +41,12 @@ namespace utility::event
 		 */
 		enum class Button {
 			Unknown = 0, /**< Unknown button */
-			X		= 0, /**< X button */
-			Y		= 1, /**< Y button */
-			A		= 2, /**< A button */
-			B		= 3, /**< B button */
-			Menu	= 4, /**< Menu button */
-			System	= 5, /**< System button */
+			X		= 1, /**< X button */
+			Y		= 2, /**< Y button */
+			A		= 3, /**< A button */
+			B		= 4, /**< B button */
+			Menu	= 5, /**< Menu button */
+			System	= 6, /**< System button */
 		};
 
 		/**
@@ -144,5 +145,23 @@ namespace utility::event
 		 */
 		bool isButtonPressed(void) const noexcept;
 	};
+
+	/**
+	 * @brief Stream insertion operator for HandButtonEvent::Button.
+	 * @param stream The output stream.
+	 * @param button The hand button to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream,
+							 const HandButtonEvent::Button button);
+
+	/**
+	 * @brief Stream insertion operator for HandButtonEvent.
+	 * @param stream The output stream.
+	 * @param handButtonEvent The HandButtonEvent to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream,
+							 const HandButtonEvent &handButtonEvent);
 
 }	 // namespace utility::event

@@ -63,8 +63,8 @@ namespace evan
 		 *
 		 * @param deviceBackend The device backend used for interacting with the
 		 * OpenXR runtime and managing resources.
-		 * @param handMotionEvent The hand motion event associated with the button
-		 * action, providing context for the button input.
+		 * @param handMotionEvent The hand motion event associated with the
+		 * button action, providing context for the button input.
 		 * @return A vector of unique pointers to events representing the
 		 * current state of the A button action.
 		 */

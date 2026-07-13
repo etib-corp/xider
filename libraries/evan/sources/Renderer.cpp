@@ -100,8 +100,8 @@ void evan::Renderer::drawFrame(const DeviceContext &deviceContext,
 		swapchainContext.waitForImage(i);
 
 		if (result == VK_ERROR_OUT_OF_DATE_KHR) {
-			swapchainContext.recreateSwapchain(deviceContext,
-											 swapchainContext.getRenderPass());
+			swapchainContext.recreateSwapchain(
+				deviceContext, swapchainContext.getRenderPass());
 		} else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
 			this->getLogger().error() << "Failed to acquire swap chain image! "
 										 "Skipping frame rendering.";
@@ -492,7 +492,7 @@ void evan::Renderer::updateUniformBuffer(const Scene &scene,
 
 	Frame::UniformBufferObject ubo {};
 	ubo.model = glm::mat4(1.0f);
-	ubo.view  = swapchainContext.getView(currentIndex);
+	ubo.view  = swapchainContext.getView(currentIndex).toViewMatrix();
 	ubo.proj  = swapchainContext.getProjection(currentIndex);
 
 	memcpy(_frames[_currentFrameIndex]->_uniformBufferMapped, &ubo,
@@ -602,9 +602,6 @@ void evan::Renderer::recordCommandBuffer(VkRenderPass renderPass,
 		this->getLogger().info() << "Binding vertex buffer for ->..";
 
 		if (vertexBuffer == VK_NULL_HANDLE) {
-			this->getLogger().warning()
-				<< "Vertex buffer is null for mesh with material ID: "
-				<< mesh->getMaterialID() << ". Skipping mesh.";
 			continue;
 		}
 

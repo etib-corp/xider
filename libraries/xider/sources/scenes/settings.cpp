@@ -21,8 +21,9 @@
  */
 
 #include <guillaume/entities/button.hpp>
+#include <guillaume/entities/text.hpp>
 
-#include "xider/scenes/main.hpp"
+#include "xider/scenes/home.hpp"
 #include "xider/scenes/settings.hpp"
 
 namespace xider::scenes
@@ -32,23 +33,34 @@ namespace xider::scenes
 					   guillaume::SessionStorage &sessionStorage)
 		: guillaume::Scene(localStorage, sessionStorage)
 	{
+		using namespace guillaume::entities;
+		using namespace guillaume::components;
+
 		getLogger().info() << "Settings scene created";
 
-		auto &buttonBuilder =
-			getBuilderManager()
-				.getBuilder<guillaume::entities::Button::Builder>();
+		auto &buttonBuilder = getBuilderManager().getBuilder<Button::Builder>();
 		auto &buttonDirector =
-			getDirectorManager()
-				.getDirector<guillaume::entities::Button::Director>();
+			getDirectorManager().getDirector<Button::Director>();
 
-		buttonDirector.makeButton(
-			buttonBuilder, nullptr, "Back to Main",
+		auto &textBuilder =
+			getBuilderManager()
+				.getBuilder<guillaume::entities::Text::Builder>();
+
+		auto &textDirector =
+			getDirectorManager()
+				.getDirector<guillaume::entities::Text::Director>();
+
+		buttonDirector.makeIconButton(
+			buttonBuilder, nullptr, "Go to Home", "home",
+			Glyph::Style::Outlined,
 			[this]() {
-				this->goToScene<Main>();
+				this->goToScene<Home>();
 			},
-			guillaume::entities::Button::Color::Filled,
-			guillaume::entities::Button::Shape::Round,
-			guillaume::entities::Button::Size::Medium, false);
+			Button::Color::Filled, Button::Shape::Round, Button::Size::Medium,
+			false);
+
+		textDirector.makeText(textBuilder, nullptr, "Setings Scene", 18,
+							  utility::graphic::Color32Bit(255, 255, 255, 255));
 	}
 
 	Settings::~Settings(void)

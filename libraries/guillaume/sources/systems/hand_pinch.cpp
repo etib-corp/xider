@@ -43,7 +43,6 @@ namespace guillaume::systems
 
 	void HandPinch::cleanup(void)
 	{
-
 	}
 
 	void HandPinch::update(const ecs::Entity::Identifier &entityIdentifier)

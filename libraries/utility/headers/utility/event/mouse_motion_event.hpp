@@ -23,6 +23,7 @@
 #pragma once
 
 #include <memory>
+#include <ostream>
 
 #include "utility/math/vector.hpp"
 
@@ -90,5 +91,14 @@ namespace utility::event
 		 */
 		MousePosition getPosition(void) const noexcept;
 	};
+
+	/**
+	 * @brief Stream insertion operator for MouseMotionEvent.
+	 * @param stream The output stream.
+	 * @param mouseMotionEvent The MouseMotionEvent to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream,
+							 const MouseMotionEvent &mouseMotionEvent);
 
 }	 // namespace utility::event

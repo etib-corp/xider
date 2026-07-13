@@ -21,46 +21,45 @@
  */
 
 #include <guillaume/entities/button.hpp>
-#include <guillaume/entities/panel.hpp>
+#include <guillaume/entities/text.hpp>
 
-#include "xider/scenes/main.hpp"
+#include "xider/scenes/home.hpp"
 #include "xider/scenes/settings.hpp"
 
 namespace xider::scenes
 {
 
-	Main::Main(guillaume::LocalStorage &localStorage,
+	Home::Home(guillaume::LocalStorage &localStorage,
 			   guillaume::SessionStorage &sessionStorage)
 		: guillaume::Scene(localStorage, sessionStorage)
 	{
-		getLogger().info() << "Main scene created";
+		using namespace guillaume::entities;
+		using namespace guillaume::components;
 
-		auto &panelBuilder =
-			getBuilderManager()
-				.getBuilder<guillaume::entities::Panel::Builder>();
-		auto &panelDirector =
-			getDirectorManager()
-				.getDirector<guillaume::entities::Panel::Director>();
+		getLogger().info() << "Home scene created";
 
-		auto &buttonBuilder =
-			getBuilderManager()
-				.getBuilder<guillaume::entities::Button::Builder>();
+		auto &buttonBuilder = getBuilderManager().getBuilder<Button::Builder>();
 		auto &buttonDirector =
-			getDirectorManager()
-				.getDirector<guillaume::entities::Button::Director>();
+			getDirectorManager().getDirector<Button::Director>();
+
+		auto &textBuilder = getBuilderManager().getBuilder<guillaume::entities::Text::Builder>();
+
+		auto &textDirector = getDirectorManager().getDirector<guillaume::entities::Text::Director>();
 
 		buttonDirector.makeIconButton(
-			buttonBuilder, nullptr, "Button 0", "counter_0",
-			guillaume::components::Glyph::Style::Outlined,
+			buttonBuilder, nullptr, "Go to Settings", "settings",
+			Glyph::Style::Outlined,
 			[this]() {
-				this->getLogger().info() << "Button 0 clicked";
+				this->goToScene<Settings>();
 			},
-			guillaume::entities::Button::Color::Filled,
-			guillaume::entities::Button::Shape::Square,
-			guillaume::entities::Button::Size::ExtraSmall, false);
+			Button::Color::Filled, Button::Shape::Round, Button::Size::Medium,
+			false);
+
+		textDirector.makeText(textBuilder, nullptr, "Home Scene", 18,
+							  utility::graphic::Color32Bit(255, 255, 255, 255));
 	}
 
-	Main::~Main(void)
+	Home::~Home(void)
 	{
 	}
 

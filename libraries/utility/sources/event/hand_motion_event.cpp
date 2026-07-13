@@ -41,4 +41,15 @@ namespace utility::event
 	HandMotionEvent::HandMotionEvent(void) = default;
 
 	HandMotionEvent::~HandMotionEvent(void) = default;
+
+	std::ostream &operator<<(std::ostream &stream,
+							 const HandMotionEvent &handMotionEvent)
+	{
+		stream << "HandMotionEvent(handType: "
+			   << static_cast<std::underlying_type<HandEvent::HandType>::type>(
+					  handMotionEvent.getHandType())
+			   << ", pose: " << handMotionEvent.getPose()
+			   << ", aim: " << handMotionEvent.getAim() << " }";
+		return stream;
+	}
 }	 // namespace utility::event

@@ -100,7 +100,7 @@ namespace guillaume
 		const auto centerRay = view.centerRay();
 		const auto origin	 = centerRay.origin();
 		const auto forward	 = centerRay.direction();
-		const auto right	 = view.right();
+		const auto right	 = view.getRight();
 
 		const auto anchor		   = origin + forward * distance;
 		const auto &directEntities = accessDirectEntities();

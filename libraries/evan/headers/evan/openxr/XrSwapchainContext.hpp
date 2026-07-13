@@ -88,16 +88,21 @@ namespace evan
 		 * @brief Recreates the swapchain and associated resources.
 		 *
 		 * This function is responsible for recreating the swapchain and any
-		 * associated resources when the swapchain becomes out of date or needs to
-		 * be recreated due to changes in the window size or other factors. It takes a
-		 * reference to the DeviceContext instance, which provides access to
-		 * Vulkan resources and synchronization mechanisms, and the Vulkan render pass used for rendering operations. Implement
-		 * this function to ensure that the swapchain is properly recreated and that all necessary resources are reinitialized for rendering operations.
+		 * associated resources when the swapchain becomes out of date or needs
+		 * to be recreated due to changes in the window size or other factors.
+		 * It takes a reference to the DeviceContext instance, which provides
+		 * access to Vulkan resources and synchronization mechanisms, and the
+		 * Vulkan render pass used for rendering operations. Implement this
+		 * function to ensure that the swapchain is properly recreated and that
+		 * all necessary resources are reinitialized for rendering operations.
 		 *
-		 * @param deviceContext A reference to the DeviceContext instance that provides access to Vulkan resources and synchronization mechanisms.
-		 * @param renderpass The Vulkan render pass that will be used with the swapchain images during rendering operations.
+		 * @param deviceContext A reference to the DeviceContext instance that
+		 * provides access to Vulkan resources and synchronization mechanisms.
+		 * @param renderpass The Vulkan render pass that will be used with the
+		 * swapchain images during rendering operations.
 		 */
-		void recreateSwapchain(const DeviceContext &deviceContext, VkRenderPass renderpass) override;
+		void recreateSwapchain(const DeviceContext &deviceContext,
+							   VkRenderPass renderpass) override;
 
 		/**
 		 * @brief Acquires an image from the swapchain for rendering.
@@ -214,7 +219,7 @@ namespace evan
 		 * and any changes in the VR environment to ensure accurate rendering of
 		 * the scene in an OpenXR application.
 		 */
-		glm::mat4 getProjection(int index) const override;
+		glm::mat4 getProjection(std::size_t index) const override;
 
 		/**
 		 * @brief Retrieves the view matrix for a specific view index.
@@ -235,7 +240,7 @@ namespace evan
 		 * interactions, and any changes in the VR environment to ensure
 		 * accurate rendering of the scene in an OpenXR application.
 		 */
-		glm::mat4 getView(int index) const override;
+		utility::graphic::ViewF getView(std::size_t index) const override;
 
 		/**
 		 * @brief Sets the view matrix for a specific view index.
@@ -254,7 +259,8 @@ namespace evan
 		 * in the VR environment to ensure accurate rendering of the scene in an
 		 * OpenXR application.
 		 */
-		void setView(int index, const glm::mat4 &view) override;
+		void setView(std::size_t index,
+					 const utility::graphic::ViewF &view) override;
 
 		/**
 		 * @brief Retrieves the number of views in the swapchain context.
@@ -274,38 +280,6 @@ namespace evan
 		std::size_t getViewCount(void) const override;
 
 		/**
-		 * @brief Sets the field of view for the swapchain context.
-		 *
-		 * This method sets the field of view (FOV) for the swapchain context,
-		 * which is essential for configuring the rendering pipeline and
-		 * ensuring that rendered content is displayed correctly based on the
-		 * desired viewing angle. Implement this method to allow the rendering
-		 * system to adjust the FOV as needed for different rendering scenarios.
-		 *
-		 * @param fov The desired field of view as a
-		 * utility::graphic::FieldOfViewF object, which contains the horizontal
-		 * and vertical FOV angles in degrees.
-		 */
-		void setFieldOfView(utility::graphic::FieldOfViewF &fov) override;
-
-		/**
-		 * @brief Retrieves the current field of view for the swapchain
-		 * context.
-		 *
-		 * This method returns the current field of view (FOV) for the swapchain
-		 * context, which is essential for configuring the rendering pipeline
-		 * and ensuring that rendered content is displayed correctly based on
-		 * the desired viewing angle. Implement this method to allow the
-		 * rendering system to access the current FOV settings for rendering
-		 * operations.
-		 *
-		 * @return The current field of view as a
-		 * utility::graphic::FieldOfViewF object, which contains the horizontal
-		 * and vertical FOV angles in degrees.
-		 */
-		utility::graphic::FieldOfViewF getFieldOfView(void) const override;
-
-		/**
 		 * Vector of XrView structures for each view configuration.
 		 */
 		std::vector<XrView> _views;
@@ -323,5 +297,21 @@ namespace evan
 		 * projection layer view.
 		 */
 		std::vector<XrCompositionLayerProjectionView> _projectionLayerViews;
+
+		/**
+		 * The near clipping plane distance for the projection matrix, which is
+		 * used to determine the minimum distance at which objects are rendered
+		 * in the scene. Objects closer than this distance will not be visible
+		 * in the rendered output.
+		 */
+		float _nearPlane;
+
+		/**
+		 * The far clipping plane distance for the projection matrix, which is
+		 * used to determine the maximum distance at which objects are rendered
+		 * in the scene. Objects beyond this distance will not be visible in the
+		 * rendered output.
+		 */
+		float _farPlane;
 	};
 }	 // namespace evan

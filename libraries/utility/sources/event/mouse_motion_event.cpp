@@ -55,4 +55,11 @@ namespace utility::event
 		return _position;
 	}
 
+	std::ostream &operator<<(std::ostream &stream,
+							 const MouseMotionEvent &mouseMotionEvent)
+	{
+		stream << "MouseMotionEvent(position: "
+			   << mouseMotionEvent.getPosition() << " )";
+		return stream;
+	}
 }	 // namespace utility::event

@@ -89,8 +89,8 @@ void evan::XrSwapchainContext::destroy(VkDevice device)
 void evan::XrSwapchainContext::recreateSwapchain(
 	const DeviceContext &deviceContext, VkRenderPass renderpass)
 {
-	this->getLogger().info()
-		<< "Recreating swapchain and associated resources for XrSwapchainContext";
+	this->getLogger().info() << "Recreating swapchain and associated resources "
+								"for XrSwapchainContext";
 
 	for (const auto &swapchainImage: _swapchainImages) {
 		this->getLogger().info()
@@ -139,8 +139,8 @@ void evan::XrSwapchainContext::recreateSwapchain(
 		_swapchainImages.push_back(
 			std::make_shared<XrSwapchainImage>(properties));
 	}
-	this->getLogger().info()
-		<< "Finished recreating swapchain and associated resources for XrSwapchainContext";
+	this->getLogger().info() << "Finished recreating swapchain and associated "
+								"resources for XrSwapchainContext";
 }
 
 VkResult evan::XrSwapchainContext::aquireImage(
@@ -227,90 +227,42 @@ const std::vector<XrCompositionLayerProjectionView> &
 	return _projectionLayerViews;
 }
 
-glm::mat4 evan::XrSwapchainContext::getProjection(int index) const
+glm::mat4 evan::XrSwapchainContext::getProjection(std::size_t index) const
 {
-	const XrFovf &fov = _views[index].fov;
-	float nearZ		  = 0.1f;
-	float farZ		  = 2000.0f;
-
-	float tanLeft  = tanf(fov.angleLeft);
-	float tanRight = tanf(fov.angleRight);
-	float tanUp	   = tanf(fov.angleUp);
-	float tanDown  = tanf(fov.angleDown);
-
-	float width	 = tanRight - tanLeft;
-	float height = tanUp - tanDown;
-
-	glm::mat4 projection(0.0f);
-	projection[0][0] = 2.0f / width;
-	projection[1][1] = 2.0f / height;
-	projection[2][0] = (tanRight + tanLeft) / width;
-	projection[2][1] = (tanUp + tanDown) / height;
-	projection[2][2] = -farZ / (farZ - nearZ);
-	projection[2][3] = -1.0f;
-	projection[3][2] = -(farZ * nearZ) / (farZ - nearZ);
-
-	// Invert the Y axis for Vulkan's coordinate system
-	projection[1][1] *= -1;
-
-	return projection;
+	return getView(index).getProjectionMatrix();
 }
 
-glm::mat4 evan::XrSwapchainContext::getView(int index) const
+utility::graphic::ViewF
+	evan::XrSwapchainContext::getView(std::size_t index) const
 {
-	const auto &pose = _views[index].pose;
+	utility::graphic::ViewF view;
+	const auto &xrPose = _views[index].pose;
+	utility::graphic::PositionF position(xrPose.position.x, xrPose.position.y,
+										 xrPose.position.z);
+	utility::graphic::OrientationF orientation(
+		xrPose.orientation.x, xrPose.orientation.y, xrPose.orientation.z,
+		xrPose.orientation.w);
+	utility::graphic::PoseF pose(position, orientation);
+	utility::graphic::FieldOfViewF fov(
+		_views[index].fov.angleUp, _views[index].fov.angleDown,
+		_views[index].fov.angleLeft, _views[index].fov.angleRight);
 
-	glm::quat orientation(pose.orientation.w, pose.orientation.x,
-						  pose.orientation.y, pose.orientation.z);
+	view.setPose(pose);
+	view.setFieldOfView(fov);
+	view.setClippingPlanes(_nearPlane, _farPlane);
 
-	glm::vec3 position(pose.position.x, pose.position.y, pose.position.z);
-
-	glm::mat4 head =
-		glm::translate(glm::mat4(1.0f), position) * glm::mat4_cast(orientation);
-
-	return glm::inverse(head);
+	return view;
 }
 
-void evan::XrSwapchainContext::setView(int index, const glm::mat4 &view)
+void evan::XrSwapchainContext::setView(std::size_t index,
+									   const utility::graphic::ViewF &view)
+
 {
+	_nearPlane = view.getNearPlane();
+	_farPlane  = view.getFarPlane();
 }
 
 std::size_t evan::XrSwapchainContext::getViewCount(void) const
 {
 	return _views.size();
-}
-
-utility::graphic::FieldOfViewF
-	evan::XrSwapchainContext::getFieldOfView(void) const
-{
-	utility::graphic::FieldOfViewF fov {};
-
-	if (_views.empty()) {
-		return fov;
-	}
-
-	float up	= 0.0f;
-	float down	= 0.0f;
-	float left	= 0.0f;
-	float right = 0.0f;
-
-	for (const auto &view: _views) {
-		up += view.fov.angleUp;
-		down += view.fov.angleDown;
-		left += view.fov.angleLeft;
-		right += view.fov.angleRight;
-	}
-
-	const float count = static_cast<float>(_views.size());
-	fov.setUp(up / count);
-	fov.setDown(down / count);
-	fov.setLeft(left / count);
-	fov.setRight(right / count);
-
-	return fov;
-}
-
-void evan::XrSwapchainContext::setFieldOfView(
-	utility::graphic::FieldOfViewF &fov)
-{
 }
