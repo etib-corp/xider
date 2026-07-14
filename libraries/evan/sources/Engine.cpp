@@ -112,12 +112,14 @@ size_t evan::Engine::addText(std::shared_ptr<utility::graphic::Text> text)
 	this->getLogger().info() << "Drawing text: " << text->getContent();
 
 	std::map<uint32_t, utility::graphic::Mesh> rawObjects;
-	auto material_id =
-		_ressourceProvider->getMaterialID(text->getFontFamily() + "_material");
+	auto material_id = _ressourceProvider->getMaterialID(
+		text->getFontFamily() + "_" + std::to_string(text->getFontSize())
+		+ "_material");
 
 	if (material_id == 0) {
 		this->getLogger().warning()
-			<< "Material '" << text->getFontFamily()
+			<< "Material '" << text->getFontFamily() << "_"
+			<< text->getFontSize()
 			<< "' not found for text object. Text will not be rendered.";
 		return 0;	 // Skip rendering this text if its material is not found
 	}
