@@ -117,6 +117,17 @@ namespace utility::graphic
 		 */
 		const std::string &getShaderName() const;
 
+		/**
+		 * @brief Retrieves the version number of the material.
+		 *
+		 * This method returns the version number of the material, which is used
+		 * for tracking changes and updates to the material's properties and
+		 * resources.
+		 *
+		 * @return A const reference to the version number of the material.
+		 */
+		uint32_t getVersion() const;
+
 		protected:
 		/**
 		 * @brief The name of the shader associated with this material.
@@ -128,5 +139,11 @@ namespace utility::graphic
 		 * material.
 		 */
 		std::map<std::string, std::shared_ptr<Texture>> _textures;
+
+		/**
+		 * @brief A version number for the material, used for tracking changes
+		 * and updates.
+		 */
+		uint32_t _version = 0;
 	};
 }	 // namespace utility::graphic

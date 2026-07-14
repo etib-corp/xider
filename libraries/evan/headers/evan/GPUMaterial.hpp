@@ -105,6 +105,33 @@ namespace evan
 		void destroy(VkDevice device);
 
 		/**
+		 * @brief Updates the GPUMaterial with new texture data and resources.
+		 *
+		 * This method updates the GPUMaterial by reinitializing its Vulkan
+		 * resources based on the provided material's texture data.
+		 * It creates new Vulkan images, image views, samplers,
+		 * and descriptor sets as needed to reflect any changes in the material's
+		 * properties or associated textures.
+		 *
+		 * @param deviceContext A shared pointer to the DeviceContext instance, which
+		 * provides access to Vulkan device resources and configurations needed
+		 * for updating images, image views, samplers, and descriptor sets.
+		 * @param renderer A reference to the Renderer instance, which may be
+		 * used to access rendering configurations or resources needed for
+		 * material updates.
+		 * @param material A reference to the utility::graphic::Material
+		 * instance, which contains updated information about the material's shader and
+		 * textures, used to reinitialize the Vulkan resources for this material.
+		 * @param shaderID The unique ID of the shader associated with this
+		 * material, used to identify which shader program should be used when
+		 * rendering objects that utilize this material.
+		 */
+		void update(std::shared_ptr<DeviceContext> deviceContext,
+					const Renderer &renderer,
+					const utility::graphic::Material &material,
+					uint32_t shaderID);
+
+		/**
 		 * @brief Retrieves the Vulkan descriptor sets associated with this
 		 * material.
 		 *
@@ -134,6 +161,17 @@ namespace evan
 		 * this material.
 		 */
 		uint32_t getShaderID() const;
+
+		/**
+		 * @brief Retrieves the version number of the uploaded material.
+		 *
+		 * This method returns the version number of the material that was
+		 * uploaded to the GPU. This is useful for tracking changes and updates
+		 * to the material's properties and resources.
+		 *
+		 * @return uint32_t The version number of the uploaded material.
+		 */
+		uint32_t getUploadedVersion() const;
 
 		protected:
 		/**
@@ -191,6 +229,12 @@ namespace evan
 		 * Vector of Vulkan descriptor sets associated with the material.
 		 */
 		std::vector<VkDescriptorSet> _descriptorSets;
+
+		/**
+		 * The version number of the material, used for tracking changes and
+		 * updates to the material's properties and resources.
+		 */
+		uint32_t _uploadedVersion = 0;
 
 		private:
 		uint32_t getBinding(GPUTexture::TextureType type);

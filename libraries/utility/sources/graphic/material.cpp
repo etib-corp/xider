@@ -14,7 +14,7 @@ namespace utility::graphic
 	Material::Material(RessourceProvider &ressourceProvider,
 					   const std::string &shaderName,
 					   const std::vector<File> &textureAssets)
-		: _shaderName(shaderName)
+		: _shaderName(shaderName), _version(0)
 	{
 		for (const auto &textureAsset: textureAssets) {
 			auto texture = ressourceProvider.loadTextureFromAsset(
@@ -51,5 +51,10 @@ namespace utility::graphic
 	const std::string &Material::getShaderName() const
 	{
 		return _shaderName;
+	}
+
+	uint32_t Material::getVersion() const
+	{
+		return _version;
 	}
 }	 // namespace utility::graphic

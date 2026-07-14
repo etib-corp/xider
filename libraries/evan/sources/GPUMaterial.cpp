@@ -51,6 +51,8 @@ evan::GPUMaterial::GPUMaterial(std::shared_ptr<DeviceContext> deviceContext,
 	this->createDescriptorSets(
 		deviceBackend->_device, renderer.getDescriptorSetLayout(),
 		renderer.getDescriptorPool(), renderer.getUniformBuffers());
+
+	_uploadedVersion = material.getVersion();
 }
 
 evan::GPUMaterial::~GPUMaterial()
@@ -67,6 +69,60 @@ void evan::GPUMaterial::destroy(VkDevice device)
 	this->getLogger().info() << "Destroying GPUMaterial...";
 }
 
+void evan::GPUMaterial::update(std::shared_ptr<DeviceContext> deviceContext,
+							   const Renderer &renderer,
+							   const utility::graphic::Material &material,
+							   uint32_t shaderID)
+{
+	if (material.getVersion() == _uploadedVersion) {
+		this->getLogger().info()
+			<< "GREP No update needed for GPUMaterial with shader ID: " << shaderID
+			<< " and material version: " << material.getVersion()
+			<< ". Material version is unchanged.";
+		return;
+	}
+
+	auto deviceBackend = deviceContext->getDeviceBackend();
+	auto textures	   = material.getTextures();
+
+	_textures.clear();
+
+	for (const auto &texture: textures) {
+		GPUTexture::TextureType textureType;
+
+		switch (texture->_type) {
+			case utility::graphic::Texture::TextureType::Albedo:
+				textureType = GPUTexture::TextureType::Albedo;
+				break;
+			case utility::graphic::Texture::TextureType::Normal:
+				textureType = GPUTexture::TextureType::Normal;
+				break;
+			case utility::graphic::Texture::TextureType::Roughness:
+				textureType = GPUTexture::TextureType::Roughness;
+				break;
+			case utility::graphic::Texture::TextureType::FontAtlas:
+				textureType = GPUTexture::TextureType::FontAtlas;
+				break;
+			default:
+				this->getLogger().warning()
+					<< "Unknown texture type for material with shader ID: "
+					<< shaderID << ". Defaulting to Albedo.";
+				textureType = GPUTexture::TextureType::Albedo;
+		}
+		_textures.emplace_back(std::make_shared<GPUTexture>(
+			*deviceContext, *texture, textureType));
+	}
+
+	vkFreeDescriptorSets(deviceBackend->_device, renderer.getDescriptorPool(),
+							static_cast<uint32_t>(_descriptorSets.size()),
+							_descriptorSets.data());
+	this->createDescriptorSets(
+		deviceBackend->_device, renderer.getDescriptorSetLayout(),
+		renderer.getDescriptorPool(), renderer.getUniformBuffers());
+
+	_uploadedVersion = material.getVersion();
+}
+
 /////////////
 // Getters //
 /////////////
@@ -79,6 +135,11 @@ std::vector<VkDescriptorSet> evan::GPUMaterial::getDescriptorSets() const
 uint32_t evan::GPUMaterial::getShaderID() const
 {
 	return _shaderID;
+}
+
+uint32_t evan::GPUMaterial::getUploadedVersion() const
+{
+	return _uploadedVersion;
 }
 
 ///////////////////////
