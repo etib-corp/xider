@@ -58,6 +58,26 @@ namespace xider::scenes
 			guillaume::entities::Button::Color::Filled,
 			guillaume::entities::Button::Shape::Square,
 			guillaume::entities::Button::Size::ExtraSmall, false);
+
+		buttonDirector.makeIconButton(
+			buttonBuilder, nullptr, "Button 1", "counter_1",
+			guillaume::components::Glyph::Style::Outlined,
+			[this]() {
+				this->getLogger().info() << "Button 1 clicked";
+			},
+			guillaume::entities::Button::Color::Filled,
+			guillaume::entities::Button::Shape::Square,
+			guillaume::entities::Button::Size::Small, false);
+
+		buttonDirector.makeIconButton(
+			buttonBuilder, nullptr, "Button 2", "counter_2",
+			guillaume::components::Glyph::Style::Outlined,
+			[this]() {
+				this->getLogger().info() << "Button 2 clicked";
+			},
+			guillaume::entities::Button::Color::Filled,
+			guillaume::entities::Button::Shape::Square,
+			guillaume::entities::Button::Size::Medium, false);
 	}
 
 	Main::~Main(void)
