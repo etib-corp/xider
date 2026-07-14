@@ -22,59 +22,42 @@
 
 #pragma once
 
-#include <utility/graphic/pose.hpp>
-#include <utility/graphic/scale.hpp>
+#include <string>
 
 #include "guillaume/ecs/component.hpp"
 
 namespace guillaume::components
 {
-
 	/**
-	 * @brief Component representing a transform in space.
+	 * @brief Component representing a 3D model attached to an entity.
 	 */
-	class Transform: public ecs::Component
+	class Model: public ecs::Component
 	{
 		private:
-		utility::graphic::PoseF _pose {};	   ///< Pose of the entity
-		utility::graphic::ScaleF _scale {};	   ///< Scale of the entity
+		std::string _modelPath {}; ///< Path to the model file
 
 		public:
 		/**
-		 * @brief Default constructor for the Transform component.
+		 * @brief Default constructor for the Model component.
 		 */
-		Transform(void) = default;
+		Model(void) = default;
 
 		/**
-		 * @brief Default destructor for the Transform component.
+		 * @brief Default destructor for the Model component.
 		 */
-		~Transform(void) = default;
+		~Model(void) = default;
 
 		/**
-		 * @brief Set the pose of the entity.
-		 * @param pose The new pose.
-		 * @return Reference to this Transform component for chaining.
+		 * @brief Set the model path.
+		 * @param path The new model path.
+		 * @return Reference to this Model component for chaining.
 		 */
-		Transform &setPose(const utility::graphic::PoseF &pose);
+		Model &setModelPath(const std::string &path);
 
 		/**
-		 * @brief Set the scale of the entity.
-		 * @param scale The new scale.
-		 * @return Reference to this Transform component for chaining.
+		 * @brief Get the model path.
+		 * @return The model path.
 		 */
-		Transform &setScale(const utility::graphic::ScaleF &scale);
-
-		/**
-		 * @brief Get the pose of the entity.
-		 * @return The pose.
-		 */
-		utility::graphic::PoseF getPose(void) const;
-
-		/**
-		 * @brief Get the scale of the entity.
-		 * @return The scale.
-		 */
-		utility::graphic::ScaleF getScale(void) const;
+		std::string getModelPath(void) const;
 	};
-
 }	 // namespace guillaume::components

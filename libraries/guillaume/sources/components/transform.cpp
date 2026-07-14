@@ -34,8 +34,23 @@ namespace guillaume::components
 		return *this;
 	}
 
+	Transform &Transform::setScale(const utility::graphic::ScaleF &scale)
+	{
+		if (_scale == scale) {
+			return *this;
+		}
+		_scale = scale;
+		setHasChanged(true);
+		return *this;
+	}
+
 	utility::graphic::PoseF Transform::getPose(void) const
 	{
 		return _pose;
+	}
+
+	utility::graphic::ScaleF Transform::getScale(void) const
+	{
+		return _scale;
 	}
 }	 // namespace guillaume::components

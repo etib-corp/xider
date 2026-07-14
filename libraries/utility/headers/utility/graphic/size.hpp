@@ -50,24 +50,29 @@ namespace utility::graphic
 		private:
 		SizeComponentType _width;	  ///< Width component of the size
 		SizeComponentType _height;	  ///< Height component of the size
+		SizeComponentType _depth;	  ///< Depth component of the size
 
 		public:
 		/**
 		 * @brief Default constructor (zero position, identity orientation).
 		 */
-		Size(void)
+		Size()
 			: _width(SizeComponentType { 0 })
 			, _height(SizeComponentType { 0 })
+			, _depth(SizeComponentType { 0 })
 		{
 		}
 		/**
 		 * @brief Construct a size from width and height.
 		 * @param width The width component.
 		 * @param height The height component.
+		 * @param depth The depth component (default is 0).
 		 */
-		Size(SizeComponentType width, SizeComponentType height)
+		Size(SizeComponentType width, SizeComponentType height,
+			 SizeComponentType depth = SizeComponentType { 0 })
 			: _width(width)
 			, _height(height)
+			, _depth(depth)
 		{
 		}
 
@@ -143,13 +148,34 @@ namespace utility::graphic
 		}
 
 		/**
+		 * @brief Set the depth component.
+		 * @param depth New depth value.
+		 * @return Reference to this object for chaining.
+		 */
+		Size &setDepth(SizeComponentType depth) noexcept
+		{
+			_depth = depth;
+			return *this;
+		}
+
+		/**
+		 * @brief Get the depth component.
+		 * @return Const reference to the depth.
+		 */
+		const SizeComponentType &getDepth(void) const noexcept
+		{
+			return _depth;
+		}
+
+		/**
 		 * @brief Equality comparison.
 		 * @param other Size to compare with.
 		 * @return True when position and orientation are equal.
 		 */
 		bool operator==(const Size &other) const noexcept
 		{
-			return _width == other._width && _height == other._height;
+			return _width == other._width && _height == other._height
+				&& _depth == other._depth;
 		}
 
 		/**

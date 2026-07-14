@@ -182,7 +182,7 @@ namespace guillaume::entities
 			case Button::Size::ExtraLarge:
 				return 32.0f;
 			default:
-				return 16.0f;
+				throw std::runtime_error("Invalid button size");
 		}
 	}
 
@@ -200,7 +200,7 @@ namespace guillaume::entities
 				case Button::Size::ExtraLarge:
 					return 16.0f;
 				default:
-					return 8.0f;
+					throw std::runtime_error("Invalid button size");
 			}
 		}
 
@@ -218,7 +218,7 @@ namespace guillaume::entities
 			case Button::Size::ExtraLarge:
 				return 28.0f;
 			default:
-				return 12.0f;
+				throw std::runtime_error("Invalid button size");
 		}
 	}
 
@@ -247,7 +247,7 @@ namespace guillaume::entities
 			case Button::Size::ExtraLarge:
 				return 30.0f;	 // 40 pixels
 			default:
-				return 15.0f;
+				throw std::runtime_error("Invalid button size");
 		}
 	}
 
@@ -265,7 +265,7 @@ namespace guillaume::entities
 			case Button::Size::ExtraLarge:
 				return 64.0f;
 			default:
-				return 16.0f;
+				throw std::runtime_error("Invalid button size");
 		}
 	}
 
@@ -288,7 +288,7 @@ namespace guillaume::entities
 	}
 
 	static utility::graphic::Color32Bit
-		getContainerColor(Button::Color style, bool isHovered, bool isButtonPressed)
+		getPressedContainerColor(Button::Color style)
 	{
 		const auto &scheme = guillaume::defaultTheme.getScheme(
 			guillaume::ThemeSchemeRole::Light);
@@ -301,75 +301,113 @@ namespace guillaume::entities
 
 		switch (style) {
 			case Button::Color::Elevated:
-				if (isButtonPressed) {
-					return applyStateAlpha(
-						scheme.getColor(SchemeColorRole::SurfaceContainerHigh)
-							.getColor(),
-						220U);
-				}
-				if (isHovered) {
-					return applyStateAlpha(
-						scheme.getColor(SchemeColorRole::SurfaceContainer)
-							.getColor(),
-						235U);
-				}
+				return applyStateAlpha(
+					scheme.getColor(SchemeColorRole::SurfaceContainerHigh)
+						.getColor(),
+					220U);
+
+			case Button::Color::Filled:
+				return applyStateAlpha(
+					scheme.getColor(SchemeColorRole::Primary).getColor(), 220U);
+
+			case Button::Color::Tonal:
+				return applyStateAlpha(
+					scheme.getColor(SchemeColorRole::SecondaryContainer)
+						.getColor(),
+					220U);
+
+			case Button::Color::Outlined:
+				return applyStateAlpha(
+					scheme.getColor(SchemeColorRole::OnSurfaceVariant)
+						.getColor(),
+					64U);
+
+			case Button::Color::Text:
+				return applyStateAlpha(
+					scheme.getColor(SchemeColorRole::Primary).getColor(), 48U);
+			default:
+				throw std::runtime_error("Invalid button color style");
+		}
+	}
+
+	static utility::graphic::Color32Bit
+		getHoverContainerColor(Button::Color style)
+	{
+		const auto &scheme = guillaume::defaultTheme.getScheme(
+			guillaume::ThemeSchemeRole::Light);
+
+		auto applyStateAlpha = [](const utility::graphic::Color32Bit &color,
+								  std::uint8_t alpha) {
+			return utility::graphic::Color32Bit(
+				color.getRed(), color.getGreen(), color.getBlue(), alpha);
+		};
+
+		switch (style) {
+			case Button::Color::Elevated:
+				return applyStateAlpha(
+					scheme.getColor(SchemeColorRole::SurfaceContainer)
+						.getColor(),
+					235U);
+
+			case Button::Color::Filled:
+				return applyStateAlpha(
+					scheme.getColor(SchemeColorRole::Primary).getColor(), 235U);
+
+			case Button::Color::Tonal:
+				return applyStateAlpha(
+					scheme.getColor(SchemeColorRole::SecondaryContainer)
+						.getColor(),
+					235U);
+
+			case Button::Color::Outlined:
+				return applyStateAlpha(
+					scheme.getColor(SchemeColorRole::OnSurfaceVariant)
+						.getColor(),
+					32U);
+
+			case Button::Color::Text:
+				return applyStateAlpha(
+					scheme.getColor(SchemeColorRole::Primary).getColor(), 24U);
+
+			default:
+				throw std::runtime_error("Invalid button color style");
+		}
+	}
+
+	static utility::graphic::Color32Bit getContainerColor(Button::Color style,
+														  bool isHovered,
+														  bool isButtonPressed)
+	{
+		const auto &scheme = guillaume::defaultTheme.getScheme(
+			guillaume::ThemeSchemeRole::Light);
+
+		if (isButtonPressed) {
+			return getPressedContainerColor(style);
+		}
+
+		if (isHovered) {
+			return getHoverContainerColor(style);
+		}
+
+		switch (style) {
+			case Button::Color::Elevated:
 				return scheme.getColor(SchemeColorRole::SurfaceContainerLow)
 					.getColor();
+
 			case Button::Color::Filled:
-				if (isButtonPressed) {
-					return applyStateAlpha(
-						scheme.getColor(SchemeColorRole::Primary).getColor(),
-						220U);
-				}
-				if (isHovered) {
-					return applyStateAlpha(
-						scheme.getColor(SchemeColorRole::Primary).getColor(),
-						235U);
-				}
 				return scheme.getColor(SchemeColorRole::Primary).getColor();
+
 			case Button::Color::Tonal:
-				if (isButtonPressed) {
-					return applyStateAlpha(
-						scheme.getColor(SchemeColorRole::SecondaryContainer)
-							.getColor(),
-						220U);
-				}
-				if (isHovered) {
-					return applyStateAlpha(
-						scheme.getColor(SchemeColorRole::SecondaryContainer)
-							.getColor(),
-						235U);
-				}
 				return scheme.getColor(SchemeColorRole::SecondaryContainer)
 					.getColor();
+
 			case Button::Color::Outlined:
-				if (isButtonPressed) {
-					return applyStateAlpha(
-						scheme.getColor(SchemeColorRole::OnSurfaceVariant)
-							.getColor(),
-						64U);
-				}
-				if (isHovered) {
-					return applyStateAlpha(
-						scheme.getColor(SchemeColorRole::OnSurfaceVariant)
-							.getColor(),
-						32U);
-				}
-				return utility::graphic::Color32Bit(0, 0, 0, 0);
 			case Button::Color::Text:
-				if (isButtonPressed) {
-					return applyStateAlpha(
-						scheme.getColor(SchemeColorRole::Primary).getColor(),
-						48U);
-				}
-				if (isHovered) {
-					return applyStateAlpha(
-						scheme.getColor(SchemeColorRole::Primary).getColor(),
-						24U);
-				}
 				return utility::graphic::Color32Bit(0, 0, 0, 0);
+
+			default:
+				throw std::runtime_error("Invalid button color style");
 		}
-		return utility::graphic::Color32Bit(255, 241, 237, 255);
 	}
 
 	static utility::graphic::Color32Bit getContentColor(Button::Color style)
@@ -390,43 +428,35 @@ namespace guillaume::entities
 					.getColor();
 			case Button::Color::Text:
 				return scheme.getColor(SchemeColorRole::Primary).getColor();
+			default:
+				throw std::runtime_error("Invalid button color style");
 		}
-		return scheme.getColor(SchemeColorRole::Primary).getColor();
 	}
 
 	void Button::hoverHandler(void)
 	{
-		this->getLogger().error() << "Button::hoverHandler: Button hovered";
-
 		setShape(_shape);
 		setColorStyle(_colorStyle);
 	}
 
 	void Button::unHoverHandler(void)
 	{
-		this->getLogger().error() << "Button::unHoverHandler: Button unhovered";
-
 		setShape(_shape);
 		setColorStyle(_colorStyle);
 	}
 
-	void Button::leftClickPressHandler()
+	void Button::buttonPressHandler()
 	{
-		this->getLogger().error()
-			<< "Button::leftClickPressHandler: Button clicked";
-
 		setShape(_shape);
 		setColorStyle(_colorStyle);
+
 		if (_onClick) {
 			_onClick();
 		}
 	}
 
-	void Button::leftClickReleaseHandler()
+	void Button::buttonReleaseHandler()
 	{
-		this->getLogger().error()
-			<< "Button::leftClickReleaseHandler: Button released";
-
 		setShape(_shape);
 		setColorStyle(_colorStyle);
 	}
@@ -563,13 +593,49 @@ namespace guillaume::entities
 	Button &Button::setIsToggle(const bool &isToggle)
 	{
 		_isToggle = isToggle;
-
 		return *this;
 	}
 
 	Button &Button::setColorStyle(const Color &colorStyle)
 	{
+		bool isHovered		 = false;
+		bool isButtonPressed = false;
+
 		_colorStyle = colorStyle;
+
+		isHovered =
+			getComponentRegistry()
+				.getComponent<components::HandHoverInteraction>(getIdentifier())
+				.isHovered()
+			? true
+			: isHovered;
+
+		isHovered = getComponentRegistry()
+						.getComponent<components::MouseHoverInteraction>(
+							getIdentifier())
+						.isHovered()
+			? true
+			: isHovered;
+
+		isButtonPressed =
+			getComponentRegistry()
+				.getComponent<components::HandButtonInteraction>(
+					getIdentifier())
+				.isButtonPressed(utility::event::HandButtonEvent::Button::A)
+			? true
+			: isButtonPressed;
+		isButtonPressed =
+			getComponentRegistry()
+				.getComponent<components::MouseButtonInteraction>(
+					getIdentifier())
+				.isButtonPressed(utility::event::MouseButtonEvent::Button::Left)
+			? true
+			: isButtonPressed;
+
+		getComponentRegistry()
+			.getComponent<components::Color>(getIdentifier())
+			.setColor(
+				getContainerColor(_colorStyle, isHovered, isButtonPressed));
 
 		if (auto icon = getEntity<Icon>(_iconIdentifier)) {
 			icon->setColor(getContentColor(_colorStyle));
@@ -584,7 +650,7 @@ namespace guillaume::entities
 
 	Button &Button::setShape(const Shape &shape)
 	{
-		bool isHovered = false;
+		bool isHovered		 = false;
 		bool isButtonPressed = false;
 
 		_shape = shape;
@@ -621,10 +687,6 @@ namespace guillaume::entities
 		getComponentRegistry()
 			.getComponent<components::Borders>(getIdentifier())
 			.setBorderRadius(getBorderRadius(_size, _shape, isButtonPressed));
-
-		getComponentRegistry()
-			.getComponent<components::Color>(getIdentifier())
-			.setColor(getContainerColor(_colorStyle, isHovered, isButtonPressed));
 
 		return *this;
 	}
@@ -720,19 +782,19 @@ namespace guillaume::entities
 			.getComponent<components::HandButtonInteraction>(getIdentifier())
 			.setOnButtonPressHandler(
 				utility::event::HandButtonEvent::Button::A,
-				std::bind(&Button::leftClickPressHandler, this))
+				std::bind(&Button::buttonPressHandler, this))
 			.setOnButtonReleaseHandler(
 				utility::event::HandButtonEvent::Button::A,
-				std::bind(&Button::leftClickReleaseHandler, this));
+				std::bind(&Button::buttonReleaseHandler, this));
 
 		getComponentRegistry()
 			.getComponent<components::MouseButtonInteraction>(getIdentifier())
 			.setOnButtonPressHandler(
 				utility::event::MouseButtonEvent::Button::Left,
-				std::bind(&Button::leftClickPressHandler, this))
+				std::bind(&Button::buttonPressHandler, this))
 			.setOnButtonReleaseHandler(
 				utility::event::MouseButtonEvent::Button::Left,
-				std::bind(&Button::leftClickReleaseHandler, this));
+				std::bind(&Button::buttonReleaseHandler, this));
 
 		getComponentRegistry()
 			.getComponent<components::HandHoverInteraction>(getIdentifier())

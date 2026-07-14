@@ -66,6 +66,11 @@ namespace utility::graphic
 		return _type;
 	}
 
+	utility::graphic::SizeF Model::computeBoundingSize(void)
+	{
+		return _boundingBox;
+	}
+
 	///////////////////////
 	// Protected methods //
 	///////////////////////
@@ -74,6 +79,14 @@ namespace utility::graphic
 	{
 		std::vector<VertexF> vertices;
 		std::vector<uint32_t> indices;
+
+		// Bounding box calculation
+		float minX = std::numeric_limits<float>::max();
+		float minY = std::numeric_limits<float>::max();
+		float minZ = std::numeric_limits<float>::max();
+		float maxX = std::numeric_limits<float>::lowest();
+		float maxY = std::numeric_limits<float>::lowest();
+		float maxZ = std::numeric_limits<float>::lowest();
 
 		tinyobj::attrib_t attrib;
 		std::vector<tinyobj::shape_t> shapes;
@@ -143,11 +156,19 @@ namespace utility::graphic
 						"Too many vertices for uint32_t indices");
 				}
 
+				minX = std::min(minX, attrib.vertices[vertexBase + 0]);
+				minY = std::min(minY, attrib.vertices[vertexBase + 1]);
+				minZ = std::min(minZ, attrib.vertices[vertexBase + 2]);
+				maxX = std::max(maxX, attrib.vertices[vertexBase + 0]);
+				maxY = std::max(maxY, attrib.vertices[vertexBase + 1]);
+				maxZ = std::max(maxZ, attrib.vertices[vertexBase + 2]);
+
 				const uint32_t newIndex =
 					static_cast<uint32_t>(vertices.size());
 				vertices.push_back(vertex);
 				indices.push_back(newIndex);
 			}
 		}
+		_boundingBox = SizeF(maxX - minX, maxY - minY, maxZ - minZ);
 	}
 }	 // namespace utility::graphic

@@ -27,6 +27,7 @@
 #include "guillaume/entities/text.hpp"
 #include "guillaume/entities/button.hpp"
 #include "guillaume/entities/icon.hpp"
+#include "guillaume/entities/model.hpp"
 
 namespace guillaume
 {
@@ -37,12 +38,13 @@ namespace guillaume
 		, _entityBuilderManager(
 			  std::make_unique<ecs::EntityBuilderManagerFiller<
 				  entities::Panel::Builder, entities::Text::Builder,
-				  entities::Button::Builder, entities::Icon::Builder>>(
-				  _componentRegistry, *this))
+				  entities::Button::Builder, entities::Icon::Builder,
+				  entities::Model::Builder>>(_componentRegistry, *this))
 		, _entityDirectorManager(
 			  std::make_unique<ecs::EntityDirectorManagerFiller<
 				  entities::Panel::Director, entities::Text::Director,
-				  entities::Button::Director, entities::Icon::Director>>())
+				  entities::Button::Director, entities::Icon::Director,
+				  entities::Model::Director>>())
 		, _nextSceneType(typeid(void))
 	{
 		getLogger().info()
@@ -100,7 +102,7 @@ namespace guillaume
 		const auto centerRay = view.centerRay();
 		const auto origin	 = centerRay.origin();
 		const auto forward	 = centerRay.direction();
-		const auto right	 = view.right();
+		const auto right	 = view.getRight();
 
 		const auto anchor		   = origin + forward * distance;
 		const auto &directEntities = accessDirectEntities();

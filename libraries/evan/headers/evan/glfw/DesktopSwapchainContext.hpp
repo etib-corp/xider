@@ -89,6 +89,26 @@ namespace evan
 		void destroy(VkDevice device) override;
 
 		/**
+		 * @brief Recreates the swapchain and associated resources.
+		 *
+		 * This function is responsible for recreating the swapchain and any
+		 * associated resources when the swapchain becomes out of date or needs
+		 * to be recreated due to changes in the window size or other factors.
+		 * It takes a reference to the DeviceContext instance, which provides
+		 * access to Vulkan resources and synchronization mechanisms. Implement
+		 * this function to ensure that the swapchain is properly recreated and
+		 * that all necessary resources are reinitialized for rendering
+		 * operations.
+		 *
+		 * @param deviceContext A reference to the DeviceContext instance that
+		 * provides access to Vulkan resources and synchronization mechanisms.
+		 * @param renderpass The Vulkan render pass that will be used with the
+		 * swapchain images during rendering operations.
+		 */
+		void recreateSwapchain(const DeviceContext &deviceContext,
+							   VkRenderPass renderpass) override;
+
+		/**
 		 * @brief Acquires the next available image from the swapchain for
 		 * rendering.
 		 *
@@ -178,7 +198,7 @@ namespace evan
 		 * provide the necessary projection matrix for rendering 3D objects in
 		 * the scene.
 		 */
-		glm::mat4 getProjection(int index) const override;
+		glm::mat4 getProjection(std::size_t index) const override;
 
 		/**
 		 * @brief Retrieves the view matrix for the specified index.
@@ -204,7 +224,7 @@ namespace evan
 		 * scene, enabling the correct positioning and orientation of the
 		 * camera.
 		 */
-		glm::mat4 getView(int index) const override;
+		utility::graphic::ViewF getView(std::size_t index) const override;
 
 		/**
 		 * @brief Sets the view matrix for the specified image index in the
@@ -221,7 +241,8 @@ namespace evan
 		 * @param view The view matrix as a glm::mat4 to set for the specified
 		 * image index in the swapchain.
 		 */
-		void setView(int index, const glm::mat4 &view) override;
+		void setView(std::size_t index,
+					 const utility::graphic::ViewF &view) override;
 
 		/**
 		 * @brief Retrieves the number of views in the swapchain context.
@@ -236,43 +257,15 @@ namespace evan
 		 */
 		std::size_t getViewCount(void) const override;
 
-		/**
-		 * @brief Sets the field of view for the swapchain context.
-		 *
-		 * This function overrides the pure virtual function from
-		 * ASwapchainContext to set the field of view (FOV) for the swapchain
-		 * context. The FOV is essential for configuring the rendering pipeline
-		 * and ensuring that rendered content is displayed correctly based on
-		 * the desired viewing angle.
-		 *
-		 * @param fov The field of view to set for the swapchain context.
-		 */
-		void setFieldOfView(utility::graphic::FieldOfViewF &fov) override;
-
-		/**
-		 * @brief Retrieves the current field of view for the swapchain context.
-		 *
-		 * This function overrides the pure virtual function from
-		 * ASwapchainContext to return the current field of view (FOV) for the
-		 * swapchain context. The FOV is essential for configuring the rendering
-		 * pipeline and ensuring that rendered content is displayed correctly
-		 * based on the desired viewing angle.
-		 *
-		 * @return The current field of view as a
-		 * utility::graphic::FieldOfViewF object, which contains the horizontal
-		 * and vertical FOV angles in degrees.
-		 */
-		utility::graphic::FieldOfViewF getFieldOfView(void) const override;
-
 		private:
 		/**
 		 * @brief View state for the swapchain context
 		 */
-		glm::mat4 _view = glm::mat4(0.0f);
+		utility::graphic::ViewF _view;
 
 		/**
-		 * @brief Field of view for the swapchain context
+		 * @brief GLFW reference window for the swapchain context
 		 */
-		utility::graphic::FieldOfViewF _fov;
+		GLFWwindow *_referenceWindow;
 	};
 }	 // namespace evan

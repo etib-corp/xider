@@ -69,8 +69,8 @@ namespace evan
 		 *
 		 * @param deviceBackend The device backend used for interacting with the
 		 * OpenXR runtime and managing resources.
-		 * @param handMotionEvent Optional shared pointer to a HandMotionEvent that
-		 * may be used to provide context for hand-related actions. This
+		 * @param handMotionEvent Optional shared pointer to a HandMotionEvent
+		 * that may be used to provide context for hand-related actions. This
 		 * parameter can be nullptr if the action is not related to hand motion.
 		 * @return A vector of unique pointers to Event objects representing the
 		 * thumb stick events.

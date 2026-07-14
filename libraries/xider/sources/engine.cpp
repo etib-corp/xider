@@ -76,6 +76,11 @@ namespace xider
 			std::make_shared<utility::graphic::Text>(std::move(text)));
 	}
 
+	size_t Engine::addModel(std::shared_ptr<utility::graphic::Model> model)
+	{
+		return _evanEngine->addModel(std::move(model));
+	}
+
 	void Engine::addScene(size_t sceneIndex)
 	{
 		_evanEngine->addScene(sceneIndex);

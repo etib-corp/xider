@@ -20,34 +20,22 @@
  SOFTWARE.
  */
 
-#pragma once
+#include "guillaume/components/model.hpp"
 
-#include <guillaume/scene.hpp>
-
-namespace xider::scenes
+namespace guillaume::components
 {
-
-	/**
-	 * @brief Main application scene.
-	 *
-	 * Represents the primary scene used by the application, responsible for
-	 * initializing core UI and game elements.
-	 */
-	class Main: public guillaume::Scene
+	Model &Model::setModelPath(const std::string &path)
 	{
-		public:
-		/**
-		 * @brief Construct a new Main scene
-		 * @param localStorage Reference to persistent local storage
-		 * @param sessionStorage Reference to per-session storage
-		 */
-		Main(guillaume::LocalStorage &localStorage,
-			 guillaume::SessionStorage &sessionStorage);
+		if (_modelPath == path) {
+			return *this;
+		}
+		_modelPath = path;
+		setHasChanged(true);
+		return *this;
+	}
 
-		/**
-		 * @brief Destroy the Main scene
-		 */
-		~Main(void);
-	};
-
-}	 // namespace xider::scenes
+	std::string Model::getModelPath(void) const
+	{
+		return _modelPath;
+	}
+}	 // namespace guillaume::components

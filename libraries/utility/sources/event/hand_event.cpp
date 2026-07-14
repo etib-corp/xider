@@ -85,4 +85,20 @@ namespace utility::event
 		return _gripSurface;
 	}
 
+	std::ostream &operator<<(std::ostream &stream,
+							 const HandEvent::HandType handType)
+	{
+		switch (handType) {
+			case HandEvent::HandType::Left:
+				stream << "Left";
+				break;
+			case HandEvent::HandType::Right:
+				stream << "Right";
+				break;
+			default:
+				stream << "Unknown";
+				break;
+		}
+		return stream;
+	}
 }	 // namespace utility::event

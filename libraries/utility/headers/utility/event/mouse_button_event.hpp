@@ -24,6 +24,7 @@
 
 #include <cstdint>
 #include <memory>
+#include <ostream>
 
 #include "utility/math/vector.hpp"
 
@@ -135,5 +136,23 @@ namespace utility::event
 		 */
 		bool isButtonPressed(void) const noexcept;
 	};
+
+	/**
+	 * @brief Stream insertion operator for MouseButtonEvent::Button.
+	 * @param stream The output stream.
+	 * @param button The mouse button to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream,
+							 const MouseButtonEvent::Button button);
+
+	/**
+	 * @brief Stream insertion operator for MouseButtonEvent.
+	 * @param stream The output stream.
+	 * @param mouseButtonEvent The MouseButtonEvent to output.
+	 * @return Reference to the output stream.
+	 */
+	std::ostream &operator<<(std::ostream &stream,
+							 const MouseButtonEvent &mouseButtonEvent);
 
 }	 // namespace utility::event

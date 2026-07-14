@@ -22,6 +22,7 @@
 
 #include <guillaume/entities/button.hpp>
 #include <guillaume/entities/text.hpp>
+#include <guillaume/entities/model.hpp>
 
 #include "xider/scenes/home.hpp"
 #include "xider/scenes/settings.hpp"
@@ -29,14 +30,14 @@
 namespace xider::scenes
 {
 
-	Settings::Settings(guillaume::LocalStorage &localStorage,
-					   guillaume::SessionStorage &sessionStorage)
+	Home::Home(guillaume::LocalStorage &localStorage,
+			   guillaume::SessionStorage &sessionStorage)
 		: guillaume::Scene(localStorage, sessionStorage)
 	{
 		using namespace guillaume::entities;
 		using namespace guillaume::components;
 
-		getLogger().info() << "Settings scene created";
+		getLogger().info() << "Home scene created";
 
 		auto &buttonBuilder = getBuilderManager().getBuilder<Button::Builder>();
 		auto &buttonDirector =
@@ -45,25 +46,33 @@ namespace xider::scenes
 		auto &textBuilder =
 			getBuilderManager()
 				.getBuilder<guillaume::entities::Text::Builder>();
-
 		auto &textDirector =
 			getDirectorManager()
 				.getDirector<guillaume::entities::Text::Director>();
 
+		auto &modelBuilder =
+			getBuilderManager()
+				.getBuilder<guillaume::entities::Model::Builder>();
+		auto &modelDirector =
+			getDirectorManager()
+				.getDirector<guillaume::entities::Model::Director>();
+
 		buttonDirector.makeIconButton(
-			buttonBuilder, nullptr, "Go to Home", "home",
+			buttonBuilder, nullptr, "Go to Settings", "settings",
 			Glyph::Style::Outlined,
 			[this]() {
-				this->goToScene<Home>();
+				this->goToScene<Settings>();
 			},
 			Button::Color::Filled, Button::Shape::Round, Button::Size::Medium,
 			false);
 
-		textDirector.makeText(textBuilder, nullptr, "Setings Scene", 18,
+		textDirector.makeText(textBuilder, nullptr, "Home Scene", 18,
 							  utility::graphic::Color32Bit(255, 255, 255, 255));
+
+		modelDirector.makeModel(modelBuilder, nullptr, "models/teapot.obj");
 	}
 
-	Settings::~Settings(void)
+	Home::~Home(void)
 	{
 	}
 

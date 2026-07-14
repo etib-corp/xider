@@ -59,8 +59,55 @@ namespace utility::graphic
 		FieldOfView<ViewComponentType>
 			_fieldOfView;	 ///< View field-of-view parameters
 
-		math::Vector2F
+		math::Vector<ViewComponentType, 2>
 			_viewportSize;	  ///< Viewport size in pixels (width, height)
+
+		ViewComponentType _nearPlane;	 ///< Near clipping plane distance
+		ViewComponentType _farPlane;	 ///< Far clipping plane distance
+
+		/**
+		 * @brief Validate perspective parameter constraints.
+		 * @param verticalFovDegrees Vertical field-of-view in degrees.
+		 * @param aspectRatio Aspect ratio (width/height).
+		 * @throws std::invalid_argument if any perspective parameter is
+		 * invalid.
+		 */
+		static void validatePerspective(ViewComponentType verticalFovRadians,
+										ViewComponentType aspectRatio)
+		{
+			if (verticalFovRadians <= ViewComponentType {}
+				|| verticalFovRadians
+					>= std::numbers::pi_v<ViewComponentType>) {
+				throw std::invalid_argument(
+					"View vertical FOV must be in range (0, pi) radians");
+			}
+
+			if (aspectRatio <= ViewComponentType {}) {
+				throw std::invalid_argument(
+					"View aspect ratio must be positive");
+			}
+		}
+
+		/**
+		 * @brief Build symmetric per-direction FOV from vertical angle and
+		 * aspect.
+		 * @param verticalFovDegrees Vertical field-of-view in degrees.
+		 * @param aspectRatio Aspect ratio (width/height).
+		 * @return Symmetric field-of-view values for all directions.
+		 */
+		static FieldOfView<ViewComponentType>
+			makeSymmetricFieldOfView(ViewComponentType verticalFovRadians,
+									 ViewComponentType aspectRatio)
+		{
+			const ViewComponentType halfVertical =
+				verticalFovRadians / ViewComponentType { 2 };
+
+			const ViewComponentType halfHorizontal =
+				std::atan(std::tan(halfVertical) * aspectRatio);
+
+			return FieldOfView<ViewComponentType>(
+				-halfVertical, halfVertical, -halfHorizontal, halfHorizontal);
+		}
 
 		/**
 		 * @brief Validate orientation vectors for use as view basis.
@@ -119,81 +166,6 @@ namespace utility::graphic
 				+ math::cross(u, vector) * (ViewComponentType { 2 } * s);
 		}
 
-		/**
-		 * @brief Build and set quaternion orientation from forward/up basis
-		 * vectors.
-		 * @param forward Forward direction candidate.
-		 * @param up Up direction candidate.
-		 * @throws std::invalid_argument if orientation constraints are
-		 * violated.
-		 */
-		void setOrientationFromBasis(
-			const math::Vector<ViewComponentType, 3> &forward,
-			const math::Vector<ViewComponentType, 3> &up)
-		{
-			validateOrientation(forward, up);
-
-			const auto normalizedForward = math::normalize(forward);
-			const auto right =
-				math::normalize(math::cross(normalizedForward, up));
-			const auto correctedUp =
-				math::normalize(math::cross(right, normalizedForward));
-			const auto back = -normalizedForward;
-
-			const ViewComponentType m00 = right[0];
-			const ViewComponentType m01 = correctedUp[0];
-			const ViewComponentType m02 = back[0];
-			const ViewComponentType m10 = right[1];
-			const ViewComponentType m11 = correctedUp[1];
-			const ViewComponentType m12 = back[1];
-			const ViewComponentType m20 = right[2];
-			const ViewComponentType m21 = correctedUp[2];
-			const ViewComponentType m22 = back[2];
-
-			ViewComponentType qx {};
-			ViewComponentType qy {};
-			ViewComponentType qz {};
-			ViewComponentType qw {};
-			const ViewComponentType trace = m00 + m11 + m22;
-
-			if (trace > ViewComponentType {}) {
-				const ViewComponentType s =
-					std::sqrt(trace + ViewComponentType { 1 })
-					* ViewComponentType { 2 };
-				qw = ViewComponentType { 0.25 } * s;
-				qx = (m21 - m12) / s;
-				qy = (m02 - m20) / s;
-				qz = (m10 - m01) / s;
-			} else if (m00 > m11 && m00 > m22) {
-				const ViewComponentType s =
-					std::sqrt(ViewComponentType { 1 } + m00 - m11 - m22)
-					* ViewComponentType { 2 };
-				qw = (m21 - m12) / s;
-				qx = ViewComponentType { 0.25 } * s;
-				qy = (m01 + m10) / s;
-				qz = (m02 + m20) / s;
-			} else if (m11 > m22) {
-				const ViewComponentType s =
-					std::sqrt(ViewComponentType { 1 } + m11 - m00 - m22)
-					* ViewComponentType { 2 };
-				qw = (m02 - m20) / s;
-				qx = (m01 + m10) / s;
-				qy = ViewComponentType { 0.25 } * s;
-				qz = (m12 + m21) / s;
-			} else {
-				const ViewComponentType s =
-					std::sqrt(ViewComponentType { 1 } + m22 - m00 - m11)
-					* ViewComponentType { 2 };
-				qw = (m10 - m01) / s;
-				qx = (m02 + m20) / s;
-				qy = (m12 + m21) / s;
-				qz = ViewComponentType { 0.25 } * s;
-			}
-
-			_pose.setOrientation(
-				Orientation<ViewComponentType>(qx, qy, qz, qw).normalized());
-		}
-
 		public:
 		/**
 		 * @brief Default constructor with common perspective defaults.
@@ -202,6 +174,8 @@ namespace utility::graphic
 			: _pose()
 			, _fieldOfView()
 			, _viewportSize()
+			, _nearPlane(ViewComponentType { 1.0 })
+			, _farPlane(ViewComponentType { 1000.0 })
 		{
 		}
 
@@ -210,15 +184,20 @@ namespace utility::graphic
 		 * @param pose View world-space position and orientation.
 		 * @param fov View field-of-view parameters.
 		 * @param viewportSize Viewport size in pixels (width, height).
+		 * @param nearPlane Near clipping plane distance.
+		 * @param farPlane Far clipping plane distance.
 		 * @throws std::invalid_argument if perspective values or quaternion are
 		 * invalid.
 		 */
 		View(Pose<ViewComponentType> pose,
 			 utility::graphic::FieldOfView<ViewComponentType> fov,
-			 math::Vector2F viewportSize)
+			 math::Vector<ViewComponentType, 2> viewportSize,
+			 ViewComponentType nearPlane, ViewComponentType farPlane)
 			: _pose(std::move(pose))
 			, _fieldOfView(std::move(fov))
 			, _viewportSize(std::move(viewportSize))
+			, _nearPlane(nearPlane)
+			, _farPlane(farPlane)
 		{
 		}
 
@@ -272,18 +251,6 @@ namespace utility::graphic
 		}
 
 		/**
-		 * @brief Set and normalize forward direction.
-		 * @param forward New forward direction (non-zero, not collinear with
-		 * up).
-		 * @throws std::invalid_argument if orientation constraints are
-		 * violated.
-		 */
-		void setForward(const math::Vector<ViewComponentType, 3> &forward)
-		{
-			setOrientationFromBasis(forward, getUp());
-		}
-
-		/**
 		 * @brief Get normalized forward direction.
 		 * @return Forward direction vector.
 		 */
@@ -293,17 +260,6 @@ namespace utility::graphic
 				rotateVectorByRotation(math::Vector<ViewComponentType, 3> {
 					ViewComponentType {}, ViewComponentType {},
 					ViewComponentType { -1 } }));
-		}
-
-		/**
-		 * @brief Set and normalize up direction.
-		 * @param up New up direction (non-zero, not collinear with forward).
-		 * @throws std::invalid_argument if orientation constraints are
-		 * violated.
-		 */
-		void setUp(const math::Vector<ViewComponentType, 3> &up)
-		{
-			setOrientationFromBasis(getForward(), up);
 		}
 
 		/**
@@ -372,12 +328,50 @@ namespace utility::graphic
 		 * @brief Compute view right direction from orientation basis.
 		 * @return Normalized right direction vector.
 		 */
-		math::Vector<ViewComponentType, 3> right(void) const
+		math::Vector<ViewComponentType, 3> getRight(void) const
 		{
 			return math::normalize(rotateVectorByRotation(
 				math::Vector<ViewComponentType, 3> { ViewComponentType { 1 },
 													 ViewComponentType {},
 													 ViewComponentType {} }));
+		}
+
+		/**
+		 * @brief Set near and far clipping plane distances.
+		 * @param nearDistance Near clipping plane distance.
+		 * @param farDistance Far clipping plane distance.
+		 */
+
+		void setClippingPlanes(ViewComponentType nearDistance,
+							   ViewComponentType farDistance)
+		{
+			if (nearDistance <= ViewComponentType { 0 }) {
+				throw std::invalid_argument("Near plane must be > 0");
+			}
+			if (farDistance <= nearDistance) {
+				throw std::invalid_argument("Far plane must be > near plane");
+			}
+
+			_nearPlane = nearDistance;
+			_farPlane  = farDistance;
+		}
+
+		/**
+		 * @brief Get near clipping plane distance.
+		 * @return Near clipping plane distance.
+		 */
+		ViewComponentType getNearPlane() const noexcept
+		{
+			return _nearPlane;
+		}
+
+		/**
+		 * @brief Get far clipping plane distance.
+		 * @return Far clipping plane distance.
+		 */
+		ViewComponentType getFarPlane() const noexcept
+		{
+			return _farPlane;
 		}
 
 		/**
@@ -402,29 +396,6 @@ namespace utility::graphic
 		}
 
 		/**
-		 * @brief Orient view to face a target position.
-		 * @param target World-space point to look at.
-		 * @param worldUp World-space up direction used to stabilize
-		 * orientation.
-		 * @throws std::runtime_error if target equals current position.
-		 * @throws std::invalid_argument if resulting orientation is invalid.
-		 */
-		void lookAt(const math::Vector<ViewComponentType, 3> &target,
-					const math::Vector<ViewComponentType, 3> &worldUp =
-						math::Vector<ViewComponentType, 3> {
-							ViewComponentType {}, ViewComponentType { 1 },
-							ViewComponentType {} })
-		{
-			const auto targetVector = target - _pose.getPosition();
-			if (math::dot(targetVector, targetVector) == ViewComponentType {}) {
-				throw std::runtime_error(
-					"View lookAt target must differ from position");
-			}
-			const auto newForward = math::normalize(targetVector);
-			setOrientationFromBasis(newForward, worldUp);
-		}
-
-		/**
 		 * @brief Create a world-space ray from normalized device coordinates.
 		 * @param ndcX Horizontal coordinate in range [-1, 1].
 		 * @param ndcY Vertical coordinate in range [-1, 1].
@@ -433,17 +404,23 @@ namespace utility::graphic
 		Ray<ViewComponentType> viewRay(ViewComponentType ndcX,
 									   ViewComponentType ndcY) const
 		{
-			const ViewComponentType horizontalOffset =
-				ndcX >= ViewComponentType {}
-				? ndcX * std::tan(_fieldOfView.getRight())
-				: ndcX * std::tan(_fieldOfView.getLeft());
-			const ViewComponentType verticalOffset =
-				ndcY >= ViewComponentType {}
-				? ndcY * std::tan(_fieldOfView.getUp())
-				: ndcY * std::tan(_fieldOfView.getDown());
+			const auto tx0 = std::tan(_fieldOfView.getLeft());
+			const auto tx1 = std::tan(_fieldOfView.getRight());
+			const auto ty0 = std::tan(_fieldOfView.getDown());
+			const auto ty1 = std::tan(_fieldOfView.getUp());
 
-			const auto rayDirection = (getForward() + right() * horizontalOffset
-									   + getUp() * verticalOffset);
+			const ViewComponentType horizontalOffset =
+				((ndcX + ViewComponentType { 1 }) * ViewComponentType { 0.5 })
+					* (tx1 - tx0)
+				+ tx0;
+
+			const ViewComponentType verticalOffset =
+				((ndcY + ViewComponentType { 1 }) * ViewComponentType { 0.5 })
+					* (ty1 - ty0)
+				+ ty0;
+
+			const auto rayDirection = getForward()
+				+ getRight() * horizontalOffset + getUp() * verticalOffset;
 
 			return Ray<ViewComponentType>(_pose.getPosition(),
 										  math::normalize(rayDirection));
@@ -455,11 +432,13 @@ namespace utility::graphic
 		 * @return Ray originating at view position toward projected direction.
 		 * @throws std::out_of_range if point is outside of viewport bounds.
 		 */
-		Ray<ViewComponentType> viewPointToRay(const math::Vector2F &point) const
+		Ray<ViewComponentType> viewPointToRay(
+			const math::Vector<ViewComponentType, 2> &point) const
 		{
 			if (point.x < 0 || point.y < 0 || point.x >= _viewportSize.x
 				|| point.y >= _viewportSize.y) {
-				throw std::out_of_range("Point is outside of viewport bounds");
+				throw std::out_of_range(
+					"View point is outside of viewport bounds");
 			}
 
 			const ViewComponentType ndcX =
@@ -541,7 +520,8 @@ namespace utility::graphic
 		 * @brief Set viewport size in pixels.
 		 * @param viewportSize Viewport size (width, height).
 		 */
-		void setViewportSize(const math::Vector2F &viewportSize)
+		void setViewportSize(
+			const math::Vector<ViewComponentType, 2> &viewportSize)
 		{
 			_viewportSize = viewportSize;
 		}
@@ -550,9 +530,88 @@ namespace utility::graphic
 		 * @brief Get viewport size in pixels.
 		 * @return Viewport size (width, height).
 		 */
-		math::Vector2F getViewportSize(void) const
+		math::Vector<ViewComponentType, 2> getViewportSize(void) const
 		{
 			return _viewportSize;
+		}
+
+		/**
+		 * @brief Convert view to a GLM-compatible 4x4 view matrix.
+		 * @return 4x4 view matrix in column-major order.
+		 */
+		utility::math::Matrix<ViewComponentType, 4, 4> toViewMatrix(void) const
+		{
+			const auto orientation = _pose.getOrientation();
+			const auto position	   = _pose.getPosition();
+
+			utility::math::Matrix<ViewComponentType, 4, 4> view = glm::inverse(
+				glm::translate(glm::identity<glm::mat4>(),
+							   glm::vec3(position.x, position.y, position.z))
+				* glm::mat4_cast(glm::quat(orientation.w, orientation.x,
+										   orientation.y, orientation.z)));
+
+			// GLM is column-major: view[col][row]
+			// view[0][0] = static_cast<ViewComponentType>(right[0]);
+			// view[0][1] = static_cast<ViewComponentType>(up[0]);
+			// view[0][2] = static_cast<ViewComponentType>(-forward[0]);
+			// view[0][3] = static_cast<ViewComponentType>(0);
+
+			// view[1][0] = static_cast<ViewComponentType>(right[1]);
+			// view[1][1] = static_cast<ViewComponentType>(up[1]);
+			// view[1][2] = static_cast<ViewComponentType>(-forward[1]);
+			// view[1][3] = static_cast<ViewComponentType>(0);
+
+			// view[2][0] = static_cast<ViewComponentType>(right[2]);
+			// view[2][1] = static_cast<ViewComponentType>(up[2]);
+			// view[2][2] = static_cast<ViewComponentType>(-forward[2]);
+			// view[2][3] = static_cast<ViewComponentType>(0);
+
+			// view[3][0] =
+			// 	-static_cast<ViewComponentType>(math::dot(right, position));
+			// view[3][1] =
+			// 	-static_cast<ViewComponentType>(math::dot(up, position));
+			// view[3][2] =
+			// 	static_cast<ViewComponentType>(math::dot(forward, position));
+			// view[3][3] = static_cast<ViewComponentType>(1);
+
+			return view;
+		}
+
+		/**
+		 * @brief Build a perspective projection matrix from per-side field of
+		 * view angles.
+		 * @return 4x4 projection matrix in column-major order.
+		 * @throws std::invalid_argument if clipping planes are invalid or FOV
+		 * produces a degenerate frustum.
+		 */
+		utility::math::Matrix<ViewComponentType, 4, 4>
+			getProjectionMatrix() const
+		{
+			const ViewComponentType tanLeft = std::tan(_fieldOfView.getLeft());
+			const ViewComponentType tanRight =
+				std::tan(_fieldOfView.getRight());
+			const ViewComponentType tanUp	= std::tan(_fieldOfView.getUp());
+			const ViewComponentType tanDown = std::tan(_fieldOfView.getDown());
+
+			const ViewComponentType width  = tanRight - tanLeft;
+			const ViewComponentType height = tanUp - tanDown;
+
+			utility::math::Matrix<ViewComponentType, 4, 4> projection = {};
+
+			projection[0][0] = static_cast<ViewComponentType>(2) / width;
+			projection[1][1] = static_cast<ViewComponentType>(2) / height;
+			projection[2][0] = (tanRight + tanLeft) / width;
+			projection[2][1] = (tanUp + tanDown) / height;
+			projection[2][2] = -_farPlane / (_farPlane - _nearPlane);
+			projection[2][3] = -static_cast<ViewComponentType>(1);
+			projection[3][2] =
+				-(_farPlane * _nearPlane) / (_farPlane - _nearPlane);
+			projection[3][3] = static_cast<ViewComponentType>(0);
+
+			projection[1][1] *=
+				static_cast<ViewComponentType>(-1);	   // Invert Y for Vulkan
+
+			return projection;
 		}
 	};
 

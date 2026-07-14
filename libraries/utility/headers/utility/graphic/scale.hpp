@@ -280,6 +280,54 @@ namespace utility::graphic
 			|| this->y < ScaleComponentType {}
 			|| this->z < ScaleComponentType {};
 		}
+
+		/**
+		 * @brief Equality comparison.
+		 * @param other The scale to compare with.
+		 * @return True if all components are equal, false otherwise.
+		 */
+		bool operator==(const Scale &other) const noexcept
+		{
+			if (this->x != other.x) {
+				return false;
+			}
+			if (this->y != other.y) {
+				return false;
+			}
+			if (this->z != other.z) {
+				return false;
+			}
+			return true;
+		}
+
+		/**
+		 * @brief Inequality comparison.
+		 * @param other The scale to compare with.
+		 * @return True if any component is not equal, false otherwise.
+		 */
+		bool operator!=(const Scale &other) const noexcept
+		{
+			return !(*this == other);
+		}
+
+		/**
+		 * @brief Less-than comparison for ordering.
+		 * @param other The scale to compare with.
+		 * @return True if this scale is less than the other scale.
+		 */
+		bool operator<(const Scale &other) const noexcept
+		{
+			if (this->x != other.x) {
+				return this->x < other.x;
+			}
+			if (this->y != other.y) {
+				return this->y < other.y;
+			}
+			if (this->z != other.z) {
+				return this->z < other.z;
+			}
+			return false;
+		}
 	};
 
 	/**

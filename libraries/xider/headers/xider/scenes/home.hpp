@@ -20,36 +20,34 @@
  SOFTWARE.
  */
 
-#include "utility/event/hand_motion_event.hpp"
+#pragma once
 
-namespace utility::event
+#include <guillaume/scene.hpp>
+
+namespace xider::scenes
 {
 
-	HandMotionEvent::Factory::~Factory(void) = default;
-
-	std::shared_ptr<Event> HandMotionEvent::Factory::create(void) const
+	/**
+	 * @brief Home application scene.
+	 *
+	 * Represents the primary scene used by the application, responsible for
+	 * initializing core UI and game elements.
+	 */
+	class Home: public guillaume::Scene
 	{
-		return std::make_unique<HandMotionEvent>();
-	}
+		public:
+		/**
+		 * @brief Construct a new Home scene
+		 * @param localStorage Reference to persistent local storage
+		 * @param sessionStorage Reference to per-session storage
+		 */
+		Home(guillaume::LocalStorage &localStorage,
+			 guillaume::SessionStorage &sessionStorage);
 
-	std::shared_ptr<HandMotionEvent>
-		HandMotionEvent::Factory::createTyped(void) const
-	{
-		return std::make_unique<HandMotionEvent>();
-	}
+		/**
+		 * @brief Destroy the Home scene
+		 */
+		~Home(void);
+	};
 
-	HandMotionEvent::HandMotionEvent(void) = default;
-
-	HandMotionEvent::~HandMotionEvent(void) = default;
-
-	std::ostream &operator<<(std::ostream &stream,
-							 const HandMotionEvent &handMotionEvent)
-	{
-		stream << "HandMotionEvent(handType: "
-			   << static_cast<std::underlying_type<HandEvent::HandType>::type>(
-					  handMotionEvent.getHandType())
-			   << ", pose: " << handMotionEvent.getPose()
-			   << ", aim: " << handMotionEvent.getAim() << " }";
-		return stream;
-	}
-}	 // namespace utility::event
+}	 // namespace xider::scenes

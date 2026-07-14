@@ -300,12 +300,12 @@ namespace guillaume::entities
 		/**
 		 * @brief Left click event handler for the button.
 		 */
-		void leftClickPressHandler(void);
+		void buttonPressHandler(void);
 
 		/**
 		 * @brief Left click release event handler for the button.
 		 */
-		void leftClickReleaseHandler(void);
+		void buttonReleaseHandler(void);
 
 		public:
 		/**

@@ -77,4 +77,41 @@ namespace utility::event
 		return _pressed;
 	}
 
+	std::ostream &operator<<(std::ostream &stream,
+							 const MouseButtonEvent::Button button)
+	{
+		switch (button) {
+			case MouseButtonEvent::Button::Unknown:
+				stream << "Unknown";
+				break;
+			case MouseButtonEvent::Button::Left:
+				stream << "Left";
+				break;
+			case MouseButtonEvent::Button::Right:
+				stream << "Right";
+				break;
+			case MouseButtonEvent::Button::Middle:
+				stream << "Middle";
+				break;
+			case MouseButtonEvent::Button::X1:
+				stream << "X1";
+				break;
+			case MouseButtonEvent::Button::X2:
+				stream << "X2";
+				break;
+		}
+		return stream;
+	}
+
+	std::ostream &operator<<(std::ostream &stream,
+							 const MouseButtonEvent &mouseButtonEvent)
+	{
+		stream << "MouseButtonEvent("
+			   << "Position: " << mouseButtonEvent.getPosition()
+			   << ", Button: " << mouseButtonEvent.getButton()
+			   << ", Pressed: " << std::boolalpha
+			   << mouseButtonEvent.isButtonPressed() << ")";
+		return stream;
+	}
+
 }	 // namespace utility::event
