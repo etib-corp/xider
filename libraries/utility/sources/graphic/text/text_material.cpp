@@ -12,12 +12,14 @@ namespace utility::graphic
 	TextMaterial::TextMaterial()
 	{
 		_shaderName = "text";
+		_version = 0;
 	}
 
 	void TextMaterial::addAtlas(const std::string &name,
 								std::shared_ptr<Texture> atlas)
 	{
 		_textures[name] = atlas;
+		_version++;
 	}
 
 }	 // namespace utility::graphic

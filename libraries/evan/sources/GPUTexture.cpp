@@ -26,15 +26,16 @@ evan::GPUTexture::GPUTexture(const DeviceContext &deviceContext,
 
 	this->getLogger().info() << "Creating default sampler for GPUTexture...";
 	if (type == TextureType::FontAtlas) {
+		_mipLevel = 1;	  // Font atlases typically don't use mipmaps
 		this->createSampler(
 			*deviceBackend,
 			VkSamplerCreateInfo {
 				.sType			  = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
 				.pNext			  = nullptr,
 				.flags			  = 0,
-				.magFilter		  = VK_FILTER_NEAREST,
-				.minFilter		  = VK_FILTER_NEAREST,
-				.mipmapMode		  = VK_SAMPLER_MIPMAP_MODE_NEAREST,
+				.magFilter		  = VK_FILTER_LINEAR,
+				.minFilter		  = VK_FILTER_LINEAR,
+				.mipmapMode		  = VK_SAMPLER_MIPMAP_MODE_LINEAR,
 				.addressModeU	  = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
 				.addressModeV	  = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,
 				.addressModeW	  = VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE,

@@ -124,13 +124,13 @@ namespace utility::graphic
 		float y = getPose().getPosition().getY();
 		float z = getPose().getPosition().getZ();
 
-		double penX		= 0.0;
-		double baseline = std::round(_font->getAscender(_fontSize));
-
 		uint32_t indexOffset			 = 0;
 		std::vector<uint32_t> codepoints = utf8ToCodepoints(_content);
 		std::vector<Glyph> glyphs =
 			_font->processCodePoints(_fontSize, codepoints);
+
+		double penX		= 0.0;
+		double baseline = std::round(_font->getAscender(_fontSize));
 
 		float maxHeight = 0.0f;
 		for (const auto &g: glyphs) {

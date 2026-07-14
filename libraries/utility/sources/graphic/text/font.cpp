@@ -101,17 +101,16 @@ namespace utility::graphic
 				fontSized =
 					std::make_shared<FontSized>(fontSize, _faces.at(faceName));
 				_sizes.emplace(key, fontSized);
-
-				if (onNewTextureCreated) {
-					onNewTextureCreated(faceName + "_"
-											+ std::to_string(fontSize),
-										fontSized->getAtlas());
-				}
 			} else {
 				fontSized = fontSizedIt->second;
 			}
 
 			glyphs.push_back(fontSized->generateGlyph(codePoint));
+			if (onNewTextureCreated) {
+				onNewTextureCreated(faceName + "_"
+										+ std::to_string(fontSize),
+									fontSized->getAtlas());
+			}
 		}
 
 		return glyphs;

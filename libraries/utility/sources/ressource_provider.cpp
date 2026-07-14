@@ -168,26 +168,28 @@ namespace utility
 
 		auto font = std::make_shared<graphic::Font>(std::vector { *fontAsset });
 		auto fontID		 = getNextID();
-		auto materialKey = fontAsset->path() + "_material";
 
 		_fonts[fontID]					= font;
 		_elementsIDs[fontAsset->path()] = fontID;
 
-		auto textMaterial = std::make_shared<graphic::TextMaterial>();
-		auto materialID	  = getNextID();
-
-		_materials[materialID]	  = textMaterial;
-		_elementsIDs[materialKey] = materialID;
-
 		font->onNewTextureCreated =
-			[this, materialKey](std::string name,
-								std::shared_ptr<graphic::Texture> atlas) {
+			[this](std::string name,
+					std::shared_ptr<graphic::Texture> atlas) {
 				auto textureID = getNextID();
+				auto materialKey = name + "_material";
 
 				_textures[textureID] = atlas;
 				_elementsIDs[name]	 = textureID;
 
 				auto materialKeyIt = _elementsIDs.find(materialKey);
+				if (materialKeyIt == _elementsIDs.end()) {
+					auto textMaterial = std::make_shared<graphic::TextMaterial>();
+					auto materialID	  = getNextID();
+
+					_materials[materialID] = textMaterial;
+					_elementsIDs[materialKey] = materialID;
+					materialKeyIt = _elementsIDs.find(materialKey);
+				}
 
 				if (materialKeyIt == _elementsIDs.end()) {
 					getLogger().warning()
@@ -257,26 +259,28 @@ namespace utility
 
 		auto font		 = std::make_shared<graphic::Font>(assets);
 		auto fontID		 = getNextID();
-		auto materialKey = familyName + "_material";
 
 		_fonts[fontID]			 = font;
 		_elementsIDs[familyName] = fontID;
 
-		auto textMaterial = std::make_shared<graphic::TextMaterial>();
-		auto materialID	  = getNextID();
-
-		_materials[materialID]	  = textMaterial;
-		_elementsIDs[materialKey] = materialID;
-
 		font->onNewTextureCreated =
-			[this, materialKey](std::string name,
-								std::shared_ptr<graphic::Texture> atlas) {
+			[this](std::string name,
+					std::shared_ptr<graphic::Texture> atlas) {
 				auto textureID = getNextID();
+				auto materialKey = name + "_material";
 
 				_textures[textureID] = atlas;
 				_elementsIDs[name]	 = textureID;
 
 				auto materialKeyIt = _elementsIDs.find(materialKey);
+				if (materialKeyIt == _elementsIDs.end()) {
+					auto textMaterial = std::make_shared<graphic::TextMaterial>();
+					auto materialID	  = getNextID();
+
+					_materials[materialID] = textMaterial;
+					_elementsIDs[materialKey] = materialID;
+					materialKeyIt = _elementsIDs.find(materialKey);
+				}
 
 				if (materialKeyIt == _elementsIDs.end()) {
 					getLogger().warning()

@@ -76,11 +76,12 @@ void evan::RessourceManager::sync(bool refresh)
 	this->getLogger().info() << "Synchronizing materials...";
 	for (const auto &[id, material]: materials) {
 		this->getLogger().info() << "Synchronizing material ID " << id;
+		auto shaderID =
+			_ressourceProvider->getShaderID(material->getShaderName());
+
 		if (_materials.find(id) == _materials.end()) {
 			this->getLogger().info()
 				<< "Creating new GPUMaterial for material ID " << id;
-			auto shaderID =
-				_ressourceProvider->getShaderID(material->getShaderName());
 
 			if (shaderID == 0) {
 				this->getLogger().warning()
@@ -94,9 +95,6 @@ void evan::RessourceManager::sync(bool refresh)
 		if (refresh) {
 			this->getLogger().info()
 				<< "Refreshing GPUMaterial for material ID " << id;
-			auto shaderID =
-				_ressourceProvider->getShaderID(material->getShaderName());
-
 			if (shaderID == 0) {
 				this->getLogger().warning()
 					<< "Shader '" << material->getShaderName()
@@ -106,6 +104,7 @@ void evan::RessourceManager::sync(bool refresh)
 			_materials[id] = std::make_shared<GPUMaterial>(
 				_deviceContext, *_renderer, *material, shaderID);
 		}
+		_materials[id]->update(_deviceContext, *_renderer, *material, shaderID);
 	}
 
 	this->getLogger().info() << "Synchronizing textures...";
