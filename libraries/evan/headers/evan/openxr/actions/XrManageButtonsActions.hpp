@@ -77,6 +77,8 @@ namespace evan
 		utility::event::HandButtonEvent::Button
 			_buttonType; /**< The type of button this action represents (A, B,
 							X, Y, Menu, System). */
+		bool _lastState { false }; /**< The last known state of the button (pressed or
+							not pressed). */
 	};
 
 	/**

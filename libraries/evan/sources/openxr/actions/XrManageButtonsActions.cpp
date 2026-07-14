@@ -39,6 +39,13 @@ std::vector<std::shared_ptr<utility::event::Event>>
 	xrGetActionStateBoolean(deviceBackend._session, &getInfo, &state);
 
 	if (state.isActive) {
+
+		if (state.currentState != _lastState) {
+			_lastState = state.currentState;
+		} else {
+			return events;
+		}
+
 		auto buttonEvent = std::make_shared<utility::event::HandButtonEvent>();
 		buttonEvent->setButton(_buttonType);
 		buttonEvent->setButtonPressed(state.currentState);
