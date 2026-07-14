@@ -80,10 +80,10 @@ namespace guillaume::entities
 			 * @brief Build and register the icon entity.
 			 * @param parent The parent entity to which the new icon entity will
 			 * be attached.
-			 * @return The entity identifier of the newly created icon entity.
+			 * @return A shared pointer to the newly created icon entity.
 			 */
-			ecs::Entity::Identifier
-				registerEntity(std::shared_ptr<Entity> parent) override;
+			std::shared_ptr<Icon>
+				registerEntity(std::shared_ptr<Entity> parent);
 
 			/**
 			 * @brief Reset the builder to its initial state for creating a new
@@ -152,10 +152,9 @@ namespace guillaume::entities
 			 * entity (RGBA).
 			 * @param style The style of the icon to assign to the created
 			 * entity.
-			 * @return The entity identifier of the newly created icon entity.
-			 * @see components::Glyph::getName
+			 * @return A shared pointer to the newly created icon entity.
 			 */
-			ecs::Entity::Identifier
+			std::shared_ptr<Icon>
 				makeIcon(Builder &builder, std::shared_ptr<Entity> parent,
 						 const std::string &iconName, const float &fontSize,
 						 const utility::graphic::Color32Bit &color,

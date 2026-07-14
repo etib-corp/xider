@@ -57,7 +57,7 @@ namespace xider::scenes
 			getDirectorManager()
 				.getDirector<guillaume::entities::Model::Director>();
 
-		buttonDirector.makeIconButton(
+		auto goToSettingsButton = buttonDirector.makeIconButton(
 			buttonBuilder, nullptr, "Go to Settings", "settings",
 			Glyph::Style::Outlined,
 			[this]() {
@@ -66,10 +66,10 @@ namespace xider::scenes
 			Button::Color::Filled, Button::Shape::Round, Button::Size::Medium,
 			false);
 
-		textDirector.makeText(textBuilder, nullptr, "Home Scene", 18,
+		auto titleText = textDirector.makeText(textBuilder, nullptr, "Home Scene", 18,
 							  utility::graphic::Color32Bit(255, 255, 255, 255));
 
-		modelDirector.makeModel(modelBuilder, nullptr, "models/teapot.obj");
+		auto teapotModel = modelDirector.makeModel(modelBuilder, nullptr, "models/teapot.obj");
 	}
 
 	Home::~Home(void)

@@ -42,7 +42,7 @@ namespace guillaume::entities
 	{
 	}
 
-	ecs::Entity::Identifier
+	std::shared_ptr<Button>
 		Button::Builder::registerEntity(std::shared_ptr<Entity> parent)
 	{
 		_button = std::make_shared<Button>(
@@ -51,10 +51,13 @@ namespace guillaume::entities
 			_onClick);
 		_button->setParent(parent);
 
-		ecs::Entity::Identifier identifier = _button->getIdentifier();
 		this->getEntityRegistry().addEntity(_button);
+
+		auto buttonCopy = _button;	// Create a copy of the shared pointer to return
+
 		reset();
-		return identifier;
+
+		return buttonCopy;
 	}
 
 	void Button::Builder::reset(void)
@@ -136,7 +139,7 @@ namespace guillaume::entities
 	{
 	}
 
-	ecs::Entity::Identifier Button::Director::makeButton(
+	std::shared_ptr<Button> Button::Director::makeButton(
 		Builder &builder, std::shared_ptr<Entity> parent,
 		const std::string &labelContent, std::function<void(void)> onClick,
 		Color colorStyle, Shape shape, Size size, bool isMorph)
@@ -150,7 +153,7 @@ namespace guillaume::entities
 			.registerEntity(parent);
 	}
 
-	ecs::Entity::Identifier Button::Director::makeIconButton(
+	std::shared_ptr<Button> Button::Director::makeIconButton(
 		Builder &builder, std::shared_ptr<Entity> parent,
 		const std::string &labelContent, const std::string &iconGlyphName,
 		const components::Glyph::Style &iconStyle,
@@ -478,8 +481,8 @@ namespace guillaume::entities
 		, _iconGlyphName(iconGlyphName)
 		, _iconStyle(iconStyle)
 		, _labelContent(labelContent)
-		, _iconIdentifier(ecs::Entity::InvalidIdentifier)
-		, _labelIdentifier(ecs::Entity::InvalidIdentifier)
+		, _icon()
+		, _label()
 		, _isToggle(isToggle)
 		, _colorStyle(colorStyle)
 		, _shape(shape)
@@ -561,10 +564,8 @@ namespace guillaume::entities
 	{
 		_iconGlyphName = iconGlyphName;
 
-		if (auto icon = getEntity<Icon>(_iconIdentifier)) {
-			icon->setGlyphName(_iconGlyphName);
-		}
-
+		_icon->setGlyphName(_iconGlyphName);
+		
 		return *this;
 	}
 
@@ -572,9 +573,7 @@ namespace guillaume::entities
 	{
 		_iconStyle = iconStyle;
 
-		if (auto icon = getEntity<Icon>(_iconIdentifier)) {
-			icon->setStyle(_iconStyle);
-		}
+		_icon->setStyle(_iconStyle);
 
 		return *this;
 	}
@@ -583,9 +582,7 @@ namespace guillaume::entities
 	{
 		_labelContent = labelContent;
 
-		if (auto label = getEntity<Text>(_labelIdentifier)) {
-			label->setContent(_labelContent);
-		}
+		_label->setContent(_labelContent);
 
 		return *this;
 	}
@@ -637,14 +634,11 @@ namespace guillaume::entities
 			.setColor(
 				getContainerColor(_colorStyle, isHovered, isButtonPressed));
 
-		if (auto icon = getEntity<Icon>(_iconIdentifier)) {
-			icon->setColor(getContentColor(_colorStyle));
-		}
 
-		if (auto label = getEntity<Text>(_labelIdentifier)) {
-			label->setColor(getContentColor(_colorStyle));
-		}
-
+		_icon->setColor(getContentColor(_colorStyle));
+		
+		_label->setColor(getContentColor(_colorStyle));
+		
 		return *this;
 	}
 
@@ -694,15 +688,11 @@ namespace guillaume::entities
 	Button &Button::setSize(const Size &size)
 	{
 		_size = size;
-
-		if (auto icon = getEntity<Icon>(_iconIdentifier)) {
-			icon->setFontSize(getFontSize(_size));
-		}
-
-		if (auto label = getEntity<Text>(_labelIdentifier)) {
-			label->setFontSize(getFontSize(_size));
-		}
-
+	
+		_icon->setFontSize(getFontSize(_size));
+	
+		_label->setFontSize(getFontSize(_size));
+	
 		const auto &buttonPose =
 			getComponentRegistry()
 				.getComponent<components::Transform>(getIdentifier())
@@ -711,23 +701,23 @@ namespace guillaume::entities
 		auto iconPose = getIconPose(buttonPose, _size, getLayer());
 
 		getComponentRegistry()
-			.getComponent<components::Transform>(_iconIdentifier)
+			.getComponent<components::Transform>(_icon->getIdentifier())
 			.setPose(iconPose);
 
 		const auto &iconBound =
 			getComponentRegistry().getComponent<components::Bound>(
-				_iconIdentifier);
+				_icon->getIdentifier());
 
 		auto labelPose =
 			getLabelPose(buttonPose, _size, getLayer(), iconBound.getWidth());
 
 		getComponentRegistry()
-			.getComponent<components::Transform>(_labelIdentifier)
+			.getComponent<components::Transform>(_label->getIdentifier())
 			.setPose(labelPose);
 
 		const auto &labelBound =
 			getComponentRegistry().getComponent<components::Bound>(
-				_labelIdentifier);
+				_label->getIdentifier());
 
 		auto buttonWidth = getWidthPadding(_size) * 2.0f + iconBound.getWidth()
 			+ getSpaceBetweenIconAndLabel(_size) + labelBound.getWidth();
@@ -770,13 +760,17 @@ namespace guillaume::entities
 		Text::Builder labelBuilder(getComponentRegistry(), *this);
 		Text::Director labelDirector;
 
-		_iconIdentifier = iconDirector.makeIcon(
+		_icon = iconDirector.makeIcon(
 			iconBuilder, shared_from_this(), _iconGlyphName, getFontSize(_size),
 			getContentColor(_colorStyle), _iconStyle);
 
-		_labelIdentifier = labelDirector.makeText(
+		getLogger().info() << "Icon : " << _icon << " created for button: " << shared_from_this();
+
+		_label = labelDirector.makeText(
 			labelBuilder, shared_from_this(), _labelContent, getFontSize(_size),
 			getContentColor(_colorStyle));
+
+		getLogger().info() << "Label : " << _label << " created for button: " << shared_from_this();
 
 		getComponentRegistry()
 			.getComponent<components::HandButtonInteraction>(getIdentifier())
