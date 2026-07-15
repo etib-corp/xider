@@ -421,7 +421,7 @@ namespace utility
 	}
 
 	std::shared_ptr<graphic::Model>
-		RessourceProvider::loadModel(const std::string &path)
+		RessourceProvider::loadModel(const std::string &path, const std::string &material)
 	{
 		std::string resolvedPath = resolvePath(path);
 		auto it					 = _elementsIDs.find(resolvedPath);
@@ -441,13 +441,13 @@ namespace utility
 
 		auto id = getNextID();
 
-		_models[id] = loadModelFromAsset(modelAsset);
+		_models[id] = loadModelFromAsset(modelAsset, material);
 
 		return _models[id];
 	}
 
 	std::shared_ptr<graphic::Model> RessourceProvider::loadModelFromAsset(
-		std::shared_ptr<utility::File> modelAsset)
+		std::shared_ptr<utility::File> modelAsset, const std::string &material)
 	{
 		auto it = _elementsIDs.find(modelAsset->path());
 
@@ -457,7 +457,17 @@ namespace utility
 			}
 		}
 
-		auto model = std::make_shared<graphic::Model>(modelAsset);
+		auto materialID = getMaterialID(material);	// Default material ID if not found
+
+		if (materialID == 0) {
+			getLogger().warning()
+				<< "Material not found: " << material
+				<< ". Using default material for model: "
+				<< modelAsset->path();
+			materialID = getDefaultMaterialID();
+		}
+
+		auto model = std::make_shared<graphic::Model>(modelAsset, materialID);
 		auto id	   = getNextID();
 
 		_models[id] = model;
@@ -467,7 +477,8 @@ namespace utility
 
 	std::shared_ptr<graphic::Model> RessourceProvider::loadModelFromAsset(
 		std::shared_ptr<utility::File> modelAsset,
-		graphic::Model::ModelType type)
+		graphic::Model::ModelType type,
+		const std::string &material)
 	{
 		auto it = _elementsIDs.find(modelAsset->path());
 
@@ -477,7 +488,17 @@ namespace utility
 			}
 		}
 
-		auto model = std::make_shared<graphic::Model>(modelAsset, type);
+		auto materialID = getMaterialID(material);
+
+		if (materialID == 0) {
+			getLogger().warning()
+				<< "Material not found: " << material
+				<< ". Using default material for model: "
+				<< modelAsset->path();
+			materialID = getDefaultMaterialID();
+		}
+
+		auto model = std::make_shared<graphic::Model>(modelAsset, type, materialID);
 		auto id	   = getNextID();
 
 		_models[id] = model;
@@ -486,7 +507,7 @@ namespace utility
 	}
 
 	std::shared_ptr<graphic::Model>
-		RessourceProvider::loadObj(const std::string &path)
+		RessourceProvider::loadObj(const std::string &path, const std::string &material)
 	{
 		std::string resolvedPath = resolvePath(path);
 		auto it					 = _elementsIDs.find(resolvedPath);
@@ -504,8 +525,18 @@ namespace utility
 			return nullptr;
 		}
 
+		auto materialID = getMaterialID(material);
+
+		if (materialID == 0) {
+			getLogger().warning()
+				<< "Material not found: " << material
+				<< ". Using default material for model: "
+				<< modelAsset->path();
+			materialID = getDefaultMaterialID();
+		}
+
 		auto model = std::make_shared<graphic::Model>(
-			modelAsset, graphic::Model::ModelType::OBJ);
+			modelAsset, graphic::Model::ModelType::OBJ, materialID);
 		auto id = getNextID();
 
 		_models[id] = model;
@@ -514,7 +545,7 @@ namespace utility
 	}
 
 	std::shared_ptr<graphic::Model> RessourceProvider::loadObjFromAsset(
-		std::shared_ptr<utility::File> modelAsset)
+		std::shared_ptr<utility::File> modelAsset, const std::string &material)
 	{
 		auto it = _elementsIDs.find(modelAsset->path());
 
@@ -524,8 +555,18 @@ namespace utility
 			}
 		}
 
+		auto materialID = getMaterialID(material);
+
+		if (materialID == 0) {
+			getLogger().warning()
+				<< "Material not found: " << material
+				<< ". Using default material for model: "
+				<< modelAsset->path();
+			materialID = getDefaultMaterialID();
+		}
+
 		auto model = std::make_shared<graphic::Model>(
-			modelAsset, graphic::Model::ModelType::OBJ);
+			modelAsset, graphic::Model::ModelType::OBJ, materialID);
 		auto id = getNextID();
 
 		_models[id] = model;
