@@ -66,12 +66,13 @@ namespace utility::graphic
 		 * provided File. It processes the model data and populates the
 		 * necessary properties of the Model object, such as vertices, textures,
 		 * and materials, based on the content of the File.
+		 * @param materialID The ID of the material associated with the model.
 		 *
 		 * @note This implementation will parse the model according to the
 		 * extensions of the file (e.g., .obj, .fbx, .gltf) and set the
 		 * appropriate ModelType based on the file format.
 		 */
-		Model(std::shared_ptr<utility::File> modelAsset);
+		Model(std::shared_ptr<utility::File> modelAsset, uint32_t materialID);
 
 		/**
 		 * @brief Constructs a Model object from a given File containing the
@@ -81,12 +82,13 @@ namespace utility::graphic
 		 * model data to be loaded.
 		 * @param type The type of the model (e.g., OBJ, FBX, GLTF) to be
 		 * loaded.
+		 * @param materialID The ID of the material associated with the model.
 		 *
 		 * This constructor is responsible for initializing the Model object by
 		 * loading the model data from the provided File and setting the
 		 * ModelType based on the specified type parameter.
 		 */
-		Model(std::shared_ptr<utility::File> modelAsset, ModelType type);
+		Model(std::shared_ptr<utility::File> modelAsset, ModelType type, uint32_t materialID);
 
 		/**
 		 * @brief Destructs the Model object, releasing any allocated resources.
@@ -107,6 +109,8 @@ namespace utility::graphic
 		 * @return The bounding size of the model.
 		 */
 		utility::graphic::SizeF computeBoundingSize(void);
+
+		uint32_t getMaterialID(void) const;
 
 		protected:
 		/**
@@ -129,6 +133,8 @@ namespace utility::graphic
 		ModelType _type;	///< The type of the model (e.g., OBJ, FBX, GLTF)
 		utility::graphic::SizeF
 			_boundingBox {};	///< The bounding box of the model
+
+		uint32_t _materialID;	///< The material associated with the model
 
 		using Loggable::getLogger;
 	};
