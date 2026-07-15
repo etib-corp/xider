@@ -314,7 +314,7 @@ namespace utility
 		RessourceProvider::loadMaterial(const std::string &path,
 										ShaderType shaderType)
 	{
-		auto it = _elementsIDs.find(path);
+		auto it = _elementsIDs.find(resolvePath(path));
 
 		if (it != _elementsIDs.end()) {
 			if (_materials.find(it->second) != _materials.end()) {
@@ -457,14 +457,19 @@ namespace utility
 			}
 		}
 
-		auto materialID = getMaterialID(material);	// Default material ID if not found
+		auto materialID = getMaterialID(resolvePath(material));	// Default material ID if not found
 
 		if (materialID == 0) {
-			getLogger().warning()
-				<< "Material not found: " << material
-				<< ". Using default material for model: "
-				<< modelAsset->path();
-			materialID = getDefaultMaterialID();
+			loadMaterial(material, ShaderType::MESH_SHADER);
+			materialID = getMaterialID(resolvePath(material));
+
+			if (materialID == 0) {
+				getLogger().warning()
+					<< "Material not found: " << material
+					<< ". Using default material for model: "
+					<< modelAsset->path();
+				materialID = getDefaultMaterialID();
+			}
 		}
 
 		auto model = std::make_shared<graphic::Model>(modelAsset, materialID);
@@ -488,7 +493,7 @@ namespace utility
 			}
 		}
 
-		auto materialID = getMaterialID(material);
+		auto materialID = getMaterialID(resolvePath(material));
 
 		if (materialID == 0) {
 			getLogger().warning()
@@ -525,7 +530,7 @@ namespace utility
 			return nullptr;
 		}
 
-		auto materialID = getMaterialID(material);
+		auto materialID = getMaterialID(resolvePath(material));
 
 		if (materialID == 0) {
 			getLogger().warning()
@@ -555,7 +560,7 @@ namespace utility
 			}
 		}
 
-		auto materialID = getMaterialID(material);
+		auto materialID = getMaterialID(resolvePath(material));
 
 		if (materialID == 0) {
 			getLogger().warning()
