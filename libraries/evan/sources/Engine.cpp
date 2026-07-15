@@ -155,16 +155,20 @@ size_t evan::Engine::addModel(std::shared_ptr<utility::graphic::Model> model)
 
 	this->getLogger().info() << "Drawing model of type: " << modelTypeStr;
 
+	auto material_id = model->getMaterialID();
+
 	std::map<uint32_t, utility::graphic::Mesh> rawObjects;
 	for (const auto &mesh: model->getMeshes()) {
-		// Assuming a default material for the model; this can be improved to
-		// handle materials per mesh if needed.
-		auto material_id = model->getMaterialID();
 		rawObjects.emplace(material_id, *mesh);
 	}
 
-	return 0;	 // Placeholder implementation - replace with actual model
-				 // addition logic
+	std::shared_ptr<RenderObject> modelObject =
+		std::make_shared<RenderObject>(_deviceContext, rawObjects, "mesh");
+	auto objectID =
+		_scenes[_currentScene]->addObject(_nextObjectID++, modelObject);
+	_ressourceManager->sync();
+
+	return objectID;
 }
 
 size_t evan::Engine::addObject(
