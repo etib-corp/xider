@@ -41,6 +41,8 @@ namespace guillaume::entities
 	{
 		_model =
 			std::make_shared<Model>(this->getComponentRegistry(), _modelPath);
+		_model->setModelPath(_modelPath);
+		_model->setTexturePath(_texturePath);
 		_model->setParent(parent);
 
 		ecs::Entity::Identifier identifier = _model->getIdentifier();
@@ -52,11 +54,20 @@ namespace guillaume::entities
 	void Model::Builder::reset(void)
 	{
 		_model.reset();
+		_modelPath.clear();
+		_texturePath.clear();
 	}
 
 	Model::Builder &Model::Builder::withModelPath(const std::string &modelPath)
 	{
 		_modelPath = modelPath;
+		return *this;
+	}
+
+	Model::Builder &
+		Model::Builder::withTexturePath(const std::string &texturePath)
+	{
+		_texturePath = texturePath;
 		return *this;
 	}
 
@@ -72,9 +83,10 @@ namespace guillaume::entities
 	ecs::Entity::Identifier
 		Model::Director::makeModel(Builder &builder,
 								   std::shared_ptr<Entity> parent,
-								   const std::string &modelPath)
+								   const std::string &modelPath,
+								   const std::string &texturePath)
 	{
-		return builder.withModelPath(modelPath).registerEntity(parent);
+		return builder.withModelPath(modelPath).withTexturePath(texturePath).registerEntity(parent);
 	}
 
 	Model::Model(ecs::ComponentRegistry &registry, const std::string &modelPath)
@@ -99,6 +111,17 @@ namespace guillaume::entities
 		return *this;
 	}
 
+	Model &Model::setTexturePath(const std::string &texturePath)
+	{
+		_texturePath = texturePath;
+
+		getComponentRegistry()
+			.getComponent<components::Model>(getIdentifier())
+			.setTexturePath(texturePath);
+
+		return *this;
+	}
+
 	void Model::initialize(void)
 	{
 	}
@@ -106,6 +129,7 @@ namespace guillaume::entities
 	void Model::update(void)
 	{
 		setModelPath(_modelPath);
+		setTexturePath(_texturePath);
 	}
 
 }	 // namespace guillaume::entities

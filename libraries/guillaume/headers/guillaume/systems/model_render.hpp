@@ -44,6 +44,7 @@ namespace guillaume::systems
 	 */
 	struct ModelRenderCacheKey {
 		std::string modelPath;	  ///< The path of the model to be rendered
+		std::string texturePath;  ///< The path of the texture to be applied to the model
 		utility::graphic::PoseF pose;	 ///< The pose of the model in 3D space
 		utility::graphic::ScaleF scale;	   ///< The scale of the model
 
@@ -55,6 +56,9 @@ namespace guillaume::systems
 		bool operator==(const ModelRenderCacheKey &other) const
 		{
 			if (modelPath != other.modelPath) {
+				return false;
+			}
+			if (texturePath != other.texturePath) {
 				return false;
 			}
 			if (pose != other.pose) {
@@ -85,6 +89,9 @@ namespace guillaume::systems
 		{
 			if (modelPath != other.modelPath) {
 				return modelPath < other.modelPath;
+			}
+			if (texturePath != other.texturePath) {
+				return texturePath < other.texturePath;
 			}
 			if (pose != other.pose) {
 				return pose < other.pose;
