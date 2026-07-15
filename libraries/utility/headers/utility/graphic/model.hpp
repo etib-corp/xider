@@ -110,6 +110,11 @@ namespace utility::graphic
 		 */
 		utility::graphic::SizeF computeBoundingSize(void);
 
+		/**
+		 * @brief Get the material ID associated with the model.
+		 *
+		 * @return The material ID as a uint32_t value.
+		 */
 		uint32_t getMaterialID(void) const;
 
 		protected:

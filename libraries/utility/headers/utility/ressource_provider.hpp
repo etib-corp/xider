@@ -255,6 +255,8 @@ namespace utility
 		 * @brief Loads a model resource from a specified file path.
 		 *
 		 * @param path The file path to the model resource to be loaded.
+		 * @param material The name of the material to be associated with the loaded
+		 * model. If not specified, the default material will be used.
 		 *
 		 * @return A shared pointer to the loaded Model object.
 		 */
@@ -265,6 +267,8 @@ namespace utility
 		 *
 		 * @param modelAsset A shared pointer to the File object containing the
 		 * model data to be loaded.
+		 * @param material The name of the material to be associated with the loaded
+		 * model. If not specified, the default material will be used.
 		 *
 		 * @return A shared pointer to the loaded Model object.
 		 */
