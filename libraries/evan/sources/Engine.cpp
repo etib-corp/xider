@@ -154,9 +154,14 @@ size_t evan::Engine::addModel(std::shared_ptr<utility::graphic::Model> model)
 																 : "Unknown");
 
 	this->getLogger().info() << "Drawing model of type: " << modelTypeStr;
-	this->getLogger().warning()
-		<< "drawModel is not fully implemented yet. This is "
-		   "a placeholder implementation.";
+
+	std::map<uint32_t, utility::graphic::Mesh> rawObjects;
+	for (const auto &mesh: model->getMeshes()) {
+		// Assuming a default material for the model; this can be improved to
+		// handle materials per mesh if needed.
+		auto material_id = model->getMaterialID();
+		rawObjects.emplace(material_id, *mesh);
+	}
 
 	return 0;	 // Placeholder implementation - replace with actual model
 				 // addition logic
