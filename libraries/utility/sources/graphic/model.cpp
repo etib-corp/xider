@@ -174,6 +174,12 @@ namespace utility::graphic
 				indices.push_back(newIndex);
 			}
 		}
+
+		_meshes.clear();
+		if (!vertices.empty() && !indices.empty()) {
+			_meshes.push_back(
+				std::make_shared<Mesh>(vertices, indices));
+		}
 		_boundingBox = SizeF(maxX - minX, maxY - minY, maxZ - minZ);
 	}
 }	 // namespace utility::graphic
