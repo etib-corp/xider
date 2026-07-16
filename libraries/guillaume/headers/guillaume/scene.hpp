@@ -28,6 +28,9 @@
 
 #include <utility/logging/loggable.hpp>
 #include <utility/logging/default_logger.hpp>
+
+#include <utility/ressource_provider.hpp>
+
 #include <utility/graphic/view.hpp>
 
 #include "guillaume/ecs/component_registry.hpp"
@@ -51,6 +54,8 @@ namespace guillaume
 										  utility::logging::DefaultLogger>
 	{
 		private:
+		std::shared_ptr<utility::RessourceProvider>
+			_ressourceProvider;	///< Shared pointer to the resource provider
 		LocalStorage &
 			_localStorage;	  ///< Reference to the local storage for this scene
 		SessionStorage &_sessionStorage;	///< Reference to the session
@@ -65,6 +70,12 @@ namespace guillaume
 										   ///< to at end of frame
 
 		protected:
+		/**
+		 * @brief Get a shared pointer to the resource provider.
+		 * @return Shared pointer to the resource provider.
+		 */
+		std::shared_ptr<utility::RessourceProvider> getRessourceProvider(void);
+
 		/**
 		 * @brief Get the entity builder manager for this scene.
 		 * @return Reference to the entity builder manager.
@@ -98,7 +109,8 @@ namespace guillaume
 		 * @param sessionStorage Reference to the session storage for this
 		 * scene.
 		 */
-		Scene(LocalStorage &localStorage, SessionStorage &sessionStorage);
+		Scene(std::shared_ptr<utility::RessourceProvider>
+			_ressourceProvider, LocalStorage &localStorage, SessionStorage &sessionStorage);
 
 		/**
 		 * @brief Default destructor for Scene.

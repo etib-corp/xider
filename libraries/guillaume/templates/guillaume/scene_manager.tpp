@@ -31,8 +31,9 @@ namespace guillaume
 {
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
 		requires IsOneOf<DefaultSceneType, SceneTypes...>
-	SceneManager<DefaultSceneType, SceneTypes...>::SceneManager(void)
-		: _scenes()
+	SceneManager<DefaultSceneType, SceneTypes...>::SceneManager(std::shared_ptr<utility::RessourceProvider> ressourceProvider)
+		: _ressourceProvider(ressourceProvider)
+		, _scenes()
 		, _activeSceneType(typeid(void))
 		, _engine(nullptr)
 	{
@@ -129,7 +130,7 @@ namespace guillaume
 	{
 		std::type_index typeIndex(typeid(SceneType));
 		_scenes[typeIndex] =
-			std::make_unique<SceneType>(_localStorage, _sessionStorage);
+			std::make_unique<SceneType>(_ressourceProvider, _localStorage, _sessionStorage);
 		this->getLogger().info()
 			<< "Registered scene type: " << utility::demangle<SceneType>();
 	}

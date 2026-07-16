@@ -31,8 +31,10 @@
 
 namespace guillaume
 {
-	Scene::Scene(LocalStorage &localStorage, SessionStorage &sessionStorage)
-		: _localStorage(localStorage)
+	Scene::Scene(std::shared_ptr<utility::RessourceProvider> _ressourceProvider,
+					 LocalStorage &localStorage, SessionStorage &sessionStorage)
+		: _ressourceProvider(_ressourceProvider)
+		, _localStorage(localStorage)
 		, _sessionStorage(sessionStorage)
 		, _componentRegistry()
 		, _entityBuilderManager(
@@ -57,6 +59,11 @@ namespace guillaume
 		getLogger().info() << "Scene destroyed with "
 						   << getEntitiesBreadthFirst().size()
 						   << " entity/entities in hierarchy";
+	}
+
+	std::shared_ptr<utility::RessourceProvider> Scene::getRessourceProvider(void)
+	{
+		return _ressourceProvider;
 	}
 
 	ecs::EntityBuilderManager &Scene::getBuilderManager(void)

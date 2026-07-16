@@ -22,23 +22,22 @@
 
 #include <guillaume/entities/button.hpp>
 #include <guillaume/entities/text.hpp>
-#include <guillaume/entities/model.hpp>
 
-#include "xider/scenes/home.hpp"
+#include "xider/scenes/sound.hpp"
 #include "xider/scenes/settings.hpp"
 
 namespace xider::scenes
 {
 
-	Home::Home(std::shared_ptr<utility::RessourceProvider> ressourceProvider,
-			   guillaume::LocalStorage &localStorage,
-			   guillaume::SessionStorage &sessionStorage)
+	Sound::Sound(std::shared_ptr<utility::RessourceProvider> ressourceProvider,
+					   guillaume::LocalStorage &localStorage,
+					   guillaume::SessionStorage &sessionStorage)
 		: guillaume::Scene(ressourceProvider, localStorage, sessionStorage)
 	{
 		using namespace guillaume::entities;
 		using namespace guillaume::components;
 
-		getLogger().info() << "Home scene created";
+		getLogger().info() << "Sound scene created";
 
 		auto &buttonBuilder = getBuilderManager().getBuilder<Button::Builder>();
 		auto &buttonDirector =
@@ -47,16 +46,10 @@ namespace xider::scenes
 		auto &textBuilder =
 			getBuilderManager()
 				.getBuilder<guillaume::entities::Text::Builder>();
+
 		auto &textDirector =
 			getDirectorManager()
 				.getDirector<guillaume::entities::Text::Director>();
-
-		auto &modelBuilder =
-			getBuilderManager()
-				.getBuilder<guillaume::entities::Model::Builder>();
-		auto &modelDirector =
-			getDirectorManager()
-				.getDirector<guillaume::entities::Model::Director>();
 
 		auto goToSettingsButton = buttonDirector.makeIconButton(
 			buttonBuilder, nullptr, "Go to Settings", "settings",
@@ -67,20 +60,38 @@ namespace xider::scenes
 			Button::Color::Filled, Button::Shape::Round, Button::Size::Medium,
 			false);
 
-		auto titleText = textDirector.makeText(
-			textBuilder, nullptr, "Home Scene", 18,
+		auto soundText = textDirector.makeText(
+			textBuilder, nullptr, "Sound Scene", 18,
+			utility::graphic::Color32Bit(255, 255, 255, 255));
+			
+			auto settingsText = textDirector.makeText(
+			textBuilder, nullptr, "Settings Scene", 18,
 			utility::graphic::Color32Bit(255, 255, 255, 255));
 
-		modelDirector.makeModel(modelBuilder, nullptr, "models/viking_room.obj", "textures/viking_room.png");
+		std::unique_ptr<utility::sound::AudioSource> source = ressourceProvider->loadAudioSource("sound/nastelbom-background-music-486996.mp3");
+		source->setGain(0.5f);
+		source->stop();
 
-			static auto source = ressourceProvider->loadAudioSource(
-		"sound/nastelbom-background-music-486996.mp3");
+		auto playSourceButton = buttonDirector.makeIconButton(
+			buttonBuilder, nullptr, "Play Sound", "play_arrow",
+			Glyph::Style::Outlined,
+			[&source]() {
+				source->play();
+			},
+			Button::Color::Filled, Button::Shape::Round, Button::Size::Medium,
+			false);
 
-	source->setGain(0.5f);
-	source->play();
+		auto pauseSourceButton = buttonDirector.makeIconButton(
+			buttonBuilder, nullptr, "Pause Sound", "pause",
+			Glyph::Style::Outlined,
+			[&source]() {
+				source->pause();
+			},
+			Button::Color::Filled, Button::Shape::Round, Button::Size::Medium,
+			false);
 	}
 
-	Home::~Home(void)
+	Sound::~Sound(void)
 	{
 	}
 

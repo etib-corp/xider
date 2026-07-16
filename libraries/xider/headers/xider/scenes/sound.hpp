@@ -20,30 +20,35 @@
  SOFTWARE.
  */
 
-#include "xider/xider.hpp"
+#pragma once
 
-#include "xider/engine.hpp"
+#include <guillaume/scene.hpp>
 
-namespace xider
+namespace xider::scenes
 {
-	XIDER::XIDER(std::shared_ptr<evan::IPlatform> platform,
-				 std::shared_ptr<utility::RessourceProvider> ressourceProvider)
-		: guillaume::Application<scenes::Home, scenes::Home, scenes::Settings, scenes::Sound>(
-			  ressourceProvider)
+
+	/**
+	 * @brief Sound application scene.
+	 *
+	 * Represents the scene responsible for managing audio settings and sound-related features within the application. It provides UI and logic for adjusting volume, audio output, and other sound configurations
+	 */
+	class Sound: public guillaume::Scene
 	{
-		getLogger().info() << "XIDER application initialized with Evan engine";
+		public:
+		/**
+		 * @brief Construct a new Sound scene
+		 * @param ressourceProvider Shared pointer to the resource provider for loading assets
+		 * @param localStorage Reference to persistent local storage
+		 * @param sessionStorage Reference to per-session storage
+		 */
+		Sound(std::shared_ptr<utility::RessourceProvider>
+			ressourceProvider,guillaume::LocalStorage &localStorage,
+			 guillaume::SessionStorage &sessionStorage);
 
-		std::unique_ptr<evan::Engine> evanEngine =
-			std::make_unique<evan::Engine>(getRessourceProvider(), platform);
+		/**
+		 * @brief Destroy the Sound scene
+		 */
+		~Sound(void);
+	};
 
-		std::unique_ptr<Engine> xiderEngine =
-			std::make_unique<Engine>(std::move(evanEngine));
-
-		setEngine(std::move(xiderEngine));
-	}
-
-	XIDER::~XIDER(void)
-	{
-		getLogger().info() << "XIDER application destroyed";
-	}
-}	 // namespace xider
+}	 // namespace xider::scenes
