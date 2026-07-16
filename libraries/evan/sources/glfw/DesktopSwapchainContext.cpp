@@ -73,6 +73,16 @@ void evan::DesktopSwapchainContext::recreateSwapchain(
 		deviceContext, _referenceWindow, renderpass);
 
 	_swapchainImages.push_back(newSwapchainImage);
+
+	auto viewportSize = this->getViewportSize();
+	this->getLogger().error()
+		<< "Setting up view for Desktop platform with viewport size: "
+		<< viewportSize;
+
+	auto view		 = this->getView(0);
+	view.setViewportSize(
+		utility::math::Vector2F{viewportSize.x / 2, viewportSize.y / 2});
+	view.setPerspective(M_PI_2, viewportSize.x / viewportSize.y);
 }
 
 VkResult evan::DesktopSwapchainContext::aquireImage(
