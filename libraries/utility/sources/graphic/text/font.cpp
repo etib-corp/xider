@@ -106,19 +106,19 @@ namespace utility::graphic
 				fontSized = fontSizedIt->second;
 			}
 
-		const bool hadGlyph = fontSized->hasGlyph(codePoint);
+			const bool hadGlyph = fontSized->hasGlyph(codePoint);
 			glyphs.push_back(fontSized->generateGlyph(codePoint));
-		if (!hadGlyph) {
-			dirtyFontSizeds[faceName] = fontSized;
+			if (!hadGlyph) {
+				dirtyFontSizeds[faceName] = fontSized;
 			}
 		}
 
-	if (onNewTextureCreated) {
-		for (const auto &[faceName, fontSized]: dirtyFontSizeds) {
-			onNewTextureCreated(faceName + "_" + std::to_string(fontSize),
-								fontSized->getAtlas());
+		if (onNewTextureCreated) {
+			for (const auto &[faceName, fontSized]: dirtyFontSizeds) {
+				onNewTextureCreated(faceName + "_" + std::to_string(fontSize),
+									fontSized->getAtlas());
+			}
 		}
-	}
 
 		return glyphs;
 	}

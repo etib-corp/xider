@@ -77,7 +77,8 @@ namespace xider::scenes
 		_first_source->stop();
 
 		_second_source = ressourceProvider->loadAudioSource(
-			"sound/sigmamusicart-jazz-lounge-relaxing-background-music-537739.mp3");
+			"sound/"
+			"sigmamusicart-jazz-lounge-relaxing-background-music-537739.mp3");
 		_second_source->setGain(0.5f);
 		_second_source->stop();
 
@@ -93,8 +94,8 @@ namespace xider::scenes
 
 		addRootEntity("play_source_button",
 					  buttonDirector.makeIconButton(
-						  buttonBuilder, nullptr, "Play First Sound", "play_arrow",
-						  Glyph::Style::Outlined,
+						  buttonBuilder, nullptr, "Play First Sound",
+						  "play_arrow", Glyph::Style::Outlined,
 						  [this]() {
 							  _first_source->play();
 						  },
@@ -113,8 +114,8 @@ namespace xider::scenes
 
 		addRootEntity("play_second_source_button",
 					  buttonDirector.makeIconButton(
-						  buttonBuilder, nullptr, "Play Second Sound", "play_arrow",
-						  Glyph::Style::Outlined,
+						  buttonBuilder, nullptr, "Play Second Sound",
+						  "play_arrow", Glyph::Style::Outlined,
 						  [this]() {
 							  _second_source->play();
 						  },

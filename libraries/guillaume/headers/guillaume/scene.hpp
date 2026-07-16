@@ -123,7 +123,8 @@ namespace guillaume
 		template<typename NextScene> void goToScene(void);
 		/**
 		 * @brief Default constructor for Scene.
-		 * @param ressourceProvider Shared pointer to the resource provider for this
+		 * @param ressourceProvider Shared pointer to the resource provider for
+		 * this
 		 * @param localStorage Reference to the local storage for this scene.
 		 * @param sessionStorage Reference to the session storage for this
 		 * scene.
