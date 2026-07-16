@@ -168,6 +168,11 @@ namespace utility::graphic
 		return _generatedAtlas;
 	}
 
+	bool FontSized::hasGlyph(uint32_t codePoint) const
+	{
+		return _generatedGlyphs.find(codePoint) != _generatedGlyphs.end();
+	}
+
 	void FontSized::generateAtlas()
 	{
 		if (!_generatedAtlas) {

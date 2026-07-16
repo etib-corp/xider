@@ -77,6 +77,15 @@ namespace utility::graphic
 		std::shared_ptr<Texture> getAtlas(bool shouldRegenerate = false);
 
 		/**
+		 * @brief Checks whether a glyph has already been generated for this
+		 * font size.
+		 *
+		 * @param codePoint The Unicode code point to look up.
+		 * @return true if the glyph exists in the atlas cache, false otherwise.
+		 */
+		bool hasGlyph(uint32_t codePoint) const;
+
+		/**
 		 * @brief Generates a glyph for a specific Unicode code point and adds
 		 * it to the texture atlas.
 		 *

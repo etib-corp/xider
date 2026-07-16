@@ -84,6 +84,7 @@ namespace utility::graphic
 	{
 		std::vector<Glyph> glyphs;
 		glyphs.reserve(codePoints.size());
+		std::map<std::string, std::shared_ptr<FontSized>> dirtyFontSizeds;
 
 		for (const auto &codePoint: codePoints) {
 			const std::string faceName = _getFaceNameForGlyph(codePoint);
@@ -105,12 +106,19 @@ namespace utility::graphic
 				fontSized = fontSizedIt->second;
 			}
 
+		const bool hadGlyph = fontSized->hasGlyph(codePoint);
 			glyphs.push_back(fontSized->generateGlyph(codePoint));
-			if (onNewTextureCreated) {
-				onNewTextureCreated(faceName + "_" + std::to_string(fontSize),
-									fontSized->getAtlas());
+		if (!hadGlyph) {
+			dirtyFontSizeds[faceName] = fontSized;
 			}
 		}
+
+	if (onNewTextureCreated) {
+		for (const auto &[faceName, fontSized]: dirtyFontSizeds) {
+			onNewTextureCreated(faceName + "_" + std::to_string(fontSize),
+								fontSized->getAtlas());
+		}
+	}
 
 		return glyphs;
 	}
