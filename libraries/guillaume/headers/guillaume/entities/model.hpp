@@ -52,6 +52,9 @@ namespace guillaume::entities
 				_model;	   ///< Unique pointer to the Model entity being built
 			std::string _modelPath;	   ///< Name of the model to be used for
 									   ///< this Model entity
+			std::string _texturePath;   ///< Name of the texture to be used for
+									   ///< this Model entity
+
 			public:
 			/**
 			 * @brief Construct a new Model Builder object.
@@ -90,6 +93,13 @@ namespace guillaume::entities
 			 * @see components::Model::getName
 			 */
 			Builder &withModelPath(const std::string &modelPath);
+
+			/**
+			 * @brief Set the name of the texture to be used for the Model entity.
+			 * @param texturePath The texture identifier to set.
+			 * @return Reference to the builder for chaining.
+			 */
+			Builder &withTexturePath(const std::string &texturePath);
 		};
 
 		/**
@@ -116,16 +126,21 @@ namespace guillaume::entities
 			 * @param parent The parent entity to which the new model entity
 			 * will be attached.
 			 * @param modelPath The model name to assign to the created entity.
+			 * @param texturePath The texture name to assign to the created entity (optional).
 			 * @return The entity identifier of the newly created model entity.
 			 * @see components::Glyph::getName
 			 */
 			ecs::Entity::Identifier makeModel(Builder &builder,
 											  std::shared_ptr<Entity> parent,
-											  const std::string &modelPath);
+											  const std::string &modelPath,
+											  const std::string &texturePath = "");
 		};
 
 		private:
 		std::string _modelPath;	   ///< Name of the model to be used for this
+								   ///< Model entity
+
+		std::string _texturePath;   ///< Name of the texture to be used for this
 								   ///< Model entity
 
 		public:
@@ -150,6 +165,13 @@ namespace guillaume::entities
 		 * @return Reference to this Model for chaining.
 		 */
 		Model &setModelPath(const std::string &modelPath);
+
+		/**
+		 * @brief Set the name of the texture for this Model entity.
+		 * @param texturePath The new name of the texture to set.
+		 * @return Reference to this Model for chaining.
+		 */
+		Model &setTexturePath(const std::string &texturePath);
 
 		/**
 		 * @brief Initialize the model entity's derived state.

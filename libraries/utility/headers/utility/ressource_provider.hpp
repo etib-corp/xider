@@ -255,21 +255,25 @@ namespace utility
 		 * @brief Loads a model resource from a specified file path.
 		 *
 		 * @param path The file path to the model resource to be loaded.
+		 * @param material The name of the material to be associated with the loaded
+		 * model. If not specified, the default material will be used.
 		 *
 		 * @return A shared pointer to the loaded Model object.
 		 */
-		std::shared_ptr<graphic::Model> loadModel(const std::string &path);
+		std::shared_ptr<graphic::Model> loadModel(const std::string &path, const std::string &material = "default_material");
 
 		/**
 		 * @brief Loads a model resource from a specified asset.
 		 *
 		 * @param modelAsset A shared pointer to the File object containing the
 		 * model data to be loaded.
+		 * @param material The name of the material to be associated with the loaded
+		 * model. If not specified, the default material will be used.
 		 *
 		 * @return A shared pointer to the loaded Model object.
 		 */
 		std::shared_ptr<graphic::Model>
-			loadModelFromAsset(std::shared_ptr<utility::File> modelAsset);
+			loadModelFromAsset(std::shared_ptr<utility::File> modelAsset, const std::string &material = "default_material");
 
 		/**
 		 * @brief Loads a model resource from a specified file path and model
@@ -279,33 +283,41 @@ namespace utility
 		 * model data to be loaded.
 		 * @param type The type of the model (e.g., OBJ, FBX, GLTF) to be
 		 * loaded.
+		 * @param material The name of the material to be associated with the loaded
+		 * model. If not specified, the default material will be used.
 		 *
 		 * @return A shared pointer to the loaded Model object.
 		 */
 		std::shared_ptr<graphic::Model>
 			loadModelFromAsset(std::shared_ptr<utility::File> modelAsset,
-							   graphic::Model::ModelType type);
+							   graphic::Model::ModelType type,
+							   const std::string &material = "default_material");
 
 		/**
 		 * @brief Loads an OBJ model resource from a specified file path.
 		 *
 		 * @param path The file path to the OBJ model resource to be loaded.
+		 * @param material The name of the material to be associated with the loaded
+		 * OBJ model. If not specified, the default material will be used.
+		 *
 		 * @return A shared pointer to the loaded Model object representing the
 		 * OBJ model.
 		 */
-		std::shared_ptr<graphic::Model> loadObj(const std::string &path);
+		std::shared_ptr<graphic::Model> loadObj(const std::string &path, const std::string &material = "default_material");
 
 		/**
 		 * @brief Loads an OBJ model resource from a specified asset.
 		 *
 		 * @param modelAsset A shared pointer to the File object containing the
 		 * OBJ model data to be loaded.
+		 * @param material The name of the material to be associated with the loaded
+		 * OBJ model. If not specified, the default material will be used.
 		 *
 		 * @return A shared pointer to the loaded Model object representing the
 		 * OBJ model.
 		 */
 		std::shared_ptr<graphic::Model>
-			loadObjFromAsset(std::shared_ptr<utility::File> modelAsset);
+			loadObjFromAsset(std::shared_ptr<utility::File> modelAsset, const std::string &material = "default_material");
 
 		/**
 		 * @brief Loads a shader resource from specified vertex and fragment

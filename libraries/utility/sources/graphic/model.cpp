@@ -9,8 +9,8 @@
 
 namespace utility::graphic
 {
-	Model::Model(std::shared_ptr<utility::File> modelAsset)
-		: Renderable(PoseF(), Color32Bit())
+	Model::Model(std::shared_ptr<utility::File> modelAsset, uint32_t materialID)
+		: Renderable(PoseF(), Color32Bit()), _materialID(materialID)
 	{
 		std::string extension =
 			modelAsset->path().substr(modelAsset->path().find_last_of(".") + 1);
@@ -33,8 +33,8 @@ namespace utility::graphic
 		}
 	}
 
-	Model::Model(std::shared_ptr<utility::File> modelAsset, ModelType modelType)
-		: Renderable(PoseF(), Color32Bit())
+	Model::Model(std::shared_ptr<utility::File> modelAsset, ModelType modelType, uint32_t materialID)
+		: Renderable(PoseF(), Color32Bit()), _materialID(materialID)
 	{
 		_type = modelType;
 
@@ -69,6 +69,11 @@ namespace utility::graphic
 	utility::graphic::SizeF Model::computeBoundingSize(void)
 	{
 		return _boundingBox;
+	}
+
+	uint32_t Model::getMaterialID(void) const
+	{
+		return _materialID;
 	}
 
 	///////////////////////
@@ -168,6 +173,12 @@ namespace utility::graphic
 				vertices.push_back(vertex);
 				indices.push_back(newIndex);
 			}
+		}
+
+		_meshes.clear();
+		if (!vertices.empty() && !indices.empty()) {
+			_meshes.push_back(
+				std::make_shared<Mesh>(vertices, indices));
 		}
 		_boundingBox = SizeF(maxX - minX, maxY - minY, maxZ - minZ);
 	}

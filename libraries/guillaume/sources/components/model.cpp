@@ -38,4 +38,19 @@ namespace guillaume::components
 	{
 		return _modelPath;
 	}
+
+	Model &Model::setTexturePath(const std::string &path)
+	{
+		if (_texturePath == path) {
+			return *this;
+		}
+		_texturePath = path;
+		setHasChanged(true);
+		return *this;
+	}
+
+	std::string Model::getTexturePath(void) const
+	{
+		return _texturePath;
+	}
 }	 // namespace guillaume::components
