@@ -426,6 +426,7 @@ namespace utility
 
 	std::shared_ptr<graphic::Model>
 		RessourceProvider::loadModel(const std::string &path,
+									 const utility::graphic::PoseF &pose,
 									 const std::string &material)
 	{
 		std::string resolvedPath = resolvePath(path);
@@ -446,13 +447,13 @@ namespace utility
 
 		auto id = getNextID();
 
-		_models[id] = loadModelFromAsset(modelAsset, material);
+		_models[id] = loadModelFromAsset(modelAsset, pose, material);
 
 		return _models[id];
 	}
 
 	std::shared_ptr<graphic::Model> RessourceProvider::loadModelFromAsset(
-		std::shared_ptr<utility::File> modelAsset, const std::string &material)
+		std::shared_ptr<utility::File> modelAsset, const utility::graphic::PoseF &pose, const std::string &material)
 	{
 		auto it = _elementsIDs.find(modelAsset->path());
 
@@ -477,7 +478,7 @@ namespace utility
 			}
 		}
 
-		auto model = std::make_shared<graphic::Model>(modelAsset, materialID);
+		auto model = std::make_shared<graphic::Model>(modelAsset, pose, materialID);
 		auto id	   = getNextID();
 
 		_models[id] = model;
@@ -487,7 +488,7 @@ namespace utility
 
 	std::shared_ptr<graphic::Model> RessourceProvider::loadModelFromAsset(
 		std::shared_ptr<utility::File> modelAsset,
-		graphic::Model::ModelType type, const std::string &material)
+		graphic::Model::ModelType type, const utility::graphic::PoseF &pose, const std::string &material)
 	{
 		auto it = _elementsIDs.find(modelAsset->path());
 
@@ -507,7 +508,7 @@ namespace utility
 		}
 
 		auto model =
-			std::make_shared<graphic::Model>(modelAsset, type, materialID);
+			std::make_shared<graphic::Model>(modelAsset, type, pose, materialID);
 		auto id = getNextID();
 
 		_models[id] = model;
@@ -517,6 +518,7 @@ namespace utility
 
 	std::shared_ptr<graphic::Model>
 		RessourceProvider::loadObj(const std::string &path,
+								   const utility::graphic::PoseF &pose,
 								   const std::string &material)
 	{
 		std::string resolvedPath = resolvePath(path);
@@ -545,7 +547,7 @@ namespace utility
 		}
 
 		auto model = std::make_shared<graphic::Model>(
-			modelAsset, graphic::Model::ModelType::OBJ, materialID);
+			modelAsset, graphic::Model::ModelType::OBJ, pose, materialID);
 		auto id = getNextID();
 
 		_models[id] = model;
@@ -554,7 +556,8 @@ namespace utility
 	}
 
 	std::shared_ptr<graphic::Model> RessourceProvider::loadObjFromAsset(
-		std::shared_ptr<utility::File> modelAsset, const std::string &material)
+		std::shared_ptr<utility::File> modelAsset, const utility::graphic::PoseF &pose,
+		const std::string &material)
 	{
 		auto it = _elementsIDs.find(modelAsset->path());
 
@@ -574,7 +577,7 @@ namespace utility
 		}
 
 		auto model = std::make_shared<graphic::Model>(
-			modelAsset, graphic::Model::ModelType::OBJ, materialID);
+			modelAsset, graphic::Model::ModelType::OBJ, pose, materialID);
 		auto id = getNextID();
 
 		_models[id] = model;

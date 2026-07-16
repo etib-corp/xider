@@ -9,8 +9,8 @@
 
 namespace utility::graphic
 {
-	Model::Model(std::shared_ptr<utility::File> modelAsset, uint32_t materialID)
-		: Renderable(PoseF(), Color32Bit())
+	Model::Model(std::shared_ptr<utility::File> modelAsset, const PoseF &pose, uint32_t materialID)
+		: Renderable(pose, Color32Bit())
 		, _materialID(materialID)
 	{
 		std::string extension =
@@ -35,8 +35,8 @@ namespace utility::graphic
 	}
 
 	Model::Model(std::shared_ptr<utility::File> modelAsset, ModelType modelType,
-				 uint32_t materialID)
-		: Renderable(PoseF(), Color32Bit())
+				 const PoseF &pose, uint32_t materialID)
+		: Renderable(pose, Color32Bit())
 		, _materialID(materialID)
 	{
 		_type = modelType;
@@ -85,6 +85,10 @@ namespace utility::graphic
 
 	void Model::loadOBJ(std::shared_ptr<utility::File> modelAsset)
 	{
+		float x = getPose().getPosition().getX();
+		float y = getPose().getPosition().getY();
+		float z = getPose().getPosition().getZ();
+
 		std::vector<VertexF> vertices;
 		std::vector<uint32_t> indices;
 
@@ -123,9 +127,9 @@ namespace utility::graphic
 
 				utility::graphic::VertexF vertex {};
 				vertex.setPosition(utility::graphic::PositionF(
-					attrib.vertices[vertexBase + 0],
-					attrib.vertices[vertexBase + 1],
-					attrib.vertices[vertexBase + 2]));
+					attrib.vertices[vertexBase + 0] + x,
+					attrib.vertices[vertexBase + 1] + y,
+					attrib.vertices[vertexBase + 2] + z));
 
 				if (index.texcoord_index >= 0) {
 					const size_t texcoordBase =
