@@ -83,7 +83,7 @@ namespace guillaume::systems
 			return;
 		}
 
-		auto model = _ressourceProvider->loadModel(cacheKey.modelPath);
+		auto model		 = _ressourceProvider->loadModel(cacheKey.modelPath);
 		auto boundingBox = model->computeBoundingSize();
 
 		getComponent<components::Bound>(entityIdentifier)

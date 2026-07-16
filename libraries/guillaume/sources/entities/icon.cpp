@@ -36,17 +36,20 @@ namespace guillaume::entities
 	{
 	}
 
-	ecs::Entity::Identifier
+	std::shared_ptr<Icon>
 		Icon::Builder::registerEntity(std::shared_ptr<Entity> parent)
 	{
 		_icon = std::make_shared<Icon>(this->getComponentRegistry(), _glyphName,
 									   _fontSize, _color, _style);
 		_icon->setParent(parent);
 
-		ecs::Entity::Identifier identifier = _icon->getIdentifier();
-		this->getEntityRegistry().addEntity(std::move(_icon));
+		this->getEntityRegistry().addEntity(_icon);
+
+		auto iconCopy = _icon;
+
 		reset();
-		return identifier;
+
+		return iconCopy;
 	}
 
 	void Icon::Builder::reset(void)
@@ -93,7 +96,7 @@ namespace guillaume::entities
 	{
 	}
 
-	ecs::Entity::Identifier Icon::Director::makeIcon(
+	std::shared_ptr<Icon> Icon::Director::makeIcon(
 		Builder &builder, std::shared_ptr<Entity> parent,
 		const std::string &glyphName, const float &fontSize,
 		const utility::graphic::Color32Bit &color,

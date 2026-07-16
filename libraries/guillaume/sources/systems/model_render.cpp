@@ -30,8 +30,7 @@ namespace guillaume::systems
 		std::shared_ptr<utility::RessourceProvider> ressourceProvider,
 		std::unique_ptr<Engine> &engine)
 		: ecs::SystemFiller<components::Transform, components::Bound,
-							components::Model>(
-			  ecs::Phase::Render)
+							components::Model>(ecs::Phase::Render)
 		, _ressourceProvider(ressourceProvider)
 		, _engine(engine)
 	{

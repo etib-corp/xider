@@ -36,16 +36,21 @@ namespace guillaume::entities
 	{
 	}
 
-	ecs::Entity::Identifier
+	std::shared_ptr<Panel>
 		Panel::Builder::registerEntity(std::shared_ptr<Entity> parent)
 	{
 		_panel = std::make_shared<Panel>(this->getComponentRegistry(), _pose,
 										 _color, _borderRadius, _entities);
 		_panel->setParent(parent);
-		ecs::Entity::Identifier identifier = _panel->getIdentifier();
+
 		this->getEntityRegistry().addEntity(_panel);
+
+		auto panelCopy =
+			_panel;	   // Create a copy of the shared pointer to return
+
 		reset();
-		return identifier;
+
+		return panelCopy;
 	}
 
 	void Panel::Builder::reset(void)
@@ -86,7 +91,7 @@ namespace guillaume::entities
 	{
 	}
 
-	ecs::Entity::Identifier Panel::Director::makeDefaultPanel(
+	std::shared_ptr<Panel> Panel::Director::makeDefaultPanel(
 		Builder &builder, std::shared_ptr<Entity> parent,
 		const utility::graphic::PoseF &pose,
 		const std::vector<ecs::Entity::Identifier> &entities)
@@ -95,7 +100,7 @@ namespace guillaume::entities
 			parent);
 	}
 
-	ecs::Entity::Identifier Panel::Director::makeColorPanel(
+	std::shared_ptr<Panel> Panel::Director::makeColorPanel(
 		Builder &builder, std::shared_ptr<Entity> parent,
 		const utility::graphic::PoseF &pose,
 		const utility::graphic::Color32Bit &color,

@@ -75,10 +75,10 @@ namespace guillaume::entities
 			 * @brief Build and register the model entity.
 			 * @param parent The parent entity to which the new model entity
 			 * will be attached.
-			 * @return The entity identifier of the newly created model entity.
+			 * @return A shared pointer to the newly created model entity.
 			 */
-			ecs::Entity::Identifier
-				registerEntity(std::shared_ptr<Entity> parent) override;
+			std::shared_ptr<Model>
+				registerEntity(std::shared_ptr<Entity> parent);
 
 			/**
 			 * @brief Reset the builder to its initial state for creating a new
@@ -130,7 +130,7 @@ namespace guillaume::entities
 			 * @return The entity identifier of the newly created model entity.
 			 * @see components::Glyph::getName
 			 */
-			ecs::Entity::Identifier makeModel(Builder &builder,
+			std::shared_ptr<Model> makeModel(Builder &builder,
 											  std::shared_ptr<Entity> parent,
 											  const std::string &modelPath,
 											  const std::string &texturePath = "");

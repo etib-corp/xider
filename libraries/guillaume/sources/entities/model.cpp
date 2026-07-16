@@ -36,7 +36,7 @@ namespace guillaume::entities
 	{
 	}
 
-	ecs::Entity::Identifier
+	std::shared_ptr<Model>
 		Model::Builder::registerEntity(std::shared_ptr<Entity> parent)
 	{
 		_model =
@@ -45,10 +45,14 @@ namespace guillaume::entities
 		_model->setTexturePath(_texturePath);
 		_model->setParent(parent);
 
-		ecs::Entity::Identifier identifier = _model->getIdentifier();
-		this->getEntityRegistry().addEntity(std::move(_model));
+		this->getEntityRegistry().addEntity(_model);
+
+		auto modelCopy =
+			_model;	   // Create a copy of the shared pointer to return
+
 		reset();
-		return identifier;
+
+		return modelCopy;
 	}
 
 	void Model::Builder::reset(void)
@@ -80,7 +84,7 @@ namespace guillaume::entities
 	{
 	}
 
-	ecs::Entity::Identifier
+	std::shared_ptr<Model>
 		Model::Director::makeModel(Builder &builder,
 								   std::shared_ptr<Entity> parent,
 								   const std::string &modelPath,

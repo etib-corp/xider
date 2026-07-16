@@ -86,8 +86,8 @@ namespace guillaume::entities
 			 * be attached.
 			 * @return The entity identifier of the newly created text entity.
 			 */
-			ecs::Entity::Identifier
-				registerEntity(std::shared_ptr<Entity> parent) override;
+			std::shared_ptr<Text>
+				registerEntity(std::shared_ptr<Entity> parent);
 
 			/**
 			 * @brief Reset the builder to its initial state for creating a new
@@ -145,7 +145,7 @@ namespace guillaume::entities
 			 * @param color The color for the default Text entity (RGBA).
 			 * @return The entity identifier of the newly created text entity.
 			 */
-			ecs::Entity::Identifier
+			std::shared_ptr<Text>
 				makeText(Builder &builder, std::shared_ptr<Entity> parent,
 						 const std::string &content, const float &fontSize,
 						 const utility::graphic::Color32Bit &color);

@@ -107,8 +107,7 @@ namespace utility::graphic
 
 			glyphs.push_back(fontSized->generateGlyph(codePoint));
 			if (onNewTextureCreated) {
-				onNewTextureCreated(faceName + "_"
-										+ std::to_string(fontSize),
+				onNewTextureCreated(faceName + "_" + std::to_string(fontSize),
 									fontSized->getAtlas());
 			}
 		}

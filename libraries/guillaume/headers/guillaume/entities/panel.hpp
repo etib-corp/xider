@@ -82,10 +82,10 @@ namespace guillaume::entities
 			 * @brief Build and register the panel entity.
 			 * @param parent The parent entity to which the new panel entity
 			 * will be attached.
-			 * @return The entity identifier of the newly created panel entity.
+			 * @return A shared pointer to the newly created panel entity.
 			 */
-			ecs::Entity::Identifier
-				registerEntity(std::shared_ptr<Entity> parent) override;
+			std::shared_ptr<Panel>
+				registerEntity(std::shared_ptr<Entity> parent);
 
 			/**
 			 * @brief Reset the builder to its initial state for creating a new
@@ -153,9 +153,10 @@ namespace guillaume::entities
 			 * @param pose The pose to set for the default panel.
 			 * @param entities The entities to attach to the default
 			 * panel.
-			 * @return The entity identifier of the newly created panel entity.
+			 * @return A shared pointer to the newly created default panel
+			 * entity.
 			 */
-			ecs::Entity::Identifier makeDefaultPanel(
+			std::shared_ptr<Panel> makeDefaultPanel(
 				Builder &builder, std::shared_ptr<Entity> parent,
 				const utility::graphic::PoseF &pose,
 				const std::vector<ecs::Entity::Identifier> &entities);
@@ -169,10 +170,10 @@ namespace guillaume::entities
 			 * @param pose The pose to set for the color panel.
 			 * @param color The color to set for the color panel.
 			 * @param entities The entities to attach to the color panel.
-			 * @return The entity identifier of the newly created color panel
+			 * @return A shared pointer to the newly created color panel
 			 * entity.
 			 */
-			ecs::Entity::Identifier makeColorPanel(
+			std::shared_ptr<Panel> makeColorPanel(
 				Builder &builder, std::shared_ptr<Entity> parent,
 				const utility::graphic::PoseF &pose,
 				const utility::graphic::Color32Bit &color,

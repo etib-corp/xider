@@ -36,17 +36,22 @@ namespace guillaume::entities
 	{
 	}
 
-	ecs::Entity::Identifier
+	std::shared_ptr<Text>
 		Text::Builder::registerEntity(std::shared_ptr<Entity> parent)
 	{
 		_text = std::make_shared<Text>(this->getComponentRegistry(), _content,
 									   _fontSize, _color);
 
 		_text->setParent(parent);
-		ecs::Entity::Identifier identifier = _text->getIdentifier();
+
 		this->getEntityRegistry().addEntity(_text);
+
+		auto textCopy =
+			_text;	  // Create a copy of the shared pointer to return
+
 		reset();
-		return identifier;
+
+		return textCopy;
 	}
 
 	void Text::Builder::reset(void)
@@ -85,7 +90,7 @@ namespace guillaume::entities
 	{
 	}
 
-	ecs::Entity::Identifier Text::Director::makeText(
+	std::shared_ptr<Text> Text::Director::makeText(
 		Builder &builder, std::shared_ptr<Entity> parent,
 		const std::string &content, const float &fontSize,
 		const utility::graphic::Color32Bit &color)

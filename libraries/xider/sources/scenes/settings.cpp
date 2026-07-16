@@ -50,7 +50,7 @@ namespace xider::scenes
 			getDirectorManager()
 				.getDirector<guillaume::entities::Text::Director>();
 
-		buttonDirector.makeIconButton(
+		auto goToHomeButton = buttonDirector.makeIconButton(
 			buttonBuilder, nullptr, "Go to Home", "home",
 			Glyph::Style::Outlined,
 			[this]() {
@@ -59,8 +59,9 @@ namespace xider::scenes
 			Button::Color::Filled, Button::Shape::Round, Button::Size::Medium,
 			false);
 
-		textDirector.makeText(textBuilder, nullptr, "Setings Scene", 18,
-							  utility::graphic::Color32Bit(255, 255, 255, 255));
+		auto settingsText = textDirector.makeText(
+			textBuilder, nullptr, "Settings Scene", 18,
+			utility::graphic::Color32Bit(255, 255, 255, 255));
 	}
 
 	Settings::~Settings(void)

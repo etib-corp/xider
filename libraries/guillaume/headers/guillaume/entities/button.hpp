@@ -123,10 +123,10 @@ namespace guillaume::entities
 			 * @brief Build and register the button entity.
 			 * @param parent The parent entity to which the new button entity
 			 * will be attached.
-			 * @return The entity identifier of the newly created button entity.
+			 * @return A shared pointer to the newly created button entity.
 			 */
-			ecs::Entity::Identifier
-				registerEntity(std::shared_ptr<Entity> parent) override;
+			std::shared_ptr<Button>
+				registerEntity(std::shared_ptr<Entity> parent);
 
 			/**
 			 * @brief Reset the builder to its initial state for creating a new
@@ -227,10 +227,10 @@ namespace guillaume::entities
 			 * @param shape The shape of the button.
 			 * @param size The size of the button.
 			 * @param isMorph Whether the button is in a morph state.
-			 * @return The entity identifier of the newly created text button
+			 * @return A shared pointer to the newly created text button
 			 * entity.
 			 */
-			ecs::Entity::Identifier
+			std::shared_ptr<Button>
 				makeButton(Builder &builder, std::shared_ptr<Entity> parent,
 						   const std::string &labelContent,
 						   std::function<void(void)> onClick, Color colorStyle,
@@ -250,10 +250,10 @@ namespace guillaume::entities
 			 * @param shape The shape of the button.
 			 * @param size The size of the button.
 			 * @param isMorph Whether the button is in a morph state.
-			 * @return The entity identifier of the newly created icon button
+			 * @return A shared pointer to the newly created icon button
 			 * entity.
 			 */
-			ecs::Entity::Identifier
+			std::shared_ptr<Button>
 				makeIconButton(Builder &builder, std::shared_ptr<Entity> parent,
 							   const std::string &labelContent,
 							   const std::string &iconGlyphName,
@@ -269,12 +269,8 @@ namespace guillaume::entities
 			components::Glyph::Style::Outlined
 		};	  ///< Style of the icon to attach.
 		std::string _labelContent {};	 ///< Label content to attach.
-		ecs::Entity::Identifier _iconIdentifier {
-			ecs::Entity::InvalidIdentifier
-		};	  ///< Internal child icon entity identifier.
-		ecs::Entity::Identifier _labelIdentifier {
-			ecs::Entity::InvalidIdentifier
-		};	  ///< Internal child label entity identifier.
+		std::shared_ptr<Icon> _icon;	 ///< Internal child icon entity
+		std::shared_ptr<Text> _label;	 ///< Internal child label entity
 		bool _isToggle { false };	 ///< Whether the button is a toggle button
 		Color _colorStyle { Color::Filled };	///< Color style of the button
 		Shape _shape { Shape::Round };			///< Shape of the button
