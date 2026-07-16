@@ -34,6 +34,8 @@ int main(void)
 	auto windowsDesktopPlatform =
 		std::make_shared<evan::WindowsDesktopPlatform>("XIDER", 1280, 720);
 
+		
+
 	// Create a resource provider using the default system IO implementation
 	utility::DefaultSystemIO defaultSystemIO;
 	auto ressourceProvider = std::make_shared<utility::RessourceProvider>(
