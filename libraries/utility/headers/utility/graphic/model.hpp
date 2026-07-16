@@ -88,7 +88,8 @@ namespace utility::graphic
 		 * loading the model data from the provided File and setting the
 		 * ModelType based on the specified type parameter.
 		 */
-		Model(std::shared_ptr<utility::File> modelAsset, ModelType type, uint32_t materialID);
+		Model(std::shared_ptr<utility::File> modelAsset, ModelType type,
+			  uint32_t materialID);
 
 		/**
 		 * @brief Destructs the Model object, releasing any allocated resources.
@@ -139,7 +140,7 @@ namespace utility::graphic
 		utility::graphic::SizeF
 			_boundingBox {};	///< The bounding box of the model
 
-		uint32_t _materialID;	///< The material associated with the model
+		uint32_t _materialID;	 ///< The material associated with the model
 
 		using Loggable::getLogger;
 	};

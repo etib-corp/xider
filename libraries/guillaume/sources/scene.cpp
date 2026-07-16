@@ -32,7 +32,7 @@
 namespace guillaume
 {
 	Scene::Scene(std::shared_ptr<utility::RessourceProvider> _ressourceProvider,
-					 LocalStorage &localStorage, SessionStorage &sessionStorage)
+				 LocalStorage &localStorage, SessionStorage &sessionStorage)
 		: _ressourceProvider(_ressourceProvider)
 		, _localStorage(localStorage)
 		, _sessionStorage(sessionStorage)
@@ -61,7 +61,8 @@ namespace guillaume
 						   << " entity/entities in hierarchy";
 	}
 
-	std::shared_ptr<utility::RessourceProvider> Scene::getRessourceProvider(void)
+	std::shared_ptr<utility::RessourceProvider>
+		Scene::getRessourceProvider(void)
 	{
 		return _ressourceProvider;
 	}
@@ -79,6 +80,19 @@ namespace guillaume
 	ecs::ComponentRegistry &Scene::getComponentRegistry(void)
 	{
 		return _componentRegistry;
+	}
+
+	void Scene::addRootEntity(const std::string &name,
+							  std::shared_ptr<ecs::Entity> entity)
+	{
+		if (_rootEntities.find(name) != _rootEntities.end()) {
+			getLogger().warning()
+				<< "Root entity with name '" << name
+				<< "' already exists. Overwriting the existing entity.";
+			throw std::runtime_error("Root entity with name '" + name
+									 + "' already exists.");
+		}
+		_rootEntities[name] = entity;
 	}
 
 	ecs::EntityRegistry &Scene::getEntityRegistry(void)
@@ -166,7 +180,7 @@ namespace guillaume
 
 			cursor += width + gap;
 		}
-	}
+	}	
 
 	void Scene::onEnter(void)
 	{

@@ -270,80 +270,83 @@ namespace guillaume
 		void initializeLightScheme(Scheme &scheme)
 		{
 			scheme.setColor(SchemeColorRole::Primary,
-							utility::graphic::Color32Bit(143, 76, 56, 255),
+							utility::graphic::Color32Bit(103, 80, 164, 255),
 							"primary");
 			scheme.setColor(SchemeColorRole::SurfaceTint,
-							utility::graphic::Color32Bit(143, 76, 56, 255),
+							utility::graphic::Color32Bit(103, 80, 164, 255),
 							"surfaceTint");
 			scheme.setColor(SchemeColorRole::OnPrimary,
 							utility::graphic::Color32Bit(255, 255, 255, 255),
 							"onPrimary");
 			scheme.setColor(SchemeColorRole::PrimaryContainer,
-							utility::graphic::Color32Bit(255, 219, 209, 255),
+							utility::graphic::Color32Bit(234, 221, 255, 255),
 							"primaryContainer");
 			scheme.setColor(SchemeColorRole::OnPrimaryContainer,
-							utility::graphic::Color32Bit(114, 53, 35, 255),
+							utility::graphic::Color32Bit(33, 0, 93, 255),
 							"onPrimaryContainer");
+
 			scheme.setColor(SchemeColorRole::Secondary,
-							utility::graphic::Color32Bit(119, 87, 78, 255),
+							utility::graphic::Color32Bit(98, 91, 113, 255),
 							"secondary");
 			scheme.setColor(SchemeColorRole::OnSecondary,
 							utility::graphic::Color32Bit(255, 255, 255, 255),
 							"onSecondary");
 			scheme.setColor(SchemeColorRole::SecondaryContainer,
-							utility::graphic::Color32Bit(255, 219, 209, 255),
+							utility::graphic::Color32Bit(232, 222, 248, 255),
 							"secondaryContainer");
 			scheme.setColor(SchemeColorRole::OnSecondaryContainer,
-							utility::graphic::Color32Bit(93, 64, 55, 255),
+							utility::graphic::Color32Bit(29, 25, 43, 255),
 							"onSecondaryContainer");
+
 			scheme.setColor(SchemeColorRole::Tertiary,
-							utility::graphic::Color32Bit(108, 93, 47, 255),
+							utility::graphic::Color32Bit(125, 82, 96, 255),
 							"tertiary");
 			scheme.setColor(SchemeColorRole::OnTertiary,
 							utility::graphic::Color32Bit(255, 255, 255, 255),
 							"onTertiary");
 			scheme.setColor(SchemeColorRole::TertiaryContainer,
-							utility::graphic::Color32Bit(245, 225, 167, 255),
+							utility::graphic::Color32Bit(255, 216, 228, 255),
 							"tertiaryContainer");
 			scheme.setColor(SchemeColorRole::OnTertiaryContainer,
-							utility::graphic::Color32Bit(83, 70, 25, 255),
+							utility::graphic::Color32Bit(49, 17, 29, 255),
 							"onTertiaryContainer");
+
 			scheme.setColor(SchemeColorRole::Error,
-							utility::graphic::Color32Bit(186, 26, 26, 255),
+							utility::graphic::Color32Bit(179, 38, 30, 255),
 							"error");
 			scheme.setColor(SchemeColorRole::OnError,
 							utility::graphic::Color32Bit(255, 255, 255, 255),
 							"onError");
 			scheme.setColor(SchemeColorRole::ErrorContainer,
-							utility::graphic::Color32Bit(255, 218, 214, 255),
+							utility::graphic::Color32Bit(249, 222, 220, 255),
 							"errorContainer");
 			scheme.setColor(SchemeColorRole::OnErrorContainer,
-							utility::graphic::Color32Bit(147, 0, 10, 255),
+							utility::graphic::Color32Bit(65, 14, 11, 255),
 							"onErrorContainer");
+
 			scheme.setColor(SchemeColorRole::Background,
-							utility::graphic::Color32Bit(255, 248, 246, 255),
+							utility::graphic::Color32Bit(255, 251, 254, 255),
 							"background");
 			scheme.setColor(SchemeColorRole::OnBackground,
-							utility::graphic::Color32Bit(35, 25, 23, 255),
+							utility::graphic::Color32Bit(28, 27, 31, 255),
 							"onBackground");
 			scheme.setColor(SchemeColorRole::Surface,
-							utility::graphic::Color32Bit(255, 248, 246, 255),
+							utility::graphic::Color32Bit(255, 251, 254, 255),
 							"surface");
 			scheme.setColor(SchemeColorRole::OnSurface,
-							utility::graphic::Color32Bit(35, 25, 23, 255),
+							utility::graphic::Color32Bit(28, 27, 31, 255),
 							"onSurface");
+
 			scheme.setColor(SchemeColorRole::SurfaceVariant,
-							utility::graphic::Color32Bit(245, 222, 216, 255),
+							utility::graphic::Color32Bit(231, 224, 236, 255),
 							"surfaceVariant");
 			scheme.setColor(SchemeColorRole::OnSurfaceVariant,
-							utility::graphic::Color32Bit(83, 67, 63, 255),
+							utility::graphic::Color32Bit(73, 69, 79, 255),
 							"onSurfaceVariant");
 			scheme.setColor(SchemeColorRole::Outline,
-							utility::graphic::Color32Bit(133, 115, 110, 255),
+							utility::graphic::Color32Bit(121, 116, 126, 255),
 							"outline");
-			scheme.setColor(SchemeColorRole::OutlineVariant,
-							utility::graphic::Color32Bit(216, 194, 188, 255),
-							"outlineVariant");
+
 			scheme.setColor(SchemeColorRole::Shadow,
 							utility::graphic::Color32Bit(0, 0, 0, 255),
 							"shadow");
@@ -351,71 +354,14 @@ namespace guillaume
 							utility::graphic::Color32Bit(0, 0, 0, 255),
 							"scrim");
 			scheme.setColor(SchemeColorRole::InverseSurface,
-							utility::graphic::Color32Bit(57, 46, 43, 255),
+							utility::graphic::Color32Bit(49, 48, 51, 255),
 							"inverseSurface");
 			scheme.setColor(SchemeColorRole::InverseOnSurface,
-							utility::graphic::Color32Bit(255, 237, 232, 255),
+							utility::graphic::Color32Bit(244, 239, 244, 255),
 							"inverseOnSurface");
 			scheme.setColor(SchemeColorRole::InversePrimary,
-							utility::graphic::Color32Bit(255, 181, 160, 255),
+							utility::graphic::Color32Bit(208, 188, 255, 255),
 							"inversePrimary");
-			scheme.setColor(SchemeColorRole::PrimaryFixed,
-							utility::graphic::Color32Bit(255, 219, 209, 255),
-							"primaryFixed");
-			scheme.setColor(SchemeColorRole::OnPrimaryFixed,
-							utility::graphic::Color32Bit(58, 11, 1, 255),
-							"onPrimaryFixed");
-			scheme.setColor(SchemeColorRole::PrimaryFixedDim,
-							utility::graphic::Color32Bit(255, 181, 160, 255),
-							"primaryFixedDim");
-			scheme.setColor(SchemeColorRole::OnPrimaryFixedVariant,
-							utility::graphic::Color32Bit(114, 53, 35, 255),
-							"onPrimaryFixedVariant");
-			scheme.setColor(SchemeColorRole::SecondaryFixed,
-							utility::graphic::Color32Bit(255, 219, 209, 255),
-							"secondaryFixed");
-			scheme.setColor(SchemeColorRole::OnSecondaryFixed,
-							utility::graphic::Color32Bit(44, 21, 15, 255),
-							"onSecondaryFixed");
-			scheme.setColor(SchemeColorRole::SecondaryFixedDim,
-							utility::graphic::Color32Bit(231, 189, 178, 255),
-							"secondaryFixedDim");
-			scheme.setColor(SchemeColorRole::OnSecondaryFixedVariant,
-							utility::graphic::Color32Bit(93, 64, 55, 255),
-							"onSecondaryFixedVariant");
-			scheme.setColor(SchemeColorRole::TertiaryFixed,
-							utility::graphic::Color32Bit(245, 225, 167, 255),
-							"tertiaryFixed");
-			scheme.setColor(SchemeColorRole::OnTertiaryFixed,
-							utility::graphic::Color32Bit(35, 27, 0, 255),
-							"onTertiaryFixed");
-			scheme.setColor(SchemeColorRole::TertiaryFixedDim,
-							utility::graphic::Color32Bit(216, 197, 141, 255),
-							"tertiaryFixedDim");
-			scheme.setColor(SchemeColorRole::OnTertiaryFixedVariant,
-							utility::graphic::Color32Bit(83, 70, 25, 255),
-							"onTertiaryFixedVariant");
-			scheme.setColor(SchemeColorRole::SurfaceDim,
-							utility::graphic::Color32Bit(232, 214, 210, 255),
-							"surfaceDim");
-			scheme.setColor(SchemeColorRole::SurfaceBright,
-							utility::graphic::Color32Bit(255, 248, 246, 255),
-							"surfaceBright");
-			scheme.setColor(SchemeColorRole::SurfaceContainerLowest,
-							utility::graphic::Color32Bit(255, 255, 255, 255),
-							"surfaceContainerLowest");
-			scheme.setColor(SchemeColorRole::SurfaceContainerLow,
-							utility::graphic::Color32Bit(255, 241, 237, 255),
-							"surfaceContainerLow");
-			scheme.setColor(SchemeColorRole::SurfaceContainer,
-							utility::graphic::Color32Bit(252, 234, 229, 255),
-							"surfaceContainer");
-			scheme.setColor(SchemeColorRole::SurfaceContainerHigh,
-							utility::graphic::Color32Bit(247, 228, 224, 255),
-							"surfaceContainerHigh");
-			scheme.setColor(SchemeColorRole::SurfaceContainerHighest,
-							utility::graphic::Color32Bit(241, 223, 218, 255),
-							"surfaceContainerHighest");
 		}
 
 		/**
@@ -732,80 +678,83 @@ namespace guillaume
 		void initializeDarkScheme(Scheme &scheme)
 		{
 			scheme.setColor(SchemeColorRole::Primary,
-							utility::graphic::Color32Bit(255, 181, 160, 255),
+							utility::graphic::Color32Bit(208, 188, 255, 255),
 							"primary");
 			scheme.setColor(SchemeColorRole::SurfaceTint,
-							utility::graphic::Color32Bit(255, 181, 160, 255),
+							utility::graphic::Color32Bit(208, 188, 255, 255),
 							"surfaceTint");
 			scheme.setColor(SchemeColorRole::OnPrimary,
-							utility::graphic::Color32Bit(86, 31, 15, 255),
+							utility::graphic::Color32Bit(56, 30, 114, 255),
 							"onPrimary");
 			scheme.setColor(SchemeColorRole::PrimaryContainer,
-							utility::graphic::Color32Bit(114, 53, 35, 255),
+							utility::graphic::Color32Bit(79, 55, 139, 255),
 							"primaryContainer");
 			scheme.setColor(SchemeColorRole::OnPrimaryContainer,
-							utility::graphic::Color32Bit(255, 219, 209, 255),
+							utility::graphic::Color32Bit(234, 221, 255, 255),
 							"onPrimaryContainer");
+
 			scheme.setColor(SchemeColorRole::Secondary,
-							utility::graphic::Color32Bit(231, 189, 178, 255),
+							utility::graphic::Color32Bit(204, 194, 220, 255),
 							"secondary");
 			scheme.setColor(SchemeColorRole::OnSecondary,
-							utility::graphic::Color32Bit(68, 42, 34, 255),
+							utility::graphic::Color32Bit(51, 45, 65, 255),
 							"onSecondary");
 			scheme.setColor(SchemeColorRole::SecondaryContainer,
-							utility::graphic::Color32Bit(93, 64, 55, 255),
+							utility::graphic::Color32Bit(74, 68, 88, 255),
 							"secondaryContainer");
 			scheme.setColor(SchemeColorRole::OnSecondaryContainer,
-							utility::graphic::Color32Bit(255, 219, 209, 255),
+							utility::graphic::Color32Bit(232, 222, 248, 255),
 							"onSecondaryContainer");
+
 			scheme.setColor(SchemeColorRole::Tertiary,
-							utility::graphic::Color32Bit(216, 197, 141, 255),
+							utility::graphic::Color32Bit(239, 184, 200, 255),
 							"tertiary");
 			scheme.setColor(SchemeColorRole::OnTertiary,
-							utility::graphic::Color32Bit(59, 47, 5, 255),
+							utility::graphic::Color32Bit(73, 37, 50, 255),
 							"onTertiary");
 			scheme.setColor(SchemeColorRole::TertiaryContainer,
-							utility::graphic::Color32Bit(83, 70, 25, 255),
+							utility::graphic::Color32Bit(99, 59, 72, 255),
 							"tertiaryContainer");
 			scheme.setColor(SchemeColorRole::OnTertiaryContainer,
-							utility::graphic::Color32Bit(245, 225, 167, 255),
+							utility::graphic::Color32Bit(255, 216, 228, 255),
 							"onTertiaryContainer");
+
 			scheme.setColor(SchemeColorRole::Error,
-							utility::graphic::Color32Bit(255, 180, 171, 255),
+							utility::graphic::Color32Bit(242, 184, 181, 255),
 							"error");
 			scheme.setColor(SchemeColorRole::OnError,
-							utility::graphic::Color32Bit(105, 0, 5, 255),
+							utility::graphic::Color32Bit(96, 20, 16, 255),
 							"onError");
 			scheme.setColor(SchemeColorRole::ErrorContainer,
-							utility::graphic::Color32Bit(147, 0, 10, 255),
+							utility::graphic::Color32Bit(140, 29, 24, 255),
 							"errorContainer");
 			scheme.setColor(SchemeColorRole::OnErrorContainer,
-							utility::graphic::Color32Bit(255, 218, 214, 255),
+							utility::graphic::Color32Bit(249, 222, 220, 255),
 							"onErrorContainer");
+
 			scheme.setColor(SchemeColorRole::Background,
-							utility::graphic::Color32Bit(26, 17, 15, 255),
+							utility::graphic::Color32Bit(28, 27, 31, 255),
 							"background");
 			scheme.setColor(SchemeColorRole::OnBackground,
-							utility::graphic::Color32Bit(241, 223, 218, 255),
+							utility::graphic::Color32Bit(230, 225, 229, 255),
 							"onBackground");
 			scheme.setColor(SchemeColorRole::Surface,
-							utility::graphic::Color32Bit(26, 17, 15, 255),
+							utility::graphic::Color32Bit(28, 27, 31, 255),
 							"surface");
 			scheme.setColor(SchemeColorRole::OnSurface,
-							utility::graphic::Color32Bit(241, 223, 218, 255),
+							utility::graphic::Color32Bit(230, 225, 229, 255),
 							"onSurface");
+
 			scheme.setColor(SchemeColorRole::SurfaceVariant,
-							utility::graphic::Color32Bit(83, 67, 63, 255),
+							utility::graphic::Color32Bit(73, 69, 79, 255),
 							"surfaceVariant");
 			scheme.setColor(SchemeColorRole::OnSurfaceVariant,
-							utility::graphic::Color32Bit(216, 194, 188, 255),
+							utility::graphic::Color32Bit(202, 196, 208, 255),
 							"onSurfaceVariant");
 			scheme.setColor(SchemeColorRole::Outline,
-							utility::graphic::Color32Bit(160, 140, 135, 255),
+							utility::graphic::Color32Bit(147, 143, 153, 255),
 							"outline");
-			scheme.setColor(SchemeColorRole::OutlineVariant,
-							utility::graphic::Color32Bit(83, 67, 63, 255),
-							"outlineVariant");
+
 			scheme.setColor(SchemeColorRole::Shadow,
 							utility::graphic::Color32Bit(0, 0, 0, 255),
 							"shadow");
@@ -813,71 +762,14 @@ namespace guillaume
 							utility::graphic::Color32Bit(0, 0, 0, 255),
 							"scrim");
 			scheme.setColor(SchemeColorRole::InverseSurface,
-							utility::graphic::Color32Bit(241, 223, 218, 255),
+							utility::graphic::Color32Bit(230, 225, 229, 255),
 							"inverseSurface");
 			scheme.setColor(SchemeColorRole::InverseOnSurface,
-							utility::graphic::Color32Bit(57, 46, 43, 255),
+							utility::graphic::Color32Bit(49, 48, 51, 255),
 							"inverseOnSurface");
 			scheme.setColor(SchemeColorRole::InversePrimary,
-							utility::graphic::Color32Bit(143, 76, 56, 255),
+							utility::graphic::Color32Bit(103, 80, 164, 255),
 							"inversePrimary");
-			scheme.setColor(SchemeColorRole::PrimaryFixed,
-							utility::graphic::Color32Bit(255, 219, 209, 255),
-							"primaryFixed");
-			scheme.setColor(SchemeColorRole::OnPrimaryFixed,
-							utility::graphic::Color32Bit(58, 11, 1, 255),
-							"onPrimaryFixed");
-			scheme.setColor(SchemeColorRole::PrimaryFixedDim,
-							utility::graphic::Color32Bit(255, 181, 160, 255),
-							"primaryFixedDim");
-			scheme.setColor(SchemeColorRole::OnPrimaryFixedVariant,
-							utility::graphic::Color32Bit(114, 53, 35, 255),
-							"onPrimaryFixedVariant");
-			scheme.setColor(SchemeColorRole::SecondaryFixed,
-							utility::graphic::Color32Bit(255, 219, 209, 255),
-							"secondaryFixed");
-			scheme.setColor(SchemeColorRole::OnSecondaryFixed,
-							utility::graphic::Color32Bit(44, 21, 15, 255),
-							"onSecondaryFixed");
-			scheme.setColor(SchemeColorRole::SecondaryFixedDim,
-							utility::graphic::Color32Bit(231, 189, 178, 255),
-							"secondaryFixedDim");
-			scheme.setColor(SchemeColorRole::OnSecondaryFixedVariant,
-							utility::graphic::Color32Bit(93, 64, 55, 255),
-							"onSecondaryFixedVariant");
-			scheme.setColor(SchemeColorRole::TertiaryFixed,
-							utility::graphic::Color32Bit(245, 225, 167, 255),
-							"tertiaryFixed");
-			scheme.setColor(SchemeColorRole::OnTertiaryFixed,
-							utility::graphic::Color32Bit(35, 27, 0, 255),
-							"onTertiaryFixed");
-			scheme.setColor(SchemeColorRole::TertiaryFixedDim,
-							utility::graphic::Color32Bit(216, 197, 141, 255),
-							"tertiaryFixedDim");
-			scheme.setColor(SchemeColorRole::OnTertiaryFixedVariant,
-							utility::graphic::Color32Bit(83, 70, 25, 255),
-							"onTertiaryFixedVariant");
-			scheme.setColor(SchemeColorRole::SurfaceDim,
-							utility::graphic::Color32Bit(26, 17, 15, 255),
-							"surfaceDim");
-			scheme.setColor(SchemeColorRole::SurfaceBright,
-							utility::graphic::Color32Bit(66, 55, 52, 255),
-							"surfaceBright");
-			scheme.setColor(SchemeColorRole::SurfaceContainerLowest,
-							utility::graphic::Color32Bit(20, 12, 10, 255),
-							"surfaceContainerLowest");
-			scheme.setColor(SchemeColorRole::SurfaceContainerLow,
-							utility::graphic::Color32Bit(35, 25, 23, 255),
-							"surfaceContainerLow");
-			scheme.setColor(SchemeColorRole::SurfaceContainer,
-							utility::graphic::Color32Bit(39, 29, 27, 255),
-							"surfaceContainer");
-			scheme.setColor(SchemeColorRole::SurfaceContainerHigh,
-							utility::graphic::Color32Bit(50, 40, 37, 255),
-							"surfaceContainerHigh");
-			scheme.setColor(SchemeColorRole::SurfaceContainerHighest,
-							utility::graphic::Color32Bit(61, 50, 47, 255),
-							"surfaceContainerHighest");
 		}
 
 		/**

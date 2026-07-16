@@ -21,18 +21,15 @@
  */
 
 #include <iostream>
+#include <utility>
 
 #include "guillaume/entities/button.hpp"
-
 #include "guillaume/theme.hpp"
-
-#include <utility>
 
 namespace guillaume::entities
 {
-
-	Button::Button::Builder::Builder(ecs::ComponentRegistry &componentRegistry,
-									 ecs::EntityRegistry &entityRegistry)
+	Button::Builder::Builder(ecs::ComponentRegistry &componentRegistry,
+							 ecs::EntityRegistry &entityRegistry)
 		: ecs::EntityBuilder(componentRegistry, entityRegistry)
 	{
 		reset();
@@ -53,8 +50,7 @@ namespace guillaume::entities
 
 		this->getEntityRegistry().addEntity(_button);
 
-		auto buttonCopy =
-			_button;	// Create a copy of the shared pointer to return
+		auto buttonCopy = _button;
 
 		reset();
 
@@ -241,15 +237,15 @@ namespace guillaume::entities
 	{
 		switch (size) {
 			case Button::Size::ExtraSmall:
-				return 15.0f;	 // 20 pixels
+				return 15.0f;
 			case Button::Size::Small:
-				return 15.0f;	 // 20 pixels
+				return 15.0f;
 			case Button::Size::Medium:
-				return 18.0f;	 // 24 pixels
+				return 18.0f;
 			case Button::Size::Large:
-				return 24.0f;	 // 32 pixels
+				return 24.0f;
 			case Button::Size::ExtraLarge:
-				return 30.0f;	 // 40 pixels
+				return 30.0f;
 			default:
 				throw std::runtime_error("Invalid button size");
 		}
@@ -292,16 +288,148 @@ namespace guillaume::entities
 	}
 
 	static utility::graphic::Color32Bit
-		getPressedContainerColor(Button::Color style)
+		applyStateAlpha(const utility::graphic::Color32Bit &color,
+						std::uint8_t alpha)
+	{
+		return utility::graphic::Color32Bit(color.getRed(), color.getGreen(),
+											color.getBlue(), alpha);
+	}
+
+	static utility::graphic::Color32Bit
+		getDefaultContainerColor(Button::Color style)
 	{
 		const auto &scheme = guillaume::defaultTheme.getScheme(
 			guillaume::ThemeSchemeRole::Light);
 
-		auto applyStateAlpha = [](const utility::graphic::Color32Bit &color,
-								  std::uint8_t alpha) {
-			return utility::graphic::Color32Bit(
-				color.getRed(), color.getGreen(), color.getBlue(), alpha);
-		};
+		switch (style) {
+			case Button::Color::Elevated:
+				return scheme.getColor(SchemeColorRole::SurfaceContainerLow)
+					.getColor();
+
+			case Button::Color::Filled:
+				return scheme.getColor(SchemeColorRole::Primary).getColor();
+
+			case Button::Color::Tonal:
+				return scheme.getColor(SchemeColorRole::SecondaryContainer)
+					.getColor();
+
+			case Button::Color::Outlined:
+			case Button::Color::Text:
+				return utility::graphic::Color32Bit(0, 0, 0, 0);
+
+			default:
+				throw std::runtime_error("Invalid button color style");
+		}
+	}
+
+	static utility::graphic::Color32Bit
+		getToggleUnselectedContainerColor(Button::Color style)
+	{
+		const auto &scheme = guillaume::defaultTheme.getScheme(
+			guillaume::ThemeSchemeRole::Light);
+
+		switch (style) {
+			case Button::Color::Elevated:
+				return scheme.getColor(SchemeColorRole::SurfaceContainerLow)
+					.getColor();
+
+			case Button::Color::Filled:
+				return scheme.getColor(SchemeColorRole::SurfaceContainer)
+					.getColor();
+
+			case Button::Color::Tonal:
+				return scheme.getColor(SchemeColorRole::SecondaryContainer)
+					.getColor();
+
+			case Button::Color::Outlined:
+			case Button::Color::Text:
+				return utility::graphic::Color32Bit(0, 0, 0, 0);
+
+			default:
+				throw std::runtime_error("Invalid button color style");
+		}
+	}
+
+	static utility::graphic::Color32Bit
+		getToggleSelectedContainerColor(Button::Color style)
+	{
+		const auto &scheme = guillaume::defaultTheme.getScheme(
+			guillaume::ThemeSchemeRole::Light);
+
+		switch (style) {
+			case Button::Color::Elevated:
+			case Button::Color::Filled:
+				return scheme.getColor(SchemeColorRole::Primary).getColor();
+
+			case Button::Color::Tonal:
+				return scheme.getColor(SchemeColorRole::Secondary).getColor();
+
+			case Button::Color::Outlined:
+				return scheme.getColor(SchemeColorRole::InverseSurface)
+					.getColor();
+
+			case Button::Color::Text:
+				return utility::graphic::Color32Bit(0, 0, 0, 0);
+
+			default:
+				throw std::runtime_error("Invalid button color style");
+		}
+	}
+
+	static utility::graphic::Color32Bit
+		getPressedContainerColor(Button::Color style, bool isToggle,
+								 bool isSelected)
+	{
+		const auto &scheme = guillaume::defaultTheme.getScheme(
+			guillaume::ThemeSchemeRole::Light);
+
+		if (isToggle) {
+			switch (style) {
+				case Button::Color::Elevated:
+				case Button::Color::Filled:
+					return applyStateAlpha(
+						isSelected
+							? scheme.getColor(SchemeColorRole::Primary)
+								  .getColor()
+							: (style == Button::Color::Filled
+								   ? scheme
+										 .getColor(
+											 SchemeColorRole::SurfaceContainer)
+										 .getColor()
+								   : scheme
+										 .getColor(SchemeColorRole::
+													   SurfaceContainerLow)
+										 .getColor()),
+						220U);
+
+				case Button::Color::Tonal:
+					return applyStateAlpha(
+						isSelected
+							? scheme.getColor(SchemeColorRole::Secondary)
+								  .getColor()
+							: scheme
+								  .getColor(SchemeColorRole::SecondaryContainer)
+								  .getColor(),
+						220U);
+
+				case Button::Color::Outlined:
+					return applyStateAlpha(
+						isSelected
+							? scheme.getColor(SchemeColorRole::InverseSurface)
+								  .getColor()
+							: scheme.getColor(SchemeColorRole::InverseOnSurface)
+								  .getColor(),
+						isSelected ? 220U : 64U);
+
+				case Button::Color::Text:
+					return applyStateAlpha(
+						scheme.getColor(SchemeColorRole::Primary).getColor(),
+						48U);
+
+				default:
+					throw std::runtime_error("Invalid button color style");
+			}
+		}
 
 		switch (style) {
 			case Button::Color::Elevated:
@@ -329,22 +457,66 @@ namespace guillaume::entities
 			case Button::Color::Text:
 				return applyStateAlpha(
 					scheme.getColor(SchemeColorRole::Primary).getColor(), 48U);
+
 			default:
 				throw std::runtime_error("Invalid button color style");
 		}
 	}
 
 	static utility::graphic::Color32Bit
-		getHoverContainerColor(Button::Color style)
+		getHoverContainerColor(Button::Color style, bool isToggle,
+							   bool isSelected)
 	{
 		const auto &scheme = guillaume::defaultTheme.getScheme(
 			guillaume::ThemeSchemeRole::Light);
 
-		auto applyStateAlpha = [](const utility::graphic::Color32Bit &color,
-								  std::uint8_t alpha) {
-			return utility::graphic::Color32Bit(
-				color.getRed(), color.getGreen(), color.getBlue(), alpha);
-		};
+		if (isToggle) {
+			switch (style) {
+				case Button::Color::Elevated:
+				case Button::Color::Filled:
+					return applyStateAlpha(
+						isSelected
+							? scheme.getColor(SchemeColorRole::Primary)
+								  .getColor()
+							: (style == Button::Color::Filled
+								   ? scheme
+										 .getColor(
+											 SchemeColorRole::SurfaceContainer)
+										 .getColor()
+								   : scheme
+										 .getColor(SchemeColorRole::
+													   SurfaceContainerLow)
+										 .getColor()),
+						235U);
+
+				case Button::Color::Tonal:
+					return applyStateAlpha(
+						isSelected
+							? scheme.getColor(SchemeColorRole::Secondary)
+								  .getColor()
+							: scheme
+								  .getColor(SchemeColorRole::SecondaryContainer)
+								  .getColor(),
+						235U);
+
+				case Button::Color::Outlined:
+					return applyStateAlpha(
+						isSelected
+							? scheme.getColor(SchemeColorRole::InverseSurface)
+								  .getColor()
+							: scheme.getColor(SchemeColorRole::OnSurfaceVariant)
+								  .getColor(),
+						isSelected ? 235U : 32U);
+
+				case Button::Color::Text:
+					return applyStateAlpha(
+						scheme.getColor(SchemeColorRole::Primary).getColor(),
+						24U);
+
+				default:
+					throw std::runtime_error("Invalid button color style");
+			}
+		}
 
 		switch (style) {
 			case Button::Color::Elevated:
@@ -378,63 +550,114 @@ namespace guillaume::entities
 		}
 	}
 
-	static utility::graphic::Color32Bit getContainerColor(Button::Color style,
-														  bool isHovered,
-														  bool isButtonPressed)
+	static utility::graphic::Color32Bit
+		getContainerColor(Button::Color style, bool isToggle, bool isSelected,
+						  bool isHovered, bool isButtonPressed)
+	{
+		if (isButtonPressed) {
+			return getPressedContainerColor(style, isToggle, isSelected);
+		}
+
+		if (isHovered) {
+			return getHoverContainerColor(style, isToggle, isSelected);
+		}
+
+		if (!isToggle) {
+			return getDefaultContainerColor(style);
+		}
+
+		if (isSelected) {
+			return getToggleSelectedContainerColor(style);
+		}
+
+		return getToggleUnselectedContainerColor(style);
+	}
+
+	static utility::graphic::Color32Bit
+		getContentColor(Button::Color style, bool isToggle, bool isSelected)
 	{
 		const auto &scheme = guillaume::defaultTheme.getScheme(
 			guillaume::ThemeSchemeRole::Light);
 
-		if (isButtonPressed) {
-			return getPressedContainerColor(style);
+		if (!isToggle) {
+			switch (style) {
+				case Button::Color::Elevated:
+					return scheme.getColor(SchemeColorRole::Primary).getColor();
+				case Button::Color::Filled:
+					return scheme.getColor(SchemeColorRole::OnPrimary)
+						.getColor();
+				case Button::Color::Tonal:
+					return scheme
+						.getColor(SchemeColorRole::OnSecondaryContainer)
+						.getColor();
+				case Button::Color::Outlined:
+					return scheme.getColor(SchemeColorRole::OnSurfaceVariant)
+						.getColor();
+				case Button::Color::Text:
+					return scheme.getColor(SchemeColorRole::Primary).getColor();
+				default:
+					throw std::runtime_error("Invalid button color style");
+			}
 		}
 
-		if (isHovered) {
-			return getHoverContainerColor(style);
+		if (!isSelected) {
+			switch (style) {
+				case Button::Color::Elevated:
+					return scheme.getColor(SchemeColorRole::Primary).getColor();
+
+				case Button::Color::Filled:
+				case Button::Color::Outlined:
+					return scheme.getColor(SchemeColorRole::OnSurfaceVariant)
+						.getColor();
+
+				case Button::Color::Tonal:
+					return scheme
+						.getColor(SchemeColorRole::OnSecondaryContainer)
+						.getColor();
+
+				case Button::Color::Text:
+					return scheme.getColor(SchemeColorRole::Primary).getColor();
+
+				default:
+					throw std::runtime_error("Invalid button color style");
+			}
 		}
 
 		switch (style) {
 			case Button::Color::Elevated:
-				return scheme.getColor(SchemeColorRole::SurfaceContainerLow)
-					.getColor();
-
 			case Button::Color::Filled:
-				return scheme.getColor(SchemeColorRole::Primary).getColor();
+				return scheme.getColor(SchemeColorRole::OnPrimary).getColor();
 
 			case Button::Color::Tonal:
-				return scheme.getColor(SchemeColorRole::SecondaryContainer)
-					.getColor();
+				return scheme.getColor(SchemeColorRole::OnSecondary).getColor();
 
 			case Button::Color::Outlined:
+				return scheme.getColor(SchemeColorRole::InverseOnSurface)
+					.getColor();
+
 			case Button::Color::Text:
-				return utility::graphic::Color32Bit(0, 0, 0, 0);
+				return scheme.getColor(SchemeColorRole::Primary).getColor();
 
 			default:
 				throw std::runtime_error("Invalid button color style");
 		}
 	}
 
-	static utility::graphic::Color32Bit getContentColor(Button::Color style)
+	static utility::graphic::Color32Bit
+		getBorderColor(Button::Color style, bool isToggle, bool isSelected)
 	{
 		const auto &scheme = guillaume::defaultTheme.getScheme(
 			guillaume::ThemeSchemeRole::Light);
 
-		switch (style) {
-			case Button::Color::Elevated:
-				return scheme.getColor(SchemeColorRole::Primary).getColor();
-			case Button::Color::Filled:
-				return scheme.getColor(SchemeColorRole::OnPrimary).getColor();
-			case Button::Color::Tonal:
-				return scheme.getColor(SchemeColorRole::OnSecondaryContainer)
-					.getColor();
-			case Button::Color::Outlined:
-				return scheme.getColor(SchemeColorRole::OnSurfaceVariant)
-					.getColor();
-			case Button::Color::Text:
-				return scheme.getColor(SchemeColorRole::Primary).getColor();
-			default:
-				throw std::runtime_error("Invalid button color style");
+		if (style != Button::Color::Outlined) {
+			return utility::graphic::Color32Bit(0, 0, 0, 0);
 		}
+
+		if (!isToggle || !isSelected) {
+			return scheme.getColor(SchemeColorRole::OutlineVariant).getColor();
+		}
+
+		return utility::graphic::Color32Bit(0, 0, 0, 0);
 	}
 
 	void Button::hoverHandler(void)
@@ -451,6 +674,10 @@ namespace guillaume::entities
 
 	void Button::buttonPressHandler()
 	{
+		if (_isToggle) {
+			_isSelected = !_isSelected;
+		}
+
 		setShape(_shape);
 		setColorStyle(_colorStyle);
 
@@ -471,20 +698,20 @@ namespace guillaume::entities
 				   const std::string &labelContent, bool isToggle,
 				   Color colorStyle, Shape shape, Size size, bool isMorph,
 				   std::function<void(void)> onClick)
-		:
-
-		ecs::ParentEntityFiller<
-			components::Transform, components::Bound, components::Color,
-			components::Borders, components::Focus,
-			components::HandButtonInteraction, components::HandHoverInteraction,
-			components::MouseHoverInteraction,
-			components::MouseButtonInteraction>(registry)
+		: ecs::ParentEntityFiller<components::Transform, components::Bound,
+								  components::Color, components::Borders,
+								  components::Focus,
+								  components::HandButtonInteraction,
+								  components::HandHoverInteraction,
+								  components::MouseHoverInteraction,
+								  components::MouseButtonInteraction>(registry)
 		, _iconGlyphName(iconGlyphName)
 		, _iconStyle(iconStyle)
 		, _labelContent(labelContent)
 		, _icon()
 		, _label()
 		, _isToggle(isToggle)
+		, _isSelected(false)
 		, _colorStyle(colorStyle)
 		, _shape(shape)
 		, _size(size)
@@ -622,6 +849,7 @@ namespace guillaume::entities
 				.isButtonPressed(utility::event::HandButtonEvent::Button::A)
 			? true
 			: isButtonPressed;
+
 		isButtonPressed =
 			getComponentRegistry()
 				.getComponent<components::MouseButtonInteraction>(
@@ -632,12 +860,15 @@ namespace guillaume::entities
 
 		getComponentRegistry()
 			.getComponent<components::Color>(getIdentifier())
-			.setColor(
-				getContainerColor(_colorStyle, isHovered, isButtonPressed));
+			.setColor(getContainerColor(_colorStyle, _isToggle, _isSelected,
+										isHovered, isButtonPressed));
 
-		_icon->setColor(getContentColor(_colorStyle));
+		getComponentRegistry()
+			.getComponent<components::Borders>(getIdentifier())
+			.setColor(getBorderColor(_colorStyle, _isToggle, _isSelected));
 
-		_label->setColor(getContentColor(_colorStyle));
+		_icon->setColor(getContentColor(_colorStyle, _isToggle, _isSelected));
+		_label->setColor(getContentColor(_colorStyle, _isToggle, _isSelected));
 
 		return *this;
 	}
@@ -647,7 +878,7 @@ namespace guillaume::entities
 		bool isHovered		 = false;
 		bool isButtonPressed = false;
 
-		_shape = shape;
+		_shape = getRestingShape(shape, _isToggle, _isSelected);
 
 		isHovered =
 			getComponentRegistry()
@@ -670,6 +901,7 @@ namespace guillaume::entities
 				.isButtonPressed(utility::event::HandButtonEvent::Button::A)
 			? true
 			: isButtonPressed;
+
 		isButtonPressed =
 			getComponentRegistry()
 				.getComponent<components::MouseButtonInteraction>(
@@ -690,7 +922,6 @@ namespace guillaume::entities
 		_size = size;
 
 		_icon->setFontSize(getFontSize(_size));
-
 		_label->setFontSize(getFontSize(_size));
 
 		const auto &buttonPose =
@@ -749,7 +980,7 @@ namespace guillaume::entities
 
 	Button &Button::setOnClick(std::function<void(void)> onClick)
 	{
-		_onClick = onClick;
+		_onClick = std::move(onClick);
 		return *this;
 	}
 
@@ -760,16 +991,16 @@ namespace guillaume::entities
 		Text::Builder labelBuilder(getComponentRegistry(), *this);
 		Text::Director labelDirector;
 
-		_icon = iconDirector.makeIcon(iconBuilder, shared_from_this(),
-									  _iconGlyphName, getFontSize(_size),
-									  getContentColor(_colorStyle), _iconStyle);
+		_icon = iconDirector.makeIcon(
+			iconBuilder, shared_from_this(), _iconGlyphName, getFontSize(_size),
+			getContentColor(_colorStyle, _isToggle, _isSelected), _iconStyle);
 
 		getLogger().info() << "Icon : " << _icon
 						   << " created for button: " << shared_from_this();
 
-		_label = labelDirector.makeText(labelBuilder, shared_from_this(),
-										_labelContent, getFontSize(_size),
-										getContentColor(_colorStyle));
+		_label = labelDirector.makeText(
+			labelBuilder, shared_from_this(), _labelContent, getFontSize(_size),
+			getContentColor(_colorStyle, _isToggle, _isSelected));
 
 		getLogger().info() << "Label : " << _label
 						   << " created for button: " << shared_from_this();

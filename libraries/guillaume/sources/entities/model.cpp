@@ -84,13 +84,13 @@ namespace guillaume::entities
 	{
 	}
 
-	std::shared_ptr<Model>
-		Model::Director::makeModel(Builder &builder,
-								   std::shared_ptr<Entity> parent,
-								   const std::string &modelPath,
-								   const std::string &texturePath)
+	std::shared_ptr<Model> Model::Director::makeModel(
+		Builder &builder, std::shared_ptr<Entity> parent,
+		const std::string &modelPath, const std::string &texturePath)
 	{
-		return builder.withModelPath(modelPath).withTexturePath(texturePath).registerEntity(parent);
+		return builder.withModelPath(modelPath)
+			.withTexturePath(texturePath)
+			.registerEntity(parent);
 	}
 
 	Model::Model(ecs::ComponentRegistry &registry, const std::string &modelPath)

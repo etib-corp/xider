@@ -43,8 +43,9 @@ namespace guillaume::systems
 	 * cached model rendering results based on the pose, model name, and color.
 	 */
 	struct ModelRenderCacheKey {
-		std::string modelPath;	  ///< The path of the model to be rendered
-		std::string texturePath;  ///< The path of the texture to be applied to the model
+		std::string modelPath;		///< The path of the model to be rendered
+		std::string texturePath;	///< The path of the texture to be applied
+									///< to the model
 		utility::graphic::PoseF pose;	 ///< The pose of the model in 3D space
 		utility::graphic::ScaleF scale;	   ///< The scale of the model
 

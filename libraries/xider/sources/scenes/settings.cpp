@@ -30,9 +30,10 @@
 namespace xider::scenes
 {
 
-	Settings::Settings(std::shared_ptr<utility::RessourceProvider> ressourceProvider,
-					   guillaume::LocalStorage &localStorage,
-					   guillaume::SessionStorage &sessionStorage)
+	Settings::Settings(
+		std::shared_ptr<utility::RessourceProvider> ressourceProvider,
+		guillaume::LocalStorage &localStorage,
+		guillaume::SessionStorage &sessionStorage)
 		: guillaume::Scene(ressourceProvider, localStorage, sessionStorage)
 	{
 		using namespace guillaume::entities;
@@ -52,23 +53,25 @@ namespace xider::scenes
 			getDirectorManager()
 				.getDirector<guillaume::entities::Text::Director>();
 
-		auto goToHomeButton = buttonDirector.makeIconButton(
-			buttonBuilder, nullptr, "Go to Home", "home",
-			Glyph::Style::Outlined,
-			[this]() {
-				this->goToScene<Home>();
-			},
-			Button::Color::Filled, Button::Shape::Round, Button::Size::Medium,
-			false);
-		
-		auto goToSoundButton = buttonDirector.makeIconButton(
-			buttonBuilder, nullptr, "Go to Sound", "computer_sound",
-			Glyph::Style::Outlined,
-			[this]() {
-				this->goToScene<Sound>();
-			},
-			Button::Color::Filled, Button::Shape::Round, Button::Size::Medium,
-			false);
+		addRootEntity("go_to_home_button",
+					  buttonDirector.makeIconButton(
+						  buttonBuilder, nullptr, "Go to Home", "home",
+						  Glyph::Style::Outlined,
+						  [this]() {
+							  this->goToScene<Home>();
+						  },
+						  Button::Color::Filled, Button::Shape::Round,
+						  Button::Size::Medium, false));
+
+		addRootEntity("go_to_sound_button",
+					  buttonDirector.makeIconButton(
+						  buttonBuilder, nullptr, "Go to Sound",
+						  "computer_sound", Glyph::Style::Outlined,
+						  [this]() {
+							  this->goToScene<Sound>();
+						  },
+						  Button::Color::Filled, Button::Shape::Round,
+						  Button::Size::Medium, false));
 	}
 
 	Settings::~Settings(void)

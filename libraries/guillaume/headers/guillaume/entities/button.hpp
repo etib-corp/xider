@@ -281,6 +281,8 @@ namespace guillaume::entities
 		static constexpr float _layerDepthStep {
 			1.0f
 		};	  ///< Distance pushed toward the camera per layer.
+		bool _isSelected;	 ///< Whether the button is currently selected (for
+							 ///< toggle buttons)
 
 		private:
 		/**

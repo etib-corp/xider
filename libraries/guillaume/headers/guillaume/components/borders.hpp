@@ -25,6 +25,8 @@
 #include <cmath>
 #include <ostream>
 
+#include <utility/graphic/color.hpp>
+
 #include "guillaume/ecs/component.hpp"
 
 namespace guillaume::components
@@ -48,6 +50,7 @@ namespace guillaume::components
 											///< bottom-right corner
 		BorderRadius
 			_bottomLeftRadius;	  ///< Borders radius for the bottom-left corner
+		utility::graphic::Color32Bit _color;	///< Color of the border
 
 		public:
 		/**
@@ -118,6 +121,19 @@ namespace guillaume::components
 		 * @return Reference to this Borders component for chaining.
 		 */
 		Borders &setBorderRadius(BorderRadius radius);
+
+		/**
+		 * @brief Set the color of the border.
+		 * @param color The new color to set for the border (RGBA).
+		 * @return Reference to this Borders component for chaining.
+		 */
+		Borders &setColor(const utility::graphic::Color32Bit &color);
+
+		/**
+		 * @brief Get the color of the border.
+		 * @return The color of the border (RGBA).
+		 */
+		utility::graphic::Color32Bit getColor(void) const;
 
 		/**
 		 * @brief Equality operator for Borders component.

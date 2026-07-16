@@ -100,6 +100,21 @@ namespace guillaume::components
 			.setBottomLeftRadius(radius);
 	}
 
+	Borders &Borders::setColor(const utility::graphic::Color32Bit &color)
+	{
+		if (_color == color) {
+			return *this;
+		}
+		_color = color;
+		setHasChanged(true);
+		return *this;
+	}
+
+	utility::graphic::Color32Bit Borders::getColor(void) const
+	{
+		return _color;
+	}
+
 	bool Borders::operator==(const Borders &other) const
 	{
 		if (_topLeftRadius != other._topLeftRadius) {
@@ -112,6 +127,9 @@ namespace guillaume::components
 			return false;
 		}
 		if (_bottomLeftRadius != other._bottomLeftRadius) {
+			return false;
+		}
+		if (_color != other._color) {
 			return false;
 		}
 		return true;
@@ -135,6 +153,9 @@ namespace guillaume::components
 		}
 		if (_bottomLeftRadius != other._bottomLeftRadius) {
 			return _bottomLeftRadius < other._bottomLeftRadius;
+		}
+		if (_color != other._color) {
+			return _color < other._color;
 		}
 		return false;
 	}

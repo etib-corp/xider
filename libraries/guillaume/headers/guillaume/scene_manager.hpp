@@ -65,7 +65,7 @@ namespace guillaume
 	{
 		private:
 		std::shared_ptr<utility::RessourceProvider>
-			_ressourceProvider;	///< Shared pointer to the resource provider
+			_ressourceProvider;	   ///< Shared pointer to the resource provider
 		std::map<std::type_index, std::unique_ptr<Scene>>
 			_scenes;	///< Registered scenes in the manager
 		std::type_index
@@ -86,7 +86,8 @@ namespace guillaume
 		/**
 		 * @brief Default constructor for the SceneManager class.
 		 */
-		SceneManager(std::shared_ptr<utility::RessourceProvider> ressourceProvider);
+		SceneManager(
+			std::shared_ptr<utility::RessourceProvider> ressourceProvider);
 
 		/**
 		 * @brief Default destructor for the SceneManager class.

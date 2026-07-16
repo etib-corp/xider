@@ -50,10 +50,10 @@ namespace guillaume::entities
 			private:
 			std::shared_ptr<Model>
 				_model;	   ///< Unique pointer to the Model entity being built
-			std::string _modelPath;	   ///< Name of the model to be used for
-									   ///< this Model entity
-			std::string _texturePath;   ///< Name of the texture to be used for
-									   ///< this Model entity
+			std::string _modelPath;		 ///< Name of the model to be used for
+										 ///< this Model entity
+			std::string _texturePath;	 ///< Name of the texture to be used for
+										 ///< this Model entity
 
 			public:
 			/**
@@ -95,7 +95,8 @@ namespace guillaume::entities
 			Builder &withModelPath(const std::string &modelPath);
 
 			/**
-			 * @brief Set the name of the texture to be used for the Model entity.
+			 * @brief Set the name of the texture to be used for the Model
+			 * entity.
 			 * @param texturePath The texture identifier to set.
 			 * @return Reference to the builder for chaining.
 			 */
@@ -126,22 +127,23 @@ namespace guillaume::entities
 			 * @param parent The parent entity to which the new model entity
 			 * will be attached.
 			 * @param modelPath The model name to assign to the created entity.
-			 * @param texturePath The texture name to assign to the created entity (optional).
+			 * @param texturePath The texture name to assign to the created
+			 * entity (optional).
 			 * @return The entity identifier of the newly created model entity.
 			 * @see components::Glyph::getName
 			 */
-			std::shared_ptr<Model> makeModel(Builder &builder,
-											  std::shared_ptr<Entity> parent,
-											  const std::string &modelPath,
-											  const std::string &texturePath = "");
+			std::shared_ptr<Model>
+				makeModel(Builder &builder, std::shared_ptr<Entity> parent,
+						  const std::string &modelPath,
+						  const std::string &texturePath = "");
 		};
 
 		private:
 		std::string _modelPath;	   ///< Name of the model to be used for this
 								   ///< Model entity
 
-		std::string _texturePath;   ///< Name of the texture to be used for this
-								   ///< Model entity
+		std::string _texturePath;	 ///< Name of the texture to be used for
+									 ///< this Model entity
 
 		public:
 		/**

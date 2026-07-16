@@ -41,8 +41,8 @@ namespace xider::scenes
 		 * @param localStorage Reference to persistent local storage
 		 * @param sessionStorage Reference to per-session storage
 		 */
-		Home(std::shared_ptr<utility::RessourceProvider>
-			ressourceProvider,guillaume::LocalStorage &localStorage,
+		Home(std::shared_ptr<utility::RessourceProvider> ressourceProvider,
+			 guillaume::LocalStorage &localStorage,
 			 guillaume::SessionStorage &sessionStorage);
 
 		/**

@@ -30,8 +30,8 @@ namespace xider::scenes
 {
 
 	Sound::Sound(std::shared_ptr<utility::RessourceProvider> ressourceProvider,
-					   guillaume::LocalStorage &localStorage,
-					   guillaume::SessionStorage &sessionStorage)
+				 guillaume::LocalStorage &localStorage,
+				 guillaume::SessionStorage &sessionStorage)
 		: guillaume::Scene(ressourceProvider, localStorage, sessionStorage)
 	{
 		using namespace guillaume::entities;
@@ -63,32 +63,63 @@ namespace xider::scenes
 		auto soundText = textDirector.makeText(
 			textBuilder, nullptr, "Sound Scene", 18,
 			utility::graphic::Color32Bit(255, 255, 255, 255));
-			
-			auto settingsText = textDirector.makeText(
+
+		auto settingsText = textDirector.makeText(
 			textBuilder, nullptr, "Settings Scene", 18,
 			utility::graphic::Color32Bit(255, 255, 255, 255));
 
-		std::unique_ptr<utility::sound::AudioSource> source = ressourceProvider->loadAudioSource("sound/nastelbom-background-music-486996.mp3");
-		source->setGain(0.5f);
-		source->stop();
+		addRootEntity("sound_text", soundText);
+		addRootEntity("settings_text", settingsText);
 
-		auto playSourceButton = buttonDirector.makeIconButton(
-			buttonBuilder, nullptr, "Play Sound", "play_arrow",
-			Glyph::Style::Outlined,
-			[&source]() {
-				source->play();
-			},
-			Button::Color::Filled, Button::Shape::Round, Button::Size::Medium,
-			false);
+		_first_source = ressourceProvider->loadAudioSource(
+			"sound/nastelbom-background-music-486996.mp3");
+		_first_source->setGain(0.5f);
+		_first_source->stop();
 
-		auto pauseSourceButton = buttonDirector.makeIconButton(
-			buttonBuilder, nullptr, "Pause Sound", "pause",
-			Glyph::Style::Outlined,
-			[&source]() {
-				source->pause();
-			},
-			Button::Color::Filled, Button::Shape::Round, Button::Size::Medium,
-			false);
+		_second_source = ressourceProvider->loadAudioSource(
+			"sound/sigmamusicart-jazz-lounge-relaxing-background-music-537739.mp3");
+		_second_source->setGain(0.5f);
+		_second_source->stop();
+
+		addRootEntity("pause_source_button",
+					  buttonDirector.makeIconButton(
+						  buttonBuilder, nullptr, "Pause First Sound", "pause",
+						  Glyph::Style::Outlined,
+						  [this]() {
+							  _first_source->pause();
+						  },
+						  Button::Color::Filled, Button::Shape::Round,
+						  Button::Size::Medium, false));
+
+		addRootEntity("play_source_button",
+					  buttonDirector.makeIconButton(
+						  buttonBuilder, nullptr, "Play First Sound", "play_arrow",
+						  Glyph::Style::Outlined,
+						  [this]() {
+							  _first_source->play();
+						  },
+						  Button::Color::Filled, Button::Shape::Round,
+						  Button::Size::Medium, false));
+
+		addRootEntity("pause_second_source_button",
+					  buttonDirector.makeIconButton(
+						  buttonBuilder, nullptr, "Pause Second Sound", "pause",
+						  Glyph::Style::Outlined,
+						  [this]() {
+							  _second_source->pause();
+						  },
+						  Button::Color::Filled, Button::Shape::Round,
+						  Button::Size::Medium, false));
+
+		addRootEntity("play_second_source_button",
+					  buttonDirector.makeIconButton(
+						  buttonBuilder, nullptr, "Play Second Sound", "play_arrow",
+						  Glyph::Style::Outlined,
+						  [this]() {
+							  _second_source->play();
+						  },
+						  Button::Color::Filled, Button::Shape::Round,
+						  Button::Size::Medium, false));
 	}
 
 	Sound::~Sound(void)

@@ -538,10 +538,20 @@ void evan::Engine::handleHandMotionEvent(
 
 void evan::Engine::updateDeltaTime(void)
 {
-	auto currentTime					   = std::chrono::steady_clock::now();
-	std::chrono::duration<float> deltaTime = currentTime - _lastFrameTime;
-	_deltaTime							   = deltaTime.count();
-	_lastFrameTime						   = currentTime;
+	static constexpr auto targetFrameTime =
+		std::chrono::duration<float>(1.0f / 60.0f);
+
+	auto currentTime = std::chrono::steady_clock::now();
+	auto elapsed	 = currentTime - _lastFrameTime;
+
+	if (elapsed < targetFrameTime) {
+		std::this_thread::sleep_for(targetFrameTime - elapsed);
+		currentTime = std::chrono::steady_clock::now();
+		elapsed		= currentTime - _lastFrameTime;
+	}
+
+	_deltaTime	   = std::chrono::duration<float>(elapsed).count();
+	_lastFrameTime = currentTime;
 }
 
 float evan::Engine::getDeltaTime(void) const
