@@ -34,7 +34,8 @@ namespace guillaume::components
 	class Model: public ecs::Component
 	{
 		private:
-		std::string _modelPath {};	  ///< Path to the model file
+		std::string _modelPath {}; ///< Path to the model file
+		std::string _texturePath {}; ///< Path to the texture file
 
 		public:
 		/**
@@ -55,9 +56,22 @@ namespace guillaume::components
 		Model &setModelPath(const std::string &path);
 
 		/**
+		 * @brief Set the texture path.
+		 * @param path The new texture path.
+		 * @return Reference to this Model component for chaining.
+		 */
+		Model &setTexturePath(const std::string &path);
+
+		/**
 		 * @brief Get the model path.
 		 * @return The model path.
 		 */
 		std::string getModelPath(void) const;
+
+		/**
+		 * @brief Get the texture path.
+		 * @return The texture path.
+		 */
+		std::string getTexturePath(void) const;
 	};
 }	 // namespace guillaume::components

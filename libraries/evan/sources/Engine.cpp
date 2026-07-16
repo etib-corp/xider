@@ -156,12 +156,21 @@ size_t evan::Engine::addModel(std::shared_ptr<utility::graphic::Model> model)
 																 : "Unknown");
 
 	this->getLogger().info() << "Drawing model of type: " << modelTypeStr;
-	this->getLogger().warning()
-		<< "drawModel is not fully implemented yet. This is "
-		   "a placeholder implementation.";
 
-	return 0;	 // Placeholder implementation - replace with actual model
-				 // addition logic
+	auto material_id = model->getMaterialID();
+
+	std::map<uint32_t, utility::graphic::Mesh> rawObjects;
+	for (const auto &mesh: model->getMeshes()) {
+		rawObjects.emplace(material_id, *mesh);
+	}
+
+	std::shared_ptr<RenderObject> modelObject =
+		std::make_shared<RenderObject>(_deviceContext, rawObjects, "mesh");
+	auto objectID =
+		_scenes[_currentScene]->addObject(_nextObjectID++, modelObject);
+	_ressourceManager->sync();
+
+	return objectID;
 }
 
 size_t evan::Engine::addObject(

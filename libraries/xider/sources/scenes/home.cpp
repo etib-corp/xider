@@ -70,8 +70,7 @@ namespace xider::scenes
 			textBuilder, nullptr, "Home Scene", 18,
 			utility::graphic::Color32Bit(255, 255, 255, 255));
 
-		auto teapotModel =
-			modelDirector.makeModel(modelBuilder, nullptr, "models/teapot.obj");
+		modelDirector.makeModel(modelBuilder, nullptr, "models/viking_room.obj", "textures/viking_room.png");
 	}
 
 	Home::~Home(void)
