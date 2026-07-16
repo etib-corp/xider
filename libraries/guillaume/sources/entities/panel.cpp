@@ -45,7 +45,8 @@ namespace guillaume::entities
 
 		this->getEntityRegistry().addEntity(_panel);
 
-		auto panelCopy = _panel;	// Create a copy of the shared pointer to return
+		auto panelCopy =
+			_panel;	   // Create a copy of the shared pointer to return
 
 		reset();
 

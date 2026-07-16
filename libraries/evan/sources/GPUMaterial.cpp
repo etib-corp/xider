@@ -76,8 +76,8 @@ void evan::GPUMaterial::update(std::shared_ptr<DeviceContext> deviceContext,
 {
 	if (material.getVersion() == _uploadedVersion) {
 		this->getLogger().info()
-			<< "GREP No update needed for GPUMaterial with shader ID: " << shaderID
-			<< " and material version: " << material.getVersion()
+			<< "GREP No update needed for GPUMaterial with shader ID: "
+			<< shaderID << " and material version: " << material.getVersion()
 			<< ". Material version is unchanged.";
 		return;
 	}
@@ -114,8 +114,8 @@ void evan::GPUMaterial::update(std::shared_ptr<DeviceContext> deviceContext,
 	}
 
 	vkFreeDescriptorSets(deviceBackend->_device, renderer.getDescriptorPool(),
-							static_cast<uint32_t>(_descriptorSets.size()),
-							_descriptorSets.data());
+						 static_cast<uint32_t>(_descriptorSets.size()),
+						 _descriptorSets.data());
 	this->createDescriptorSets(
 		deviceBackend->_device, renderer.getDescriptorSetLayout(),
 		renderer.getDescriptorPool(), renderer.getUniformBuffers());

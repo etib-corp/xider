@@ -66,10 +66,12 @@ namespace xider::scenes
 			Button::Color::Filled, Button::Shape::Round, Button::Size::Medium,
 			false);
 
-		auto titleText = textDirector.makeText(textBuilder, nullptr, "Home Scene", 18,
-							  utility::graphic::Color32Bit(255, 255, 255, 255));
+		auto titleText = textDirector.makeText(
+			textBuilder, nullptr, "Home Scene", 18,
+			utility::graphic::Color32Bit(255, 255, 255, 255));
 
-		auto teapotModel = modelDirector.makeModel(modelBuilder, nullptr, "models/teapot.obj");
+		auto teapotModel =
+			modelDirector.makeModel(modelBuilder, nullptr, "models/teapot.obj");
 	}
 
 	Home::~Home(void)

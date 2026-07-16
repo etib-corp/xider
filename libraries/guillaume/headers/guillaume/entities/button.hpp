@@ -269,8 +269,8 @@ namespace guillaume::entities
 			components::Glyph::Style::Outlined
 		};	  ///< Style of the icon to attach.
 		std::string _labelContent {};	 ///< Label content to attach.
-		std::shared_ptr<Icon> _icon;	///< Internal child icon entity
-		std::shared_ptr<Text> _label;	///< Internal child label entity
+		std::shared_ptr<Icon> _icon;	 ///< Internal child icon entity
+		std::shared_ptr<Text> _label;	 ///< Internal child label entity
 		bool _isToggle { false };	 ///< Whether the button is a toggle button
 		Color _colorStyle { Color::Filled };	///< Color style of the button
 		Shape _shape { Shape::Round };			///< Shape of the button

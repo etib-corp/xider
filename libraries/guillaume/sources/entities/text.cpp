@@ -46,7 +46,8 @@ namespace guillaume::entities
 
 		this->getEntityRegistry().addEntity(_text);
 
-		auto textCopy = _text;	// Create a copy of the shared pointer to return
+		auto textCopy =
+			_text;	  // Create a copy of the shared pointer to return
 
 		reset();
 

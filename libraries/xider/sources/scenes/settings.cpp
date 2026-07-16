@@ -59,8 +59,9 @@ namespace xider::scenes
 			Button::Color::Filled, Button::Shape::Round, Button::Size::Medium,
 			false);
 
-		auto settingsText = textDirector.makeText(textBuilder, nullptr, "Settings Scene", 18,
-							  utility::graphic::Color32Bit(255, 255, 255, 255));
+		auto settingsText = textDirector.makeText(
+			textBuilder, nullptr, "Settings Scene", 18,
+			utility::graphic::Color32Bit(255, 255, 255, 255));
 	}
 
 	Settings::~Settings(void)

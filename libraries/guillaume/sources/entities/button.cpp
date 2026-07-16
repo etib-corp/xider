@@ -53,7 +53,8 @@ namespace guillaume::entities
 
 		this->getEntityRegistry().addEntity(_button);
 
-		auto buttonCopy = _button;	// Create a copy of the shared pointer to return
+		auto buttonCopy =
+			_button;	// Create a copy of the shared pointer to return
 
 		reset();
 
@@ -565,7 +566,7 @@ namespace guillaume::entities
 		_iconGlyphName = iconGlyphName;
 
 		_icon->setGlyphName(_iconGlyphName);
-		
+
 		return *this;
 	}
 
@@ -634,11 +635,10 @@ namespace guillaume::entities
 			.setColor(
 				getContainerColor(_colorStyle, isHovered, isButtonPressed));
 
-
 		_icon->setColor(getContentColor(_colorStyle));
-		
+
 		_label->setColor(getContentColor(_colorStyle));
-		
+
 		return *this;
 	}
 
@@ -688,11 +688,11 @@ namespace guillaume::entities
 	Button &Button::setSize(const Size &size)
 	{
 		_size = size;
-	
+
 		_icon->setFontSize(getFontSize(_size));
-	
+
 		_label->setFontSize(getFontSize(_size));
-	
+
 		const auto &buttonPose =
 			getComponentRegistry()
 				.getComponent<components::Transform>(getIdentifier())
@@ -760,17 +760,19 @@ namespace guillaume::entities
 		Text::Builder labelBuilder(getComponentRegistry(), *this);
 		Text::Director labelDirector;
 
-		_icon = iconDirector.makeIcon(
-			iconBuilder, shared_from_this(), _iconGlyphName, getFontSize(_size),
-			getContentColor(_colorStyle), _iconStyle);
+		_icon = iconDirector.makeIcon(iconBuilder, shared_from_this(),
+									  _iconGlyphName, getFontSize(_size),
+									  getContentColor(_colorStyle), _iconStyle);
 
-		getLogger().info() << "Icon : " << _icon << " created for button: " << shared_from_this();
+		getLogger().info() << "Icon : " << _icon
+						   << " created for button: " << shared_from_this();
 
-		_label = labelDirector.makeText(
-			labelBuilder, shared_from_this(), _labelContent, getFontSize(_size),
-			getContentColor(_colorStyle));
+		_label = labelDirector.makeText(labelBuilder, shared_from_this(),
+										_labelContent, getFontSize(_size),
+										getContentColor(_colorStyle));
 
-		getLogger().info() << "Label : " << _label << " created for button: " << shared_from_this();
+		getLogger().info() << "Label : " << _label
+						   << " created for button: " << shared_from_this();
 
 		getComponentRegistry()
 			.getComponent<components::HandButtonInteraction>(getIdentifier())

@@ -119,8 +119,8 @@ namespace guillaume::entities
 			 * @return A shared pointer to the newly created model entity.
 			 */
 			std::shared_ptr<Model> makeModel(Builder &builder,
-											  std::shared_ptr<Entity> parent,
-											  const std::string &modelPath);
+											 std::shared_ptr<Entity> parent,
+											 const std::string &modelPath);
 		};
 
 		private:

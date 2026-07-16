@@ -34,7 +34,7 @@ namespace guillaume::components
 	class Model: public ecs::Component
 	{
 		private:
-		std::string _modelPath {}; ///< Path to the model file
+		std::string _modelPath {};	  ///< Path to the model file
 
 		public:
 		/**

@@ -45,7 +45,8 @@ namespace guillaume::entities
 
 		this->getEntityRegistry().addEntity(_model);
 
-		auto modelCopy = _model;	// Create a copy of the shared pointer to return
+		auto modelCopy =
+			_model;	   // Create a copy of the shared pointer to return
 
 		reset();
 

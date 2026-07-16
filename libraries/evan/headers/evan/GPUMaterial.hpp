@@ -110,18 +110,20 @@ namespace evan
 		 * This method updates the GPUMaterial by reinitializing its Vulkan
 		 * resources based on the provided material's texture data.
 		 * It creates new Vulkan images, image views, samplers,
-		 * and descriptor sets as needed to reflect any changes in the material's
-		 * properties or associated textures.
+		 * and descriptor sets as needed to reflect any changes in the
+		 * material's properties or associated textures.
 		 *
-		 * @param deviceContext A shared pointer to the DeviceContext instance, which
-		 * provides access to Vulkan device resources and configurations needed
-		 * for updating images, image views, samplers, and descriptor sets.
+		 * @param deviceContext A shared pointer to the DeviceContext instance,
+		 * which provides access to Vulkan device resources and configurations
+		 * needed for updating images, image views, samplers, and descriptor
+		 * sets.
 		 * @param renderer A reference to the Renderer instance, which may be
 		 * used to access rendering configurations or resources needed for
 		 * material updates.
 		 * @param material A reference to the utility::graphic::Material
-		 * instance, which contains updated information about the material's shader and
-		 * textures, used to reinitialize the Vulkan resources for this material.
+		 * instance, which contains updated information about the material's
+		 * shader and textures, used to reinitialize the Vulkan resources for
+		 * this material.
 		 * @param shaderID The unique ID of the shader associated with this
 		 * material, used to identify which shader program should be used when
 		 * rendering objects that utilize this material.
