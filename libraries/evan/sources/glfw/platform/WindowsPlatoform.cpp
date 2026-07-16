@@ -29,6 +29,7 @@ evan::WindowsDesktopPlatform::WindowsDesktopPlatform(const std::string &name,
 		this->getLogger().error() << "Failed to create GLFW window";
 		return;
 	}
+	glfwSetWindowAspectRatio(_window, width, height);
 }
 
 ////////////////////
