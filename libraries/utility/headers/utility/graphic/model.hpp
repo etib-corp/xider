@@ -66,13 +66,14 @@ namespace utility::graphic
 		 * provided File. It processes the model data and populates the
 		 * necessary properties of the Model object, such as vertices, textures,
 		 * and materials, based on the content of the File.
+		 * @param pose The initial position and orientation for the model.
 		 * @param materialID The ID of the material associated with the model.
 		 *
 		 * @note This implementation will parse the model according to the
 		 * extensions of the file (e.g., .obj, .fbx, .gltf) and set the
 		 * appropriate ModelType based on the file format.
 		 */
-		Model(std::shared_ptr<utility::File> modelAsset, uint32_t materialID);
+		Model(std::shared_ptr<utility::File> modelAsset, const PoseF &pose, uint32_t materialID);
 
 		/**
 		 * @brief Constructs a Model object from a given File containing the
@@ -82,6 +83,7 @@ namespace utility::graphic
 		 * model data to be loaded.
 		 * @param type The type of the model (e.g., OBJ, FBX, GLTF) to be
 		 * loaded.
+		 * @param pose The initial position and orientation for the model.
 		 * @param materialID The ID of the material associated with the model.
 		 *
 		 * This constructor is responsible for initializing the Model object by
@@ -89,6 +91,7 @@ namespace utility::graphic
 		 * ModelType based on the specified type parameter.
 		 */
 		Model(std::shared_ptr<utility::File> modelAsset, ModelType type,
+			  const PoseF &pose,
 			  uint32_t materialID);
 
 		/**
