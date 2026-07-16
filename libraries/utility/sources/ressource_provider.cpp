@@ -357,6 +357,8 @@ namespace utility
 		// the material object
 		_materials[id] = material;
 
+		_elementsIDs[materialAsset->path()] = id;
+
 		return _materials[id];
 	}
 
@@ -477,6 +479,8 @@ namespace utility
 
 		_models[id] = model;
 
+		_elementsIDs[modelAsset->path()] = id;
+
 		return _models[id];
 	}
 
@@ -507,6 +511,8 @@ namespace utility
 		auto id	   = getNextID();
 
 		_models[id] = model;
+
+		_elementsIDs[modelAsset->path()] = id;
 
 		return _models[id];
 	}
@@ -545,7 +551,7 @@ namespace utility
 		auto id = getNextID();
 
 		_models[id] = model;
-
+		_elementsIDs[modelAsset->path()] = id;
 		return _models[id];
 	}
 
