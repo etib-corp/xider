@@ -40,7 +40,7 @@ namespace guillaume::event
 		if (!_lastEvent) {
 			return nullptr;
 		}
-		return std::move(_lastEvent);
+		return _lastEvent;
 	}
 
 	template<utility::event::InheritFromEvent EventType>

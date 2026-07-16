@@ -180,7 +180,7 @@ namespace guillaume
 
 			cursor += width + gap;
 		}
-	}	
+	}
 
 	void Scene::onEnter(void)
 	{

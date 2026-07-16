@@ -38,9 +38,11 @@ namespace xider::scenes
 	{
 		private:
 		std::unique_ptr<utility::sound::AudioSource>
-			_first_source;	///< Audio source for background music or sound effects
+			_first_source;	  ///< Audio source for background music or sound
+							  ///< effects
 		std::unique_ptr<utility::sound::AudioSource>
-			_second_source;	///< Audio source for additional sound effects or music
+			_second_source;	   ///< Audio source for additional sound effects or
+							   ///< music
 		public:
 		/**
 		 * @brief Construct a new Sound scene
