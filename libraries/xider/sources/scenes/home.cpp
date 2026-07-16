@@ -30,9 +30,10 @@
 namespace xider::scenes
 {
 
-	Home::Home(guillaume::LocalStorage &localStorage,
+	Home::Home(std::shared_ptr<utility::RessourceProvider> ressourceProvider,
+			   guillaume::LocalStorage &localStorage,
 			   guillaume::SessionStorage &sessionStorage)
-		: guillaume::Scene(localStorage, sessionStorage)
+		: guillaume::Scene(ressourceProvider, localStorage, sessionStorage)
 	{
 		using namespace guillaume::entities;
 		using namespace guillaume::components;
@@ -57,20 +58,29 @@ namespace xider::scenes
 			getDirectorManager()
 				.getDirector<guillaume::entities::Model::Director>();
 
-		auto goToSettingsButton = buttonDirector.makeIconButton(
-			buttonBuilder, nullptr, "Go to Settings", "settings",
-			Glyph::Style::Outlined,
-			[this]() {
-				this->goToScene<Settings>();
-			},
-			Button::Color::Filled, Button::Shape::Round, Button::Size::Medium,
-			false);
+		addRootEntity("go_to_settings_button",
+					  buttonDirector.makeIconButton(
+						  buttonBuilder, nullptr, "Go to Settings", "settings",
+						  Glyph::Style::Outlined,
+						  [this]() {
+							  this->goToScene<Settings>();
+						  },
+						  Button::Color::Filled, Button::Shape::Round,
+						  Button::Size::Medium, false));
 
-		auto titleText = textDirector.makeText(
-			textBuilder, nullptr, "Home Scene", 18,
-			utility::graphic::Color32Bit(255, 255, 255, 255));
+		addRootEntity("title_text",
+					  textDirector.makeText(
+						  textBuilder, nullptr, "Home Scene", 18,
+						  utility::graphic::Color32Bit(255, 255, 255, 255)));
 
-		modelDirector.makeModel(modelBuilder, nullptr, "models/viking_room.obj", "textures/viking_room.png");
+		addRootEntity("teapot_model",
+					  modelDirector.makeModel(modelBuilder, nullptr,
+											  "models/teapot.obj"));
+
+		addRootEntity("viking_room_model",
+					  modelDirector.makeModel(modelBuilder, nullptr,
+											  "models/viking_room.obj",
+											  "textures/viking_room.png"));
 	}
 
 	Home::~Home(void)

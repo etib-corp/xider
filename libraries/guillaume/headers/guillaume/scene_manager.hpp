@@ -31,6 +31,8 @@
 #include <utility/logging/loggable.hpp>
 #include <utility/logging/default_logger.hpp>
 
+#include <utility/ressource_provider.hpp>
+
 #include "guillaume/scene.hpp"
 
 #include "guillaume/ecs/component_registry.hpp"
@@ -62,6 +64,8 @@ namespace guillaume
 			utility::logging::DefaultLogger>
 	{
 		private:
+		std::shared_ptr<utility::RessourceProvider>
+			_ressourceProvider;	   ///< Shared pointer to the resource provider
 		std::map<std::type_index, std::unique_ptr<Scene>>
 			_scenes;	///< Registered scenes in the manager
 		std::type_index
@@ -81,8 +85,11 @@ namespace guillaume
 		public:
 		/**
 		 * @brief Default constructor for the SceneManager class.
+		 * @param ressourceProvider Shared pointer to the resource provider for
+		 * the scenes.
 		 */
-		SceneManager(void);
+		SceneManager(
+			std::shared_ptr<utility::RessourceProvider> ressourceProvider);
 
 		/**
 		 * @brief Default destructor for the SceneManager class.

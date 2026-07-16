@@ -10,7 +10,8 @@
 namespace utility::graphic
 {
 	Model::Model(std::shared_ptr<utility::File> modelAsset, uint32_t materialID)
-		: Renderable(PoseF(), Color32Bit()), _materialID(materialID)
+		: Renderable(PoseF(), Color32Bit())
+		, _materialID(materialID)
 	{
 		std::string extension =
 			modelAsset->path().substr(modelAsset->path().find_last_of(".") + 1);
@@ -33,8 +34,10 @@ namespace utility::graphic
 		}
 	}
 
-	Model::Model(std::shared_ptr<utility::File> modelAsset, ModelType modelType, uint32_t materialID)
-		: Renderable(PoseF(), Color32Bit()), _materialID(materialID)
+	Model::Model(std::shared_ptr<utility::File> modelAsset, ModelType modelType,
+				 uint32_t materialID)
+		: Renderable(PoseF(), Color32Bit())
+		, _materialID(materialID)
 	{
 		_type = modelType;
 
@@ -177,8 +180,7 @@ namespace utility::graphic
 
 		_meshes.clear();
 		if (!vertices.empty() && !indices.empty()) {
-			_meshes.push_back(
-				std::make_shared<Mesh>(vertices, indices));
+			_meshes.push_back(std::make_shared<Mesh>(vertices, indices));
 		}
 		_boundingBox = SizeF(maxX - minX, maxY - minY, maxZ - minZ);
 	}

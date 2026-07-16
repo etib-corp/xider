@@ -25,13 +25,16 @@
 
 #include "xider/scenes/home.hpp"
 #include "xider/scenes/settings.hpp"
+#include "xider/scenes/sound.hpp"
 
 namespace xider::scenes
 {
 
-	Settings::Settings(guillaume::LocalStorage &localStorage,
-					   guillaume::SessionStorage &sessionStorage)
-		: guillaume::Scene(localStorage, sessionStorage)
+	Settings::Settings(
+		std::shared_ptr<utility::RessourceProvider> ressourceProvider,
+		guillaume::LocalStorage &localStorage,
+		guillaume::SessionStorage &sessionStorage)
+		: guillaume::Scene(ressourceProvider, localStorage, sessionStorage)
 	{
 		using namespace guillaume::entities;
 		using namespace guillaume::components;
@@ -50,18 +53,25 @@ namespace xider::scenes
 			getDirectorManager()
 				.getDirector<guillaume::entities::Text::Director>();
 
-		auto goToHomeButton = buttonDirector.makeIconButton(
-			buttonBuilder, nullptr, "Go to Home", "home",
-			Glyph::Style::Outlined,
-			[this]() {
-				this->goToScene<Home>();
-			},
-			Button::Color::Filled, Button::Shape::Round, Button::Size::Medium,
-			false);
+		addRootEntity("go_to_home_button",
+					  buttonDirector.makeIconButton(
+						  buttonBuilder, nullptr, "Go to Home", "home",
+						  Glyph::Style::Outlined,
+						  [this]() {
+							  this->goToScene<Home>();
+						  },
+						  Button::Color::Filled, Button::Shape::Round,
+						  Button::Size::Medium, false));
 
-		auto settingsText = textDirector.makeText(
-			textBuilder, nullptr, "Settings Scene", 18,
-			utility::graphic::Color32Bit(255, 255, 255, 255));
+		addRootEntity("go_to_sound_button",
+					  buttonDirector.makeIconButton(
+						  buttonBuilder, nullptr, "Go to Sound",
+						  "computer_sound", Glyph::Style::Outlined,
+						  [this]() {
+							  this->goToScene<Sound>();
+						  },
+						  Button::Color::Filled, Button::Shape::Round,
+						  Button::Size::Medium, false));
 	}
 
 	Settings::~Settings(void)

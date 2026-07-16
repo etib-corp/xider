@@ -28,6 +28,9 @@
 
 #include <utility/logging/loggable.hpp>
 #include <utility/logging/default_logger.hpp>
+
+#include <utility/ressource_provider.hpp>
+
 #include <utility/graphic/view.hpp>
 
 #include "guillaume/ecs/component_registry.hpp"
@@ -51,6 +54,8 @@ namespace guillaume
 										  utility::logging::DefaultLogger>
 	{
 		private:
+		std::shared_ptr<utility::RessourceProvider>
+			_ressourceProvider;	   ///< Shared pointer to the resource provider
 		LocalStorage &
 			_localStorage;	  ///< Reference to the local storage for this scene
 		SessionStorage &_sessionStorage;	///< Reference to the session
@@ -63,8 +68,16 @@ namespace guillaume
 			_entityDirectorManager;		   ///< Manager for entity directors
 		std::type_index _nextSceneType;	   ///< Type of the next scene to switch
 										   ///< to at end of frame
+		std::map<std::string, std::shared_ptr<ecs::Entity>>
+			_rootEntities;	  ///< Map of root entities in the scene
 
 		protected:
+		/**
+		 * @brief Get a shared pointer to the resource provider.
+		 * @return Shared pointer to the resource provider.
+		 */
+		std::shared_ptr<utility::RessourceProvider> getRessourceProvider(void);
+
 		/**
 		 * @brief Get the entity builder manager for this scene.
 		 * @return Reference to the entity builder manager.
@@ -76,6 +89,22 @@ namespace guillaume
 		 * @return Reference to the entity director manager.
 		 */
 		ecs::EntityDirectorManager &getDirectorManager(void);
+
+		/**
+		 * @brief Add a root entity to the scene.
+		 * @param name The name of the entity.
+		 * @param entity The shared pointer to the entity.
+		 */
+		void addRootEntity(const std::string &name,
+						   std::shared_ptr<ecs::Entity> entity);
+
+		/**
+		 * @brief Get a root entity by name.
+		 * @param name The name of the entity.
+		 * @return Shared pointer to the entity, or nullptr if not found.
+		 */
+		template<ecs::InheritFromEntity EntityType>
+		std::shared_ptr<EntityType> getRootEntity(const std::string &name);
 
 		public:
 		/**
@@ -94,11 +123,13 @@ namespace guillaume
 		template<typename NextScene> void goToScene(void);
 		/**
 		 * @brief Default constructor for Scene.
+		 * @param ressourceProvider Shared pointer to the resource provider for this
 		 * @param localStorage Reference to the local storage for this scene.
 		 * @param sessionStorage Reference to the session storage for this
 		 * scene.
 		 */
-		Scene(LocalStorage &localStorage, SessionStorage &sessionStorage);
+		Scene(std::shared_ptr<utility::RessourceProvider> ressourceProvider,
+			  LocalStorage &localStorage, SessionStorage &sessionStorage);
 
 		/**
 		 * @brief Default destructor for Scene.

@@ -26,6 +26,16 @@
 
 namespace guillaume
 {
+	template<ecs::InheritFromEntity EntityType>
+		std::shared_ptr<EntityType> Scene::getRootEntity(const std::string &name)
+	{
+		const auto it = _rootEntities.find(name);
+		if (it == _rootEntities.end()) {
+			return nullptr;
+		}
+		return std::dynamic_pointer_cast<EntityType>(it->second);
+	}
+
 	template<typename NextScene>
 	void Scene::goToScene(void)
 	{

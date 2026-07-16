@@ -37,10 +37,12 @@ namespace xider::scenes
 		public:
 		/**
 		 * @brief Construct a new Settings scene
+		 * @param ressourceProvider Shared pointer to the resource provider
 		 * @param localStorage Reference to persistent local storage
 		 * @param sessionStorage Reference to per-session storage
 		 */
-		Settings(guillaume::LocalStorage &localStorage,
+		Settings(std::shared_ptr<utility::RessourceProvider> ressourceProvider,
+				 guillaume::LocalStorage &localStorage,
 				 guillaume::SessionStorage &sessionStorage);
 
 		/**

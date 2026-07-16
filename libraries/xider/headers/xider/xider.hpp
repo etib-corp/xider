@@ -30,6 +30,7 @@
 #include "xider/engine.hpp"
 #include "scenes/home.hpp"
 #include "scenes/settings.hpp"
+#include "scenes/sound.hpp"
 
 namespace xider
 {
@@ -45,7 +46,7 @@ namespace xider
 	 */
 	class XIDER:
 		public guillaume::Application<scenes::Home, scenes::Home,
-									  scenes::Settings>
+									  scenes::Settings, scenes::Sound>
 	{
 		public:
 		/**

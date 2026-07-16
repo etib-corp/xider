@@ -112,7 +112,7 @@ namespace guillaume
 	{
 		registerCoreSystems();
 		_sceneManager =
-			std::make_unique<SceneManager<DefaultSceneType, SceneTypes...>>();
+			std::make_unique<SceneManager<DefaultSceneType, SceneTypes...>>(_ressourceProvider);
 	}
 
 	template<InheritFromScene DefaultSceneType, InheritFromScene... SceneTypes>
