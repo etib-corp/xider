@@ -85,6 +85,8 @@ namespace guillaume
 		public:
 		/**
 		 * @brief Default constructor for the SceneManager class.
+		 * @param ressourceProvider Shared pointer to the resource provider for
+		 * the scenes.
 		 */
 		SceneManager(
 			std::shared_ptr<utility::RessourceProvider> ressourceProvider);

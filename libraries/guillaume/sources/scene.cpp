@@ -31,9 +31,9 @@
 
 namespace guillaume
 {
-	Scene::Scene(std::shared_ptr<utility::RessourceProvider> _ressourceProvider,
+	Scene::Scene(std::shared_ptr<utility::RessourceProvider> ressourceProvider,
 				 LocalStorage &localStorage, SessionStorage &sessionStorage)
-		: _ressourceProvider(_ressourceProvider)
+		: _ressourceProvider(ressourceProvider)
 		, _localStorage(localStorage)
 		, _sessionStorage(sessionStorage)
 		, _componentRegistry()

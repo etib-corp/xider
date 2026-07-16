@@ -38,6 +38,7 @@ namespace xider::scenes
 		public:
 		/**
 		 * @brief Construct a new Home scene
+		 * @param ressourceProvider Shared pointer to the resource provider
 		 * @param localStorage Reference to persistent local storage
 		 * @param sessionStorage Reference to per-session storage
 		 */
