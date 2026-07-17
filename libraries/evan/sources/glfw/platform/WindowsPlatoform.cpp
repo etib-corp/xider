@@ -54,23 +54,15 @@ std::vector<std::string>
 VkSurfaceKHR
 	evan::WindowsDesktopPlatform::createSurface(VkInstance instance) const
 {
+	this->getLogger().info()
+		<< "Creating Vulkan surface for WindowsDesktopPlatform";
+
 	VkSurfaceKHR surface;
-#if defined(__WIN32__)
-	VkWin32SurfaceCreateInfoKHR createInfo {};
-
-	createInfo.sType	 = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
-	createInfo.hwnd		 = glfwGetWin32Window(_window);
-	createInfo.hinstance = GetModuleHandle(nullptr);
-
-	if (vkCreateWin32SurfaceKHR(instance, &createInfo, nullptr, &surface)
+	if (glfwCreateWindowSurface(instance, _window, nullptr, &surface)
 		!= VK_SUCCESS) {
 		this->getLogger().error() << "Failed to create Vulkan surface";
 		return VK_NULL_HANDLE;
 	}
-#else
-	this->getLogger().error() << "Unsupported platform for surface creation";
-	return VK_NULL_HANDLE;
-#endif
 	this->getLogger().info() << "Vulkan surface created successfully";
 	return surface;
 }
