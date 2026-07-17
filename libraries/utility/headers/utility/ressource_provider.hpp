@@ -3,6 +3,8 @@
 #include <utility/system_io/file.hpp>
 #include <utility/system_io/system_io.hpp>
 
+
+#include <utility/graphic/pose.hpp>
 #include <utility/graphic/text/font.hpp>
 #include <utility/graphic/text/code_points.hpp>
 #include <utility/graphic/text/text_material.hpp>
@@ -255,6 +257,7 @@ namespace utility
 		 * @brief Loads a model resource from a specified file path.
 		 *
 		 * @param path The file path to the model resource to be loaded.
+		 * @param pose The initial position and orientation for the model.
 		 * @param material The name of the material to be associated with the
 		 * loaded model. If not specified, the default material will be used.
 		 *
@@ -262,6 +265,7 @@ namespace utility
 		 */
 		std::shared_ptr<graphic::Model>
 			loadModel(const std::string &path,
+					  const utility::graphic::PoseF &pose = utility::graphic::PoseF(),
 					  const std::string &material = "default_material");
 
 		/**
@@ -269,6 +273,7 @@ namespace utility
 		 *
 		 * @param modelAsset A shared pointer to the File object containing the
 		 * model data to be loaded.
+		 * @param pose The initial position and orientation for the model.
 		 * @param material The name of the material to be associated with the
 		 * loaded model. If not specified, the default material will be used.
 		 *
@@ -276,6 +281,7 @@ namespace utility
 		 */
 		std::shared_ptr<graphic::Model> loadModelFromAsset(
 			std::shared_ptr<utility::File> modelAsset,
+			const utility::graphic::PoseF &pose = utility::graphic::PoseF(),
 			const std::string &material = "default_material");
 
 		/**
@@ -286,6 +292,7 @@ namespace utility
 		 * model data to be loaded.
 		 * @param type The type of the model (e.g., OBJ, FBX, GLTF) to be
 		 * loaded.
+		 * @param pose The initial position and orientation for the model.
 		 * @param material The name of the material to be associated with the
 		 * loaded model. If not specified, the default material will be used.
 		 *
@@ -294,12 +301,14 @@ namespace utility
 		std::shared_ptr<graphic::Model> loadModelFromAsset(
 			std::shared_ptr<utility::File> modelAsset,
 			graphic::Model::ModelType type,
+			const utility::graphic::PoseF &pose = utility::graphic::PoseF(),
 			const std::string &material = "default_material");
 
 		/**
 		 * @brief Loads an OBJ model resource from a specified file path.
 		 *
 		 * @param path The file path to the OBJ model resource to be loaded.
+		 * @param pose The initial position and orientation for the model.
 		 * @param material The name of the material to be associated with the
 		 * loaded OBJ model. If not specified, the default material will be
 		 * used.
@@ -309,6 +318,7 @@ namespace utility
 		 */
 		std::shared_ptr<graphic::Model>
 			loadObj(const std::string &path,
+					const utility::graphic::PoseF &pose = utility::graphic::PoseF(),
 					const std::string &material = "default_material");
 
 		/**
@@ -316,6 +326,7 @@ namespace utility
 		 *
 		 * @param modelAsset A shared pointer to the File object containing the
 		 * OBJ model data to be loaded.
+		 * @param pose The initial position and orientation for the model.
 		 * @param material The name of the material to be associated with the
 		 * loaded OBJ model. If not specified, the default material will be
 		 * used.
@@ -325,6 +336,7 @@ namespace utility
 		 */
 		std::shared_ptr<graphic::Model>
 			loadObjFromAsset(std::shared_ptr<utility::File> modelAsset,
+						 	 const utility::graphic::PoseF &pose = utility::graphic::PoseF(),
 							 const std::string &material = "default_material");
 
 		/**
