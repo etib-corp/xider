@@ -306,12 +306,12 @@ void evan::DesktopBackend::createInstance(const evan::IPlatform &platform,
 	this->getLogger().info()
 		<< "Creating Vulkan instance for DesktopBackend...";
 
-	if (enableValidationLayers && !this->checkValidationLayerSupport()) {
-		this->getLogger().error()
-			<< "Validation layers requested, but not available!";
+	bool useValidationLayers = enableValidationLayers;
+	if (useValidationLayers && !this->checkValidationLayerSupport()) {
 		this->getLogger().warning()
-			<< "Stopping instance creation due to missing validation layers.";
-		return;
+			<< "Validation layers requested, but not available. Continuing "
+			   "without them.";
+		useValidationLayers = false;
 	}
 
 	VkApplicationInfo appInfo {};
@@ -350,11 +350,10 @@ void evan::DesktopBackend::createInstance(const evan::IPlatform &platform,
 		static_cast<uint32_t>(extensionsWrapped.size());
 	createInfo.ppEnabledExtensionNames = extensionsWrapped.data();
 
-	createInfo.enabledLayerCount =
-		static_cast<uint32_t>(validationLayers.size());
-	createInfo.ppEnabledLayerNames = validationLayers.data();
-
-	if (enableValidationLayers == true) {
+	if (useValidationLayers) {
+		createInfo.enabledLayerCount =
+			static_cast<uint32_t>(validationLayers.size());
+		createInfo.ppEnabledLayerNames = validationLayers.data();
 		this->getLogger().info()
 			<< "Validation layers enabled for instance creation. Setting up "
 			   "debug messenger create info...";
@@ -364,6 +363,9 @@ void evan::DesktopBackend::createInstance(const evan::IPlatform &platform,
 											   defaultDebugCallback);
 		createInfo.pNext =
 			(VkDebugUtilsMessengerCreateInfoEXT *)&debugCreateInfo;
+	} else {
+		createInfo.enabledLayerCount = 0;
+		createInfo.ppEnabledLayerNames = nullptr;
 	}
 
 	this->getLogger().info()
