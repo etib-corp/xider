@@ -25,13 +25,10 @@
  * enabled for the Vulkan logical device. Device extensions provide
  * additional functionality beyond the core Vulkan specification. The
  * "VK_KHR_swapchain" extension is essential for presenting rendered
- * images to a display surface, while "VK_KHR_portability_subset" is
- * used to ensure compatibility across different platforms, particularly
- * on macOS where Vulkan support is provided through MoltenVK.
+ * images to a display surface.
  */
 const std::vector<const char *> deviceExtensions = {
-	VK_KHR_SWAPCHAIN_EXTENSION_NAME,
-	VK_EXT_EXTENDED_DYNAMIC_STATE_EXTENSION_NAME
+	VK_KHR_SWAPCHAIN_EXTENSION_NAME
 };
 
 namespace evan

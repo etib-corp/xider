@@ -491,16 +491,8 @@ void evan::DesktopBackend::createLogicalDevice()
 	deviceFeatures.fillModeNonSolid = VK_TRUE;
 #endif
 
-	this->getLogger().info() << "Setting up extended dynamic state features...";
-	VkPhysicalDeviceExtendedDynamicStateFeaturesEXT extendedDynamicState {};
-	extendedDynamicState.sType =
-		VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_FEATURES_EXT;
-	extendedDynamicState.extendedDynamicState = VK_TRUE;
-
 	VkDeviceCreateInfo createInfo {};
 	createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-
-	createInfo.pNext = &extendedDynamicState;
 
 	createInfo.queueCreateInfoCount =
 		static_cast<uint32_t>(queueCreateInfos.size());
