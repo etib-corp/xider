@@ -90,6 +90,11 @@ namespace xider
 		 */
 		utility::graphic::ViewF getView(void) const override;
 
+		/**
+		 * @brief Remove a previously added render object.
+		 * @param objectID The identifier returned by addMesh/addText.
+		 * @return True when the object was removed.
+		 */
 		bool removeObject(size_t objectID) override;
 
 		/**
