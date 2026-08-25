@@ -88,10 +88,17 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_compile_options(-g)
 endif()
 
+# Android builds are delegated to Gradle (NDK), which fetches its own copies
+# of the sibling libraries. The host CMake must not build them.
+set(XIDER_BUILD_HOST_LIBRARY TRUE)
+if(BUILD_FOR_ANDROID)
+    set(XIDER_BUILD_HOST_LIBRARY FALSE)
+endif()
+
 # 03. Global properties
 
 # Fetch external dependencies (standalone sibling libraries)
-if(NOT _SKIP_PLATFORM_VALIDATION)
+if(NOT _SKIP_PLATFORM_VALIDATION AND XIDER_BUILD_HOST_LIBRARY)
     include(FetchContent)
 
     # Disable sibling-library tests while fetching; the siblings are consumed
@@ -128,34 +135,36 @@ endif()
 
 # 04. Library definition
 
-# Set the files directories
-set(XIDER_HEADERS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/headers")
-set(XIDER_SOURCES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/sources")
+if(XIDER_BUILD_HOST_LIBRARY)
+    # Set the files directories
+    set(XIDER_HEADERS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/headers")
+    set(XIDER_SOURCES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/sources")
 
-include_directories(
-    ${XIDER_HEADERS_DIR}
-)
+    include_directories(
+        ${XIDER_HEADERS_DIR}
+    )
 
-file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
-    "${XIDER_SOURCES_DIR}/*.cpp"
-)
+    file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
+        "${XIDER_SOURCES_DIR}/*.cpp"
+    )
 
-add_library(${PROJECT_NAME} ${SOURCES})
+    add_library(${PROJECT_NAME} ${SOURCES})
 
-# 07. Link dependencies
-target_link_libraries(${PROJECT_NAME}
-    PUBLIC
-        utility
-        evan
-        guillaume
-)
+    # 07. Link dependencies
+    target_link_libraries(${PROJECT_NAME}
+        PUBLIC
+            utility
+            evan
+            guillaume
+    )
 
-# 05. Include directories
-target_include_directories(${PROJECT_NAME}
-    PUBLIC
-        $<BUILD_INTERFACE:${XIDER_HEADERS_DIR}>
-        $<INSTALL_INTERFACE:include>
-)
+    # 05. Include directories
+    target_include_directories(${PROJECT_NAME}
+        PUBLIC
+            $<BUILD_INTERFACE:${XIDER_HEADERS_DIR}>
+            $<INSTALL_INTERFACE:include>
+    )
+endif()
 
 # Platform-specific entry points
 if(NOT _SKIP_PLATFORM_VALIDATION)
@@ -200,14 +209,14 @@ if(BUILD_ALL_DOCS OR BUILD_DOCS_ONLY)
     add_subdirectory(docs)
 endif()
 
-if (DEV_MODE)
+if (DEV_MODE AND XIDER_BUILD_HOST_LIBRARY)
     message(STATUS "Development mode enabled.")
     target_compile_definitions(${PROJECT_NAME} PRIVATE DEV)
 endif()
 
 # 09. Tests
 
-if(BUILD_TESTING)
+if(BUILD_TESTING AND XIDER_BUILD_HOST_LIBRARY)
     message(STATUS "Building tests...")
     add_subdirectory(tests)
 else()
