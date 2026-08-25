@@ -45,8 +45,54 @@ set(BUILD_TESTING OFF CACHE BOOL "Build the tests" FORCE)
 set(BUILD_DOCS OFF CACHE BOOL "Build the documentation" FORCE)
 
 
+set(ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../../../../..")
+
+# Fetch standalone sibling libraries
+include(FetchContent)
+FetchContent_Declare(utility
+    GIT_REPOSITORY https://github.com/etib-corp/utility.git
+    GIT_TAG main
+    GIT_SHALLOW TRUE
+    GIT_PROGRESS TRUE
+)
+FetchContent_MakeAvailable(utility)
+
+FetchContent_Declare(evan
+    GIT_REPOSITORY https://github.com/etib-corp/evan.git
+    GIT_TAG main
+    GIT_SHALLOW TRUE
+    GIT_PROGRESS TRUE
+)
+FetchContent_MakeAvailable(evan)
+
+FetchContent_Declare(guillaume
+    GIT_REPOSITORY https://github.com/etib-corp/guillaume.git
+    GIT_TAG main
+    GIT_SHALLOW TRUE
+    GIT_PROGRESS TRUE
+)
+FetchContent_MakeAvailable(guillaume)
+
+# Build the XIDER library from the flattened repo layout
 if(NOT TARGET xider)
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../../../../../libraries/xider ${CMAKE_CURRENT_BINARY_DIR}/xider)
+    set(XIDER_HEADERS_DIR "${ROOT}/headers")
+    set(XIDER_SOURCES_DIR "${ROOT}/sources")
+    file(GLOB_RECURSE XIDER_SOURCES CONFIGURE_DEPENDS
+        "${XIDER_SOURCES_DIR}/*.cpp"
+    )
+    add_library(xider STATIC
+        ${XIDER_SOURCES}
+    )
+    target_include_directories(xider
+        PUBLIC
+            ${XIDER_HEADERS_DIR}
+    )
+    target_link_libraries(xider
+        PUBLIC
+            utility
+            evan
+            guillaume
+    )
 endif()
 
 set(XIDER_HEADERS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/headers")

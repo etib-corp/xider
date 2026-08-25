@@ -1,5 +1,16 @@
 cmake_minimum_required(VERSION 3.10)
-project(xider LANGUAGES C CXX)
+
+# Ensure option() honors parent-provided normal variables in subprojects.
+if(POLICY CMP0077)
+    cmake_policy(SET CMP0077 NEW)
+endif()
+
+project(xider
+    VERSION 1.0.0
+    DESCRIPTION "XIDER is an IDE for creating Desktop and XR applications with a focus on ease of use and rapid development."
+    HOMEPAGE_URL "https://etib-corp.github.io/xider"
+    LANGUAGES C CXX
+)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -77,6 +88,85 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_compile_options(-g)
 endif()
 
+# Android builds are delegated to Gradle (NDK), which fetches its own copies
+# of the sibling libraries. The host CMake must not build them.
+set(XIDER_BUILD_HOST_LIBRARY TRUE)
+if(BUILD_FOR_ANDROID)
+    set(XIDER_BUILD_HOST_LIBRARY FALSE)
+endif()
+
+# 03. Global properties
+
+# Fetch external dependencies (standalone sibling libraries)
+if(NOT _SKIP_PLATFORM_VALIDATION AND XIDER_BUILD_HOST_LIBRARY)
+    include(FetchContent)
+
+    # Disable sibling-library tests while fetching; the siblings are consumed
+    # here as libraries only (their tests run in their own CI).
+    set(XIDER_BUILD_TESTING ${BUILD_TESTING})
+    set(BUILD_TESTING OFF CACHE BOOL "" FORCE)
+
+    FetchContent_Declare(utility
+        GIT_REPOSITORY https://github.com/etib-corp/utility.git
+        GIT_TAG main
+        GIT_SHALLOW TRUE
+        GIT_PROGRESS TRUE
+    )
+    FetchContent_MakeAvailable(utility)
+
+    FetchContent_Declare(evan
+        GIT_REPOSITORY https://github.com/etib-corp/evan.git
+        GIT_TAG main
+        GIT_SHALLOW TRUE
+        GIT_PROGRESS TRUE
+    )
+    FetchContent_MakeAvailable(evan)
+
+    FetchContent_Declare(guillaume
+        GIT_REPOSITORY https://github.com/etib-corp/guillaume.git
+        GIT_TAG main
+        GIT_SHALLOW TRUE
+        GIT_PROGRESS TRUE
+    )
+    FetchContent_MakeAvailable(guillaume)
+
+    set(BUILD_TESTING ${XIDER_BUILD_TESTING} CACHE BOOL "" FORCE)
+endif()
+
+# 04. Library definition
+
+if(XIDER_BUILD_HOST_LIBRARY)
+    # Set the files directories
+    set(XIDER_HEADERS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/headers")
+    set(XIDER_SOURCES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/sources")
+
+    include_directories(
+        ${XIDER_HEADERS_DIR}
+    )
+
+    file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
+        "${XIDER_SOURCES_DIR}/*.cpp"
+    )
+
+    add_library(${PROJECT_NAME} ${SOURCES})
+
+    # 07. Link dependencies
+    target_link_libraries(${PROJECT_NAME}
+        PUBLIC
+            utility
+            evan
+            guillaume
+    )
+
+    # 05. Include directories
+    target_include_directories(${PROJECT_NAME}
+        PUBLIC
+            $<BUILD_INTERFACE:${XIDER_HEADERS_DIR}>
+            $<INSTALL_INTERFACE:include>
+    )
+endif()
+
+# Platform-specific entry points
 if(NOT _SKIP_PLATFORM_VALIDATION)
     if (BUILD_FOR_OPENXR)
         message(STATUS "Building with OpenXR support")
@@ -119,7 +209,16 @@ if(BUILD_ALL_DOCS OR BUILD_DOCS_ONLY)
     add_subdirectory(docs)
 endif()
 
-if (DEV_MODE)
+if (DEV_MODE AND XIDER_BUILD_HOST_LIBRARY)
     message(STATUS "Development mode enabled.")
     target_compile_definitions(${PROJECT_NAME} PRIVATE DEV)
+endif()
+
+# 09. Tests
+
+if(BUILD_TESTING AND XIDER_BUILD_HOST_LIBRARY)
+    message(STATUS "Building tests...")
+    add_subdirectory(tests)
+else()
+    message(STATUS "Skipping tests...")
 endif()

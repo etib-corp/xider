@@ -18,11 +18,9 @@ XIDER is a cross-platform IDE for developing extended reality (XR) and desktop a
 
 - `CMakeLists.txt` — root build configuration with platform/backend option validation
 - `cmake/` — platform configs (`Config*.cmake`) and `Docs.cmake` module
-- `libraries/` — core libraries:
-  - `utility/` — event system, logging, math, graphics, system I/O utilities
-  - `evan/` — Vulkan/OpenXR/GLFW abstraction layer
-  - `guillaume/` — C++ UI framework with SQLite3 integration
-  - `xider/` — main IDE library (depends on utility, evan, guillaume)
+- `headers/` — XIDER public headers under `xider/`
+- `sources/` — XIDER implementation sources
+- `tests/` — XIDER unit tests
 - `platforms/` — platform-specific entry points:
   - `glfw/{linux,macos,windows}/` — desktop GLFW backends
   - `openxr/{android,linux}/` — OpenXR backends
@@ -30,6 +28,9 @@ XIDER is a cross-platform IDE for developing extended reality (XR) and desktop a
 - `docs/` — architecture docs, build guide, code/contribution conventions
 - `scripts/` — helper scripts (`run-clang-format.sh`, `install_ubuntu_dependencies.sh`)
 - `build/` — CMake build output (auto-generated; do not edit)
+
+XIDER fetches the shared sibling libraries as standalone dependencies via
+FetchContent: `utility`, `evan`, and `guillaume`.
 
 ## Build and test
 
@@ -76,15 +77,15 @@ cmake -S . -B build -DBUILD_DOCS=ON <platform/backend options>
 ## C++ conventions for agents
 
 - **Header/source placement**:
-  - Public headers: `libraries/<name>/headers/<library>/` (e.g., `headers/utility/event/`)
-  - Implementation: `libraries/<name>/sources/<module>/`
-  - Tests: `libraries/<name>/tests/sources/<module>/`
+  - Public headers: `headers/xider/` (e.g., `headers/xider/engine.hpp`)
+  - Implementation: `sources/<module>/`
+  - Tests: `tests/sources/<module>/`
 - **File extensions**: Use `.hpp` for headers, `.cpp` for sources
 - **Naming**:
   - Classes/structs: `PascalCase`
   - Functions/variables: `camelCase`
   - Member fields: prefix with `_` (e.g., `_value`, `_sharedValue`)
-  - Namespaces: nested by library/module (e.g., `utility::event`, `utility::logging`)
+  - Namespaces: nested by module (e.g., `xider`, `xider::scenes`)
 - **Class layout** (in headers):
   1. `public` section (types, constructors, methods, fields)
   2. `protected` section (same order)
@@ -134,9 +135,9 @@ cmake -S . -B build -DBUILD_DOCS=ON <platform/backend options>
   - `.github/workflows/` — CI configuration (requires approval)
   - `cmake/Config*.cmake` — platform toolchain configs (requires approval)
 - **Edit with care**:
-  - Public headers in `libraries/*/headers/` — update docs/tests if API changes
+  - Public headers in `headers/xider/` — update docs/tests if API changes
   - `CMakeLists.txt` files — ensure target-scoped commands, maintain option validation
-  - `libraries/*/tests/` — keep tests in sync with module changes
+  - `tests/` — keep tests in sync with module changes
 - **Require human approval before**:
   - Changing C++ standard, CMake minimum version, or compiler flags
   - Adding new external dependencies or changing dependency versions
@@ -155,8 +156,8 @@ cmake -S . -B build -DBUILD_DOCS=ON <platform/backend options>
 
 ## Safe example tasks
 
-1. **Add a unit test for an existing utility function**: Create a new `.cpp` file in `libraries/utility/tests/sources/<module>/`, write `TEST_F` cases using existing fixtures, ensure `GLOB_RECURSE` picks it up, run `ctest`.
+1. **Add a unit test for an existing function**: Create a new `.cpp` file in `tests/sources/<module>/`, write `TEST_F` cases using existing fixtures, ensure `GLOB_RECURSE` picks it up, run `ctest`.
 
-2. **Add a source/header pair to an existing module**: Place `.hpp` in `libraries/<name>/headers/<library>/<module>/` and `.cpp` in `libraries/<name>/sources/<module>/`, follow naming conventions (`PascalCase` class, `camelCase` methods, `_` prefix for members), update namespace nesting, verify build.
+2. **Add a source/header pair to an existing module**: Place `.hpp` in `headers/xider/<module>/` and `.cpp` in `sources/<module>/`, follow naming conventions (`PascalCase` class, `camelCase` methods, `_` prefix for members), update namespace nesting, verify build.
 
 3. **Refactor a component to match existing error handling patterns**: Replace raw pointers with `std::unique_ptr` or `std::shared_ptr`, add `const` correctness, use `enum class` for state machines, follow class layout order (public → protected → private).
