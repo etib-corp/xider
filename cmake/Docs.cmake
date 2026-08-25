@@ -43,11 +43,6 @@ function(add_project_docs)
         "${ROOT}/assets"
         "${ROOT}/docs/assets"
     )
-    file(GLOB LIBS RELATIVE "${ROOT}" "${ROOT}/libraries/*")
-    foreach(lib IN LISTS LIBS)
-        list(APPEND IMAGE_PATH_CANDIDATES "${ROOT}/libraries/${lib}/assets")
-        list(APPEND IMAGE_PATH_CANDIDATES "${ROOT}/libraries/${lib}/docs/assets")
-    endforeach()
 
     set(DOXYGEN_IMAGE_PATH)
     foreach(img IN LISTS IMAGE_PATH_CANDIDATES)
@@ -89,20 +84,12 @@ function(add_project_docs)
     set(DOXYGEN_USE_MATHJAX          YES)
 
     # -- Gather source files ----------------------------------------------------
-    # Libraries headers + docs + examples
+    # Application headers + docs
     file(GLOB_RECURSE LIB_HEADERS
-        "${ROOT}/libraries/*/headers/*.h"
-        "${ROOT}/libraries/*/headers/*.hh"
-        "${ROOT}/libraries/*/headers/*.hpp"
-        "${ROOT}/libraries/*/headers/*.hxx"
-    )
-    file(GLOB_RECURSE LIB_DOCS
-        "${ROOT}/libraries/*/docs/*.md"
-        "${ROOT}/libraries/*/docs/**/*.md"
-    )
-    file(GLOB_RECURSE LIB_EXAMPLE_DOCS
-        "${ROOT}/libraries/*/examples/*.md"
-        "${ROOT}/libraries/*/examples/**/*.md"
+        "${ROOT}/headers/**/*.h"
+        "${ROOT}/headers/**/*.hh"
+        "${ROOT}/headers/**/*.hpp"
+        "${ROOT}/headers/**/*.hxx"
     )
 
     # Top-level docs
@@ -135,8 +122,6 @@ function(add_project_docs)
     # Build the full file list for Doxygen
     set(DOC_INPUT_FILES
         ${LIB_HEADERS}
-        ${LIB_DOCS}
-        ${LIB_EXAMPLE_DOCS}
         ${TOP_DOCS}
         ${PLATFORM_HEADERS}
         ${PLATFORM_SOURCES}

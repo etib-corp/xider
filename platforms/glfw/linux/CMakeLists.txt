@@ -3,9 +3,6 @@ if(NOT BUILD_FOR_LINUX)
     return()
 endif()
 
-# Add subdirectory for local dependencies
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../../../libraries/xider ${CMAKE_CURRENT_BINARY_DIR}/xider)
-
 # Set the name of the target
 set(LINUX_DESKTOP_TARGET "xider-desktop-linux")
 

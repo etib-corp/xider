@@ -2,6 +2,17 @@
 
 **XIDER** (eXtensible Integrated Development Environment for Reality) is a powerful and versatile IDE designed to streamline the development of applications for extended reality (XR) platforms. With its intuitive interface and robust feature set, XIDER empowers developers to create immersive experiences across a wide range of devices, including virtual reality (VR), augmented reality (AR), and mixed reality (MR) platforms.
 
+## Application Layer
+
+XIDER is the application layer that combines the [Utility](https://github.com/etib-corp/utility),
+[Evan](https://github.com/etib-corp/evan), and [Guillaume](https://github.com/etib-corp/guillaume)
+libraries into a single desktop and XR IDE shell.
+
+- Owns the top-level application object.
+- Bridges Guillaume scenes with Evan rendering.
+- Wraps the engine and event handler used by the platform entry points.
+- Provides the `Home`, `Settings`, and `Sound` scenes used by the app.
+
 ## Features
 
 - **Cross-Platform Support**: Build applications that run smoothly on Windows, macOS, and Linux, as well as various XR platforms.
@@ -16,18 +27,30 @@ This project focuses on four key strategic objectives to ensure successful devel
 
 | **Focus Area** | **Description** |
 | --- | --- |
-| **[Technological Watch](objectives/TECHNOLOGICAL_WATCH)** | Actively explore, test, and integrate emerging technologies with a critical approach. |
-| **[Technical Architecture](objectives/TECHNICAL_ARCHITECTURE)** | Structure, document, and ensure the reliability of the project's architecture. |
-| **[Community Contributions](objectives/COMMUNITY_CONTRIBUTIONS)** | Open the project to the community and encourage external contributions. |
-| **[Performance and Optimization](objectives/PERFORMANCE_OPTIMIZATION)** | Measure, test, and optimize technical performance. |
+| **[Technological Watch](docs/objectives/TECHNOLOGICAL_WATCH.MD)** | Actively explore, test, and integrate emerging technologies with a critical approach. |
+| **[Technical Architecture](docs/objectives/TECHNICAL_ARCHITECTURE.MD)** | Structure, document, and ensure the reliability of the project's architecture. |
+| **[Community Contributions](docs/objectives/COMMUNITY_CONTRIBUTIONS.MD)** | Open the project to the community and encourage external contributions. |
+| **[Performance and Optimization](docs/objectives/PERFORMANCE_OPTIMIZATION.MD)** | Measure, test, and optimize technical performance. |
+
+## Build Notes
+
+XIDER is built as a C++20 application/library through CMake. It fetches and
+links against Utility, Evan, and Guillaume. Select exactly one backend and one
+platform when configuring the project.
+
+- Backend: `BUILD_FOR_OPENXR` or `BUILD_FOR_GLFW`
+- Platform: `BUILD_FOR_ANDROID`, `BUILD_FOR_LINUX`, `BUILD_FOR_WINDOWS`, or
+    `BUILD_FOR_MACOS`
 
 ## Documentation
 
 For more detailed information on each part of the project, please refer to the following documentation files:
 
-- [Building Guide](BUILDING)
-- [Project Architecture](PROJECT_ARCHITECTURE)
-- [Beta Test Plan](BETA_TEST_PLAN)
+- [Building Guide](docs/BUILDING.MD)
+- [Project Architecture](docs/PROJECT_ARCHITECTURE.MD)
+- [Beta Test Plan](docs/BETA_TEST_PLAN.MD)
+- [How XIDER Works](docs/HOW_XIDER_WORKS.MD)
+- [Architecture](docs/ARCHITECTURE.MD)
 
 ## Contributing
 
