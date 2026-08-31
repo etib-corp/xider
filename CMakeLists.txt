@@ -27,6 +27,7 @@ option(BUILD_FOR_MACOS "Build for macOS" OFF)
 
 option(BUILD_DOCS "Build documentation" OFF)
 option(BUILD_TESTING "Build the tests" OFF)
+option(BUILD_BENCHMARKS "Build the benchmark harness" OFF)
 option(DEV_MODE "Enable development mode" OFF)
 
 # Change default output of bin
@@ -112,6 +113,12 @@ if(NOT _SKIP_PLATFORM_VALIDATION AND XIDER_BUILD_HOST_LIBRARY)
         GIT_SHALLOW TRUE
         GIT_PROGRESS TRUE
     )
+    # Prefer local sibling checkouts (../utility, ../evan, ../guillaume) for
+    # development so that local fixes are picked up without pushing first.
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../utility/CMakeLists.txt")
+        set(FETCHCONTENT_SOURCE_DIR_UTILITY
+            "${CMAKE_CURRENT_SOURCE_DIR}/../utility" CACHE PATH "" FORCE)
+    endif()
     FetchContent_MakeAvailable(utility)
 
     FetchContent_Declare(evan
@@ -120,6 +127,10 @@ if(NOT _SKIP_PLATFORM_VALIDATION AND XIDER_BUILD_HOST_LIBRARY)
         GIT_SHALLOW TRUE
         GIT_PROGRESS TRUE
     )
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../evan/CMakeLists.txt")
+        set(FETCHCONTENT_SOURCE_DIR_EVAN
+            "${CMAKE_CURRENT_SOURCE_DIR}/../evan" CACHE PATH "" FORCE)
+    endif()
     FetchContent_MakeAvailable(evan)
 
     FetchContent_Declare(guillaume
@@ -128,6 +139,10 @@ if(NOT _SKIP_PLATFORM_VALIDATION AND XIDER_BUILD_HOST_LIBRARY)
         GIT_SHALLOW TRUE
         GIT_PROGRESS TRUE
     )
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../guillaume/CMakeLists.txt")
+        set(FETCHCONTENT_SOURCE_DIR_GUILLAUME
+            "${CMAKE_CURRENT_SOURCE_DIR}/../guillaume" CACHE PATH "" FORCE)
+    endif()
     FetchContent_MakeAvailable(guillaume)
 
     set(BUILD_TESTING ${XIDER_BUILD_TESTING} CACHE BOOL "" FORCE)
@@ -138,17 +153,11 @@ endif()
 if(XIDER_BUILD_HOST_LIBRARY)
     # Set the files directories
     set(XIDER_HEADERS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/headers")
-    set(XIDER_SOURCES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/sources")
 
-    include_directories(
-        ${XIDER_HEADERS_DIR}
-    )
+    # Explicit source list (no file(GLOB)) for reproducible packaging.
+    include(cmake/Sources.cmake)
 
-    file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
-        "${XIDER_SOURCES_DIR}/*.cpp"
-    )
-
-    add_library(${PROJECT_NAME} ${SOURCES})
+    add_library(${PROJECT_NAME} ${XIDER_SOURCES})
 
     # 07. Link dependencies
     target_link_libraries(${PROJECT_NAME}
@@ -158,7 +167,7 @@ if(XIDER_BUILD_HOST_LIBRARY)
             guillaume
     )
 
-    # 05. Include directories
+    # 05. Include directories (target-scoped)
     target_include_directories(${PROJECT_NAME}
         PUBLIC
             $<BUILD_INTERFACE:${XIDER_HEADERS_DIR}>
@@ -221,4 +230,17 @@ if(BUILD_TESTING AND XIDER_BUILD_HOST_LIBRARY)
     add_subdirectory(tests)
 else()
     message(STATUS "Skipping tests...")
+endif()
+
+# 10. Benchmarks
+
+if(BUILD_BENCHMARKS AND XIDER_BUILD_HOST_LIBRARY)
+    message(STATUS "Building benchmarks...")
+    add_subdirectory(benchmarks)
+endif()
+
+# 11. Examples
+
+if(XIDER_BUILD_HOST_LIBRARY)
+    add_subdirectory(examples)
 endif()

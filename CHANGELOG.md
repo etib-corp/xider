@@ -11,6 +11,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Standard open-source documentation: `CHANGELOG.md`, `CODE_OF_CONDUCT.md`,
   `SECURITY.md`, and `AUTHORS.md`.
+- Packaging & consumability: `install()`/`export()`, a CMake package config
+  (`xiderConfig.cmake`) for `find_package(xider)`, and CPack rules.
+- Benchmark harness (`BUILD_BENCHMARKS`) covering entity traversal and
+  signature queries.
+- CI hardening: `ctest` execution, ASan/UBSan and `clang-tidy` jobs, and
+  coverage reporting.
+- Documentation: full README, Getting Started tutorial, and versioning &
+  support policy.
+- A runnable `examples/scene_objects` sample.
+
+### Changed
+
+- Replaced `file(GLOB)` with explicit source lists for reproducible builds.
+- Moved include paths onto the `xider` target (target-scoped includes).
 
 ## [1.0.0] - 2025-08-21
 
