@@ -55,3 +55,14 @@ For more detailed information on each part of the project, please refer to the f
 ## Contributing
 
 We welcome contributions from the community! If you're interested in contributing to XIDER, please check out our [Contributing Guidelines](CONTRIBUTING.md) for more information on how to get involved.
+
+## Community
+
+- [Code of Conduct](CODE_OF_CONDUCT.md)
+- [Security Policy](SECURITY.md)
+- [Authors](AUTHORS.md)
+- [Changelog](CHANGELOG.md)
+
+## License
+
+XIDER is released under the [MIT License](LICENSE).
