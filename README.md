@@ -42,6 +42,36 @@ platform when configuring the project.
 - Platform: `BUILD_FOR_ANDROID`, `BUILD_FOR_LINUX`, `BUILD_FOR_WINDOWS`, or
     `BUILD_FOR_MACOS`
 
+## Quickstart
+
+```sh
+cmake -S . -B build \
+  -DBUILD_FOR_GLFW=ON \
+  -DBUILD_FOR_LINUX=ON \
+  -DBUILD_TESTING=ON
+cmake --build build
+ctest --test-dir build --output-on-failure
+```
+
+Optional options:
+
+- `-DBUILD_TESTING=ON` — build and run the test suite.
+- `-DBUILD_DOCS=ON` — build Doxygen documentation.
+- `-DBUILD_BENCHMARKS=ON` — build the benchmark harness.
+
+## Consuming as a dependency
+
+Once installed, downstream projects can use `find_package(xider)`:
+
+```sh
+cmake --install build --prefix /path/to/prefix
+```
+
+```cmake
+find_package(xider REQUIRED)
+target_link_libraries(my_app PRIVATE xider::xider)
+```
+
 ## Documentation
 
 For more detailed information on each part of the project, please refer to the following documentation files:
@@ -51,7 +81,20 @@ For more detailed information on each part of the project, please refer to the f
 - [Beta Test Plan](docs/BETA_TEST_PLAN.md)
 - [How XIDER Works](docs/HOW_XIDER_WORKS.md)
 - [Architecture](docs/ARCHITECTURE.md)
+- [Getting Started](docs/GETTING_STARTED.md)
+- [Versioning & Support](docs/VERSIONING.md)
 
 ## Contributing
 
 We welcome contributions from the community! If you're interested in contributing to XIDER, please check out our [Contributing Guidelines](CONTRIBUTING.md) for more information on how to get involved.
+
+## Community
+
+- [Code of Conduct](CODE_OF_CONDUCT.md)
+- [Security Policy](SECURITY.md)
+- [Authors](AUTHORS.md)
+- [Changelog](CHANGELOG.md)
+
+## License
+
+XIDER is released under the [MIT License](LICENSE).
