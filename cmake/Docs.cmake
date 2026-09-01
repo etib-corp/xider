@@ -113,7 +113,15 @@ function(add_project_docs)
 
     # Optional well-known documentation files
     set(OPTIONAL_ROOT_DOCS)
-    foreach(_f "${ROOT}/README.md" "${ROOT}/CONTRIBUTING.md")
+    foreach(_f
+        "${ROOT}/README.md"
+        "${ROOT}/CONTRIBUTING.md"
+        "${ROOT}/CODE_OF_CONDUCT.md"
+        "${ROOT}/SECURITY.md"
+        "${ROOT}/AUTHORS.md"
+        "${ROOT}/CHANGELOG.md"
+        "${ROOT}/LICENSE"
+    )
         if(EXISTS "${_f}")
             list(APPEND OPTIONAL_ROOT_DOCS "${_f}")
         endif()
