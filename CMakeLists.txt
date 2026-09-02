@@ -244,3 +244,18 @@ endif()
 if(XIDER_BUILD_HOST_LIBRARY)
     add_subdirectory(examples)
 endif()
+
+# 12. Packaging
+
+if(XIDER_BUILD_HOST_LIBRARY)
+    # CPack packaging
+    set(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
+    set(CPACK_PACKAGE_VERSION "${PROJECT_VERSION}")
+    set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_DESCRIPTION}")
+    set(CPACK_PACKAGE_HOMEPAGE_URL "${PROJECT_HOMEPAGE_URL}")
+    set(CPACK_PACKAGE_VENDOR "ETIB Corporation")
+    set(CPACK_PACKAGE_CONTACT "clement-antoine.xavier@epitech.eu")
+    set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
+    set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
+    include(CPack)
+endif()
