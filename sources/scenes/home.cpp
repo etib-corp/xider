@@ -90,9 +90,9 @@ namespace xider::scenes
 											  "models/viking_room.obj",
 											  "textures/viking_room.png"));
 
-		addRootEntity("home_image",
-					  imageDirector.makeImage(imageBuilder, nullptr,
-											  "texture1.png"));
+		addRootEntity(
+			"home_image",
+			imageDirector.makeImage(imageBuilder, nullptr, "texture1.png"));
 	}
 
 	Home::~Home(void)
