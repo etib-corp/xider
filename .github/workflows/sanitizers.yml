@@ -174,5 +174,5 @@ jobs:
 
       - name: Run benchmarks (report)
         run: >
-          ${{ github.workspace }}/build/benchmarks/xider_benchmarks
+          ${{ github.workspace }}/xider_benchmarks.bin
           --benchmark_min_time=0.01s
