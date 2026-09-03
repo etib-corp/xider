@@ -42,7 +42,7 @@ android {
     externalNativeBuild {
         cmake {
             path = file("cpp/CMakeLists.txt")
-            version = "3.30.5"
+            version = "3.31.5"
         }
     }
     sourceSets {
