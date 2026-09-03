@@ -23,6 +23,7 @@
 #include <guillaume/entities/button.hpp>
 #include <guillaume/entities/text.hpp>
 #include <guillaume/entities/model.hpp>
+#include <guillaume/entities/image.hpp>
 
 #include "xider/scenes/home.hpp"
 #include "xider/scenes/settings.hpp"
@@ -58,6 +59,13 @@ namespace xider::scenes
 			getDirectorManager()
 				.getDirector<guillaume::entities::Model::Director>();
 
+		auto &imageBuilder =
+			getBuilderManager()
+				.getBuilder<guillaume::entities::Image::Builder>();
+		auto &imageDirector =
+			getDirectorManager()
+				.getDirector<guillaume::entities::Image::Director>();
+
 		addRootEntity("go_to_settings_button",
 					  buttonDirector.makeIconButton(
 						  buttonBuilder, nullptr, "Go to Settings", "settings",
@@ -81,6 +89,10 @@ namespace xider::scenes
 					  modelDirector.makeModel(modelBuilder, nullptr,
 											  "models/viking_room.obj",
 											  "textures/viking_room.png"));
+
+		addRootEntity(
+			"home_image",
+			imageDirector.makeImage(imageBuilder, nullptr, "texture1.png"));
 	}
 
 	Home::~Home(void)
