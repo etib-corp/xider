@@ -49,6 +49,12 @@ set(ROOT "${CMAKE_CURRENT_SOURCE_DIR}/../../../../..")
 
 # Fetch standalone sibling libraries
 include(FetchContent)
+
+# OpenAL-soft 1.25+ enables C++20 module targets when compiled in C++20 mode,
+# which requires Ninja >= 1.11. The Android-bundled Ninja (1.10.2) is too old,
+# so disable OpenAL's module feature via its option.
+set(ALSOFT_ENABLE_MODULES OFF CACHE BOOL "Disable OpenAL C++20 modules (Ninja too old)" FORCE)
+
 FetchContent_Declare(utility
     GIT_REPOSITORY https://github.com/etib-corp/utility.git
     GIT_TAG main
