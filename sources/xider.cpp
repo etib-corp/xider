@@ -22,8 +22,6 @@
 
 #include "xider/xider.hpp"
 
-#include "xider/engine.hpp"
-
 namespace xider
 {
 	XIDER::XIDER(std::shared_ptr<evan::IPlatform> platform,
@@ -36,10 +34,7 @@ namespace xider
 		std::unique_ptr<evan::Engine> evanEngine =
 			std::make_unique<evan::Engine>(getRessourceProvider(), platform);
 
-		std::unique_ptr<Engine> xiderEngine =
-			std::make_unique<Engine>(std::move(evanEngine));
-
-		setEngine(std::move(xiderEngine));
+		setEngine(std::move(evanEngine));
 	}
 
 	XIDER::~XIDER(void)
