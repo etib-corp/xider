@@ -42,6 +42,16 @@ platform when configuring the project.
 - Platform: `BUILD_FOR_ANDROID`, `BUILD_FOR_LINUX`, `BUILD_FOR_WINDOWS`, or
     `BUILD_FOR_MACOS`
 
+### Dependencies
+
+- CMake 3.10+
+- A C++20 compiler
+- The Vulkan SDK
+- Doxygen + Graphviz (only for `-DBUILD_DOCS=ON`)
+
+XIDER fetches its dependencies (Utility, Evan, Guillaume) via CMake
+`FetchContent`.
+
 ## Quickstart
 
 ```sh
