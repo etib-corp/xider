@@ -46,7 +46,7 @@ platform when configuring the project.
 
 - CMake 3.10+
 - A C++20 compiler
-- The Vulkan SDK
+- The Vulkan SDK (download form [LunarG](https://vulkan.lunarg.com/sdk/home))
 - Doxygen + Graphviz (only for `-DBUILD_DOCS=ON`)
 
 XIDER fetches its dependencies (Utility, Evan, Guillaume) via CMake
