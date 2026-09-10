@@ -21,6 +21,7 @@
  */
 
 #include "xider/engine.hpp"
+#include "xider/frame_updater.hpp"
 
 namespace xider
 {
@@ -106,6 +107,10 @@ namespace xider
 		if (_evanEngine) {
 			_evanEngine->update();
 		}
+
+		// The scenes place their interface against the camera of the frame
+		// being drawn, which only the engine knows of.
+		FrameUpdater::run(getView());
 	}
 
 	bool Engine::shouldCaptureViewportInput(void) const

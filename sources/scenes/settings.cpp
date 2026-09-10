@@ -20,62 +20,88 @@
  SOFTWARE.
  */
 
-#include <guillaume/entities/button.hpp>
-#include <guillaume/entities/text.hpp>
+#include <string>
 
 #include "xider/scenes/home.hpp"
 #include "xider/scenes/settings.hpp"
-#include "xider/scenes/sound.hpp"
 
 namespace xider::scenes
 {
-
 	Settings::Settings(
 		std::shared_ptr<utility::RessourceProvider> ressourceProvider,
 		guillaume::LocalStorage &localStorage,
 		guillaume::SessionStorage &sessionStorage)
-		: guillaume::Scene(ressourceProvider, localStorage, sessionStorage)
+		: DemoScene(ressourceProvider, localStorage, sessionStorage, "Settings",
+					"Preferences the demo remembers from one run to the next")
+		, _preferences(localStorage)
 	{
-		using namespace guillaume::entities;
-		using namespace guillaume::components;
-
 		getLogger().info() << "Settings scene created";
 
-		auto &buttonBuilder = getBuilderManager().getBuilder<Button::Builder>();
-		auto &buttonDirector =
-			getDirectorManager().getDirector<Button::Director>();
+		_hintsToggle = addToggle("toggle_hints", "Hints", "tips_and_updates",
+								 _preferences.areHintsShown(), [this](bool isOn) {
+									 this->_preferences.setHintsShown(isOn);
+								 });
 
-		auto &textBuilder =
-			getBuilderManager()
-				.getBuilder<guillaume::entities::Text::Builder>();
+		_texturesToggle =
+			addToggle("toggle_textures", "Textures", "texture",
+					  _preferences.areTexturesShown(), [this](bool isOn) {
+						  this->_preferences.setTexturesShown(isOn);
+					  });
 
-		auto &textDirector =
-			getDirectorManager()
-				.getDirector<guillaume::entities::Text::Director>();
+		_loudToggle =
+			addToggle("toggle_loud", "Loud playback", "volume_up",
+					  _preferences.isPlaybackLoud(), [this](bool isOn) {
+						  this->_preferences.setPlaybackLoud(isOn);
+					  });
 
-		addRootEntity("go_to_home_button",
-					  buttonDirector.makeIconButton(
-						  buttonBuilder, nullptr, "Go to Home", "home",
-						  Glyph::Style::Outlined,
-						  [this]() {
-							  this->goToScene<Home>();
-						  },
-						  Button::Color::Filled, Button::Shape::Round,
-						  Button::Size::Medium, false));
+		addButton("reset_preferences", "Reset", "autorenew", [this]() {
+			this->_preferences.reset();
+			this->applyPreferences();
+		});
 
-		addRootEntity("go_to_sound_button",
-					  buttonDirector.makeIconButton(
-						  buttonBuilder, nullptr, "Go to Sound",
-						  "computer_sound", Glyph::Style::Outlined,
-						  [this]() {
-							  this->goToScene<Sound>();
-						  },
-						  Button::Color::Filled, Button::Shape::Round,
-						  Button::Size::Medium, false));
+		addButton("go_to_home", "Home", "home", [this]() {
+			this->goToScene<Home>();
+		});
 	}
 
 	Settings::~Settings(void)
 	{
+	}
+
+	void Settings::onEnter(void)
+	{
+		DemoScene::onEnter();
+
+		applyPreferences();
+	}
+
+	std::shared_ptr<guillaume::entities::Button> Settings::addToggle(
+		const std::string &name, const std::string &label, const std::string &icon,
+		bool isOn, std::function<void(bool)> apply)
+	{
+		// The toggle shows its state with the glyph of a checked box, and reads
+		// it back from the button itself: the button flips its own state before
+		// it runs the handler it was given.
+		auto toggle = addButton(name, label, icon, []() {},
+								guillaume::entities::Button::Size::Medium, true);
+
+		toggle->setSelectedIconGlyphName("check");
+		toggle->setSelected(isOn);
+
+		guillaume::entities::Button *state = toggle.get();
+
+		toggle->setOnClick([state, apply = std::move(apply)]() {
+			apply(state->isSelected());
+		});
+
+		return toggle;
+	}
+
+	void Settings::applyPreferences(void)
+	{
+		_hintsToggle->setSelected(_preferences.areHintsShown());
+		_texturesToggle->setSelected(_preferences.areTexturesShown());
+		_loudToggle->setSelected(_preferences.isPlaybackLoud());
 	}
 
 }	 // namespace xider::scenes

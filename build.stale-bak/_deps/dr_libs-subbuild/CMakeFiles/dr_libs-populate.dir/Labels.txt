@@ -1,0 +1,14 @@
+# Target labels
+ dr_libs-populate
+# Source files and their labels
+/Users/julithein/Documents/Preskater/Projects.nosync/xider/xider/build/_deps/dr_libs-subbuild/CMakeFiles/dr_libs-populate
+/Users/julithein/Documents/Preskater/Projects.nosync/xider/xider/build/_deps/dr_libs-subbuild/CMakeFiles/dr_libs-populate.rule
+/Users/julithein/Documents/Preskater/Projects.nosync/xider/xider/build/_deps/dr_libs-subbuild/CMakeFiles/dr_libs-populate-complete.rule
+/Users/julithein/Documents/Preskater/Projects.nosync/xider/xider/build/_deps/dr_libs-subbuild/dr_libs-populate-prefix/src/dr_libs-populate-stamp/dr_libs-populate-build.rule
+/Users/julithein/Documents/Preskater/Projects.nosync/xider/xider/build/_deps/dr_libs-subbuild/dr_libs-populate-prefix/src/dr_libs-populate-stamp/dr_libs-populate-configure.rule
+/Users/julithein/Documents/Preskater/Projects.nosync/xider/xider/build/_deps/dr_libs-subbuild/dr_libs-populate-prefix/src/dr_libs-populate-stamp/dr_libs-populate-download.rule
+/Users/julithein/Documents/Preskater/Projects.nosync/xider/xider/build/_deps/dr_libs-subbuild/dr_libs-populate-prefix/src/dr_libs-populate-stamp/dr_libs-populate-install.rule
+/Users/julithein/Documents/Preskater/Projects.nosync/xider/xider/build/_deps/dr_libs-subbuild/dr_libs-populate-prefix/src/dr_libs-populate-stamp/dr_libs-populate-mkdir.rule
+/Users/julithein/Documents/Preskater/Projects.nosync/xider/xider/build/_deps/dr_libs-subbuild/dr_libs-populate-prefix/src/dr_libs-populate-stamp/dr_libs-populate-patch.rule
+/Users/julithein/Documents/Preskater/Projects.nosync/xider/xider/build/_deps/dr_libs-subbuild/dr_libs-populate-prefix/src/dr_libs-populate-stamp/dr_libs-populate-test.rule
+/Users/julithein/Documents/Preskater/Projects.nosync/xider/xider/build/_deps/dr_libs-subbuild/dr_libs-populate-prefix/src/dr_libs-populate-stamp/dr_libs-populate-update.rule

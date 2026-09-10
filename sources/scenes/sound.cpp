@@ -20,111 +20,119 @@
  SOFTWARE.
  */
 
-#include <guillaume/entities/button.hpp>
-#include <guillaume/entities/text.hpp>
+#include <string>
+#include <vector>
 
+#include "xider/scenes/home.hpp"
 #include "xider/scenes/sound.hpp"
-#include "xider/scenes/settings.hpp"
 
 namespace xider::scenes
 {
+	namespace
+	{
+		/// Path of the first track the application ships.
+		constexpr const char *ambientPath =
+			"sound/nastelbom-background-music-486996.mp3";
+		/// Path of the second track the application ships.
+		constexpr const char *pulsePath =
+			"sound/"
+			"sigmamusicart-jazz-lounge-relaxing-background-music-537739.mp3";
+	}	 // namespace
 
 	Sound::Sound(std::shared_ptr<utility::RessourceProvider> ressourceProvider,
 				 guillaume::LocalStorage &localStorage,
 				 guillaume::SessionStorage &sessionStorage)
-		: guillaume::Scene(ressourceProvider, localStorage, sessionStorage)
+		: DemoScene(ressourceProvider, localStorage, sessionStorage, "Sound",
+					"Two tracks played by the audio manager of the toolkit")
+		, _preferences(localStorage)
 	{
-		using namespace guillaume::entities;
-		using namespace guillaume::components;
-
 		getLogger().info() << "Sound scene created";
 
-		auto &buttonBuilder = getBuilderManager().getBuilder<Button::Builder>();
-		auto &buttonDirector =
-			getDirectorManager().getDirector<Button::Director>();
+		_ambient = ressourceProvider->loadAudioSource(ambientPath);
+		_pulse	 = ressourceProvider->loadAudioSource(pulsePath);
 
-		auto &textBuilder =
-			getBuilderManager()
-				.getBuilder<guillaume::entities::Text::Builder>();
+		addTrack("Ambient", _ambient.get());
+		addTrack("Pulse", _pulse.get());
 
-		auto &textDirector =
-			getDirectorManager()
-				.getDirector<guillaume::entities::Text::Director>();
-
-		auto goToSettingsButton = buttonDirector.makeIconButton(
-			buttonBuilder, nullptr, "Go to Settings", "settings",
-			Glyph::Style::Outlined,
-			[this]() {
-				this->goToScene<Settings>();
-			},
-			Button::Color::Filled, Button::Shape::Round, Button::Size::Medium,
-			false);
-
-		auto soundText = textDirector.makeText(
-			textBuilder, nullptr, "Sound Scene", 18,
-			utility::graphic::Color32Bit(255, 255, 255, 255));
-
-		auto settingsText = textDirector.makeText(
-			textBuilder, nullptr, "Settings Scene", 18,
-			utility::graphic::Color32Bit(255, 255, 255, 255));
-
-		addRootEntity("sound_text", soundText);
-		addRootEntity("settings_text", settingsText);
-
-		_first_source = ressourceProvider->loadAudioSource(
-			"sound/nastelbom-background-music-486996.mp3");
-		_first_source->setGain(0.5f);
-		_first_source->stop();
-
-		_second_source = ressourceProvider->loadAudioSource(
-			"sound/"
-			"sigmamusicart-jazz-lounge-relaxing-background-music-537739.mp3");
-		_second_source->setGain(0.5f);
-		_second_source->stop();
-
-		addRootEntity("pause_source_button",
-					  buttonDirector.makeIconButton(
-						  buttonBuilder, nullptr, "Pause First Sound", "pause",
-						  Glyph::Style::Outlined,
-						  [this]() {
-							  _first_source->pause();
-						  },
-						  Button::Color::Filled, Button::Shape::Round,
-						  Button::Size::Medium, false));
-
-		addRootEntity("play_source_button",
-					  buttonDirector.makeIconButton(
-						  buttonBuilder, nullptr, "Play First Sound",
-						  "play_arrow", Glyph::Style::Outlined,
-						  [this]() {
-							  _first_source->play();
-						  },
-						  Button::Color::Filled, Button::Shape::Round,
-						  Button::Size::Medium, false));
-
-		addRootEntity("pause_second_source_button",
-					  buttonDirector.makeIconButton(
-						  buttonBuilder, nullptr, "Pause Second Sound", "pause",
-						  Glyph::Style::Outlined,
-						  [this]() {
-							  _second_source->pause();
-						  },
-						  Button::Color::Filled, Button::Shape::Round,
-						  Button::Size::Medium, false));
-
-		addRootEntity("play_second_source_button",
-					  buttonDirector.makeIconButton(
-						  buttonBuilder, nullptr, "Play Second Sound",
-						  "play_arrow", Glyph::Style::Outlined,
-						  [this]() {
-							  _second_source->play();
-						  },
-						  Button::Color::Filled, Button::Shape::Round,
-						  Button::Size::Medium, false));
+		addButton("go_to_home", "Home", "home", [this]() {
+			this->goToScene<Home>();
+		});
 	}
 
 	Sound::~Sound(void)
 	{
+	}
+
+	void Sound::onEnter(void)
+	{
+		DemoScene::onEnter();
+
+		applyGain();
+	}
+
+	void Sound::onExit(void)
+	{
+		// A track left playing would follow the user into the other scenes.
+		for (utility::sound::AudioSource *track: { _ambient.get(),
+													_pulse.get() }) {
+			if (track != nullptr) {
+				track->stop();
+			}
+		}
+
+		DemoScene::onExit();
+	}
+
+	void Sound::addTrack(const std::string &title,
+						 utility::sound::AudioSource *track)
+	{
+		addText("track_label", title, 16.0f, color::muted());
+
+		if (track == nullptr) {
+			getLogger().warning()
+				<< "The track '" << title
+				<< "' could not be loaded, its transport is left out";
+
+			skipRow(0.06f);
+			return;
+		}
+
+		track->setGain(_quietGain);
+		track->stop();
+
+		// The transport drives the track through its raw pointer: the entity
+		// holding the handler dies with the scene, which owns the track until
+		// the end of it.
+		addIconRow({
+			{ .name	   = "play",
+			  .icon	   = "play_arrow",
+			  .onClick = [track]() {
+				  track->play();
+			  } },
+			{ .name	   = "pause",
+			  .icon	   = "pause",
+			  .onClick = [track]() {
+				  track->pause();
+			  } },
+			{ .name	   = "stop",
+			  .icon	   = "stop",
+			  .onClick = [track]() {
+				  track->stop();
+			  } },
+		});
+	}
+
+	void Sound::applyGain(void)
+	{
+		const float gain = _preferences.isPlaybackLoud() ? _loudGain
+														 : _quietGain;
+
+		for (utility::sound::AudioSource *track: { _ambient.get(),
+													_pulse.get() }) {
+			if (track != nullptr) {
+				track->setGain(gain);
+			}
+		}
 	}
 
 }	 // namespace xider::scenes

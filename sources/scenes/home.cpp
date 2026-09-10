@@ -20,83 +20,67 @@
  SOFTWARE.
  */
 
-#include <guillaume/entities/button.hpp>
-#include <guillaume/entities/text.hpp>
-#include <guillaume/entities/model.hpp>
-#include <guillaume/entities/image.hpp>
-
 #include "xider/scenes/home.hpp"
+
 #include "xider/scenes/settings.hpp"
+#include "xider/scenes/sound.hpp"
+#include "xider/scenes/viewer.hpp"
 
 namespace xider::scenes
 {
-
 	Home::Home(std::shared_ptr<utility::RessourceProvider> ressourceProvider,
 			   guillaume::LocalStorage &localStorage,
 			   guillaume::SessionStorage &sessionStorage)
-		: guillaume::Scene(ressourceProvider, localStorage, sessionStorage)
+		: DemoScene(ressourceProvider, localStorage, sessionStorage,
+					"XIDER Demo Lab",
+					"A tour of the engine, the interface toolkit and the "
+					"assets they share")
+		, _preferences(localStorage)
 	{
-		using namespace guillaume::entities;
-		using namespace guillaume::components;
-
 		getLogger().info() << "Home scene created";
 
-		auto &buttonBuilder = getBuilderManager().getBuilder<Button::Builder>();
-		auto &buttonDirector =
-			getDirectorManager().getDirector<Button::Director>();
+		addButton("go_to_viewer", "Viewer", "view_in_ar",
+				  [this]() {
+					  this->goToScene<Viewer>();
+				  });
 
-		auto &textBuilder =
-			getBuilderManager()
-				.getBuilder<guillaume::entities::Text::Builder>();
-		auto &textDirector =
-			getDirectorManager()
-				.getDirector<guillaume::entities::Text::Director>();
+		addButton("go_to_sound", "Sound", "computer_sound",
+				  [this]() {
+					  this->goToScene<Sound>();
+				  });
 
-		auto &modelBuilder =
-			getBuilderManager()
-				.getBuilder<guillaume::entities::Model::Builder>();
-		auto &modelDirector =
-			getDirectorManager()
-				.getDirector<guillaume::entities::Model::Director>();
+		addButton("go_to_settings", "Settings", "settings",
+				  [this]() {
+					  this->goToScene<Settings>();
+				  });
 
-		auto &imageBuilder =
-			getBuilderManager()
-				.getBuilder<guillaume::entities::Image::Builder>();
-		auto &imageDirector =
-			getDirectorManager()
-				.getDirector<guillaume::entities::Image::Director>();
+		skipRow(0.04f);
 
-		addRootEntity("go_to_settings_button",
-					  buttonDirector.makeIconButton(
-						  buttonBuilder, nullptr, "Go to Settings", "settings",
-						  Glyph::Style::Outlined,
-						  [this]() {
-							  this->goToScene<Settings>();
-						  },
-						  Button::Color::Filled, Button::Shape::Round,
-						  Button::Size::Medium, false));
+		_hint = addText("camera_hint",
+						"Right-drag to look around, WASD to fly",
+						14.0f, color::muted());
 
-		addRootEntity("title_text",
-					  textDirector.makeText(
-						  textBuilder, nullptr, "Home Scene", 18,
-						  utility::graphic::Color32Bit(255, 255, 255, 255)));
+		const auto &catalog = getModelCatalog();
 
-		addRootEntity("teapot_model",
-					  modelDirector.makeModel(modelBuilder, nullptr,
-											  "models/teapot.obj"));
-
-		addRootEntity("viking_room_model",
-					  modelDirector.makeModel(modelBuilder, nullptr,
-											  "models/viking_room.obj",
-											  "textures/viking_room.png"));
-
-		addRootEntity(
-			"home_image",
-			imageDirector.makeImage(imageBuilder, nullptr, "texture1.png"));
+		// Two models of the catalogue stand next to the console: the textured
+		// one, which shows what the asset pipeline carries, and the largest
+		// one, which shows a mesh at a scale of its own.
+		_vikingRoom = addModel("viking_room", catalog[4], _modelFraction,
+							   _vikingRoomX, 0.0f);
+		_teddy		= addModel("teddy", catalog[1], _modelFraction, _teddyX,
+							   0.0f);
 	}
 
 	Home::~Home(void)
 	{
+	}
+
+	void Home::onEnter(void)
+	{
+		DemoScene::onEnter();
+
+		_hint->setColor(_preferences.areHintsShown() ? color::muted()
+													 : color::hidden());
 	}
 
 }	 // namespace xider::scenes

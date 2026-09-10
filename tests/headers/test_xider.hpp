@@ -23,22 +23,94 @@
 #pragma once
 
 #include <filesystem>
+#include <memory>
+#include <vector>
 
 #include <gtest/gtest.h>
 
-#include <xider/xider.hpp>
+#include <guillaume/local_storage.hpp>
+#include <guillaume/scene.hpp>
+#include <guillaume/session_storage.hpp>
+
+#include <utility/graphic/pose.hpp>
+#include <utility/graphic/view.hpp>
+#include <utility/ressource_provider.hpp>
+#include <utility/system_io/default_system_io.hpp>
 
 namespace xider::tests
 {
-
+	/**
+	 * @brief Test fixture giving each case a storage and a resource provider.
+	 *
+	 * The storages live in a directory of their own, removed once the case is
+	 * over, so that the preferences one case writes are never read back by the
+	 * next one. The provider is rooted in that same directory, which holds no
+	 * asset: a scene has to survive the assets of the application being out of
+	 * reach, as they are while the tests run.
+	 */
 	class TestXIDER: public ::testing::Test
 	{
 		protected:
 		TestXIDER(void)			  = default;
 		~TestXIDER(void) override = default;
 
+		/**
+		 * @brief Create the scratch directory and the storages of the case.
+		 */
 		void SetUp(void) override;
+
+		/**
+		 * @brief Release the storages and remove the scratch directory.
+		 */
 		void TearDown(void) override;
+
+		/**
+		 * @brief Build the view the application renders the demo with.
+		 * @return A view with a field of view, looking down the Z axis.
+		 */
+		static utility::graphic::ViewF makeView(void);
+
+		/**
+		 * @brief Place the interface of a scene as a frame would.
+		 * @param scene Scene to place.
+		 * @param view View of the frame.
+		 */
+		static void settle(guillaume::Scene &scene,
+						   const utility::graphic::ViewF &view);
+
+		/**
+		 * @brief Read the pose of every entity of a scene holding one.
+		 * @param scene Scene to read.
+		 * @return Poses of the scene, in breadth-first order.
+		 */
+		static std::vector<utility::graphic::PoseF>
+			collectPoses(guillaume::Scene &scene);
+
+		/**
+		 * @brief Check that a settled scene holds a usable interface.
+		 *
+		 * Every pose has to be a number, to face the viewer the way the
+		 * renderers of the framework can draw it, and to stand between the
+		 * camera and its far plane. The console hangs on one side of the
+		 * anchor, and the models of a scene on the other.
+		 * @param scene Scene to check.
+		 * @param hasModels Whether the scene displays models beside its
+		 * console.
+		 */
+		static void expectUsableInterface(guillaume::Scene &scene,
+										  bool hasModels);
+
+		protected:
+		std::filesystem::path
+			_directory;	  ///< Directory holding the storages of the case.
+		utility::DefaultSystemIO
+			_systemIo;	  ///< File system the provider loads assets from.
+		std::unique_ptr<guillaume::LocalStorage>
+			_localStorage;	  ///< Storage the preferences are written to.
+		std::unique_ptr<guillaume::SessionStorage>
+			_sessionStorage;	///< Storage kept for the session.
+		std::shared_ptr<utility::RessourceProvider>
+			_ressourceProvider;	   ///< Provider the scenes load assets from.
 	};
 
 }	 // namespace xider::tests

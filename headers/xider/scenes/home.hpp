@@ -22,34 +22,63 @@
 
 #pragma once
 
-#include <guillaume/scene.hpp>
+#include <memory>
+
+#include <guillaume/entities/model.hpp>
+#include <guillaume/entities/text.hpp>
+
+#include "xider/preferences.hpp"
+#include "xider/scenes/demo_scene.hpp"
 
 namespace xider::scenes
 {
-
 	/**
 	 * @brief Home application scene.
 	 *
-	 * Represents the primary scene used by the application, responsible for
-	 * initializing core UI and game elements.
+	 * Welcomes the user with a showcase of the models the demo ships, and
+	 * leads to the other scenes of the application.
 	 */
-	class Home: public guillaume::Scene
+	class Home: public DemoScene
 	{
 		public:
 		/**
-		 * @brief Construct a new Home scene
-		 * @param ressourceProvider Shared pointer to the resource provider
-		 * @param localStorage Reference to persistent local storage
-		 * @param sessionStorage Reference to per-session storage
+		 * @brief Construct a new Home scene.
+		 * @param ressourceProvider Shared pointer to the resource provider.
+		 * @param localStorage Reference to persistent local storage.
+		 * @param sessionStorage Reference to per-session storage.
 		 */
 		Home(std::shared_ptr<utility::RessourceProvider> ressourceProvider,
 			 guillaume::LocalStorage &localStorage,
 			 guillaume::SessionStorage &sessionStorage);
 
 		/**
-		 * @brief Destroy the Home scene
+		 * @brief Destroy the Home scene.
 		 */
-		~Home(void);
+		~Home(void) override;
+
+		public:
+		/**
+		 * @brief Show the hint line the preferences ask for.
+		 */
+		void onEnter(void) override;
+
+		private:
+		static constexpr float _modelFraction =
+			0.35f;	  ///< Share of the visible height a showcase model
+				  ///< covers.
+		static constexpr float _vikingRoomX =
+			0.16f;	  ///< Horizontal center of the textured model.
+		static constexpr float _teddyX =
+			0.38f;	  ///< Horizontal center of the teddy bear.
+
+		private:
+		Preferences _preferences;	///< Settings of the demo.
+		std::shared_ptr<guillaume::entities::Text>
+			_hint {};	///< Line explaining how to fly the camera.
+		std::shared_ptr<guillaume::entities::Model>
+			_vikingRoom {};	   ///< Model showing off a texture.
+		std::shared_ptr<guillaume::entities::Model>
+			_teddy {};	///< Largest model of the catalogue.
 	};
 
 }	 // namespace xider::scenes

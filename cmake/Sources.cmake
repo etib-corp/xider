@@ -6,8 +6,13 @@
 
 set(XIDER_SOURCES
     sources/engine.cpp
+    sources/frame_updater.cpp
+    sources/hud.cpp
+    sources/preferences.cpp
+    sources/scenes/demo_scene.cpp
     sources/scenes/home.cpp
     sources/scenes/settings.cpp
     sources/scenes/sound.cpp
+    sources/scenes/viewer.cpp
     sources/xider.cpp
 )

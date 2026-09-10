@@ -22,43 +22,80 @@
 
 #pragma once
 
-#include <guillaume/scene.hpp>
+#include <memory>
+
+#include <guillaume/entities/text.hpp>
+
+#include <utility/sound/audio_source.hpp>
+
+#include "xider/preferences.hpp"
+#include "xider/scenes/demo_scene.hpp"
 
 namespace xider::scenes
 {
-
 	/**
 	 * @brief Sound application scene.
 	 *
-	 * Represents the scene responsible for managing audio settings and
-	 * sound-related features within the application. It provides UI and logic
-	 * for adjusting volume, audio output, and other sound configurations
+	 * Plays the tracks the application ships, through a transport command per
+	 * track, and follows the gain the preferences ask for.
 	 */
-	class Sound: public guillaume::Scene
+	class Sound: public DemoScene
 	{
-		private:
-		std::unique_ptr<utility::sound::AudioSource>
-			_first_source;	  ///< Audio source for background music or sound
-							  ///< effects
-		std::unique_ptr<utility::sound::AudioSource>
-			_second_source;	   ///< Audio source for additional sound effects or
-							   ///< music
 		public:
 		/**
-		 * @brief Construct a new Sound scene
+		 * @brief Construct a new Sound scene.
 		 * @param ressourceProvider Shared pointer to the resource provider for
-		 * loading assets
-		 * @param localStorage Reference to persistent local storage
-		 * @param sessionStorage Reference to per-session storage
+		 * loading assets.
+		 * @param localStorage Reference to persistent local storage.
+		 * @param sessionStorage Reference to per-session storage.
 		 */
 		Sound(std::shared_ptr<utility::RessourceProvider> ressourceProvider,
 			  guillaume::LocalStorage &localStorage,
 			  guillaume::SessionStorage &sessionStorage);
 
 		/**
-		 * @brief Destroy the Sound scene
+		 * @brief Destroy the Sound scene.
 		 */
-		~Sound(void);
+		~Sound(void) override;
+
+		public:
+		/**
+		 * @brief Apply the preferences and stop anything left playing.
+		 */
+		void onEnter(void) override;
+
+		/**
+		 * @brief Stop the tracks the scene leaves behind.
+		 */
+		void onExit(void) override;
+
+		private:
+		/**
+		 * @brief Add a track label and its transport row to the console.
+		 * @param title Name of the track, shown above its transport.
+		 * @param track Track the transport drives, or nullptr when the asset
+		 * of the track could not be loaded.
+		 */
+		void addTrack(const std::string &title,
+					  utility::sound::AudioSource *track);
+
+		/**
+		 * @brief Apply the gain preference to every track.
+		 */
+		void applyGain(void);
+
+		private:
+		static constexpr float _loudGain =
+			1.0f;	///< Gain of a track when the preferences ask for it.
+		static constexpr float _quietGain =
+			0.5f;	///< Gain of a track otherwise.
+
+		private:
+		Preferences _preferences;	///< Settings of the demo.
+		std::unique_ptr<utility::sound::AudioSource>
+			_ambient {};	///< First track of the application.
+		std::unique_ptr<utility::sound::AudioSource>
+			_pulse {};	///< Second track of the application.
 	};
 
 }	 // namespace xider::scenes

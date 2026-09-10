@@ -227,6 +227,9 @@ endif()
 
 if(BUILD_TESTING AND XIDER_BUILD_HOST_LIBRARY)
     message(STATUS "Building tests...")
+    # Enabled here as well as in tests/, so that CTest finds the tests from the
+    # build directory of the project rather than from the tests directory only.
+    enable_testing()
     add_subdirectory(tests)
 else()
     message(STATUS "Skipping tests...")

@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/Users/julithein/Documents/Preskater/Projects.nosync/xider/xider/build/_deps/dr_libs-subbuild/CMakeFiles/dr_libs-populate"
+		},
+		{
+			"file" : "/Users/julithein/Documents/Preskater/Projects.nosync/xider/xider/build/_deps/dr_libs-subbuild/CMakeFiles/dr_libs-populate.rule"
+		},
+		{
+			"file" : "/Users/julithein/Documents/Preskater/Projects.nosync/xider/xider/build/_deps/dr_libs-subbuild/CMakeFiles/dr_libs-populate-complete.rule"
+		},
+		{
+			"file" : "/Users/julithein/Documents/Preskater/Projects.nosync/xider/xider/build/_deps/dr_libs-subbuild/dr_libs-populate-prefix/src/dr_libs-populate-stamp/dr_libs-populate-build.rule"
+		},
+		{
+			"file" : "/Users/julithein/Documents/Preskater/Projects.nosync/xider/xider/build/_deps/dr_libs-subbuild/dr_libs-populate-prefix/src/dr_libs-populate-stamp/dr_libs-populate-configure.rule"
+		},
+		{
+			"file" : "/Users/julithein/Documents/Preskater/Projects.nosync/xider/xider/build/_deps/dr_libs-subbuild/dr_libs-populate-prefix/src/dr_libs-populate-stamp/dr_libs-populate-download.rule"
+		},
+		{
+			"file" : "/Users/julithein/Documents/Preskater/Projects.nosync/xider/xider/build/_deps/dr_libs-subbuild/dr_libs-populate-prefix/src/dr_libs-populate-stamp/dr_libs-populate-install.rule"
+		},
+		{
+			"file" : "/Users/julithein/Documents/Preskater/Projects.nosync/xider/xider/build/_deps/dr_libs-subbuild/dr_libs-populate-prefix/src/dr_libs-populate-stamp/dr_libs-populate-mkdir.rule"
+		},
+		{
+			"file" : "/Users/julithein/Documents/Preskater/Projects.nosync/xider/xider/build/_deps/dr_libs-subbuild/dr_libs-populate-prefix/src/dr_libs-populate-stamp/dr_libs-populate-patch.rule"
+		},
+		{
+			"file" : "/Users/julithein/Documents/Preskater/Projects.nosync/xider/xider/build/_deps/dr_libs-subbuild/dr_libs-populate-prefix/src/dr_libs-populate-stamp/dr_libs-populate-test.rule"
+		},
+		{
+			"file" : "/Users/julithein/Documents/Preskater/Projects.nosync/xider/xider/build/_deps/dr_libs-subbuild/dr_libs-populate-prefix/src/dr_libs-populate-stamp/dr_libs-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"dr_libs-populate"
+		],
+		"name" : "dr_libs-populate"
+	}
+}
