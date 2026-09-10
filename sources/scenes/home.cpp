@@ -93,6 +93,26 @@ namespace xider::scenes
 		addRootEntity(
 			"home_image",
 			imageDirector.makeImage(imageBuilder, nullptr, "texture1.png"));
+
+		addRootEntity("counter_text",
+					  textDirector.makeText(
+						  textBuilder, nullptr, "0", 18,
+						  utility::graphic::Color32Bit(255, 255, 255, 255)));
+
+		addRootEntity(
+			"click_me_button",
+			buttonDirector.makeButton(
+				buttonBuilder, nullptr, "Click Me",
+				[this]() {
+					_counter++;
+					auto text = this->getRootEntity<guillaume::entities::Text>(
+						"counter_text");
+					if (text) {
+						text->setContent(std::to_string(_counter));
+					}
+				},
+				Button::Color::Filled, Button::Shape::Round,
+				Button::Size::Medium, false));
 	}
 
 	Home::~Home(void)
