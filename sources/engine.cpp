@@ -88,6 +88,9 @@ namespace xider
 
 	void Engine::pollEvents(void)
 	{
+		if (!_evanEngine) {
+			return;
+		}
 		auto events	  = _evanEngine->pollEvents();
 		auto callback = this->getEventCallback();
 
