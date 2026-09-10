@@ -113,12 +113,6 @@ if(NOT _SKIP_PLATFORM_VALIDATION AND XIDER_BUILD_HOST_LIBRARY)
         GIT_SHALLOW TRUE
         GIT_PROGRESS TRUE
     )
-    # Prefer local sibling checkouts (../utility, ../evan, ../guillaume) for
-    # development so that local fixes are picked up without pushing first.
-    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../utility/CMakeLists.txt")
-        set(FETCHCONTENT_SOURCE_DIR_UTILITY
-            "${CMAKE_CURRENT_SOURCE_DIR}/../utility" CACHE PATH "" FORCE)
-    endif()
     FetchContent_MakeAvailable(utility)
 
     FetchContent_Declare(evan
@@ -127,10 +121,6 @@ if(NOT _SKIP_PLATFORM_VALIDATION AND XIDER_BUILD_HOST_LIBRARY)
         GIT_SHALLOW TRUE
         GIT_PROGRESS TRUE
     )
-    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../evan/CMakeLists.txt")
-        set(FETCHCONTENT_SOURCE_DIR_EVAN
-            "${CMAKE_CURRENT_SOURCE_DIR}/../evan" CACHE PATH "" FORCE)
-    endif()
     FetchContent_MakeAvailable(evan)
 
     FetchContent_Declare(guillaume
@@ -139,10 +129,6 @@ if(NOT _SKIP_PLATFORM_VALIDATION AND XIDER_BUILD_HOST_LIBRARY)
         GIT_SHALLOW TRUE
         GIT_PROGRESS TRUE
     )
-    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/../guillaume/CMakeLists.txt")
-        set(FETCHCONTENT_SOURCE_DIR_GUILLAUME
-            "${CMAKE_CURRENT_SOURCE_DIR}/../guillaume" CACHE PATH "" FORCE)
-    endif()
     FetchContent_MakeAvailable(guillaume)
 
     set(BUILD_TESTING ${XIDER_BUILD_TESTING} CACHE BOOL "" FORCE)
