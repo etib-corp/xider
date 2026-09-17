@@ -18,6 +18,10 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
+# Enable CTest at the top level so tests are registered in the root
+# CTestTestfile.cmake (enable_testing() in a subdirectory is not enough).
+include(CTest)
+
 option(BUILD_FOR_OPENXR "Build with OpenXR support" OFF)
 option(BUILD_FOR_GLFW "Build with GLFW support" OFF)
 option(BUILD_FOR_ANDROID "Build for Android" OFF)

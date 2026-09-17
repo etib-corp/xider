@@ -22,6 +22,10 @@
 
 #include "test_xider.hpp"
 
+#include <memory>
+
+#include <xider/engine.hpp>
+
 namespace xider::tests
 {
 	void TestXIDER::SetUp(void)
@@ -32,11 +36,54 @@ namespace xider::tests
 	{
 	}
 
-	TEST_F(TestXIDER, SampleTest)
+	TEST_F(TestXIDER, EngineConstructsWithNullBackend)
 	{
-		// This is a sample test case. Replace it with actual tests for the
-		// Engine class.
-		EXPECT_TRUE(true);
+		// A null Evans backend is valid: the wrapper is constructed headless
+		// and only dereferences the backend on non-guarded calls.
+		EXPECT_NO_THROW(xider::Engine { nullptr });
 	}
 
+	TEST_F(TestXIDER, PresentIsSafeWithoutBackend)
+	{
+		xider::Engine engine { nullptr };
+
+		EXPECT_NO_THROW(engine.present());
+	}
+
+	TEST_F(TestXIDER, UpdateIsSafeWithoutBackend)
+	{
+		xider::Engine engine { nullptr };
+
+		EXPECT_NO_THROW(engine.update());
+	}
+
+	TEST_F(TestXIDER, ClearIsSafeWithoutBackend)
+	{
+		xider::Engine engine { nullptr };
+
+		EXPECT_NO_THROW(engine.clear());
+	}
+
+	TEST_F(TestXIDER, ViewportCaptureDefaultsToOffWithoutBackend)
+	{
+		xider::Engine engine { nullptr };
+
+		EXPECT_FALSE(engine.shouldCaptureViewportInput());
+	}
+
+	TEST_F(TestXIDER, ViewportCaptureSetterIsIgnoredWithoutBackend)
+	{
+		xider::Engine engine { nullptr };
+
+		engine.setShouldCaptureViewportInput(true);
+
+		EXPECT_FALSE(engine.shouldCaptureViewportInput());
+	}
+
+	TEST_F(TestXIDER, GetViewThrowsWithoutBackend)
+	{
+		xider::Engine engine { nullptr };
+
+		EXPECT_THROW(engine.getView(), std::runtime_error);
+	}
 }	 // namespace xider::tests
