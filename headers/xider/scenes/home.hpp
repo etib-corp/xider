@@ -50,6 +50,9 @@ namespace xider::scenes
 		 * @brief Destroy the Home scene
 		 */
 		~Home(void);
+
+		private:
+		int _counter { 0 };	   ///< Click counter value
 	};
 
 }	 // namespace xider::scenes
