@@ -12,7 +12,8 @@ application.
 
 ## Runtime Responsibilities
 
-- `xider::Engine` receives platform events and forwards draw work to Evan.
+- `evan::Engine` implements the `utility::Engine` interface and forwards draw
+  work to the Vulkan renderer.
 - `xider::XIDER` manages the application and scene lifetime.
 - The `Main` and `Settings` scenes define the visible application state.
 
