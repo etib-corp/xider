@@ -22,24 +22,19 @@
 
 #include "xider/xider.hpp"
 
-#include "xider/engine.hpp"
-
 namespace xider
 {
 	XIDER::XIDER(std::shared_ptr<evan::IPlatform> platform,
 				 std::shared_ptr<utility::RessourceProvider> ressourceProvider)
-		: guillaume::Application<scenes::Home, scenes::Home, scenes::Settings,
-								 scenes::Sound>(ressourceProvider)
+		: guillaume::Application<scenes::Showcase, scenes::Showcase>(
+			  ressourceProvider)
 	{
 		getLogger().info() << "XIDER application initialized with Evan engine";
 
 		std::unique_ptr<evan::Engine> evanEngine =
 			std::make_unique<evan::Engine>(getRessourceProvider(), platform);
 
-		std::unique_ptr<Engine> xiderEngine =
-			std::make_unique<Engine>(std::move(evanEngine));
-
-		setEngine(std::move(xiderEngine));
+		setEngine(std::move(evanEngine));
 	}
 
 	XIDER::~XIDER(void)

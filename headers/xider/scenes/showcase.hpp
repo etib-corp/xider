@@ -28,28 +28,30 @@ namespace xider::scenes
 {
 
 	/**
-	 * @brief Home application scene.
+	 * @brief Showcase application scene.
 	 *
-	 * Represents the primary scene used by the application, responsible for
-	 * initializing core UI and game elements.
+	 * Demonstrates the Material Design 3 entity families provided by Guillaume
+	 * (app bar, navigation bar, tabs, list, cards, chips, badges, switches,
+	 * checkboxes, radio buttons, sliders, text fields, progress indicators,
+	 * dividers, snackbars and dialogs).
 	 */
-	class Home: public guillaume::Scene
+	class Showcase: public guillaume::Scene
 	{
 		public:
 		/**
-		 * @brief Construct a new Home scene
+		 * @brief Construct a new Showcase scene
 		 * @param ressourceProvider Shared pointer to the resource provider
 		 * @param localStorage Reference to persistent local storage
 		 * @param sessionStorage Reference to per-session storage
 		 */
-		Home(std::shared_ptr<utility::RessourceProvider> ressourceProvider,
-			 guillaume::LocalStorage &localStorage,
-			 guillaume::SessionStorage &sessionStorage);
+		Showcase(std::shared_ptr<utility::RessourceProvider> ressourceProvider,
+				 guillaume::LocalStorage &localStorage,
+				 guillaume::SessionStorage &sessionStorage);
 
 		/**
-		 * @brief Destroy the Home scene
+		 * @brief Destroy the Showcase scene
 		 */
-		~Home(void);
+		~Showcase(void);
 	};
 
 }	 // namespace xider::scenes

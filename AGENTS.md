@@ -77,7 +77,7 @@ cmake -S . -B build -DBUILD_DOCS=ON <platform/backend options>
 ## C++ conventions for agents
 
 - **Header/source placement**:
-  - Public headers: `headers/xider/` (e.g., `headers/xider/engine.hpp`)
+  - Public headers: `headers/xider/` (e.g., `headers/xider/xider.hpp`)
   - Implementation: `sources/<module>/`
   - Tests: `tests/sources/<module>/`
 - **File extensions**: Use `.hpp` for headers, `.cpp` for sources
