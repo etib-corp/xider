@@ -6,7 +6,7 @@ if(POLICY CMP0077)
 endif()
 
 project(xider
-    VERSION 1.0.0
+    VERSION 2026.1.0
     DESCRIPTION "XIDER is an IDE for creating Desktop and XR applications with a focus on ease of use and rapid development."
     HOMEPAGE_URL "https://etib-corp.github.io/xider"
     LANGUAGES C CXX
