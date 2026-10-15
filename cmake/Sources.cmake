@@ -5,9 +5,6 @@
 # When adding or removing a source file, update this list.
 
 set(XIDER_SOURCES
-    sources/engine.cpp
-    sources/scenes/home.cpp
-    sources/scenes/settings.cpp
-    sources/scenes/sound.cpp
+    sources/scenes/showcase.cpp
     sources/xider.cpp
 )

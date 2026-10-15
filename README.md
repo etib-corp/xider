@@ -11,7 +11,7 @@ libraries into a single desktop and XR IDE shell.
 - Owns the top-level application object.
 - Bridges Guillaume scenes with Evan rendering.
 - Wraps the engine and event handler used by the platform entry points.
-- Provides the `Home`, `Settings`, and `Sound` scenes used by the app.
+- Provides the `Showcase` scene used by the app.
 
 ## Features
 
